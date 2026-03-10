@@ -1,1 +1,0 @@
-progetto di software a cura di Paolo Martino, Lorenzo Mazzucato, Davide Mezzaroma e Tommaso Palla
