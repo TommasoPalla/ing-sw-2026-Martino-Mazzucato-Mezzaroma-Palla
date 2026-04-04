@@ -1,6 +1,5 @@
 package enums;
 
-public enum ExampleEnum {
-  value 1,
-  value 2;
+public enum CharacterRole {
+  hunter, builder, gatherer, artist, shaman, inventor;
 }
