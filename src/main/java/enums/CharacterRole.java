@@ -1,5 +1,5 @@
 package enums;
 
 public enum CharacterRole {
-  hunter, builder, gatherer, artist, shaman, inventor;
+  HUNTER, BUILDER, GATHERER, ARTIST, SHAMAN, INVENTOR;
 }
