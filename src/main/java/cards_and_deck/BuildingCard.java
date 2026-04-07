@@ -27,7 +27,6 @@ public class BuildingCard extends Card {
     }
 
     // actual functions
-
     /**
      * check whether player has sufficient food to purchase this buildingCard
      */
@@ -50,7 +49,8 @@ public class BuildingCard extends Card {
         if (activatedAt != GamePhase.ON_DRAW){
             return;
         }
-        // da definire la "strategy" in dei building
+        /* da definire la "strategy" dei building,
+        effect è il metodo dell'interfaccia building strategy*/
         this.effect();
     }
 }
