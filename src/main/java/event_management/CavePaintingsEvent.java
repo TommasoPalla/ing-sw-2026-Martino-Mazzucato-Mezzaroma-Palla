@@ -10,20 +10,20 @@ public class CavePaintingsEvent implements EventStrategy{
         switch(era){
             case FIRST:
                 for(Player player : players){
-                    if(player.getTribe().getArtists() < 1) player.getTribe().addPrestigePoints(-2);
-                    else player.getTryibe().addPrestigePoints( player.getTribe().getArtists() );
+                    if(player.getTribe().getArtistsNumber() < 1) player.getTribe().addPrestigePoints(-2);
+                    else player.getTribe().addPrestigePoints( player.getTribe().getArtistsNumber() );
                 }
                 break;
             case SECOND:
                 for(Player player : players){
-                    if(player.getTribe().getArtists() <= 1) player.getTribe().addPrestigePoints(-2);
-                    else player.getTryibe().addPrestigePoints( 2*player.getTribe().getArtists() );
+                    if(player.getTribe().getArtistsNumber() <= 1) player.getTribe().addPrestigePoints(-2);
+                    else player.getTribe().addPrestigePoints( 2*player.getTribe().getArtistsNumber() );
                 }
                 break;
             case THIRD:
                 for(Player player : players){
-                    if(player.getTribe().getArtists() <= 2) player.getTribe().addPrestigePoints(-2);
-                    else player.getTribe().addPrestigePoints( 3*player.getTribe().getArtists() );
+                    if(player.getTribe().getArtistsNumber() <= 2) player.getTribe().addPrestigePoints(-2);
+                    else player.getTribe().addPrestigePoints( 3*player.getTribe().getArtistsNumber() );
                 }
                 break;
         }
