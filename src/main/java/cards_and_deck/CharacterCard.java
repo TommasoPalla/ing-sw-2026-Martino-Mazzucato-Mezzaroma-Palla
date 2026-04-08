@@ -9,7 +9,7 @@ public class CharacterCard extends Card {
     private final InventorType inventorType;
     private final Integer shamanStars;
     private final Integer buildingDiscount;
-    private final Boolean hunterMeat;
+    private final Boolean hunterIcon;
 
     /* static factory pattern: different static method that call the constructor
         managing where to pass null as parameters */
@@ -21,22 +21,53 @@ public class CharacterCard extends Card {
     public static CharacterCard createBuilders(Era era, String name, String cardID, CharacterRole role,
                                                Integer prestigePoints, Integer buildingDiscount){
         return new CharacterCard(era, name, cardID, role,
-                prestigePoints, null, null, buildingDiscount, null);
+                prestigePoints, InventorType.NONE, null, buildingDiscount, null);
     }
+    public static CharacterCard createShaman(Era era, String name, String cardID, CharacterRole role,
+                                             Integer shamanStars){
+        return new CharacterCard(era, name, cardID, role,
+                null, InventorType.NONE, shamanStars, null, null);
+    }
+    public static CharacterCard createHunter(Era era, String name, String cardID, CharacterRole role,
+                                             Boolean hunterIcon){
+        return new CharacterCard(era, name, cardID, role,
+                null, InventorType.NONE, null, null, hunterIcon);
+    }
+    public static CharacterCard createArtistOrGatherer(Era era, String name, String cardID, CharacterRole role){
+        return new CharacterCard(era, name, cardID, role,
+                null, InventorType.NONE, null, null, null);
+    }
+
     // constructor
     public CharacterCard(Era era, String name, String cardID, CharacterRole role,
                          Integer prestigePoints, InventorType inventorType, Integer shamanStars,
-                         Integer buildingDiscount, Boolean hunterMeat){
+                         Integer buildingDiscount, Boolean hunterIcon){
         super(era, name, cardID);
         this.role = role;
-        if (Optional.ofNullable(prestigePoints)){
         this.prestigePoints = prestigePoints;
-        this.buildingDiscount = discount;
+        this.inventorType = inventorType;
+        this.shamanStars = shamanStars;
+        this.buildingDiscount = buildingDiscount;
+        this.hunterIcon = hunterIcon;
     }
-    // constructor called for inventors
-    // constructor called for
 
     // getters
-    public int
-
+    public CharacterRole getRole(){
+        return this.role;
+    }
+    public Optional<Integer> getPrestigePoints(){
+        return Optional.ofNullable(this.prestigePoints);
+    }
+    public InventorType getInventorType(){
+        return this.inventorType;
+    }
+    public Optional<Integer> getShamanStars(){
+        return Optional.ofNullable(this.shamanStars);
+    }
+    public Optional<Integer> getBuildingDiscount(){
+        return Optional.ofNullable(this.buildingDiscount);
+    }
+    public Optional<Boolean> isAlphaHunter(){
+        return Optional.ofNullable(this.hunterIcon);
+    }
 }
