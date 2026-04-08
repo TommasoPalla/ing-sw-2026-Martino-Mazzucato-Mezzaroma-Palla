@@ -7,6 +7,7 @@ public class BuildingCard extends Card {
     private final int cost;
     private final GamePhase activatedAt;
     private final String effectDescription;
+    protected Player owner;
     /*attributi accessori per l'effetto
      */
 
@@ -25,6 +26,7 @@ public class BuildingCard extends Card {
     public int getCost(){
         return this.cost;
     }
+    public Player getOwner(){ return this.owner; }
 
     // actual functions
     /**
@@ -41,6 +43,12 @@ public class BuildingCard extends Card {
             return false;
         }
     }
+    /*
+    * assigns an owner to the card
+     */
+    public void assignOwner(Player player){
+        this.owner = player;
+    }
     /* quando player.draw(from top o bottom) pesca un building chiama questo metodo
         passa la propria tribù (tramite getTribe)
         viene sempre chiamato questo metodo che controlla se l'effetto è immediato
@@ -51,6 +59,8 @@ public class BuildingCard extends Card {
         }
         /* da definire la "strategy" dei building,
         effect è il metodo dell'interfaccia building strategy*/
-        this.effect();
+        this.applyEffect();
     }
+
+   public void applyEffect(){}
 }
