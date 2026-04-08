@@ -1,11 +1,13 @@
 import enums.GamePhase;
 import users.Player;
 
+import java.util.ArrayList;
+
 public class Game {
   
-  final private ArrayList<Player> players;
-  final private int numPlayers;
-  private player currentPlayer;
+  private ArrayList<Player> players;
+  private int numPlayers;
+  private Player currentPlayer;
   private ArrayList<Player> turnOrder;
   private int era;
   private int currentRound;
