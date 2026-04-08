@@ -11,5 +11,6 @@ public enum InventorType {
   DOLL, 
   FLUTE, 
   LEATHER, 
-  BREAD;
+  BREAD,
+  NONE
 }
