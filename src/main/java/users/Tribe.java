@@ -15,7 +15,7 @@ public class Tribe {
     private int builderDiscount;
     private int gatherersDiscount;
     private int artistsNumber;
-    private int shamanStars;
+    private int shamansStars;
     private int inventorsNumberPerType;
 
     //getters
@@ -27,6 +27,9 @@ public class Tribe {
     public int getBuilderDiscount() {return builderDiscount;}
     public int getGatherersDiscount() {return gatherersDiscount;}
     public int getArtistsNumber() {return artistsNumber;}
-    public int getShamanStars() {return shamanStars;}
+    public int getShamansStars() {return shamansStars;}
     public int getInventorsNumberPerType() {return inventorsNumberPerType;}
+
+    //actual methods
+    public void addPrestigePoints(int increment){shamansStars += increment;}
 }

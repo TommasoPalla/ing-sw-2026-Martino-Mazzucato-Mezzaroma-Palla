@@ -2,10 +2,11 @@ package event_management;
 
 import enums.Era;
 import users.Player;
+
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
+
 
 public class ShamanicRitualEvent implements EventStrategy{
     @Override
@@ -14,23 +15,20 @@ public class ShamanicRitualEvent implements EventStrategy{
         * Same procedure is applied to the players with the lowest value.
          */
         OptionalInt maxShamanStars = players.stream()
-                .mapToInt(Player::getTribe().getShamansStars)
-                .max();
+                .mapToInt(p -> p.getTribe().getShamansStars()).max();
 
-        if (maxShamanStars.isPresent()){
-            ArrayList<Player> eventWinners = players.stream()
-                    .filter(p -> p.getTribe().getShamansStars() == maxShamanStars.getAsInt())
-                    .toList();
-        }
         OptionalInt minShamanStars = players.stream()
-                .mapToInt(Player::getTribe().getShamansStars)
-                .min();
+                .mapToInt(p -> p.getTribe().getShamansStars()).min();
 
-        if (maxShamanStars.isPresent()){
-            ArrayList<Player> eventLosers = players.stream()
-                    .filter(p -> p.getTribe().getShamansStars() == minShamanStars.getAsInt())
-                    .toList();
-        }
+        if(maxShamanStars.isEmpty() || minShamanStars.isEmpty()) return;
+
+        ArrayList<Player> eventWinners = players.stream()
+                .filter(p -> p.getTribe().getShamansStars() == maxShamanStars.getAsInt())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<Player> eventLosers = players.stream()
+            .filter(p -> p.getTribe().getShamansStars() == minShamanStars.getAsInt())
+            .collect(Collectors.toCollection(ArrayList::new));
         /* Based on the era of the specific event, it gives prestige points to the event winners and detracts points
         * from the losers
          */
