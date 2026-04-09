@@ -3,6 +3,7 @@ package building_management;
 import cards_and_deck.BuildingCard;
 import enums.GamePhase;
 import users.Player;
+import users.Tribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +17,10 @@ public class BuildingManager {
     Map<Player, ArrayList<BuildingCard>> startTurnBuildings = new HashMap<>();
 
     // BuildingCard o cardID in input????
-    public void addBuilding(BuildingCard buildingCard, GamePhase gamePhase, Player player) {
-        switch (gamePhase) {
+    // Building is added to the player's list in the specific map based on the building activation time
+    // called in Tribe
+    public void addBuilding(BuildingCard buildingCard, Player player) {
+        switch (buildingCard.getActivatedAt()) {
             case ON_DRAW:
                 onDrawBuildings.putIfAbsent(player, new ArrayList<>());
                 onDrawBuildings.get(player).add(buildingCard);
@@ -41,6 +44,8 @@ public class BuildingManager {
         }
     }
 
+    // Called in Game, during every game phase, to activate only the buildings in the player's list
+    // of that specific game phase
     public void useBuilding(GamePhase gamePhase, Player player) {
         switch (gamePhase) {
             case ON_DRAW:

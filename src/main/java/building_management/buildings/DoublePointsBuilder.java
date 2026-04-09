@@ -1,5 +1,5 @@
 package building_management.buildings;
-import building_management.BuildingStrategy;
+import cards_and_deck.BuildingCard;
 
-public class DoublePointsBuilder implements BuildingStrategy {
+public class DoublePointsBuilder extends BuildingCard {
 }

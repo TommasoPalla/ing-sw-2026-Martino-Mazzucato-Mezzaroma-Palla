@@ -4,22 +4,19 @@ import enums.*;
 import users.*;
 
 public class BuildingCard extends Card {
-    private final int cost;
-    private final GamePhase activatedAt;
+    private final int cost; // food cost of the building card
+    private final GamePhase activatedAt; // game phase during which this building card is activated
     private final String effectDescription;
-    private final int prestige;
-    protected Player owner;
+    protected Player owner; // the owner of this building, assigned when the building is purchased
     /*attributi accessori per l'effetto
      */
 
     // constructor, "overrides" Card constructor
-    public BuildingCard(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription,
-                        int prestige){
+    public BuildingCard(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription){
         super(era, name, cardID);
         this.cost = cost;
         this.activatedAt = activatedAt;
         this.effectDescription = effectDescription;
-        this.prestige=prestige;
         this.owner = null;
     }
 
@@ -30,8 +27,8 @@ public class BuildingCard extends Card {
     public int getCost(){
         return this.cost;
     }
+    public GamePhase getActivatedAt(){ return this.activatedAt; }
     public Player getOwner(){ return this.owner; }
-    public int getPrestige(){return this.prestige; }
 
     // actual functions
     /**
@@ -41,12 +38,7 @@ public class BuildingCard extends Card {
     public boolean isPurchasable(Player player){
         int discountedCost = cost - player.getTribe().getGatherersDiscount();
         int foodReserve = player.getTribe().getFoodReserve();
-        if(foodReserve >= discountedCost){
-            return true;
-        }
-        else {
-            return false;
-        }
+        return foodReserve >= discountedCost;
     }
     /*
     * assigns an owner to the card
