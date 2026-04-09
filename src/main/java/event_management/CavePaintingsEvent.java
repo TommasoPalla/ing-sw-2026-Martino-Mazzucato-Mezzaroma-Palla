@@ -1,6 +1,6 @@
 package event_management;
 
-import users.*;
+import users.Player;
 import java.util.ArrayList;
 
 public class CavePaintingsEvent implements EventStrategy{
