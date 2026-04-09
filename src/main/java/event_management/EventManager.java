@@ -14,7 +14,7 @@ public class EventManager {
 
     public void resolve(ArrayList<EventCard> incomingEvents, ArrayList<Player> players){
         for( EventCard event : incomingEvents ){
-            EventStrategy eventStrategy = strategies.get(event.getType()); // da correggere
+            EventStrategy eventStrategy = strategies.get(event.getType());
             Era era = event.getEra();
             eventStrategy.apply(era, players);
         }

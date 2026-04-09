@@ -5,7 +5,7 @@ import cards_and_deck.CharacterCard;
 
 import java.util.ArrayList;
 
-public class Tribe {
+public class  Tribe {
     private int prestigePoints;
     private int foodReserve;
     private ArrayList<CharacterCard> population;
@@ -31,5 +31,19 @@ public class Tribe {
     public int getInventorsNumberPerType() {return inventorsNumberPerType;}
 
     //actual methods
-    public void addPrestigePoints(int increment){shamansStars += increment;}
+    public void modifyPrestigePoints(int pp) { prestigePoints += pp; }
+
+    public void modifyFood(int food) { foodReserve += food; }
+
+    public void addShamanstars(int stars)  { shamansStars += stars; }
+
+    public void addCharactertoTribe(CharacterCard character) {
+        population.add(character);
+        //da finire (?)
+    }
+
+    public void addBuildingToTribe(BuildingCard building) {
+        buildings.add(building);
+        //da aggiungere chiamata a "addBuilding" di BuildingManager (in qualche modo)
+    }
 }

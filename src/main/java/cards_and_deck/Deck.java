@@ -2,6 +2,7 @@ package cards_and_deck;
 
 import enums.Era;
 import users.Player;
+import game.Game;
 
 import java.util.ArrayList;
 import java.util.ArrayDeque;
