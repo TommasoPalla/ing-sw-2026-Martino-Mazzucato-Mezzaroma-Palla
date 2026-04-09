@@ -1,7 +1,6 @@
 package event_management;
 
 import cards_and_deck.EventCard;
-import enums.Era;
 import enums.EventType;
 import users.Player;
 
@@ -15,7 +14,7 @@ public class EventManager {
     public void resolve(ArrayList<EventCard> incomingEvents, ArrayList<Player> players){
         for( EventCard event : incomingEvents ){
             EventStrategy eventStrategy = strategies.get(event.getType());
-            Era era = event.getEra();
+            int era = event.getEra();
             eventStrategy.apply(era, players);
         }
     }

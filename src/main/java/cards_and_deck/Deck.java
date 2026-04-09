@@ -1,12 +1,9 @@
 package cards_and_deck;
 
-import enums.Era;
-import users.Player;
 import game.Game;
 
 import java.util.ArrayList;
 import java.util.ArrayDeque;
-import game.Game;
 
 public class Deck {
     private ArrayDeque<Card> tribeDeck;
@@ -21,10 +18,10 @@ public class Deck {
             case 4 -> this.deckInitLength = 80;//num
             case 5 -> this.deckInitLength = 85;//num
         }
-        initTribeDeck(Era.FIRST);
+        initTribeDeck(1);
     }
     //method called by game.Game.changeEra(), creates a new deck for the current era
-    public void initTribeDeck(Era era){
+    public void initTribeDeck(int era){
 
     }
     public Card drawCard(){
@@ -32,11 +29,12 @@ public class Deck {
             return tribeDeck.pop();
         }    //pop lancia noSuchElementException, si potrebbe usare al posto dell'if
         else {
-            Era e = Game.getInstance().getEra();
-            initTribeDeck(e);
+            int era = Game.getInstance().getEra();
+            initTribeDeck(era);
+            return null;
         }
     }
     public int getCardsNumber(){
-
+        return tribeDeck.size();
     }
 }

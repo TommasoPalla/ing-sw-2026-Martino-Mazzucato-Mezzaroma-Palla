@@ -10,7 +10,7 @@ public class EventCard extends Card{
 
     /* nel file JSON verrano passati tutti gli attributi, della mappa solo i param
     che si vogliono, gli altri possono essere omessi*/
-    public EventCard(Era era, String name, String cardID, EventType type,
+    public EventCard(int era, String name, String cardID, EventType type,
                      EnumMap<EventParam, Integer> inputPar){
         super(era, name, cardID);
         this.type = type;

@@ -1,6 +1,5 @@
 package event_management;
 
-import enums.Era;
 import users.Player;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class ShamanicRitualEvent implements EventStrategy{
     @Override
-    public void apply(Era era, ArrayList<Player> players){
+    public void apply(int era, ArrayList<Player> players){
         /* finds the player(s) with the highest number of shamanic stars and puts them in a winners' list.
         * Same procedure is applied to the players with the lowest value.
          */
@@ -32,31 +31,11 @@ public class ShamanicRitualEvent implements EventStrategy{
         /* Based on the era of the specific event, it gives prestige points to the event winners and detracts points
         * from the losers
          */
-        switch(era){
-            case FIRST:
-                for(Player player : eventWinners){
-                    player.getTribe().modifyPrestigePoints(5);
-                }
-                for(Player player : eventLosers){
-                    player.getTribe().modifyPrestigePoints(-3);
-                }
-                break;
-            case SECOND:
-                for(Player player : eventWinners){
-                    player.getTribe().modifyPrestigePoints(10);
-                }
-                for(Player player : eventLosers){
-                    player.getTribe().modifyPrestigePoints(-5);
-                }
-                break;
-            case THIRD:
-                for(Player player : eventWinners){
-                    player.getTribe().modifyPrestigePoints(15);
-                }
-                for(Player player : eventLosers){
-                    player.getTribe().modifyPrestigePoints(-7);
-                }
-                break;
+        for(Player player : eventWinners){
+            player.getTribe().modifyPrestigePoints(5*era);
+        }
+        for(Player player : eventLosers){
+            player.getTribe().modifyPrestigePoints(-1*(1+2*era));
         }
     }
 }

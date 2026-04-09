@@ -1,13 +1,12 @@
 package event_management;
 
-import enums.Era;
 import users.Player;
 
 import java.util.ArrayList;
 
 public class SustainanceEvent implements EventStrategy{
     @Override
-    public void apply(Era era, ArrayList<Player> players) {
+    public void apply(int era, ArrayList<Player> players) {
 
     }
 }

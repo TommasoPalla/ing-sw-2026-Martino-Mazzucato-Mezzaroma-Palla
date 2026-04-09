@@ -12,7 +12,7 @@ public class BuildingCard extends Card {
      */
 
     // constructor, "overrides" Card constructor
-    public BuildingCard(Era era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription){
+    public BuildingCard(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription){
         super(era, name, cardID);
         this.cost = cost;
         this.activatedAt = activatedAt;
@@ -34,7 +34,7 @@ public class BuildingCard extends Card {
      */
     // chiamata all'interno dei metodi di draw
     public boolean isPurchasable(Player player){
-        int discountedCost = cost - player.getTribe().getGathererDiscount();
+        int discountedCost = cost - player.getTribe().getGatherersDiscount();
         int foodReserve = player.getTribe().getFoodReserve();
         if(foodReserve >= discountedCost){
             return true;
@@ -54,7 +54,7 @@ public class BuildingCard extends Card {
         viene sempre chiamato questo metodo che controlla se l'effetto è immediato
         e lo applica*/
     public void effectOnPurchase(Tribe tribe){
-        if (activatedAt != GamePhase.ON_DRAW){
+        if (activatedAt != GamePhase.ON_DRAW){ //da cambiare in on purchase
             return;
         }
         /* da definire la "strategy" dei building,

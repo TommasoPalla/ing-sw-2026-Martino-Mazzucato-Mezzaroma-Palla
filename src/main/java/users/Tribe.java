@@ -35,7 +35,7 @@ public class  Tribe {
 
     public void modifyFood(int food) { foodReserve += food; }
 
-    public void addShamanstars(int stars)  { shamansStars += stars; }
+    public void addShamansStars(int stars)  { shamansStars += stars; }
 
     public void addCharactertoTribe(CharacterCard character) {
         population.add(character);

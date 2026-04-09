@@ -1,13 +1,11 @@
 package cards_and_deck;
 
-import enums.Era;
-
 public abstract class Card {
-    private final Era era;
+    private final int era;
     private final String name;
     private final String cardID;
 
-    public Card(Era era, String name, String cardID){
+    public Card(int era, String name, String cardID){
       this.era = era;
       this.name = name;
       this.cardID = cardID;
@@ -19,7 +17,7 @@ public abstract class Card {
     public String getCardID(){
         return this.cardID;
     }
-    public Era getEra(){
+    public int getEra(){
         return this.era;
     }
 }

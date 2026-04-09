@@ -13,33 +13,33 @@ public class CharacterCard extends Card {
 
     /* static factory pattern: different static method that call the constructor
         managing where to pass null as parameters */
-    public static CharacterCard createInventor(Era era, String name, String cardID, CharacterRole role,
+    public static CharacterCard createInventor(int era, String name, String cardID, CharacterRole role,
                                                InventorType T){
         return new CharacterCard(era, name, cardID, role,
                 null, T, null, null, null);
     }
-    public static CharacterCard createBuilders(Era era, String name, String cardID, CharacterRole role,
+    public static CharacterCard createBuilders(int era, String name, String cardID, CharacterRole role,
                                                Integer prestigePoints, Integer buildingDiscount){
         return new CharacterCard(era, name, cardID, role,
                 prestigePoints, InventorType.NONE, null, buildingDiscount, null);
     }
-    public static CharacterCard createShaman(Era era, String name, String cardID, CharacterRole role,
+    public static CharacterCard createShaman(int era, String name, String cardID, CharacterRole role,
                                              Integer shamanStars){
         return new CharacterCard(era, name, cardID, role,
                 null, InventorType.NONE, shamanStars, null, null);
     }
-    public static CharacterCard createHunter(Era era, String name, String cardID, CharacterRole role,
+    public static CharacterCard createHunter(int era, String name, String cardID, CharacterRole role,
                                              Boolean hunterIcon){
         return new CharacterCard(era, name, cardID, role,
                 null, InventorType.NONE, null, null, hunterIcon);
     }
-    public static CharacterCard createArtistOrGatherer(Era era, String name, String cardID, CharacterRole role){
+    public static CharacterCard createArtistOrGatherer(int era, String name, String cardID, CharacterRole role){
         return new CharacterCard(era, name, cardID, role,
                 null, InventorType.NONE, null, null, null);
     }
 
     // constructor
-    public CharacterCard(Era era, String name, String cardID, CharacterRole role,
+    public CharacterCard(int era, String name, String cardID, CharacterRole role,
                          Integer prestigePoints, InventorType inventorType, Integer shamanStars,
                          Integer buildingDiscount, Boolean hunterIcon){
         super(era, name, cardID);

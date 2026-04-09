@@ -3,7 +3,6 @@ package game;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import enums.Era;
 import users.Player;
 import game_board.OfferTrack;
 import enums.GamePhase;
@@ -11,6 +10,10 @@ import enums.GamePhase;
 
 /* Game uses the Singleton design pattern: one instance of the game is created, with a specific ID to
 * define different games' instances. A method "getInstance()" allows other classes to access the game instance
+* */
+
+/*
+* esempio Era e = Game.getInstance().getEra();
  */
 public class Game {
   private static Game instance;
@@ -18,7 +21,7 @@ public class Game {
   final private int numPlayers;
   private Player currentPlayer;
   private ArrayList<Player> turnOrder;
-  private Era era;
+  private int era;
   private int currentRound;
   private GamePhase currentPhase;
   private OfferTrack offertrack;
@@ -33,9 +36,9 @@ public class Game {
   }
 
   public static Game getInstance() {return instance;}
-  public GamePhase getGamePhase(){return currentPhase}
-  public Player getCurrentPlayer(){return currentPlayer}
-  public int getNumPlayer(){return numPlayers}
+  public GamePhase getGamePhase(){return currentPhase;}
+  public Player getCurrentPlayer(){return currentPlayer;}
+  public int getNumPlayer(){return numPlayers;}
   private Player getNextPlayer(){
       int i=0;
       while(turnOrder.get(i)!=currentPlayer){
@@ -43,7 +46,7 @@ public class Game {
       }
       return turnOrder.get(i+1);
   }
-  public ArrayList<Player> getTurnOrder(){return turnOrder}
+  public ArrayList<Player> getTurnOrder(){return turnOrder;}
 
 
 
@@ -54,7 +57,7 @@ public class Game {
 
       currentPlayer = turnOrder.get(0);
       currentRound = 1;
-      era = Era.FIRST;
+      era = 1;
 
       offertrack = new OfferTrack(numPlayers);
 
@@ -71,23 +74,35 @@ public class Game {
   public void setCurrentPlayer(){
       currentPlayer = getNextPlayer();
   }
-  public void updateCurrentPhase(){
+    public void updateCurrentPhase(){
+        switch(currentPhase){
+            case GamePhase.START_TURN:
+                currentPhase=GamePhase.ON_DRAW;
+                break;
+            case GamePhase.ON_DRAW:
+                currentPhase=GamePhase.ON_EVENT;
+                break;
+            case GamePhase.ON_EVENT:
+                currentPhase=GamePhase.END_TURN;
+                break;
+            case GamePhase.END_TURN:
+                currentPhase=GamePhase.START_TURN;
+                break;
+        }
 
 
-  }
-  public void checkEra(){
+    }
+  /*public void checkEra(){
 
-  }
+  }*/
 
   public void changeEra(){
       era=era++;
   }
 
-  public Era getEra(){
+  public int getEra(){
       return era;
   }
 
-
-
-
 }
+
