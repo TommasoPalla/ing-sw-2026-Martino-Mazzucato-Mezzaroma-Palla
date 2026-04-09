@@ -2,10 +2,12 @@ package users;
 
 import cards_and_deck.BuildingCard;
 import cards_and_deck.CharacterCard;
+import game.Game;
 
 import java.util.ArrayList;
 
 public class  Tribe {
+    private final Player tribeOwner;
     private int prestigePoints;
     private int foodReserve;
     private ArrayList<CharacterCard> population;
@@ -18,17 +20,21 @@ public class  Tribe {
     private int shamansStars;
     private int inventorsNumberPerType;
 
+    //Tribe's constructor
+    public Tribe(Player tribeOwner) { this.tribeOwner = tribeOwner; }
+
     //getters
-    public int getPrestigePoints() {return prestigePoints;}
-    public int getFoodReserve() {return foodReserve;}
-    public ArrayList<CharacterCard> getPopulation() {return population;}
-    public ArrayList<BuildingCard> getBuildings() {return buildings;}
-    public int getHuntersNumber() {return huntersNumber;}
-    public int getBuilderDiscount() {return builderDiscount;}
-    public int getGatherersDiscount() {return gatherersDiscount;}
-    public int getArtistsNumber() {return artistsNumber;}
-    public int getShamansStars() {return shamansStars;}
-    public int getInventorsNumberPerType() {return inventorsNumberPerType;}
+    public Player getTribeOwner() { return tribeOwner; }
+    public int getPrestigePoints() { return prestigePoints; }
+    public int getFoodReserve() { return foodReserve; }
+    public ArrayList<CharacterCard> getPopulation() { return population; }
+    public ArrayList<BuildingCard> getBuildings() { return buildings; }
+    public int getHuntersNumber() { return huntersNumber; }
+    public int getBuilderDiscount() { return builderDiscount; }
+    public int getGatherersDiscount() { return gatherersDiscount; }
+    public int getArtistsNumber() { return artistsNumber; }
+    public int getShamansStars() { return shamansStars; }
+    public int getInventorsNumberPerType() { return inventorsNumberPerType; }
 
     //actual methods
     public void modifyPrestigePoints(int pp) { prestigePoints += pp; }
@@ -37,13 +43,21 @@ public class  Tribe {
 
     public void addShamansStars(int stars)  { shamansStars += stars; }
 
+    // Character is added to the player's list
+    // Called in Player (?)
     public void addCharactertoTribe(CharacterCard character) {
         population.add(character);
         //da finire (?)
     }
 
+    // The owner of the building card is assigned and the building is added to the player's list
+    // of buildings in his tribe, and to the player's list of the buildings activated at that specific
+    // game phase, in BuildingManager
+    //
+    // Called in Player (?)
     public void addBuildingToTribe(BuildingCard building) {
         buildings.add(building);
-        //da aggiungere chiamata a "addBuilding" di BuildingManager (in qualche modo) e settaggio owner del building
+        building.assignOwner(tribeOwner);
+        Game.getInstance().getBuildingManager().addBuilding(building, tribeOwner );
     }
 }

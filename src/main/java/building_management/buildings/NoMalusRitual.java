@@ -1,5 +1,6 @@
 package building_management.buildings;
-import building_management.BuildingStrategy;
 
-public class NoMalusRitual implements BuildingStrategy {
+import cards_and_deck.BuildingCard;
+
+public class NoMalusRitual extends BuildingCard {
 }

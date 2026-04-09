@@ -3,6 +3,7 @@ package game;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import building_management.BuildingManager;
 import users.Player;
 import game_board.OfferTrack;
 import enums.GamePhase;
@@ -24,7 +25,8 @@ public class Game {
   private int era;
   private int currentRound;
   private GamePhase currentPhase;
-  private OfferTrack offertrack;
+  private OfferTrack offerTrack;
+  private BuildingManager buildingManager;
 
   /* Game constructor, which with the game is initialized
   *
@@ -39,6 +41,8 @@ public class Game {
   public GamePhase getGamePhase(){return currentPhase;}
   public Player getCurrentPlayer(){return currentPlayer;}
   public int getNumPlayer(){return numPlayers;}
+  public OfferTrack getOfferTrack(){return offerTrack;}
+  public BuildingManager getBuildingManager(){return buildingManager;}
   private Player getNextPlayer(){
       int i=0;
       while(turnOrder.get(i)!=currentPlayer){
@@ -59,9 +63,10 @@ public class Game {
       currentRound = 1;
       era = 1;
 
-      offertrack = new OfferTrack(numPlayers);
+      offerTrack = new OfferTrack(numPlayers);
+      buildingManager = new BuildingManager();
 
-      currentPhase=GamePhase.START_TURN;
+      currentPhase = GamePhase.START_TURN;
   }
 
 
@@ -97,7 +102,7 @@ public class Game {
   }*/
 
   public void changeEra(){
-      era=era++;
+      era++;
   }
 
   public int getEra(){
