@@ -44,6 +44,6 @@ public class  Tribe {
 
     public void addBuildingToTribe(BuildingCard building) {
         buildings.add(building);
-        //da aggiungere chiamata a "addBuilding" di BuildingManager (in qualche modo)
+        //da aggiungere chiamata a "addBuilding" di BuildingManager (in qualche modo) e settaggio owner del building
     }
 }

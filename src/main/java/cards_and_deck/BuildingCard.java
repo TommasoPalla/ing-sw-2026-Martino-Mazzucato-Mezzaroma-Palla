@@ -17,6 +17,7 @@ public class BuildingCard extends Card {
         this.cost = cost;
         this.activatedAt = activatedAt;
         this.effectDescription = effectDescription;
+        this.owner = null;
     }
 
     // getters
@@ -57,8 +58,6 @@ public class BuildingCard extends Card {
         if (activatedAt != GamePhase.ON_DRAW){ //da cambiare in on purchase
             return;
         }
-        /* da definire la "strategy" dei building,
-        effect è il metodo dell'interfaccia building strategy*/
         this.applyEffect();
     }
 
