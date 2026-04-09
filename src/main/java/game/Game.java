@@ -1,3 +1,5 @@
+package game;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import users.Player;
@@ -18,7 +20,7 @@ public class Game {
   private OfferTrack offertrack;
   
   /*private string game_id;
-  public Game(string game_id){
+  public game.Game(string game_id){
     this.game_id=game_id;
   }*/
 
@@ -50,7 +52,7 @@ public class Game {
       currentRound=1;
       era=1;
 
-      offertrack=new OfferTrack(numPlayers);
+      offertrack=new game_board.OfferTrack(numPlayers);
 
       currentPhase=GamePhase.START_TURN;
   }

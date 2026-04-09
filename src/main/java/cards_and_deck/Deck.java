@@ -11,7 +11,7 @@ public class Deck {
     private ArrayList<BuildingCard> buildingsDeck;
     private int deckInitLength;
 
-    //constructor called by Game.startGame()
+    //constructor called by game.Game.startGame()
     public Deck(int numPlayers){
         switch (numPlayers){
             case 2 -> this.deckInitLength = 70;//numero da definire
@@ -21,7 +21,7 @@ public class Deck {
         }
         initTribeDeck(Era.FIRST);
     }
-    //method called by Game.changeEra(), creates a new deck for the current era
+    //method called by game.Game.changeEra(), creates a new deck for the current era
     public void initTribeDeck(Era era){
 
     }
