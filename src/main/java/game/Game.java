@@ -2,33 +2,37 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import enums.Era;
 import users.Player;
 import game_board.OfferTrack;
 import enums.GamePhase;
 
 
-
+/* Game uses the Singleton design pattern: one instance of the game is created, with a specific ID to
+* define different games' instances. A method "getInstance()" allows other classes to access the game instance
+ */
 public class Game {
-  
+  private static Game instance;
   final private ArrayList<Player> players;
   final private int numPlayers;
   private Player currentPlayer;
   private ArrayList<Player> turnOrder;
-  private int era;
+  private Era era;
   private int currentRound;
   private GamePhase currentPhase;
   private OfferTrack offertrack;
-  
-  /*private string game_id;
-  public game.Game(string game_id){
-    this.game_id=game_id;
-  }*/
 
-  public Game(ArrayList<Player> players) {
+  /* Game constructor, which with the game is initialized
+  *
+   */
+  public Game(Game gameID, ArrayList<Player> players) {
+      instance = gameID;
       this.players = players;
       this.numPlayers = players.size();
   }
 
+  public static Game getInstance() {return instance;}
   public GamePhase getGamePhase(){return currentPhase}
   public Player getCurrentPlayer(){return currentPlayer}
   public int getNumPlayer(){return numPlayers}
@@ -48,11 +52,11 @@ public class Game {
       turnOrder = new ArrayList<>(players);
       Collections.shuffle(turnOrder);
 
-      currentPlayer=turnOrder.get(0);
-      currentRound=1;
-      era=1;
+      currentPlayer = turnOrder.get(0);
+      currentRound = 1;
+      era = Era.FIRST;
 
-      offertrack=new game_board.OfferTrack(numPlayers);
+      offertrack = new OfferTrack(numPlayers);
 
       currentPhase=GamePhase.START_TURN;
   }
@@ -65,7 +69,7 @@ public class Game {
   }
 
   public void setCurrentPlayer(){
-      currentPlayer=getNextPlayer();
+      currentPlayer = getNextPlayer();
   }
   public void updateCurrentPhase(){
 
@@ -79,7 +83,7 @@ public class Game {
       era=era++;
   }
 
-  public int getEra(){
+  public Era getEra(){
       return era;
   }
 

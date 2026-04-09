@@ -31,7 +31,7 @@ public class Deck {
             return tribeDeck.pop();
         }    //pop lancia noSuchElementException, si potrebbe usare al posto dell'if
         else {
-            Era e = Game.getEra();
+            Era e = Game.getInstance().getEra();
             initTribeDeck(e);
         }
     }

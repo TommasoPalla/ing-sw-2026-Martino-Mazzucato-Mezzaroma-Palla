@@ -19,7 +19,7 @@ public class OfferTrack{
     private ArrayList<BuildingCard> bottomBuildingCard;
     private int currentPlayerTileIdx;
 
-    OfferTrack(int playerNumber){
+    public OfferTrack(int playerNumber){
 
         this.offerTiles = new ArrayList<OfferTile>();
         this.topRow = new ArrayList<Card>();
