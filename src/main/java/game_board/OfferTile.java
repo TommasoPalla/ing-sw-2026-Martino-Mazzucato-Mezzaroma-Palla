@@ -9,7 +9,7 @@ public class OfferTile {
     private boolean occupied;
     protected Player currentOccupant;
 
-    OfferTile(String cardID){
+    public OfferTile(String cardID){
         this.occupied = false;
         this.currentOccupant = null;
         switch (cardID){

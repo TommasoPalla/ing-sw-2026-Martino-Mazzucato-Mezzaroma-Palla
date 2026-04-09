@@ -6,4 +6,5 @@ public enum Era {
   FIRST, 
   SECOND, 
   THIRD;
+
 }

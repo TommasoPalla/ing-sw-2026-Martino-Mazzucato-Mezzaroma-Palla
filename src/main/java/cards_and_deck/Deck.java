@@ -6,6 +6,7 @@ import game.Game;
 
 import java.util.ArrayList;
 import java.util.ArrayDeque;
+import game.Game;
 
 public class Deck {
     private ArrayDeque<Card> tribeDeck;
