@@ -28,7 +28,7 @@ public class  Tribe {
     public int getGatherersDiscount() {return gatherersDiscount;}
     public int getArtistsNumber() {return artistsNumber;}
     public int getShamansStars() {return shamansStars;}
-    public int getInventorsNumberPerType() {return inventorsNumberPerType;}
+    public int getInventorsNumberPerType() {return inventorsNumberPerType;}//istogramma da fare
 
     //actual methods
     public void modifyPrestigePoints(int pp) { prestigePoints += pp; }

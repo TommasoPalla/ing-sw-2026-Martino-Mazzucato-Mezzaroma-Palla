@@ -7,16 +7,19 @@ public class BuildingCard extends Card {
     private final int cost;
     private final GamePhase activatedAt;
     private final String effectDescription;
+    private final int prestige;
     protected Player owner;
     /*attributi accessori per l'effetto
      */
 
     // constructor, "overrides" Card constructor
-    public BuildingCard(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription){
+    public BuildingCard(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription,
+                        int prestige){
         super(era, name, cardID);
         this.cost = cost;
         this.activatedAt = activatedAt;
         this.effectDescription = effectDescription;
+        this.prestige=prestige;
         this.owner = null;
     }
 
@@ -28,6 +31,7 @@ public class BuildingCard extends Card {
         return this.cost;
     }
     public Player getOwner(){ return this.owner; }
+    public int getPrestige(){return this.prestige; }
 
     // actual functions
     /**
