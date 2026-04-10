@@ -22,8 +22,7 @@ public class EventManager {
         incomingEvents.addAll(sustenance);
         for( EventCard event : incomingEvents ){
             EventStrategy eventStrategy = strategies.get(event.getEventType());
-            int era = event.getEra();
-            eventStrategy.apply(era, players);
+            eventStrategy.apply(event, players);
         }
     }
 }

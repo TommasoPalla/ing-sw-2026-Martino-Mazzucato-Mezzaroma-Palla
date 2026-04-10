@@ -1,18 +1,16 @@
 package event_management;
 
+import cards_and_deck.EventCard;
+import enums.EventParam;
 import users.Player;
 
 import java.util.ArrayList;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
-
 public class ShamanicRitualEvent implements EventStrategy{
     @Override
-    public void apply(int era, ArrayList<Player> players){
-        /* finds the player(s) with the highest number of shamanic stars and puts them in a winners' list.
-        * Same procedure is applied to the players with the lowest value.
-         */
+    public void apply(EventCard eventCard, ArrayList<Player> players){
         OptionalInt maxShamanStars = players.stream()
                 .mapToInt(p -> p.getTribe().getShamansStars()).max();
 
@@ -28,14 +26,13 @@ public class ShamanicRitualEvent implements EventStrategy{
         ArrayList<Player> eventLosers = players.stream()
             .filter(p -> p.getTribe().getShamansStars() == minShamanStars.getAsInt())
             .collect(Collectors.toCollection(ArrayList::new));
-        /* Based on the era of the specific event, it gives prestige points to the event winners and detracts points
-        * from the losers
-         */
+
         for(Player player : eventWinners){
-            player.getTribe().modifyPrestigePoints(5 * era);
+            player.getTribe().modifyPrestigePoints( eventCard.getParam(EventParam.PRESTIGE_BONUS) );
+            //Game.getInstance().getBuildingManager().useBuilding(GamePhase.ON_EVENT, player);
         }
         for(Player player : eventLosers){
-            player.getTribe().modifyPrestigePoints(-1 * (1 + 2 * era));
+            player.getTribe().modifyPrestigePoints( -eventCard.getParam(EventParam.PRESTIGE_MALUS) );
         }
     }
 }
