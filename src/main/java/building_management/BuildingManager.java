@@ -46,7 +46,7 @@ public class BuildingManager {
 
     // Called in Game, during every game phase, to activate only the buildings in the player's list
     // of that specific game phase
-    public void subscribeBuilding(GamePhase gamePhase, Player player) {
+    public void useBuilding(GamePhase gamePhase, Player player) {
         switch (gamePhase) {
             case ON_DRAW:
                 for (BuildingCard building : onDrawBuildings.get(player)) {
