@@ -11,6 +11,7 @@ public class Player {
     private Color totemColor;
     private Tribe tribe;
     private OfferTile currentOfferTile;
+    private int ritualWinnerBonus = 0; // Used for double points in DoubleBonusRitual building card
 
     public Player(String name, Tribe tribe, Color totemColor){
         this.name=name;
@@ -25,7 +26,7 @@ public class Player {
     public Tribe getTribe() {return tribe;}
     public OfferTile getCurrentOfferTile() {return currentOfferTile;}
     public int getFinalPoints(){return this.calculateFinalPoints();}
-
+    public int getRitualWinnerBonus() { return ritualWinnerBonus; }
 
     //functions
     public int calculateFinalPoints(){
@@ -77,5 +78,8 @@ public class Player {
     }
     public void drawFromBottomRow(){
 
+    }
+    public void setRitualWinnerBonus(int bonus){
+        this.ritualWinnerBonus = bonus;
     }
 }

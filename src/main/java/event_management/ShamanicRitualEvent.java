@@ -30,6 +30,7 @@ public class ShamanicRitualEvent implements EventStrategy{
         for(Player player : eventWinners){
             player.getTribe().modifyPrestigePoints( eventCard.getParam(EventParam.PRESTIGE_BONUS) );
             //Game.getInstance().getBuildingManager().useBuilding(GamePhase.ON_EVENT, player);
+            player.setRitualWinnerBonus( eventCard.getParam(EventParam.PRESTIGE_BONUS) );
         }
         for(Player player : eventLosers){
             player.getTribe().modifyPrestigePoints( -eventCard.getParam(EventParam.PRESTIGE_MALUS) );
