@@ -32,10 +32,10 @@ public class ShamanicRitualEvent implements EventStrategy{
         * from the losers
          */
         for(Player player : eventWinners){
-            player.getTribe().modifyPrestigePoints(5*era);
+            player.getTribe().modifyPrestigePoints(5 * era);
         }
         for(Player player : eventLosers){
-            player.getTribe().modifyPrestigePoints(-1*(1+2*era));
+            player.getTribe().modifyPrestigePoints(-1 * (1 + 2 * era));
         }
     }
 }

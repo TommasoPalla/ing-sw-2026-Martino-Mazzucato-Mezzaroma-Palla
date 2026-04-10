@@ -34,7 +34,6 @@ public class BuildingCard extends Card {
     public Player getOwner(){ return this.owner; }
     public int getPrestige(){return this.prestige; }
 
-
     // actual functions
     /**
      * check whether player has sufficient food to purchase this buildingCard

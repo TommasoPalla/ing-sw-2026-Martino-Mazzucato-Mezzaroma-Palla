@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import building_management.BuildingManager;
+import cards_and_deck.Deck;
 import users.Player;
 import game_board.OfferTrack;
 import enums.GamePhase;
@@ -17,44 +18,48 @@ import enums.GamePhase;
 * esempio Era e = Game.getInstance().getEra();
  */
 public class Game {
-  private static Game instance;
-  final private ArrayList<Player> players;
-  final private int numPlayers;
-  private Player currentPlayer;
-  private ArrayList<Player> turnOrder;
-  private int era;
-  private int currentRound;
-  private GamePhase currentPhase;
-  private OfferTrack offerTrack;
-  private BuildingManager buildingManager;
+    private static Game instance;
+    final private ArrayList<Player> players;
+    final private int numPlayers;
+    private Player currentPlayer;
+    private ArrayList<Player> turnOrder;
+    private int era;
+    private int currentRound;
+    private GamePhase currentPhase;
+    private OfferTrack offerTrack;
+    private BuildingManager buildingManager;
+    private static Deck deck;       //forse static non e' la soluzione ma ad ora non so che altro fare
 
   /* Game constructor, which with the game is initialized
   *
    */
-  public Game(Game gameID, ArrayList<Player> players) {
+    public Game(Game gameID, ArrayList<Player> players) {
       instance = gameID;
       this.players = players;
       this.numPlayers = players.size();
-  }
+    }
 
-  public static Game getInstance() {return instance;}
-  public GamePhase getGamePhase(){return currentPhase;}
-  public Player getCurrentPlayer(){return currentPlayer;}
-  public int getNumPlayer(){return numPlayers;}
-  public OfferTrack getOfferTrack(){return offerTrack;}
-  public BuildingManager getBuildingManager(){return buildingManager;}
-  private Player getNextPlayer(){
+    public static Game getInstance() {return instance;}
+    // non ho assolutamente idea se sia il modo migliore per fare questa cosa
+    public static Deck getDeck() {return deck;}
+
+    public GamePhase getGamePhase(){return currentPhase;}
+    public Player getCurrentPlayer(){return currentPlayer;}
+    public int getNumPlayer(){return numPlayers;}
+    public OfferTrack getOfferTrack(){return offerTrack;}
+    public BuildingManager getBuildingManager(){return buildingManager;}
+    private Player getNextPlayer(){
       int i=0;
       while(turnOrder.get(i)!=currentPlayer){
           i++;
       }
       return turnOrder.get(i+1);
-  }
-  public ArrayList<Player> getTurnOrder(){return turnOrder;}
+    }
+    public ArrayList<Player> getTurnOrder(){return turnOrder;}
 
 
 
-  public void startGame(){
+    public void startGame(){
 
       turnOrder = new ArrayList<>(players);
       Collections.shuffle(turnOrder);
@@ -67,18 +72,18 @@ public class Game {
       buildingManager = new BuildingManager();
 
       currentPhase = GamePhase.START_TURN;
-  }
+    }
 
 
-  public void finishGame(){
+    public void finishGame(){
       if(currentRound == 10){
 
       }
-  }
+    }
 
-  public void setCurrentPlayer(){
+    public void setCurrentPlayer(){
       currentPlayer = getNextPlayer();
-  }
+    }
     public void updateCurrentPhase(){
         switch(currentPhase){
             case GamePhase.START_TURN:
@@ -97,17 +102,17 @@ public class Game {
 
 
     }
-  /*public void checkEra(){
+    /*public void checkEra(){
 
-  }*/
+    }*/
 
-  public void changeEra(){
+    public void changeEra(){
       era++;
-  }
+    }
 
-  public int getEra(){
+    public int getEra(){
       return era;
-  }
+    }
 
 }
 

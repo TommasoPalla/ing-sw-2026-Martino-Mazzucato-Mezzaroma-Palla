@@ -45,7 +45,7 @@ public class  Tribe {
 
     // Character is added to the player's list
     // Called in Player (?)
-    public void addCharactertoTribe(CharacterCard character) {
+    public void addCharacterToTribe(CharacterCard character) {
         population.add(character);
         //da finire (?)
     }

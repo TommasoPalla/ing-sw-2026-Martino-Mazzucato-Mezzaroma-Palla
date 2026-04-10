@@ -5,15 +5,15 @@ import java.util.EnumMap;
 
 
 public class EventCard extends Card{
-    private final EventType type;
+    private final EventType eventType;
     private final EnumMap<EventParam, Integer> parameters;
 
     /* nel file JSON verrano passati tutti gli attributi, della mappa solo i param
     che si vogliono, gli altri possono essere omessi*/
-    public EventCard(int era, String name, String cardID, EventType type,
+    public EventCard(int era, String name, String cardID, EventType eventType,
                      EnumMap<EventParam, Integer> inputPar){
         super(era, name, cardID);
-        this.type = type;
+        this.eventType = eventType;
         if(inputPar != null){
             this.parameters = new EnumMap<>(inputPar);
         }
@@ -22,8 +22,8 @@ public class EventCard extends Card{
         }
 
     }
-    public EventType getType(){
-        return this.type;
+    public EventType getEventType(){
+        return this.eventType;
     }
     /* esempio di chiamata per chiedere solo foodBonus di evento caccia
     card.getParam(EventParam.FOOD_BONUS) */
