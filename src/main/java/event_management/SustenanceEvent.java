@@ -3,6 +3,7 @@ package event_management;
 import building_management.BuildingManager;
 import building_management.EffectContext;
 import cards_and_deck.EventCard;
+import enums.ContextParameters;
 import enums.EventParam;
 import enums.GamePhase;
 import users.Player;
@@ -16,18 +17,22 @@ public class SustenanceEvent implements EventStrategy{
         for(Player player : players){
             int necessaryFood = player.getTribe().getPopulation().size() * eventCard.getParam(EventParam.FOOD_MALUS);
             int gatherersDiscount = player.getTribe().getGatherersDiscount();
-            int foodReserve = player.getTribe().getFoodReserve();
+            int initialFoodToPay = necessaryFood - gatherersDiscount;
 
             EffectContext context = new EffectContext(player);
-            buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
+            context.putParam(ContextParameters.FOOD_MALUS, initialFoodToPay);
+            buildingManager.useBuilding(GamePhase.ON_EVENT, context, SustenanceEvent.class);
 
-            int foodToPay = necessaryFood - gatherersDiscount;
-            if(foodToPay > foodReserve){
+            int finalFoodToPay = context.getParam(ContextParameters.FOOD_MALUS);
+            if(finalFoodToPay < 0) finalFoodToPay = 0;
+
+            int foodReserve = player.getTribe().getFoodReserve();
+            if(finalFoodToPay > foodReserve){
                 player.getTribe().modifyFood(-foodReserve);
-                player.getTribe().modifyPrestigePoints((foodReserve - foodToPay) * eventCard.getParam(EventParam.PRESTIGE_MALUS));
-                // (foodReserve - foodToPay) is already negative => prestige points reduced
+                player.getTribe().modifyPrestigePoints((foodReserve - finalFoodToPay) * eventCard.getParam(EventParam.PRESTIGE_MALUS));
+                // (foodReserve - finalFoodToPay) is already negative => prestige points reduced
             }
-            else player.getTribe().modifyFood(-foodToPay);
+            else player.getTribe().modifyFood(-finalFoodToPay);
         }
 
     }

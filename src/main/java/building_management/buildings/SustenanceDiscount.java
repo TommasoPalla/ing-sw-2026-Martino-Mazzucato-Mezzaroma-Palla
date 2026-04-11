@@ -1,9 +1,12 @@
 package building_management.buildings;
 
+import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
 import enums.CharacterRole;
+import enums.ContextParameters;
 import enums.GamePhase;
 import event_management.EventStrategy;
+import event_management.SustenanceEvent;
 
 public class SustenanceDiscount extends BuildingCard {
     private final EventStrategy activationEvent;
@@ -20,10 +23,16 @@ public class SustenanceDiscount extends BuildingCard {
     // Calculates the number of Character Cards of the specific role and adds it
     // to the Food discount
     @Override
-    public void applyEffect() {
+    public void applyEffect(EffectContext context) {
         int characterNumber = Math.toIntExact(owner.getTribe().getPopulation().stream()
                 .filter(card -> card.getRole() == role)
                 .count());
-        // owner.getTribe().modifyFoodDiscount( charachterNumber) ??????? DA VEDERE COME FARE
+        int currentFoodToPay = context.getParam(ContextParameters.FOOD_MALUS);
+        context.putParam(ContextParameters.FOOD_MALUS, currentFoodToPay - characterNumber);
+    }
+
+    @Override
+    public boolean isUsedIn(Class<? extends EventStrategy> eventType) {
+        return eventType.equals(SustenanceEvent.class);
     }
 }

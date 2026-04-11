@@ -1,6 +1,8 @@
 package building_management.buildings;
 
+import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
+import enums.ContextParameters;
 import enums.GamePhase;
 import event_management.EventStrategy;
 
@@ -14,7 +16,11 @@ public class ArtistsFood extends BuildingCard {
         this.activationEvent = activationEvent;
     }
     @Override
-    public void applyEffect(){
-        owner.getTribe().modifyFood( owner.getTribe().getArtistsNumber() );
+    public void applyEffect(EffectContext context){
+        int artistsNumber = context.getPlayer().getTribe().getArtistsNumber();
+        int currentFoodBonus = context.getParam(ContextParameters.FOOD_BONUS);
+        context.putParam(ContextParameters.FOOD_BONUS, artistsNumber + currentFoodBonus);
+
+        //owner.getTribe().modifyFood( owner.getTribe().getArtistsNumber() );
     };
 }

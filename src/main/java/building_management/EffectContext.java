@@ -16,5 +16,5 @@ public class EffectContext {
 
     public Player getPlayer() {return player;}
     public void putParam(ContextParameters parameterType, Integer value){parameters.put(parameterType, value);}
-    public Integer getParam(ContextParameters parameterType){return parameters.get(parameterType);}
+    public Integer getParam(ContextParameters parameterType){return (int) parameters.get(parameterType);}
 }
