@@ -54,7 +54,7 @@ public class BuildingCard extends Card {
         passa la propria tribù (tramite getTribe)
         viene sempre chiamato questo metodo che controlla se l'effetto è immediato
         e lo applica*/
-    public void effectOnPurchase(Tribe tribe){
+    public void effectOnPurchase(){
         if (activatedAt != GamePhase.ON_DRAW){ //da cambiare in on purchase
             return;
         }
