@@ -41,4 +41,19 @@ public class CardLoader {
             return new ArrayList<>();
         }
     }
+    public List<BuildingCard> loadBuildings(String filePath) {
+        try (FileReader reader = new FileReader(filePath)) {
+            Gson gson = new Gson();
+
+            // Definiamo il tipo
+            Type listType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+
+            // JSON legge il file e crea la lista
+            return gson.fromJson(reader, listType);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 }
