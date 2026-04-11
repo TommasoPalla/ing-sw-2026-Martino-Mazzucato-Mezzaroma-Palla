@@ -58,6 +58,6 @@ public class  Tribe {
     public void addBuildingToTribe(BuildingCard building) {
         buildings.add(building);
         building.assignOwner(tribeOwner);
-        Game.getInstance().getBuildingManager().addBuilding(building, tribeOwner );
+        Game.getInstance().getBuildingManager().addBuilding(building, tribeOwner);
     }
 }

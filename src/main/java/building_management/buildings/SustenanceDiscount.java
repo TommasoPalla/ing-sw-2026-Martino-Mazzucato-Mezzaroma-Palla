@@ -5,11 +5,11 @@ import enums.CharacterRole;
 import enums.GamePhase;
 import event_management.EventStrategy;
 
-public class SustainanceDiscount extends BuildingCard {
+public class SustenanceDiscount extends BuildingCard {
     private final EventStrategy activationEvent;
     private final CharacterRole role;
 
-    public SustainanceDiscount(int era, String name, String cardID, int cost, GamePhase activatedAt,
+    public SustenanceDiscount(int era, String name, String cardID, int cost, GamePhase activatedAt,
                                String effectDescription, int prestige,
                                EventStrategy activationEvent, CharacterRole role) {
         super(era, name, cardID, cost, activatedAt, effectDescription, prestige);

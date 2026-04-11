@@ -1,7 +1,11 @@
 package cards_and_deck;
 
+import building_management.EffectContext;
 import enums.*;
+import event_management.EventStrategy;
 import users.*;
+
+import javax.naming.Context;
 
 public class BuildingCard extends Card {
     private final int cost; // food cost of the building card
@@ -44,9 +48,6 @@ public class BuildingCard extends Card {
         int foodReserve = player.getTribe().getFoodReserve();
         return foodReserve >= discountedCost;
     }
-    /*
-    * assigns an owner to the card
-     */
     public void assignOwner(Player player){
         this.owner = player;
     }
@@ -61,5 +62,9 @@ public class BuildingCard extends Card {
         this.applyEffect();
     }
 
-   public void applyEffect(){}
+    public void applyEffect(){}
+    public void applyEffect(EffectContext context){};
+    public boolean isUsedIn(Class<? extends EventStrategy> eventType){
+        return false;
+    }
 }

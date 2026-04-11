@@ -1,8 +1,12 @@
 package building_management.buildings;
 
+import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
+import enums.ContextParameters;
 import enums.GamePhase;
 import event_management.EventStrategy;
+import event_management.ShamanicRitualEvent;
+import users.Player;
 
 // If the owner is one of the winners of the Shamanic Ritual event
 // he gains double the indicated Prestige Points
@@ -15,10 +19,20 @@ public class DoubleBonusRitual extends BuildingCard {
     }
 
     @Override
-    public void applyEffect() {
+    public void applyEffect(EffectContext context) {
+        int ritualPoints = context.getParam(ContextParameters.PRESTIGE_BONUS);
+        if(ritualPoints > 0) ritualPoints *= 2;
+        context.putParam(ContextParameters.PRESTIGE_BONUS, ritualPoints);
+        /*  con questa roba qui del context non dovrebbe neanche piu' servire l'owner, credo, perche' se serve il player e' nel context
         if (owner.getRitualWinnerBonus() != 0) {
             owner.getTribe().modifyPrestigePoints( owner.getRitualWinnerBonus() );
             owner.setRitualWinnerBonus(0);
         }
+         */
+    }
+
+    @Override
+    public boolean isUsedIn(Class<? extends EventStrategy> eventType) {
+        return eventType.equals(ShamanicRitualEvent.class);
     }
 }

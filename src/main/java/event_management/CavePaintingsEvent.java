@@ -1,5 +1,6 @@
 package event_management;
 
+import building_management.BuildingManager;
 import cards_and_deck.EventCard;
 import enums.EventParam;
 import users.Player;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 
 public class CavePaintingsEvent implements EventStrategy{
     @Override
-    public void apply(EventCard eventCard, ArrayList<Player> players) {
+    public void apply(EventCard eventCard, ArrayList<Player> players, BuildingManager buildingManager) {
         for(Player player : players){
             if(player.getTribe().getArtistsNumber() < eventCard.getEra())
                 player.getTribe().modifyPrestigePoints( -eventCard.getParam(EventParam.PRESTIGE_MALUS) );

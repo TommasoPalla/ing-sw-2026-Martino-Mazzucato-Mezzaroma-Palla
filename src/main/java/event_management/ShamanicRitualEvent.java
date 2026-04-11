@@ -1,7 +1,11 @@
 package event_management;
 
+import building_management.BuildingManager;
+import building_management.EffectContext;
 import cards_and_deck.EventCard;
+import enums.ContextParameters;
 import enums.EventParam;
+import enums.GamePhase;
 import users.Player;
 
 import java.util.ArrayList;
@@ -10,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class ShamanicRitualEvent implements EventStrategy{
     @Override
-    public void apply(EventCard eventCard, ArrayList<Player> players){
+    public void apply(EventCard eventCard, ArrayList<Player> players, BuildingManager buildingManager){
         OptionalInt maxShamanStars = players.stream()
                 .mapToInt(p -> p.getTribe().getShamansStars()).max();
 
@@ -28,12 +32,26 @@ public class ShamanicRitualEvent implements EventStrategy{
             .collect(Collectors.toCollection(ArrayList::new));
 
         for(Player player : eventWinners){
-            player.getTribe().modifyPrestigePoints( eventCard.getParam(EventParam.PRESTIGE_BONUS) );
-            //Game.getInstance().getBuildingManager().useBuilding(GamePhase.ON_EVENT, player);
-            player.setRitualWinnerBonus( eventCard.getParam(EventParam.PRESTIGE_BONUS) );
+            //inizializzo il context: player corrente con bonus di punti che dipende dalla carta evento (Era)
+            EffectContext context = new EffectContext(player);
+            context.putParam(ContextParameters.PRESTIGE_BONUS, eventCard.getParam(EventParam.PRESTIGE_BONUS));
+
+            //qui chiedo al building manager di fare le sue cose (nello specifico di raddoppiare i punti per chi vince)
+            buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
+
+            //prendo i punti bonus dal context che e' stato modificato dal building manager e li do al player
+            int finalBonusPoints = context.getParam(ContextParameters.PRESTIGE_BONUS);
+            player.getTribe().modifyPrestigePoints(finalBonusPoints);
         }
+        //stessa identica cosa per i loser
         for(Player player : eventLosers){
-            player.getTribe().modifyPrestigePoints( -eventCard.getParam(EventParam.PRESTIGE_MALUS) );
+            EffectContext context = new EffectContext(player);
+            context.putParam(ContextParameters.PRESTIGE_MALUS, eventCard.getParam(EventParam.PRESTIGE_MALUS));
+
+            buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
+
+            int finalMalusPoints = context.getParam(ContextParameters.PRESTIGE_MALUS);
+            player.getTribe().modifyPrestigePoints(-finalMalusPoints);
         }
     }
 }
