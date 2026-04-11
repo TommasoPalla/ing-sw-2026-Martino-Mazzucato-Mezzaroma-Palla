@@ -58,9 +58,12 @@ public class Deck {
 
     public void initBuildingDeck(int era){
         List<Card> tempDeck = new ArrayList<>();
-        for (CharacterCard charCard: allCharacterCards){
-            if(charCard.getEra() == era){
-                tribeDeck.add(charCard);
+        for (BuildingCard buildingCard: allBuildingCards){
+            if(buildingCard.getEra() == era){
+                buildingsDeck.add(buildingCard);
+                //shuffle
+                //prnedo i primi buldingDeck[era-1]
+                // da completare: inserire pick randomico
             }
         }
     }
@@ -70,6 +73,8 @@ public class Deck {
             return tribeDeck.pop();
         }    //pop lancia noSuchElementException, si potrebbe usare al posto dell'if
         else {
+            // non dovrebbe essere chiamato changeEra()?
+            Game.getInstance().changeEra(); //verificare che non vada oltre Era 3
             int era = Game.getInstance().getEra();
             initTribeDeck(era);
             return tribeDeck.pop();     //anche se cambi l'era poi comunque devi pescare la carta e metterla sul tracciato
