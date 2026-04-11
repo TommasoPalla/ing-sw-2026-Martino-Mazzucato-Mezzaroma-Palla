@@ -28,7 +28,7 @@ public class Game {
     private GamePhase currentPhase;
     private OfferTrack offerTrack;
     private BuildingManager buildingManager;
-    private static Deck deck;       //forse static non e' la soluzione ma ad ora non so che altro fare
+    private static Deck deck;       //forse static non è la soluzione ma ad ora non so che altro fare
 
   /* Game constructor, which with the game is initialized
   *

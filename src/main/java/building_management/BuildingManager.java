@@ -1,5 +1,6 @@
 package building_management;
 
+import building_management.buildings.ComboFood;
 import cards_and_deck.BuildingCard;
 import enums.GamePhase;
 import users.Player;
@@ -24,6 +25,9 @@ public class BuildingManager {
             case ON_DRAW:
                 onDrawBuildings.putIfAbsent(player, new ArrayList<>());
                 onDrawBuildings.get(player).add(buildingCard);
+                if(buildingCard.getCardID().equals("loremipsum")) {
+                    buildingCard.effectOnPurchase();
+                }
                 break;
             case END_GAME:
                 endGameBuildings.putIfAbsent(player, new ArrayList<>());
