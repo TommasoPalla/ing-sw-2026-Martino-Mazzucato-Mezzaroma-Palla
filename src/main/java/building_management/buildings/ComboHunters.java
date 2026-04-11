@@ -10,11 +10,9 @@ import event_management.HuntEvent;
 // During the Hunt event, the owner takes 1 Food token and gains
 // 1 additional Prestige Point for each Hunter in his tribe
 public class ComboHunters extends BuildingCard {
-    private final EventStrategy activationEvent;
     public ComboHunters(int era, String name, String cardID, int cost, GamePhase activatedAt,
-                       String effectDescription, int prestige, EventStrategy activationEvent) {
+                       String effectDescription, int prestige) {
         super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
-        this.activationEvent = activationEvent;
     }
 
     @Override

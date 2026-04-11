@@ -9,14 +9,11 @@ import event_management.EventStrategy;
 import event_management.SustenanceEvent;
 
 public class SustenanceDiscount extends BuildingCard {
-    private final EventStrategy activationEvent;
     private final CharacterRole role;
 
     public SustenanceDiscount(int era, String name, String cardID, int cost, GamePhase activatedAt,
-                               String effectDescription, int prestige,
-                               EventStrategy activationEvent, CharacterRole role) {
+                               String effectDescription, int prestige, CharacterRole role) {
         super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
-        this.activationEvent = activationEvent;
         this.role = role;
     }
 
