@@ -4,6 +4,7 @@ import java.util.Optional;
 import enums.*;
 
 public class CharacterCard extends Card {
+    private final int numPlayersFlag;   //3 stands for 3+, 4 for 4+. How many players are required to use the card
     private final CharacterRole role;
     private final Integer prestigePoints;
     private final InventorType inventorType;
@@ -13,36 +14,38 @@ public class CharacterCard extends Card {
 
     /* static factory pattern: different static method that call the constructor
         managing where to pass null as parameters */
-    public static CharacterCard createInventor(int era, String name, String cardID, CharacterRole role,
-                                               InventorType T){
-        return new CharacterCard(era, name, cardID, role,
+    public static CharacterCard createInventor(int era, String name, String cardID, int numPlayersFlag,
+                                               CharacterRole role, InventorType T){
+        return new CharacterCard(era, name, cardID, numPlayersFlag, role,
                 null, T, null, null, null);
     }
-    public static CharacterCard createBuilders(int era, String name, String cardID, CharacterRole role,
-                                               Integer prestigePoints, Integer buildingDiscount){
-        return new CharacterCard(era, name, cardID, role,
+    public static CharacterCard createBuilders(int era, String name, String cardID, int numPlayersFlag,
+                                               CharacterRole role, Integer prestigePoints, Integer buildingDiscount){
+        return new CharacterCard(era, name, cardID, numPlayersFlag, role,
                 prestigePoints, InventorType.NONE, null, buildingDiscount, null);
     }
-    public static CharacterCard createShaman(int era, String name, String cardID, CharacterRole role,
-                                             Integer shamanStars){
-        return new CharacterCard(era, name, cardID, role,
+    public static CharacterCard createShaman(int era, String name, String cardID, int numPlayersFlag,
+                                             CharacterRole role, Integer shamanStars){
+        return new CharacterCard(era, name, cardID, numPlayersFlag, role,
                 null, InventorType.NONE, shamanStars, null, null);
     }
-    public static CharacterCard createHunter(int era, String name, String cardID, CharacterRole role,
-                                             Boolean hunterIcon){
-        return new CharacterCard(era, name, cardID, role,
+    public static CharacterCard createHunter(int era, String name, String cardID, int numPlayersFlag,
+                                             CharacterRole role, Boolean hunterIcon){
+        return new CharacterCard(era, name, cardID, numPlayersFlag, role,
                 null, InventorType.NONE, null, null, hunterIcon);
     }
-    public static CharacterCard createArtistOrGatherer(int era, String name, String cardID, CharacterRole role){
-        return new CharacterCard(era, name, cardID, role,
+    public static CharacterCard createArtistOrGatherer(int era, String name, String cardID, int numPlayersFlag,
+                                                       CharacterRole role){
+        return new CharacterCard(era, name, cardID, numPlayersFlag, role,
                 null, InventorType.NONE, null, null, null);
     }
 
     // constructor
-    public CharacterCard(int era, String name, String cardID, CharacterRole role,
+    public CharacterCard(int era, String name, String cardID, int numPlayersFlag, CharacterRole role,
                          Integer prestigePoints, InventorType inventorType, Integer shamanStars,
                          Integer buildingDiscount, Boolean hunterIcon){
         super(era, name, cardID);
+        this.numPlayersFlag = numPlayersFlag;
         this.role = role;
         this.prestigePoints = prestigePoints;
         this.inventorType = inventorType;
@@ -52,6 +55,7 @@ public class CharacterCard extends Card {
     }
 
     // getters
+    public int getNumPlayersFlag() { return this.numPlayersFlag;}
     public CharacterRole getRole(){
         return this.role;
     }
