@@ -3,6 +3,7 @@ package game_board;
 import cards_and_deck.*;
 import game.Game;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 public class OfferTrack{
@@ -93,12 +94,18 @@ public class OfferTrack{
             topRow.add(Game.getDeck().drawCard());
         }
     }
+    //forse si può fare meglio, così però non serve drawBuilding
     public void repopulateTopBuildingCards(){
-        while(topBuildingCard.size() < availableBuildingsPerEra[Game.getInstance().getEra()]){
-            topBuildingCard.add(Game.getDeck().drawBuilding());
+        topBuildingCard = new ArrayList<BuildingCard>();    //sennò size può avere un valore variabile
+        ArrayDeque<BuildingCard> tempBuildings = Game.getDeck().getBuildingsDeck();
+        int era = Game.getInstance().getEra();
+        while(tempBuildings.peek().getEra() == era){    //verificare che non venga letto l'elemento successivo
+            topBuildingCard.add(tempBuildings.pop());
         }
     }
+
     public void initializeBottomRow(){
+        bottomRow = new ArrayList<>();  //size sarà certamente nulla
         while(bottomRow.size() < playerNumber + 1){
             Card drawnCard = Game.getDeck().drawCard();
             if(drawnCard.getClass().equals(EventCard.class)) topRow.add(drawnCard);     //dovrebbe funzionare uguale a instanceof

@@ -5,8 +5,6 @@ import enums.*;
 import event_management.EventStrategy;
 import users.*;
 
-import javax.naming.Context;
-import java.util.EnumMap;
 
 public class BuildingCard extends Card {
     private final int cost; // food cost of the building card
@@ -49,6 +47,7 @@ public class BuildingCard extends Card {
     public void assignOwner(Player player){
         this.owner = player;
     }
+
     /* quando player.draw(from top o bottom) pesca un building chiama questo metodo
         passa la propria tribù (tramite getTribe)
         viene sempre chiamato questo metodo che controlla se l'effetto è immediato
@@ -58,7 +57,7 @@ public class BuildingCard extends Card {
             return;
         }
         this.applyEffect();
-    }
+    }   //da definire
 
     public void applyEffect(){}
     public void applyEffect(EffectContext context){};

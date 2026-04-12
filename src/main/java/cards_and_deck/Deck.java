@@ -33,7 +33,7 @@ public class Deck {
     }
 
     //getters
-    public int getCardsNumber(){return tribeDeck.size();}
+    public int getCardsNumber(){return tribeDeck.size();}   //serve?
     public ArrayDeque<Card> getTribeDeck() {return tribeDeck;}
     public ArrayDeque<BuildingCard> getBuildingsDeck() {return buildingsDeck;}
 
@@ -97,16 +97,13 @@ public class Deck {
         int era = Game.getInstance().getEra();
         if(era != 3 && tribeDeck.peek().getEra() != era){
             Game.getInstance().changeEra();
-            //chiama repopulate buildings
         }
         return tribeDeck.pop();
     }
 
     /**
-     *
      * @deprecated
      */
-    //uguale a drawCard. forse sta roba va cambiata e fatta un po' meglio idk
     public BuildingCard drawBuilding(){
         if(buildingsDeck.isEmpty()){
             int era = Game.getInstance().getEra();

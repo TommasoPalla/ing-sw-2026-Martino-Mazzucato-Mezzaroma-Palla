@@ -138,6 +138,9 @@ public class Game {
 
     public void changeEra(){ //da mettere un'eccezione
       era++;
+      //potrebbero andare da un'altra parte
+      offerTrack.moveBuildings();
+      offerTrack.repopulateTopBuildingCards();
     }
 
     public int getEra(){
