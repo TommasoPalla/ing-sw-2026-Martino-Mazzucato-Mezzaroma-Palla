@@ -2,7 +2,7 @@ package building_management.buildings;
 
 import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
-import enums.ContextParameters;
+import enums.Parameters;
 import enums.GamePhase;
 import event_management.CavePaintingsEvent;
 import event_management.EventStrategy;
@@ -17,8 +17,8 @@ public class ArtistsFood extends BuildingCard {
     @Override
     public void applyEffect(EffectContext context){
         int artistsNumber = context.getPlayer().getTribe().getArtistsNumber();
-        int currentFoodBonus = context.getParam(ContextParameters.FOOD_BONUS);
-        context.putParam(ContextParameters.FOOD_BONUS, artistsNumber + currentFoodBonus);
+        int currentFoodBonus = context.getParam(Parameters.FOOD_BONUS);
+        context.putParam(Parameters.FOOD_BONUS, artistsNumber + currentFoodBonus);
     }
 
     @Override

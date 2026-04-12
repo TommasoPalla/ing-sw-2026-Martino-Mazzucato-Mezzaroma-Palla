@@ -3,8 +3,7 @@ package event_management;
 import building_management.BuildingManager;
 import building_management.EffectContext;
 import cards_and_deck.EventCard;
-import enums.ContextParameters;
-import enums.EventParam;
+import enums.Parameters;
 import enums.GamePhase;
 import users.Player;
 
@@ -34,23 +33,23 @@ public class ShamanicRitualEvent implements EventStrategy{
         for(Player player : eventWinners){
             //inizializzo il context: player corrente con bonus di punti che dipende dalla carta evento (Era)
             EffectContext context = new EffectContext(player);
-            context.putParam(ContextParameters.PRESTIGE_BONUS, eventCard.getParam(EventParam.PRESTIGE_BONUS));
+            context.putParam(Parameters.PRESTIGE_BONUS, eventCard.getParam(Parameters.PRESTIGE_BONUS));
 
             //qui chiedo al building manager di fare le sue cose (nello specifico di raddoppiare i punti per chi vince)
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
 
             //prendo i punti bonus dal context che e' stato modificato dal building manager e li do al player
-            int finalBonusPoints = context.getParam(ContextParameters.PRESTIGE_BONUS);
+            int finalBonusPoints = context.getParam(Parameters.PRESTIGE_BONUS);
             player.getTribe().modifyPrestigePoints(finalBonusPoints);
         }
         //stessa identica cosa per i loser
         for(Player player : eventLosers){
             EffectContext context = new EffectContext(player);
-            context.putParam(ContextParameters.PRESTIGE_MALUS, eventCard.getParam(EventParam.PRESTIGE_MALUS));
+            context.putParam(Parameters.PRESTIGE_MALUS, eventCard.getParam(Parameters.PRESTIGE_MALUS));
 
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
 
-            int finalMalusPoints = context.getParam(ContextParameters.PRESTIGE_MALUS);
+            int finalMalusPoints = context.getParam(Parameters.PRESTIGE_MALUS);
             player.getTribe().modifyPrestigePoints(-finalMalusPoints);
         }
     }

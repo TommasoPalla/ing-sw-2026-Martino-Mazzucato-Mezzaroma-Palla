@@ -3,7 +3,7 @@ package building_management.buildings;
 import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
 import enums.CharacterRole;
-import enums.ContextParameters;
+import enums.Parameters;
 import enums.GamePhase;
 import event_management.EventStrategy;
 import event_management.SustenanceEvent;
@@ -24,8 +24,8 @@ public class SustenanceDiscount extends BuildingCard {
         int characterNumber = Math.toIntExact(owner.getTribe().getPopulation().stream()
                 .filter(card -> card.getRole() == role)
                 .count());
-        int currentFoodToPay = context.getParam(ContextParameters.FOOD_MALUS);
-        context.putParam(ContextParameters.FOOD_MALUS, currentFoodToPay - characterNumber);
+        int currentFoodToPay = context.getParam(Parameters.FOOD_MALUS);
+        context.putParam(Parameters.FOOD_MALUS, currentFoodToPay - characterNumber);
     }
 
     @Override
