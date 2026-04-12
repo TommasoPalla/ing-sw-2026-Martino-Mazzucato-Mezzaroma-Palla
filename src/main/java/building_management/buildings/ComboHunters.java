@@ -23,8 +23,6 @@ public class ComboHunters extends BuildingCard {
         int huntersNumber = context.getPlayer().getTribe().getHuntersNumber();
         context.putParam(ContextParameters.FOOD_BONUS, huntersNumber + initialFoodBonus);
         context.putParam(ContextParameters.PRESTIGE_BONUS, huntersNumber + initialPrestigeBonus);
-        //owner.getTribe().modifyFood( owner.getTribe().getHuntersNumber());
-        //owner.getTribe().modifyPrestigePoints( owner.getTribe().getHuntersNumber());
     }
 
     @Override

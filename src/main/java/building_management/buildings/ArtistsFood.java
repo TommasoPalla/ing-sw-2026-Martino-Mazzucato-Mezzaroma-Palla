@@ -19,8 +19,6 @@ public class ArtistsFood extends BuildingCard {
         int artistsNumber = context.getPlayer().getTribe().getArtistsNumber();
         int currentFoodBonus = context.getParam(ContextParameters.FOOD_BONUS);
         context.putParam(ContextParameters.FOOD_BONUS, artistsNumber + currentFoodBonus);
-
-        //owner.getTribe().modifyFood( owner.getTribe().getArtistsNumber() );
     }
 
     @Override

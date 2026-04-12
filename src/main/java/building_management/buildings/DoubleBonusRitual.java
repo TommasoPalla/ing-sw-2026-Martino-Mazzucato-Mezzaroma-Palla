@@ -20,12 +20,6 @@ public class DoubleBonusRitual extends BuildingCard {
         int ritualPoints = context.getParam(ContextParameters.PRESTIGE_BONUS);
         if(ritualPoints > 0) ritualPoints *= 2;
         context.putParam(ContextParameters.PRESTIGE_BONUS, ritualPoints);
-        /*  con questa roba qui del context non dovrebbe neanche piu' servire l'owner, credo, perche' se serve il player e' nel context
-        if (owner.getRitualWinnerBonus() != 0) {
-            owner.getTribe().modifyPrestigePoints( owner.getRitualWinnerBonus() );
-            owner.setRitualWinnerBonus(0);
-        }
-         */
     }
 
     @Override

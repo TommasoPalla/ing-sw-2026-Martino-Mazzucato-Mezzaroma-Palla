@@ -9,9 +9,6 @@ public class BonusStars extends BuildingCard {
         super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
     }
 
-    /* Owner's tribe gets 3 bonus shaman stars
-    *
-     */
     @Override
     public void applyEffect() {
         owner.getTribe().addShamansStars(3);
