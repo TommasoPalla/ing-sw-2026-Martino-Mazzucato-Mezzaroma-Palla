@@ -12,13 +12,13 @@ public class  Tribe {
     private int foodReserve;
     private ArrayList<CharacterCard> population;
     private ArrayList<BuildingCard> buildings;
+    private int[] inventorsPerType;
 
     private int huntersNumber;
     private int builderDiscount;
     private int gatherersDiscount;
     private int artistsNumber;
     private int shamansStars;
-    private int inventorsNumberPerType;
 
     //Tribe's constructor
     public Tribe(Player tribeOwner) { this.tribeOwner = tribeOwner; }
@@ -34,7 +34,7 @@ public class  Tribe {
     public int getGatherersDiscount() { return gatherersDiscount; }
     public int getArtistsNumber() { return artistsNumber; }
     public int getShamansStars() { return shamansStars; }
-    public int getInventorsNumberPerType() { return inventorsNumberPerType; }
+    public int [] getInventorsPrType() { return inventorsPerType; }
 
     //actual methods
     public void modifyPrestigePoints(int pp) { prestigePoints += pp; }

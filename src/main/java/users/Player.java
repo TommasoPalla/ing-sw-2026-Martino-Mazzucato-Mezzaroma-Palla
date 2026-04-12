@@ -71,9 +71,10 @@ public class Player {
         }
     }
 
-    public void drawFromTopRow(){
+    //public void drawFromTopRow(int index, OfferTrack offerTrack){
+        //if(offerTrack.getOfferRow().get(index).instanceOf(CharacterCard))
 
-    }
+    //}
     public void drawFromBottomRow(){
 
     }
