@@ -6,6 +6,7 @@ import event_management.EventStrategy;
 import users.*;
 
 import javax.naming.Context;
+import java.util.EnumMap;
 
 public class BuildingCard extends Card {
     private final int cost; // food cost of the building card
@@ -13,9 +14,6 @@ public class BuildingCard extends Card {
     private final String effectDescription;
     protected Player owner; // the owner of this building, assigned when the building is purchased
     private final int prestige;
-
-    /*attributi accessori per l'effetto
-     */
 
     // constructor, "overrides" Card constructor
     public BuildingCard(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige){

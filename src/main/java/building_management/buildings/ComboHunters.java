@@ -2,7 +2,7 @@ package building_management.buildings;
 
 import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
-import enums.ContextParameters;
+import enums.Parameters;
 import enums.GamePhase;
 import event_management.EventStrategy;
 import event_management.HuntEvent;
@@ -17,12 +17,12 @@ public class ComboHunters extends BuildingCard {
 
     @Override
     public void applyEffect(EffectContext context) {
-        int initialFoodBonus = context.getParam(ContextParameters.FOOD_BONUS);
-        int initialPrestigeBonus = context.getParam(ContextParameters.PRESTIGE_BONUS);
+        int initialFoodBonus = context.getParam(Parameters.FOOD_BONUS);
+        int initialPrestigeBonus = context.getParam(Parameters.PRESTIGE_BONUS);
 
         int huntersNumber = context.getPlayer().getTribe().getHuntersNumber();
-        context.putParam(ContextParameters.FOOD_BONUS, huntersNumber + initialFoodBonus);
-        context.putParam(ContextParameters.PRESTIGE_BONUS, huntersNumber + initialPrestigeBonus);
+        context.putParam(Parameters.FOOD_BONUS, huntersNumber + initialFoodBonus);
+        context.putParam(Parameters.PRESTIGE_BONUS, huntersNumber + initialPrestigeBonus);
     }
 
     @Override

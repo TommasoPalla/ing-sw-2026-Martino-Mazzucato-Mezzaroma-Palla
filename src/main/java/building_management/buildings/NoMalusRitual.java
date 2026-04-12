@@ -2,8 +2,8 @@ package building_management.buildings;
 
 import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
-import enums.ContextParameters;
 import enums.GamePhase;
+import enums.Parameters;
 import event_management.EventStrategy;
 import event_management.ShamanicRitualEvent;
 
@@ -15,8 +15,8 @@ public class NoMalusRitual extends BuildingCard {
 
     @Override
     public void applyEffect(EffectContext context) {
-        int ritualPoints = context.getParam(ContextParameters.PRESTIGE_MALUS);
-        if(ritualPoints < 0) context.putParam(ContextParameters.PRESTIGE_MALUS, 0);
+        int ritualPoints = context.getParam(Parameters.PRESTIGE_MALUS);
+        if(ritualPoints < 0) context.putParam(Parameters.PRESTIGE_MALUS, 0);
     }
 
     @Override
