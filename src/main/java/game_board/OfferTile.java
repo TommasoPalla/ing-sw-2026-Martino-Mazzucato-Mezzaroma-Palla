@@ -8,7 +8,7 @@ public class OfferTile {
     private char offerTileID;
 
     private boolean occupied;
-    protected Player currentOccupant;
+    private Player currentOccupant;
 
     public OfferTile(char offerTileID){
         this.occupied = false;
@@ -58,6 +58,7 @@ public class OfferTile {
     public boolean isOccupied(){return occupied;}
     public int getFoodBonus(){return foodBonus;}
     public char getTileCode(){return offerTileID;}
+    public Player getCurrentOccupant(){return currentOccupant;}
 
     //actual functions
     public void occupy(Player player){

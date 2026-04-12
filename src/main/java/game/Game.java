@@ -2,6 +2,8 @@ package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import building_management.BuildingManager;
 import cards_and_deck.Deck;
@@ -137,11 +139,13 @@ public class Game {
             this.updateCurrentPhase();//scartare bottom, fase eventi
             //manca metodo per scartare la fila sotto attivando effetti
 
-            for(int i=0; i<this.numPlayers;i++){//ripristino turnOrder
+            for(int i=0; i<this.numPlayers;i++){//creazione newTurns per riordinare i turni
                 newTurns.add(i, currentPlayer.getCurrentOfferTile());
                 currentPlayer=getNextPlayer();
             }
-            //turnOrder=newTurns.stream().sorted(Comparator.comparing(OfferTile :: ))
+            //ripristino turnOrder in ordine alfabetico
+            turnOrder=newTurns.stream().sorted(Comparator.comparing(OfferTile :: getTileCode))
+                    .map(OfferTile::getCurrentOccupant).collect(Collectors.toCollection(ArrayList::new));
 
 
             offerTrack.moveCardsToBottom();
