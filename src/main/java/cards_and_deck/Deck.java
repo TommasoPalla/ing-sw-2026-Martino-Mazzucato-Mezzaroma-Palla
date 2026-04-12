@@ -28,8 +28,8 @@ public class Deck {
         this.allCharacterCards = loader.loadCharacters("cards.json");    //card Loader
         this.allEventCards = loader.loadEvents("cards.json");
         this.allBuildingCards = loader.loadBuildings("cards.json");
-        initTribeDeck(1);
-        initBuildingDeck(1);
+        initTribeDeck(numPlayers);
+        initBuildingDeck();
     }
 
     //getters
@@ -37,55 +37,62 @@ public class Deck {
     public ArrayDeque<Card> getTribeDeck() {return tribeDeck;}
     public ArrayDeque<BuildingCard> getBuildingsDeck() {return buildingsDeck;}
 
-    /** method intTribeDeck creates a new deck with current era's characters and events
+    /** method intTribeDeck creates a new deck with characters and events
      * first picks all cards suitable for the number of players, then it shuffles them and returns a deque
      */
     //method called by Game.getInstance().changeEra()
-    //cambiare fare un deck unico
-    public void initTribeDeck(int era){
-        List<Card> tempDeck = new ArrayList<>();
-        for (CharacterCard charCard: allCharacterCards){
-            if(charCard.getEra() == era){
-                tempDeck.add(charCard);
+    public void initTribeDeck(int numPlayers){
+        this.tribeDeck = new ArrayDeque<>();
+        for(int era = 1; era <= 3; era++){
+            List<Card> tempDeck = new ArrayList<>();
+            for (CharacterCard charCard: allCharacterCards){
+                if(charCard.getEra() == era && charCard.getNumPlayersFlag() <= numPlayers){
+                    tempDeck.add(charCard);
+                }
             }
-        }
-        // forse si può migliorare la gestione delle carte Evento Finale
-        for(EventCard evCard: allEventCards){
-            if(evCard.getEra() == era && (era != 3 ||
-                    (evCard.getEventType() != EventType.SUSTENANCE && evCard.getEventType() != EventType.SHAMANIC_RITUAL))){
-                tempDeck.add(evCard);
+            // forse si può migliorare la gestione delle carte Evento Finale
+            for(EventCard evCard: allEventCards){
+                if(evCard.getEra() == era && (era != 3 ||
+                        (evCard.getEventType() != EventType.SUSTENANCE && evCard.getEventType() != EventType.SHAMANIC_RITUAL))){
+                    tempDeck.add(evCard);
+                }
             }
+            Collections.shuffle(tempDeck);
+            this.tribeDeck.addAll(tempDeck);
         }
-        Collections.shuffle(tempDeck);
-        this.tribeDeck = new ArrayDeque<>(tempDeck);
-        //aggiunta carte evento finale
+        //final events are added to the deck
         for(EventCard evCard: allEventCards){
             if(evCard.getEra() == 3 &&
                     (evCard.getEventType() == EventType.SUSTENANCE || evCard.getEventType() == EventType.SHAMANIC_RITUAL)){
-                this.tribeDeck.push(evCard);
+                this.tribeDeck.add(evCard);
             }
         }
     }
 
-    /** method initBuildingDeck creates a deck with current era's buildings
-     * method shuffles all buildings of the current era and then picks the correct number of cards for the number
+    /** method initBuildingDeck creates a deck with buildings
+     * method shuffles all buildings for each era and then picks the correct number of cards for the number
      * of players
     * */
-    public void initBuildingDeck(int era){
-        List<BuildingCard> tempDeck = new ArrayList<>();
+    public void initBuildingDeck(){
         this.buildingsDeck = new ArrayDeque<>();
-        for (BuildingCard buildingCard: allBuildingCards){
-            if(buildingCard.getEra() == era){
-                tempDeck.add(buildingCard);
+        for(int era = 1; era <= 3; era++){
+            List<BuildingCard> tempDeck = new ArrayList<>();
+            for (BuildingCard buildingCard: allBuildingCards){
+                if(buildingCard.getEra() == era){
+                    tempDeck.add(buildingCard);
+                }
             }
-        }
-        Collections.shuffle((tempDeck));
-        for(int i = 0; i < buildingsDeckLength[era] && i < tempDeck.size(); i++){
-            BuildingCard tempCard = tempDeck.get(i);
-            this.buildingsDeck.push(tempCard);
+            Collections.shuffle((tempDeck));
+            for(int i = 0; i < buildingsDeckLength[era] && i < tempDeck.size(); i++){
+                BuildingCard tempCard = tempDeck.get(i);
+                this.buildingsDeck.add(tempCard);
+            }
         }
     }
 
+    /** drawCard method is used to repopulate topRow and bottomRow, drawing cards from Deck
+     * @return instance of Card
+     */
     public Card drawCard() {
         int era = Game.getInstance().getEra();
         if(era != 3 && tribeDeck.peek().getEra() != era){
@@ -95,11 +102,15 @@ public class Deck {
         return tribeDeck.pop();
     }
 
+    /**
+     *
+     * @deprecated
+     */
     //uguale a drawCard. forse sta roba va cambiata e fatta un po' meglio idk
     public BuildingCard drawBuilding(){
         if(buildingsDeck.isEmpty()){
             int era = Game.getInstance().getEra();
-            initBuildingDeck(era);
+            initBuildingDeck();
         }
         return buildingsDeck.pop();
     }
