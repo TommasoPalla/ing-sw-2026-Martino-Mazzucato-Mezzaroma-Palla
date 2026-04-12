@@ -77,6 +77,30 @@ public class Game {
       offerTrack = new OfferTrack(numPlayers);
       buildingManager = new BuildingManager();
 
+      //inizializzo track
+      offerTrack.initializeBottomRow();
+      offerTrack.repopulateTopRow();
+      offerTrack.repopulateTopBuildingCards();
+
+
+      //inizializzo cibo
+      turnOrder.get(0).getTribe().modifyFood(+2);
+      turnOrder.get(1).getTribe().modifyFood(+3);
+
+      switch (numPlayers){
+          case 2:
+              break;
+          case 3:
+              turnOrder.get(2).getTribe().modifyFood(+3);
+              break;
+          case 4:
+              turnOrder.get(3).getTribe().modifyFood(+4);
+              break;
+          case 5:
+              turnOrder.get(4).getTribe().modifyFood(+4);
+              break;
+      }
+
       currentPhase = GamePhase.START_TURN;
     }
 
@@ -124,20 +148,32 @@ public class Game {
         ArrayList <OfferTile> newTurns = null;
 
         this.startGame();
+        //ripristina game phase
         while(this.currentRound<10){
             //turno di player 1 da startGame()
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
                 currentPlayer.chooseOfferTile();
                 currentPlayer=getNextPlayer();
             }
-            this.updateCurrentPhase();
+
+            //se qualcuno sceglie la tessera A dagli 3 cibo
+            for(int i=0; i<this.numPlayers;i++){
+                turnOrder.get(i).getTribe().modifyFood(turnOrder.get(i).getCurrentOfferTile().getFoodBonus());
+            }
+
+
+            this.updateCurrentPhase();//fase draw
+
+
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono le loro carte in ordine
                 currentPlayer.drawFromTopRow();
                 currentPlayer.drawFromBottomRow();
                 currentPlayer=getNextPlayer();
             }
-            this.updateCurrentPhase();//scartare bottom, fase eventi
-            //manca metodo per scartare la fila sotto attivando effetti
+
+            this.updateCurrentPhase();//fase eventi
+
+            //resolve
 
             for(int i=0; i<this.numPlayers;i++){//creazione newTurns per riordinare i turni
                 newTurns.add(i, currentPlayer.getCurrentOfferTile());
@@ -147,7 +183,9 @@ public class Game {
             turnOrder=newTurns.stream().sorted(Comparator.comparing(OfferTile :: getTileCode))
                     .map(OfferTile::getCurrentOccupant).collect(Collectors.toCollection(ArrayList::new));
 
+            this.updateCurrentPhase();//fase finale
 
+            //remove bottom row
             offerTrack.moveCardsToBottom();
             offerTrack.repopulateTopRow();
 
