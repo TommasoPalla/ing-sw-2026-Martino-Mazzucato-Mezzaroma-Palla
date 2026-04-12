@@ -1,16 +1,14 @@
 package cards_and_deck;
 
+import enums.EventType;
 import game.Game;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Deck {
     private ArrayDeque<Card> tribeDeck;
     private ArrayDeque<BuildingCard> buildingsDeck;
-    private int[] buildingsDeckLenght;  //Number of buildingCards for each era
+    private int[] buildingsDeckLength;  //Number of buildingCards for each era
 
     // capire se metterli qua o in Game
     private final List<CharacterCard> allCharacterCards;
@@ -20,10 +18,10 @@ public class Deck {
     //constructor called by game.Game.startGame()
     public Deck(int numPlayers){
         switch (numPlayers){
-            case 2 -> this.buildingsDeckLenght = new int[]{1, 2, 3};
-            case 3 -> this.buildingsDeckLenght = new int[]{2, 2, 4};
-            case 4 -> this.buildingsDeckLenght = new int[]{2, 3, 4};
-            case 5 -> this.buildingsDeckLenght = new int[]{2, 3, 5};
+            case 2 -> this.buildingsDeckLength = new int[]{1, 2, 3};
+            case 3 -> this.buildingsDeckLength = new int[]{2, 2, 4};
+            case 4 -> this.buildingsDeckLength = new int[]{2, 3, 4};
+            case 5 -> this.buildingsDeckLength = new int[]{2, 3, 5};
         }
         //da revisionare, scegliere se fare 3 file diversi per ogni tipo di carta
         CardLoader loader = new CardLoader();
@@ -39,46 +37,62 @@ public class Deck {
     public ArrayDeque<Card> getTribeDeck() {return tribeDeck;}
     public ArrayDeque<BuildingCard> getBuildingsDeck() {return buildingsDeck;}
 
-    //method called by game.Game.changeEra(), creates a new deck for the current era
+    /** method intTribeDeck creates a new deck with current era's characters and events
+     * first picks all cards suitable for the number of players, then it shuffles them and returns a deque
+     */
+    //method called by Game.getInstance().changeEra()
+    //cambiare fare un deck unico
     public void initTribeDeck(int era){
         List<Card> tempDeck = new ArrayList<>();
         for (CharacterCard charCard: allCharacterCards){
             if(charCard.getEra() == era){
-                tribeDeck.add(charCard);
+                tempDeck.add(charCard);
             }
         }
+        // forse si può migliorare la gestione delle carte Evento Finale
         for(EventCard evCard: allEventCards){
-            if(evCard.getEra() == era){
-                tribeDeck.add(evCard);
+            if(evCard.getEra() == era && (era != 3 ||
+                    (evCard.getEventType() != EventType.SUSTENANCE && evCard.getEventType() != EventType.SHAMANIC_RITUAL))){
+                tempDeck.add(evCard);
             }
         }
         Collections.shuffle(tempDeck);
         this.tribeDeck = new ArrayDeque<>(tempDeck);
-    }
-
-    public void initBuildingDeck(int era){
-        List<Card> tempDeck = new ArrayList<>();
-        for (BuildingCard buildingCard: allBuildingCards){
-            if(buildingCard.getEra() == era){
-                buildingsDeck.add(buildingCard);
-                //shuffle
-                //prnedo i primi buldingDeck[era-1]
-                // da completare: inserire pick randomico
+        //aggiunta carte evento finale
+        for(EventCard evCard: allEventCards){
+            if(evCard.getEra() == 3 &&
+                    (evCard.getEventType() == EventType.SUSTENANCE || evCard.getEventType() == EventType.SHAMANIC_RITUAL)){
+                this.tribeDeck.push(evCard);
             }
         }
     }
 
-    public Card drawCard(){
-        if(!tribeDeck.isEmpty()) {
-            return tribeDeck.pop();
-        }    //pop lancia noSuchElementException, si potrebbe usare al posto dell'if
-        else {
-            // non dovrebbe essere chiamato changeEra()?
-            Game.getInstance().changeEra(); //verificare che non vada oltre Era 3
-            int era = Game.getInstance().getEra();
-            initTribeDeck(era);
-            return tribeDeck.pop();     //anche se cambi l'era poi comunque devi pescare la carta e metterla sul tracciato
+    /** method initBuildingDeck creates a deck with current era's buildings
+     * method shuffles all buildings of the current era and then picks the correct number of cards for the number
+     * of players
+    * */
+    public void initBuildingDeck(int era){
+        List<BuildingCard> tempDeck = new ArrayList<>();
+        this.buildingsDeck = new ArrayDeque<>();
+        for (BuildingCard buildingCard: allBuildingCards){
+            if(buildingCard.getEra() == era){
+                tempDeck.add(buildingCard);
+            }
         }
+        Collections.shuffle((tempDeck));
+        for(int i = 0; i < buildingsDeckLength[era] && i < tempDeck.size(); i++){
+            BuildingCard tempCard = tempDeck.get(i);
+            this.buildingsDeck.push(tempCard);
+        }
+    }
+
+    public Card drawCard() {
+        int era = Game.getInstance().getEra();
+        if(era != 3 && tribeDeck.peek().getEra() != era){
+            Game.getInstance().changeEra();
+            //chiama repopulate buildings
+        }
+        return tribeDeck.pop();
     }
 
     //uguale a drawCard. forse sta roba va cambiata e fatta un po' meglio idk
