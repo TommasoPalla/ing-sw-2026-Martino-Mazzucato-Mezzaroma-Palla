@@ -43,13 +43,13 @@ public class OfferTrack{
         //throw an exception if the number of players is wrong, otherwise initialize the OfferTrack
         if(playerNumber < 2 || playerNumber > 5) throw new IllegalArgumentException("The number of player should be between 2 and 5.");
 
-        offerTiles.add(new OfferTile("OT_B"));
-        offerTiles.add(new OfferTile("OT_C"));
-        offerTiles.add(new OfferTile("OT_E"));
-        offerTiles.add(new OfferTile("OT_F"));
-        if(playerNumber >= 3) offerTiles.add(new OfferTile("OT_D"));
-        if(playerNumber >= 4) offerTiles.add(new OfferTile("OT_G"));
-        if(playerNumber == 5) offerTiles.add(new OfferTile("OT_A"));
+        offerTiles.add(new OfferTile('B'));
+        offerTiles.add(new OfferTile('C'));
+        offerTiles.add(new OfferTile('E'));
+        offerTiles.add(new OfferTile('F'));
+        if(playerNumber >= 3) offerTiles.add(new OfferTile('D'));
+        if(playerNumber >= 4) offerTiles.add(new OfferTile('G'));
+        if(playerNumber == 5) offerTiles.add(new OfferTile('A'));
     }
 
     //getters

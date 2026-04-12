@@ -8,6 +8,7 @@ import cards_and_deck.Deck;
 import users.Player;
 import game_board.OfferTrack;
 import enums.GamePhase;
+import game_board.OfferTile;
 
 
 /* Game uses the Singleton design pattern: one instance of the game is created, with a specific ID to
@@ -109,7 +110,7 @@ public class Game {
 
     }*/
 
-    public void changeEra(){
+    public void changeEra(){ //da mettere un'eccezione
       era++;
     }
 
@@ -118,8 +119,10 @@ public class Game {
     }
 
     public void playGame(){
+        ArrayList <OfferTile> newTurns = null;
+
         this.startGame();
-        while(deck.getCardsNumber()>0){
+        while(this.currentRound<10){
             //turno di player 1 da startGame()
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
                 currentPlayer.chooseOfferTile();
@@ -133,6 +136,14 @@ public class Game {
             }
             this.updateCurrentPhase();//scartare bottom, fase eventi
             //manca metodo per scartare la fila sotto attivando effetti
+
+            for(int i=0; i<this.numPlayers;i++){//ripristino turnOrder
+                newTurns.add(i, currentPlayer.getCurrentOfferTile());
+                currentPlayer=getNextPlayer();
+            }
+            //turnOrder=newTurns.stream().sorted(Comparator.comparing(OfferTile :: ))
+
+
             offerTrack.moveCardsToBottom();
             offerTrack.repopulateTopRow();
 
