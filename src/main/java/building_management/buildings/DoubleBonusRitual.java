@@ -10,9 +10,9 @@ import event_management.ShamanicRitualEvent;
 // If the owner is one of the winners of the Shamanic Ritual event
 // he gains double the indicated Prestige Points
 public class DoubleBonusRitual extends BuildingCard {
-    public DoubleBonusRitual(int era, String name, String cardID, int cost, GamePhase activatedAt,
+    public DoubleBonusRitual(int era, String cardID, int cost, GamePhase activatedAt,
                              String effectDescription, int prestige) {
-        super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
+        super(era, cardID, cost, activatedAt, effectDescription, prestige);
     }
 
     @Override

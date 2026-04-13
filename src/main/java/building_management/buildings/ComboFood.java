@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 public class ComboFood extends BuildingCard {
     long currentSetsNumber = 0;
 
-    public ComboFood(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
-        super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
+    public ComboFood(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
+        super(era, cardID, cost, activatedAt, effectDescription, prestige);
     }
 
     // When the player purchases the building, initialises the variable currentSetsNumber

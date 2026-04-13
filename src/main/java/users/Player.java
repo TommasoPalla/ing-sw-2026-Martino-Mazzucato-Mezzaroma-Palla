@@ -67,7 +67,8 @@ public class Player {
             throw new Illegal_Draw_Exception();
 
         } else {
-            offerTrack.pickBuildingFromTop(index);
+            BuildingCard buildingPurchased = offerTrack.pickBuildingFromTop(index);
+            tribe.addBuildingToTribe(buildingPurchased);
 
         }
 
@@ -83,7 +84,8 @@ public class Player {
             throw new Illegal_Draw_Exception();
 
         } else {
-            offerTrack.pickBuildingFromBottom(index);
+            BuildingCard buildingPurchased = offerTrack.pickBuildingFromBottom(index);
+            tribe.addBuildingToTribe(buildingPurchased);
 
         }
 

@@ -8,8 +8,8 @@ import enums.GamePhase;
 // At the end of the game, the owner gains double the Prestige Points indicated
 // on the Builder cards in his tribe
 public class DoublePointsBuilder extends BuildingCard {
-    public DoublePointsBuilder(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
-        super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
+    public DoublePointsBuilder(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
+        super(era, cardID, cost, activatedAt, effectDescription, prestige);
     }
 
     @Override

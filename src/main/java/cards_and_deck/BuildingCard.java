@@ -48,17 +48,14 @@ public class BuildingCard extends Card {
         this.owner = player;
     }
 
-    /* quando player.draw(from top o bottom) pesca un building chiama questo metodo
-        passa la propria tribù (tramite getTribe)
-        viene sempre chiamato questo metodo che controlla se l'effetto è immediato
-        e lo applica*/
-    public void effectOnPurchase(){
-        if (activatedAt != GamePhase.ON_DRAW){ //da cambiare in on purchase
-            return;
-        }
-        this.applyEffect();
-    }   //da definire
 
+    // Called in Player when the building is purchased. Used for buildings
+    // "ComboFood" and "InventorsFood"
+    public void effectOnPurchase(){
+    }
+
+    // The method is overridden in all buildings, the second one is used
+    // by buildings related to events
     public void applyEffect(){}
     public void applyEffect(EffectContext context){};
     public boolean isUsedIn(Class<? extends EventStrategy> eventType){

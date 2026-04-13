@@ -10,9 +10,9 @@ import event_management.EventStrategy;
 // During the Cave Paintings event, the owner takes 1 food token for every
 // artist in his tribe
 public class ArtistsFood extends BuildingCard {
-    public ArtistsFood(int era, String name, String cardID, int cost, GamePhase activatedAt,
+    public ArtistsFood(int era, String cardID, int cost, GamePhase activatedAt,
                        String effectDescription, int prestige) {
-        super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
+        super(era, cardID, cost, activatedAt, effectDescription, prestige);
     }
     @Override
     public void applyEffect(EffectContext context){

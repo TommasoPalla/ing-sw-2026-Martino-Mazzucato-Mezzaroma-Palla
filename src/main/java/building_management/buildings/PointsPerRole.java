@@ -10,8 +10,8 @@ public class PointsPerRole extends BuildingCard {
     private final int BonusPoints;
     private final CharacterRole role;
 
-    public PointsPerRole(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige, int bonusPoints, CharacterRole role) {
-        super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
+    public PointsPerRole(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige, int bonusPoints, CharacterRole role) {
+        super(era, cardID, cost, activatedAt, effectDescription, prestige);
         this.BonusPoints = bonusPoints;
         this.role = role;
     }

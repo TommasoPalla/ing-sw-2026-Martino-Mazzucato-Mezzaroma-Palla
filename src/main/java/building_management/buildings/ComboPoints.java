@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 // At the end of the game, the owner gains 6 Prestige Points for each set of 6
 // different Character cards in their tribe
 public class ComboPoints extends BuildingCard {
-    public ComboPoints(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
-        super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
+    public ComboPoints(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
+        super(era, cardID, cost, activatedAt, effectDescription, prestige);
     }
 
     @Override
