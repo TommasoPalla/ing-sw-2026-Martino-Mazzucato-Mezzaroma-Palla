@@ -1,12 +1,25 @@
 package enums;
+
+import com.google.gson.annotations.SerializedName;
 /*
 this enum represents all the possible roles of a character*/
 
 public enum CharacterRole {
-  HUNTER, 
-  BUILDER, 
-  GATHERER, 
-  ARTIST, 
-  SHAMAN, 
-  INVENTOR;
+  @SerializedName("H")
+  HUNTER,
+
+  @SerializedName("B")
+  BUILDER,
+
+  @SerializedName("G")
+  GATHERER,
+
+  @SerializedName("A")
+  ARTIST,
+
+  @SerializedName("S")
+  SHAMAN,
+
+  @SerializedName("I")
+  INVENTOR
 }
