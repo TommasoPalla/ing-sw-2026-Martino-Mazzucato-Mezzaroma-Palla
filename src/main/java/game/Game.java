@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import building_management.BuildingManager;
 import cards_and_deck.Deck;
+import users.Illegal_Draw_Exception;
 import users.Player;
 import game_board.OfferTrack;
 import enums.GamePhase;
@@ -176,12 +177,26 @@ public class Game {
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono le loro carte in ordine
 
 
-                int j=0;
-                //classe controller richiede l'indice input
-                currentPlayer.drawFromTopRow(j, offerTrack);
-
-                //classe controller richiede l'indice input
-                currentPlayer.drawFromBottomRow(j, offerTrack);
+                //classe controller richiede gli indici input
+                int whichRow = 0;
+                int index = 0;
+                int topDrawable = currentPlayer.getCurrentOfferTile().getCardsFromAbove();
+                int bottomDrawable = currentPlayer.getCurrentOfferTile().getCardsFromBelow();
+                for(int j=0; j<topDrawable+bottomDrawable;j++) {
+                    //getRow && index da controller
+                    if (whichRow == 0 && topDrawable > 0) {
+                        currentPlayer.drawFromTopRow(index, offerTrack);
+                        topDrawable--;
+                    }
+                    else if(whichRow == 1 && bottomDrawable > 0){
+                        currentPlayer.drawFromBottomRow(index, offerTrack);
+                        bottomDrawable--;
+                    }
+                    else{
+                        throw new Illegal_Draw_Exception();
+                    }
+                    buildingManager.useBuilding(currentPhase, currentPlayer);
+                }
 
 
                 currentPlayer=getNextPlayer();
