@@ -137,7 +137,7 @@ public class Game {
 
     }*/
 
-    public void changeEra(){ //da mettere un'eccezione
+    public void changeEra() { //da mettere un'eccezione
       era++;
       offerTrack.moveBuildings();
       offerTrack.repopulateTopBuildingCards();
@@ -147,7 +147,7 @@ public class Game {
       return era;
     }
 
-    public void playGame(){
+    public void playGame() throws Illegal_Draw_Exception {
         ArrayList <OfferTile> newTurns = null;
 
         this.startGame();
@@ -162,6 +162,9 @@ public class Game {
 
 
                 currentPlayer.chooseOfferTile(k, offerTrack);
+
+                buildingManager.useBuilding(currentPhase, currentPlayer);
+
                 currentPlayer=getNextPlayer();
             }
 

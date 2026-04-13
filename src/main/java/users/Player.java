@@ -60,11 +60,10 @@ public class Player {
 
     public void drawFromTopRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
         Card card = offerTrack.getTopRow().get(index);
-        if (card instanceof CharacterCard) {
-            //cast per usare i metodi di character CharacterCard character = (CharacterCard) card;
-            //        // usa character
+        if (card.getClass().equals(CharacterCard.class)) {
+
             offerTrack.pickCharacterFromTop(index);
-        } else if (card instanceof EventCard) {
+        } else if (card.getClass().equals(EventCard.class)) {
             throw new Illegal_Draw_Exception();
 
         } else {
@@ -77,11 +76,10 @@ public class Player {
 
     public void drawFromBottomRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
         Card card = offerTrack.getTopRow().get(index);
-        if (card instanceof CharacterCard) {
-            //cast per usare i metodi di character CharacterCard character = (CharacterCard) card;
-            //        // usa character
+        if (card.getClass().equals(CharacterCard.class)) {
+
             offerTrack.pickCharacterFromBottom(index);
-        } else if (card instanceof EventCard) {
+        } else if (card.getClass().equals(EventCard.class)) {
             throw new Illegal_Draw_Exception();
 
         } else {
