@@ -9,7 +9,7 @@ public class CharacterCard extends Card {
     private final Integer prestigePoints;
     private final InventorType inventorType;
     private final Integer shamanStars;
-    private final Integer buildingDiscount;
+    private final Integer buildingDiscount;     //valued as a positive integer
     private final Boolean hunterIcon;
 
     /* static factory pattern: different static method that call the constructor

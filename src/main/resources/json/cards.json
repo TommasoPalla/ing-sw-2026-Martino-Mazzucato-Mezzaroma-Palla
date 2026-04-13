@@ -13,6 +13,134 @@
       "numPlayersFlag": 2,
       "role": "H",
       "hunterIcon": true
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CH_3",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": false
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CH_4",
+      "numPlayersFlag": 3,
+      "role": "H",
+      "hunterIcon": false
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CH_5",
+      "numPlayersFlag": 3,
+      "role": "H",
+      "hunterIcon": false
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CB_1",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 3,
+      "buildingDiscount": 1
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CB_2",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 0,
+      "buildingDiscount": 2
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CB_3",
+      "numPlayersFlag": 5,
+      "role": "B",
+      "prestigePoints": 1,
+      "buildingDiscount": 2
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CB_4",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 2,
+      "buildingDiscount": 1
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CG_1",
+      "numPlayersFlag": 2,
+      "role": "G"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CG_2",
+      "numPlayersFlag": 2,
+      "role": "G"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CG_3",
+      "numPlayersFlag": 3,
+      "role": "G"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CG_4",
+      "numPlayersFlag": 5,
+      "role": "G"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CA_1",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CG_2",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CG_3",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CG_4",
+      "numPlayersFlag": 3,
+      "role": "A"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CG_5",
+      "numPlayersFlag": 4,
+      "role": "A"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CI_1",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "L"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CI_2",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "B"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CI_3",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "A"
     }
   ],
   "events": [
@@ -32,11 +160,7 @@
       "cardID": "E1_B_1",
       "cost": 4,
       "activatedAt": "ON_DRAW",
-      "effectDescription": [
-        "From the moment you have this building,",
-        "take 5 food every time you complete a set",
-        "of 6 different types of Character cards."
-      ],
+      "effectDescription": "From the moment you have this building, take 5 food every time you complete a set of 6 different types of Character cards.",
       "prestige": 3
     }
   ]

@@ -1,9 +1,5 @@
-// temporaneo
-// per caricare le carte dal file JSON
 package cards_and_deck;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.InputStreamReader;
@@ -12,16 +8,25 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**CardLoader class manages methods that load cards from JSON file
+ * it has a method for each type of cards*
+ */
 public class CardLoader {
     private final Gson gson = new Gson();
 
+    /**
+     *
+     * @param key is the type of cards to extract from JSON (characters, buildings, events)
+     * @return json Array to convert in a list of the specific type of card
+     * @throws Exception
+     */
     private JsonArray getArrayFromRoot(String key) throws Exception{
         String jsonPath = "json/cards.json";
         try (Reader reader = new InputStreamReader(
                 getClass().getClassLoader().getResourceAsStream(jsonPath))) {
 
-            JsonObject root = gson.fromJson(reader, JsonObject.class);
+            JsonElement rootElement = JsonParser.parseReader(reader);
+            JsonObject root = rootElement.getAsJsonObject();
             return root.getAsJsonArray(key);
         }
     }

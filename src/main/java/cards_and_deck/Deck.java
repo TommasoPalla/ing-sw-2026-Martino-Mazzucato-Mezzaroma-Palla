@@ -10,7 +10,6 @@ public class Deck {
     private ArrayDeque<BuildingCard> buildingsDeck;
     private int[] buildingsDeckLength;  //Number of buildingCards for each era
 
-    // capire se metterli qua o in Game
     private final List<CharacterCard> allCharacterCards;
     private final List<EventCard> allEventCards;
     private final List<BuildingCard> allBuildingCards;    //from JSON
@@ -23,7 +22,7 @@ public class Deck {
             case 4 -> this.buildingsDeckLength = new int[]{2, 3, 4};
             case 5 -> this.buildingsDeckLength = new int[]{2, 3, 5};
         }
-        //da revisionare, scegliere se fare 3 file diversi per ogni tipo di carta
+
         CardLoader loader = new CardLoader();
         this.allCharacterCards = loader.loadCharacters();    //card Loader
         this.allEventCards = loader.loadEvents();

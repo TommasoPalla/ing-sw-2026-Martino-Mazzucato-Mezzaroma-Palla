@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
 import cards_and_deck.CharacterCard;
 import cards_and_deck.CardLoader;
+import enums.CharacterRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class CharacterCardTest {
     @Test
     public void initCharacters(){
         this.allCharacterCards = loader.loadCharacters();
-        System.out.println(this.allCharacterCards.get(0).getCardID());
+        System.out.println(this.allCharacterCards.get(1).getRole());
+        assertEquals(CharacterRole.HUNTER, this.allCharacterCards.get(1).getRole());
     }
 }
