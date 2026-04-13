@@ -13,6 +13,7 @@ import game_board.OfferTrack;
 import enums.GamePhase;
 import game_board.OfferTile;
 import event_management.EventManager;
+import users.Tribe;
 
 
 /* Game uses the Singleton design pattern: one instance of the game is created, with a specific ID to
@@ -28,6 +29,7 @@ public class Game {
     final private int numPlayers;
     private Player currentPlayer;
     private ArrayList<Player> turnOrder;
+    private ArrayList<Player> ranking;
     private int era;
     private int currentRound;
     private GamePhase currentPhase;
@@ -221,14 +223,11 @@ public class Game {
 
             this.updateCurrentPhase();//fase finale
 
-            for(int i=0; i<this.numPlayers;i++){//building attivati alla fine
+            for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del round
                 buildingManager.useBuilding(currentPhase, currentPlayer);
                 currentPlayer=getNextPlayer();
             }
-
-
-
-
+            //return alle tile !!!!!!!!!!!
 
             //fase inizializzata
             this.updateCurrentPhase();
@@ -238,7 +237,16 @@ public class Game {
             offerTrack.repopulateTopRow();
 
         }
-        //building attivati endgame??
+        currentPhase = GamePhase.END_GAME;
+
+        for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del gioco
+            buildingManager.useBuilding(currentPhase, currentPlayer);
+            currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculateFinalPoints());
+            currentPlayer=getNextPlayer();
+        }
+        ArrayList<Player> ranking = players.stream().sorted(Comparator.comparingInt(
+                (Player p) -> p.getTribe().getPrestigePoints()).reversed())
+                        .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }
