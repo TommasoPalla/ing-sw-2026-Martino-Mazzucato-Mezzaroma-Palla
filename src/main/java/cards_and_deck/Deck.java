@@ -100,15 +100,4 @@ public class Deck {
         }
         return tribeDeck.pop();
     }
-
-    /**
-     * @deprecated
-     */
-    public BuildingCard drawBuilding(){
-        if(buildingsDeck.isEmpty()){
-            int era = Game.getInstance().getEra();
-            initBuildingDeck();
-        }
-        return buildingsDeck.pop();
-    }
 }
