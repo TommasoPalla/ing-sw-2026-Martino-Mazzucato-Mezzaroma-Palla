@@ -12,6 +12,7 @@ import users.Player;
 import game_board.OfferTrack;
 import enums.GamePhase;
 import game_board.OfferTile;
+import event_management.EventManager;
 
 
 /* Game uses the Singleton design pattern: one instance of the game is created, with a specific ID to
@@ -32,6 +33,7 @@ public class Game {
     private GamePhase currentPhase;
     private OfferTrack offerTrack;
     private BuildingManager buildingManager;
+    private EventManager eventManager;
     private static Deck deck;       //forse static non è la soluzione ma ad ora non so che altro fare
 
   /* Game constructor, which with the game is initialized
@@ -151,7 +153,6 @@ public class Game {
         ArrayList <OfferTile> newTurns = null;
 
         this.startGame();
-        //ripristina game phase
         while(this.currentRound<10){
             //turno di player 1 da startGame()
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
@@ -183,6 +184,8 @@ public class Game {
                 //classe controller richiede gli indici input
                 int whichRow = 0;
                 int index = 0;
+
+
                 int topDrawable = currentPlayer.getCurrentOfferTile().getCardsFromAbove();
                 int bottomDrawable = currentPlayer.getCurrentOfferTile().getCardsFromBelow();
                 for(int j=0; j<topDrawable+bottomDrawable;j++) {
@@ -201,13 +204,12 @@ public class Game {
                     buildingManager.useBuilding(currentPhase, currentPlayer);
                 }
 
-
                 currentPlayer=getNextPlayer();
             }
 
             this.updateCurrentPhase();//fase eventi
 
-            //resolve
+            eventManager.resolve(offerTrack.getBottomEvents(), players, buildingManager);
 
             for(int i=0; i<this.numPlayers;i++){//creazione newTurns per riordinare i turni
                 newTurns.add(i, currentPlayer.getCurrentOfferTile());
@@ -219,15 +221,24 @@ public class Game {
 
             this.updateCurrentPhase();//fase finale
 
+            for(int i=0; i<this.numPlayers;i++){//building attivati alla fine
+                buildingManager.useBuilding(currentPhase, currentPlayer);
+                currentPlayer=getNextPlayer();
+            }
 
 
-            //remove bottom row
+
+
+
+            //fase inizializzata
+            this.updateCurrentPhase();
+
+            //track inizializzata
             offerTrack.moveCardsToBottom();
             offerTrack.repopulateTopRow();
 
-
-
         }
+        //building attivati endgame??
     }
 
 }
