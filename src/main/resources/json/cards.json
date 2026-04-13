@@ -99,25 +99,25 @@
     },
     {
       "era": 1,
-      "cardID": "E1_CG_2",
+      "cardID": "E1_CA_2",
       "numPlayersFlag": 2,
       "role": "A"
     },
     {
       "era": 1,
-      "cardID": "E1_CG_3",
+      "cardID": "E1_CA_3",
       "numPlayersFlag": 2,
       "role": "A"
     },
     {
       "era": 1,
-      "cardID": "E1_CG_4",
+      "cardID": "E1_CA_4",
       "numPlayersFlag": 3,
       "role": "A"
     },
     {
       "era": 1,
-      "cardID": "E1_CG_5",
+      "cardID": "E1_CA_5",
       "numPlayersFlag": 4,
       "role": "A"
     },
@@ -141,6 +141,442 @@
       "numPlayersFlag": 2,
       "role": "I",
       "inventorType": "A"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CI_4",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "E"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CI_5",
+      "numPlayersFlag": 4,
+      "role": "I",
+      "inventorType": "W"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CI_6",
+      "numPlayersFlag": 4,
+      "role": "I",
+      "inventorType": "R"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CI_7",
+      "numPlayersFlag": 4,
+      "role": "I",
+      "inventorType": "F"
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CS_1",
+      "numPlayersFlag": 2,
+      "role": "S",
+      "shamanStars": 1
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CS_2",
+      "numPlayersFlag": 2,
+      "role": "S",
+      "shamanStars": 2
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CS_3",
+      "numPlayersFlag": 4,
+      "role": "S",
+      "shamanStars": 1
+    },
+    {
+      "era": 1,
+      "cardID": "E1_CS_4",
+      "numPlayersFlag": 5,
+      "role": "S",
+      "shamanStars": 2
+    },
+
+    {
+      "era": 2,
+      "cardID": "E2_CH_1",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": false
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CH_2",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": false
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CH_3",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": true
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CH_4",
+      "numPlayersFlag": 3,
+      "role": "H",
+      "hunterIcon": true
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CH_5",
+      "numPlayersFlag": 4,
+      "role": "H",
+      "hunterIcon": true
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CH_6",
+      "numPlayersFlag": 5,
+      "role": "H",
+      "hunterIcon": false
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CB_1",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 3,
+      "buildingDiscount": 2
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CB_2",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 4,
+      "buildingDiscount": 1
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CB_3",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 1,
+      "buildingDiscount": 2
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CB_4",
+      "numPlayersFlag": 3,
+      "role": "B",
+      "prestigePoints": 2,
+      "buildingDiscount": 1
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CG_1",
+      "numPlayersFlag": 2,
+      "role": "G"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CG_2",
+      "numPlayersFlag": 2,
+      "role": "G"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CG_3",
+      "numPlayersFlag": 4,
+      "role": "G"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CG_4",
+      "numPlayersFlag": 5,
+      "role": "G"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CA_1",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CA_2",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CA_3",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CA_4",
+      "numPlayersFlag": 3,
+      "role": "A"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CI_1",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "W"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CI_2",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "R"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CI_3",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "D"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CI_4",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "F"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CI_5",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "L"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CI_6",
+      "numPlayersFlag": 4,
+      "role": "I",
+      "inventorType": "H"
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CS_1",
+      "numPlayersFlag": 2,
+      "role": "S",
+      "shamanStars": 2
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CS_2",
+      "numPlayersFlag": 2,
+      "role": "S",
+      "shamanStars": 2
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CS_3",
+      "numPlayersFlag": 5,
+      "role": "S",
+      "shamanStars": 1
+    },
+    {
+      "era": 2,
+      "cardID": "E2_CS_4",
+      "numPlayersFlag": 5,
+      "role": "S",
+      "shamanStars": 2
+    },
+
+    {
+      "era": 3,
+      "cardID": "E3_CH_1",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": true
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CH_2",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": false
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CH_3",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": false
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CH_4",
+      "numPlayersFlag": 5,
+      "role": "H",
+      "hunterIcon": true
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CB_1",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 2,
+      "buildingDiscount": 2
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CB_2",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 5,
+      "buildingDiscount": 1
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CB_3",
+      "numPlayersFlag": 2,
+      "role": "B",
+      "prestigePoints": 3,
+      "buildingDiscount": 2
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CB_4",
+      "numPlayersFlag": 5,
+      "role": "B",
+      "prestigePoints": 4,
+      "buildingDiscount": 1
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CG_1",
+      "numPlayersFlag": 2,
+      "role": "G"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CG_2",
+      "numPlayersFlag": 4,
+      "role": "G"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CG_3",
+      "numPlayersFlag": 5,
+      "role": "G"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CA_1",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CA_2",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CA_3",
+      "numPlayersFlag": 2,
+      "role": "A"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CA_4",
+      "numPlayersFlag": 5,
+      "role": "A"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CI_1",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "H"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CI_2",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "N"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CI_3",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "D"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CI_4",
+      "numPlayersFlag": 2,
+      "role": "I",
+      "inventorType": "E"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CI_5",
+      "numPlayersFlag": 3,
+      "role": "I",
+      "inventorType": "B"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CI_6",
+      "numPlayersFlag": 3,
+      "role": "I",
+      "inventorType": "A"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CI_7",
+      "numPlayersFlag": 4,
+      "role": "I",
+      "inventorType": "N"
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CS_1",
+      "numPlayersFlag": 2,
+      "role": "S",
+      "shamanStars": 2
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CS_2",
+      "numPlayersFlag": 2,
+      "role": "S",
+      "shamanStars": 3
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CS_3",
+      "numPlayersFlag": 2,
+      "role": "S",
+      "shamanStars": 3
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CS_4",
+      "numPlayersFlag": 3,
+      "role": "S",
+      "shamanStars": 2
+    },
+    {
+      "era": 3,
+      "cardID": "E3_CS_5",
+      "numPlayersFlag": 4,
+      "role": "S",
+      "shamanStars": 2
     }
   ],
   "events": [
@@ -152,8 +588,113 @@
         "F+": 1,
         "P+": 1
       }
+    },
+    {
+      "era": 1,
+      "cardID": "E1_E_S",
+      "eventType": "S",
+      "parameters": {
+        "F-": 1,
+        "P-": 1
+      }
+    },
+    {
+      "era": 1,
+      "cardID": "E1_E_C",
+      "eventType": "C",
+      "parameters": {
+        "P+": 1,
+        "P-": 2,
+        "A" : 0
+      }
+    },
+    {
+      "era": 1,
+      "cardID": "E1_E_R",
+      "eventType": "R",
+      "parameters": {
+        "P+": 5,
+        "P-": 3
+      }
+    },
+
+    {
+      "era": 2,
+      "cardID": "E2_E_H",
+      "eventType": "H",
+      "parameters": {
+        "F+": 1,
+        "P+": 2
+      }
+    },
+    {
+      "era": 2,
+      "cardID": "E2_E_S",
+      "eventType": "S",
+      "parameters": {
+        "F-": 1,
+        "P-": 2
+      }
+    },
+    {
+      "era": 2,
+      "cardID": "E2_E_C",
+      "eventType": "C",
+      "parameters": {
+        "P+": 2,
+        "P-": 2,
+        "A": 1
+      }
+    },
+    {
+      "era": 2,
+      "cardID": "E2_E_R",
+      "eventType": "R",
+      "parameters": {
+        "P+": 10,
+        "P-": 5
+      }
+    },
+
+    {
+      "era": 3,
+      "cardID": "E3_E_H",
+      "eventType": "H",
+      "parameters": {
+        "F+": 1,
+        "P+": 3
+      }
+    },
+    {
+      "era": 3,
+      "cardID": "E3_E_S",
+      "eventType": "S",
+      "parameters": {
+        "F-": 1,
+        "P-": 3
+      }
+    },
+    {
+      "era": 1,
+      "cardID": "E1_E_C",
+      "eventType": "C",
+      "parameters": {
+        "P+": 3,
+        "P-": 2,
+        "A": 2
+      }
+    },
+    {
+      "era": 1,
+      "cardID": "E1_E_R",
+      "eventType": "R",
+      "parameters": {
+        "P+": 15,
+        "P-": 7
+      }
     }
   ],
+
   "buildings": [
     {
       "era": 1,
@@ -161,6 +702,169 @@
       "cost": 4,
       "activatedAt": "ON_DRAW",
       "effectDescription": "From the moment you have this building, take 5 food every time you complete a set of 6 different types of Character cards.",
+      "prestige": 3
+    },
+    {
+      "era": 1,
+      "cardID": "E1_B_2",
+      "cost": 3,
+      "activatedAt": "ON_DRAW",
+      "effectDescription": "double inventors description",
+      "prestige": 4
+    },
+    {
+      "era": 1,
+      "cardID": "E1_B_3",
+      "cost": 3,
+      "activatedAt": "END_TURN",
+      "effectDescription": "totem food description",
+      "prestige": 3
+    },
+    {
+      "era": 1,
+      "cardID": "E1_B_4",
+      "cost": 4,
+      "activatedAt": "ON_EVENT",
+      "effectDescription": "sustenance gatherers description",
+      "prestige": 4
+    },
+    {
+      "era": 1,
+      "cardID": "E1_B_5",
+      "cost": 5,
+      "activatedAt": "ON_EVENT",
+      "effectDescription": "sustenance artists description",
+      "prestige": 3
+    },
+    {
+      "era": 1,
+      "cardID": "E1_B_6",
+      "cost": 5,
+      "activatedAt": "ON_EVENT",
+      "effectDescription": "no malus description",
+      "prestige": 2
+    },
+
+    {
+      "era": 2,
+      "cardID": "E2_B_1",
+      "cost": 6,
+      "activatedAt": "ON_PURCHASE??",
+      "effectDescription": "bonus stars description",
+      "prestige": 4
+    },
+    {
+      "era": 2,
+      "cardID": "E2_B_2",
+      "cost": 7,
+      "activatedAt": "ON_EVENT",
+      "effectDescription": "sustenance inventors description",
+      "prestige": 4
+    },
+    {
+      "era": 2,
+      "cardID": "E2_B_3",
+      "cost": 7,
+      "activatedAt": "ON_EVENT",
+      "effectDescription": "hunt bonus description",
+      "prestige": 2
+    },
+    {
+      "era": 2,
+      "cardID": "E2_B_4",
+      "cost": 5,
+      "activatedAt": "ON_EVENT",
+      "effectDescription": "artists food description",
+      "prestige": 6
+    },
+    {
+      "era": 2,
+      "cardID": "E2_B_5",
+      "cost": 7,
+      "activatedAt": "ON_EVENT",
+      "effectDescription": "ritual double points description",
+      "prestige": 0
+    },
+    {
+      "era": 2,
+      "cardID": "E2_B_6",
+      "cost": 6,
+      "activatedAt": "END_GAME",
+      "effectDescription": "double builders points description",
+      "prestige": 4
+    },
+    {
+      "era": 2,
+      "cardID": "E2_B_7",
+      "cost": 5,
+      "activatedAt": "END_GAME",
+      "effectDescription": "tribe combo description",
+      "prestige": 6
+    },
+
+    {
+      "era": 3,
+      "cardID": "E3_B_1",
+      "cost": 8,
+      "activatedAt": "END_GAME",
+      "effectDescription": "hunters bonus points description",
+      "prestige": 8
+    },
+    {
+      "era": 3,
+      "cardID": "E3_B_2",
+      "cost": 6,
+      "activatedAt": "END_GAME",
+      "effectDescription": "builders bonus points description",
+      "prestige": 3
+    },
+    {
+      "era": 3,
+      "cardID": "E3_B_3",
+      "cost": 7,
+      "activatedAt": "END_GAME",
+      "effectDescription": "gatherers bonus points description",
+      "prestige": 6
+    },
+    {
+      "era": 3,
+      "cardID": "E3_B_4",
+      "cost": 7,
+      "activatedAt": "END_GAME",
+      "effectDescription": "artists bonus points description",
+      "prestige": 4
+    },
+    {
+      "era": 3,
+      "cardID": "E3_B_5",
+      "cost": 6,
+      "activatedAt": "END_GAME",
+      "effectDescription": "inventors bonus points description",
+      "prestige": 2
+    },
+    {
+      "era": 3,
+      "cardID": "E3_B_6",
+      "cost": 7,
+      "activatedAt": "END_GAME",
+      "effectDescription": "shamans bonus points description",
+      "prestige": 4
+    },
+    {
+      "era": 3,
+      "cardID": "E3_B_7",
+      "cost": 10,
+      "activatedAt": "END_GAME",
+      "effectDescription": "flat 25 points description",
+      "prestige": 0,
+      "P+": 25
+    },
+    {
+      "era": 3,
+      "cardID": "E3_B_8",
+      "cost": 9,
+      "activatedAt": "END_TURN",
+      "effectDescription": "draw additional card description",
       "prestige": 3
     }
   ]

@@ -47,27 +47,28 @@ public class Game {
       this.numPlayers = players.size();
     }
 
+    //getters
     public static Game getInstance() {return instance;}
     // non ho assolutamente idea se sia il modo migliore per fare questa cosa
     public static Deck getDeck() {return deck;}
-
     public GamePhase getGamePhase(){return currentPhase;}
     public Player getCurrentPlayer(){return currentPlayer;}
     public int getNumPlayer(){return numPlayers;}
     public OfferTrack getOfferTrack(){return offerTrack;}
     public BuildingManager getBuildingManager(){return buildingManager;}
-    private Player getNextPlayer() /*throws No_More_Players_Exception*/{
-      int i=0;
-      while(turnOrder.get(i)!=currentPlayer && i<this.numPlayers){
-          i++;
-      }
-      if(i==this.numPlayers-1){
-          i=0;
-      }
-      return turnOrder.get(i);
-    }
     public ArrayList<Player> getTurnOrder(){return turnOrder;}
+    public int getEra(){return era;}
 
+    private Player getNextPlayer() /*throws No_More_Players_Exception*/{
+        int i=0;
+        while(turnOrder.get(i)!=currentPlayer && i<this.numPlayers){
+            i++;
+        }
+        if(i==this.numPlayers-1){
+            i=0;
+        }
+        return turnOrder.get(i);
+    }
 
 
     public void startGame(){
@@ -75,7 +76,7 @@ public class Game {
       turnOrder = new ArrayList<>(players);
       Collections.shuffle(turnOrder);
 
-      currentPlayer = turnOrder.get(0);
+      currentPlayer = turnOrder.getFirst();
       currentRound = 1;
       era = 1;
 
@@ -87,38 +88,32 @@ public class Game {
       offerTrack.repopulateTopRow();
       offerTrack.repopulateTopBuildingCards();
 
-
-      //inizializzo cibo
-      turnOrder.get(0).getTribe().modifyFood(+2);
-      turnOrder.get(1).getTribe().modifyFood(+3);
-
-      switch (numPlayers){
-          case 2:
-              break;
-          case 3:
-              turnOrder.get(2).getTribe().modifyFood(+3);
-              break;
-          case 4:
-              turnOrder.get(3).getTribe().modifyFood(+4);
-              break;
-          case 5:
-              turnOrder.get(4).getTribe().modifyFood(+4);
-              break;
-      }
+      giveInitialFood(numPlayers);
 
       currentPhase = GamePhase.START_TURN;
     }
 
 
+    /*
     public void finishGame(){
       if(currentRound == 10){
 
       }
     }
+     */
 
-    public void setCurrentPlayer(){
-      currentPlayer = getNextPlayer();
+    //actual functions
+    private void setCurrentPlayer(){currentPlayer = getNextPlayer();}
+
+    private void giveInitialFood(int numPlayers){
+        turnOrder.get(0).getTribe().modifyFood(2);
+        turnOrder.get(1).getTribe().modifyFood(3);
+
+        if(numPlayers >= 3) turnOrder.get(2).getTribe().modifyFood(3);
+        if(numPlayers >= 4) turnOrder.get(3).getTribe().modifyFood(4);
+        if(numPlayers >= 5) turnOrder.get(4).getTribe().modifyFood(5);
     }
+
     public void updateCurrentPhase(){
         switch(currentPhase){
             case GamePhase.START_TURN:
@@ -137,20 +132,15 @@ public class Game {
 
 
     }
-    /*public void checkEra(){
-
-    }*/
 
     public void changeEra() { //da mettere un'eccezione
-      era++;
-      offerTrack.moveBuildings();
-      offerTrack.repopulateTopBuildingCards();
+        era++;
+        offerTrack.moveBuildings();
+        offerTrack.repopulateTopBuildingCards();
     }
 
-    public int getEra(){
-      return era;
-    }
 
+    //direi che potrebbe essere il caso di fare una classe turnManager: ci sono un sacco di cose di cui tener conto
     public void playGame() throws Illegal_Draw_Exception {
         ArrayList <OfferTile> newTurns = null;
 
@@ -159,15 +149,11 @@ public class Game {
             //turno di player 1 da startGame()
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
 
-
                 //classe controller richiede l'indice input
                 int k=0;
 
-
                 currentPlayer.chooseOfferTile(k, offerTrack);
-
                 buildingManager.useBuilding(currentPhase, currentPlayer);
-
                 currentPlayer=getNextPlayer();
             }
 
@@ -176,17 +162,13 @@ public class Game {
                 turnOrder.get(i).getTribe().modifyFood(turnOrder.get(i).getCurrentOfferTile().getFoodBonus());
             }
 
-
             this.updateCurrentPhase();//fase draw
 
-
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono le loro carte in ordine
-
 
                 //classe controller richiede gli indici input
                 int whichRow = 0;
                 int index = 0;
-
 
                 int topDrawable = currentPlayer.getCurrentOfferTile().getCardsFromAbove();
                 int bottomDrawable = currentPlayer.getCurrentOfferTile().getCardsFromBelow();

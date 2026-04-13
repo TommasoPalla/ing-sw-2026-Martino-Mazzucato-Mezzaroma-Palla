@@ -2,6 +2,7 @@ package users;
 
 import cards_and_deck.BuildingCard;
 import cards_and_deck.CharacterCard;
+import enums.CharacterRole;
 import enums.InventorType;
 import game.Game;
 
@@ -13,14 +14,12 @@ public class  Tribe {
     private final Player tribeOwner;
     private int prestigePoints;
     private int foodReserve;
-    private ArrayList<CharacterCard> population;
+    private EnumMap<CharacterRole, ArrayList<CharacterCard>> population;
     private ArrayList<BuildingCard> buildings;
     private EnumMap<InventorType, Integer> inventorsPerType;
 
-    private int huntersNumber = 0;
     private int builderDiscount = 0;
     private int gatherersDiscount = 0;
-    private int artistsNumber = 0;
     private int shamansStars = 0;
 
     //Tribe's constructor
@@ -38,14 +37,14 @@ public class  Tribe {
     public int getFoodReserve() {
         return foodReserve;
     }
-    public ArrayList<CharacterCard> getPopulation() {
+    public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() {
         return population;
     }
     public ArrayList<BuildingCard> getBuildings() {
         return buildings;
     }
     public int getHuntersNumber() {
-        return huntersNumber;
+        return population.get(CharacterRole.HUNTER).size();
     }
     public int getBuilderDiscount() {
         return builderDiscount;
@@ -54,7 +53,7 @@ public class  Tribe {
         return gatherersDiscount;
     }
     public int getArtistsNumber() {
-        return artistsNumber;
+        return population.get(CharacterRole.ARTIST).size();
     }
     public int getShamansStars() {
         return shamansStars;
@@ -81,8 +80,22 @@ public class  Tribe {
     // Character is added to the player's list
     // Called in Player (?)
     public void addCharacterToTribe(CharacterCard character) {
-        population.add(character);
-        //da finire (?)
+        population.get(character.getRole()).add(character);
+        switch(character.getRole()){
+            case BUILDER:
+                builderDiscount += character.getBuildingDiscount().orElseThrow();
+                break;
+            case GATHERER:
+                gatherersDiscount += 3;
+                break;
+            case SHAMAN:
+                shamansStars += character.getShamanStars().orElseThrow();
+                break;
+            case INVENTOR:
+                inventorsPerType.putIfAbsent(character.getInventorType(), 0);
+                inventorsPerType.put(character.getInventorType(), inventorsPerType.get(character.getInventorType()) + 1);
+                break;
+        }
     }
 
     // The owner of the building card is assigned and the building is added to the player's list
@@ -103,7 +116,7 @@ public class  Tribe {
 
         // Points from builders
         int populationPoints = 0;
-        for (CharacterCard character : population) {
+        for (CharacterCard character : population.get(CharacterRole.BUILDER)) {
             populationPoints = populationPoints + character.getPrestigePoints().orElse(0);
         }
 
@@ -114,7 +127,7 @@ public class  Tribe {
         }
 
         // Points from artists
-        int artistsPoints = (artistsNumber / 2) * 10;
+        int artistsPoints = (population.get(CharacterRole.ARTIST).size() / 2) * 10;
 
         // Points from inventors
         int numInventors = 0;

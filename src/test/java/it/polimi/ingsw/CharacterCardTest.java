@@ -19,5 +19,6 @@ public class CharacterCardTest {
         this.allCharacterCards = loader.loadCharacters();
         System.out.println(this.allCharacterCards.get(1).getRole());
         assertEquals(CharacterRole.HUNTER, this.allCharacterCards.get(1).getRole());
+        assertEquals(2, this.allCharacterCards.get(1).getNumPlayersFlag());
     }
 }

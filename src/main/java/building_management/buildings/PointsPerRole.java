@@ -20,9 +20,7 @@ public class PointsPerRole extends BuildingCard {
     // parameter
     @Override
     public void applyEffect() {
-        int characterNumber = Math.toIntExact(owner.getTribe().getPopulation().stream()
-                .filter(card -> card.getRole() == role)
-                .count());
-        owner.getTribe().modifyPrestigePoints(BonusPoints*characterNumber);
+        int characterNumber = owner.getTribe().getPopulation().get(role).size();
+        owner.getTribe().modifyPrestigePoints(BonusPoints * characterNumber);
     }
 }
