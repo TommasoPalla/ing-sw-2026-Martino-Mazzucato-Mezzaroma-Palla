@@ -89,12 +89,16 @@ public class OfferTrack{
     //---------------------------FORSE DA CAPIRE SE LE EXCEPTION UCCIDONO L'INPUT DELL'UTENTE--------
     public BuildingCard pickBuildingFromTop(int index){
         if(index >= topBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
-        return topBuildingCard.get(index);
+        BuildingCard cardPicked = topBuildingCard.get(index);
+        topBuildingCard.remove(index);
+        return cardPicked;
     }
 
     public BuildingCard pickBuildingFromBottom(int index){
         if(index >= bottomBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
-        return bottomBuildingCard.get(index);
+        BuildingCard cardPicked = bottomBuildingCard.get(index);
+        bottomBuildingCard.remove(index);
+        return cardPicked;
     }
     //-----------------------------------------------------------------------------------------------
     public void moveCardsToBottom(){bottomRow = topRow;}
