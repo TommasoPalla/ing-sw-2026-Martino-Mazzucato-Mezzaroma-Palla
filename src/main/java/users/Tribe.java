@@ -34,7 +34,7 @@ public class  Tribe {
     public int getGatherersDiscount() { return gatherersDiscount; }
     public int getArtistsNumber() { return artistsNumber; }
     public int getShamansStars() { return shamansStars; }
-    public int [] getInventorsPrType() { return inventorsPerType; }
+    public int [] getInventorsPerType() { return inventorsPerType; }
 
     //actual methods
     public void modifyPrestigePoints(int pp) { prestigePoints += pp; }

@@ -5,6 +5,7 @@ import game.Game;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import users.Player;
 
 public class OfferTrack{
     private ArrayList<OfferTile> offerTiles;

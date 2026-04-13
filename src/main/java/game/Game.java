@@ -138,7 +138,6 @@ public class Game {
 
     public void changeEra(){ //da mettere un'eccezione
       era++;
-      //potrebbero andare da un'altra parte
       offerTrack.moveBuildings();
       offerTrack.repopulateTopBuildingCards();
     }
@@ -155,7 +154,13 @@ public class Game {
         while(this.currentRound<10){
             //turno di player 1 da startGame()
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
-                currentPlayer.chooseOfferTile();
+
+
+                //classe controller richiede l'indice input
+                int k=0;
+
+
+                currentPlayer.chooseOfferTile(k, offerTrack);
                 currentPlayer=getNextPlayer();
             }
 
@@ -169,8 +174,15 @@ public class Game {
 
 
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono le loro carte in ordine
-                currentPlayer.drawFromTopRow();
-                currentPlayer.drawFromBottomRow();
+
+
+                int j=0;
+                //classe controller richiede l'indice input
+                currentPlayer.drawFromTopRow(j, offerTrack);
+                //classe controller richiede l'indice input
+                currentPlayer.drawFromBottomRow(j, offerTrack);
+
+
                 currentPlayer=getNextPlayer();
             }
 
