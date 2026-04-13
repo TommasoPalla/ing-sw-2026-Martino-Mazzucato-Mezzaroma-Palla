@@ -6,6 +6,8 @@ import enums.InventorType;
 import game.Game;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class  Tribe {
     private final Player tribeOwner;
@@ -13,13 +15,13 @@ public class  Tribe {
     private int foodReserve;
     private ArrayList<CharacterCard> population;
     private ArrayList<BuildingCard> buildings;
-    private int[] inventorsPerType;
+    private EnumMap<InventorType, Integer> inventorsPerType;
 
-    private int huntersNumber;
-    private int builderDiscount;
-    private int gatherersDiscount;
-    private int artistsNumber;
-    private int shamansStars;
+    private int huntersNumber = 0;
+    private int builderDiscount = 0;
+    private int gatherersDiscount = 0;
+    private int artistsNumber = 0;
+    private int shamansStars = 0;
 
     //Tribe's constructor
     public Tribe(Player tribeOwner) {
@@ -57,7 +59,7 @@ public class  Tribe {
     public int getShamansStars() {
         return shamansStars;
     }
-    public int[] getInventorsPerType() {
+    public EnumMap<InventorType, Integer> getInventorsPerType() {
         return inventorsPerType;
     }
 
@@ -85,45 +87,44 @@ public class  Tribe {
 
     // The owner of the building card is assigned and the building is added to the player's list
     // of buildings in his tribe, and to the player's list of the buildings activated at that specific
-    // game phase, in BuildingManager
+    // game phase, in BuildingManager.
     //
-    // Called in Player (?)
+    // Called in Player.
     public void addBuildingToTribe(BuildingCard building) {
         buildings.add(building);
         building.assignOwner(tribeOwner);
         Game.getInstance().getBuildingManager().addBuilding(building, tribeOwner);
+        // Calls effectOnPurchase for the building. It only works with the buildings who override it
+        building.effectOnPurchase();
     }
 
 
     public int calculateFinalPoints() {
 
-
+        // Points from builders
         int populationPoints = 0;
         for (CharacterCard character : population) {
             populationPoints = populationPoints + character.getPrestigePoints().orElse(0);
         }
 
+        // Points from buildings
         int buildingPoints = 0;
         for (BuildingCard building : buildings) {
             buildingPoints += building.getPrestige();
         }
 
+        // Points from artists
         int artistsPoints = (artistsNumber / 2) * 10;
 
-
-        int inventorsPoints = 0;
+        // Points from inventors
         int numInventors = 0;
-        for (int i = 0; i < InventorType.values().length; i++) {
-            if (inventorsPerType[i] != 0) {
-                numInventors++;
-            }
-            inventorsPoints += inventorsPerType[i];
+        for (InventorType invention : inventorsPerType.keySet()) {
+            numInventors += inventorsPerType.get(invention);
         }
-        inventorsPoints = inventorsPoints * numInventors;
+        int inventorsPoints = numInventors * inventorsPerType.size();
 
 
 
-        return (prestigePoints + artistsPoints + populationPoints + buildingPoints + inventorsPoints);
-
+        return (artistsPoints + populationPoints + buildingPoints + inventorsPoints);
     }
 }
