@@ -74,27 +74,31 @@ public class OfferTrack{
         return bottomEventCards;}
 
     //actual functions
-    public Card pickCharacterFromTop(int index){
-        Card indexedCard = topRow.get(index);
-        if(indexedCard instanceof EventCard) throw new IllegalArgumentException("You can't draw an event, choose a character or a building if available.");
-        else return indexedCard;
+    public CharacterCard pickCharacterFromTop(int index){
+        CharacterCard cardPicked = (CharacterCard) topRow.get(index);
+        topRow.remove(index);
+        return cardPicked;
     }
 
-    public Card pickCharacterFromBottom(int index) {
-        Card indexedCard = topRow.get(index);
-        if (indexedCard instanceof EventCard) throw new IllegalArgumentException("You can't draw an event, choose a character or a building if available");
-        else return indexedCard;
+    public CharacterCard pickCharacterFromBottom(int index) {
+        CharacterCard cardPicked = (CharacterCard) bottomRow.get(index);
+        topRow.remove(index);
+        return cardPicked;
     }
 
     //---------------------------FORSE DA CAPIRE SE LE EXCEPTION UCCIDONO L'INPUT DELL'UTENTE--------
     public BuildingCard pickBuildingFromTop(int index){
         if(index >= topBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
-        return topBuildingCard.get(index);
+        BuildingCard cardPicked = topBuildingCard.get(index);
+        topBuildingCard.remove(index);
+        return cardPicked;
     }
 
     public BuildingCard pickBuildingFromBottom(int index){
         if(index >= bottomBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
-        return bottomBuildingCard.get(index);
+        BuildingCard cardPicked = bottomBuildingCard.get(index);
+        bottomBuildingCard.remove(index);
+        return cardPicked;
     }
     //-----------------------------------------------------------------------------------------------
     public void moveCardsToBottom(){bottomRow = topRow;}
@@ -123,6 +127,5 @@ public class OfferTrack{
             if(drawnCard.getClass().equals(EventCard.class)) topRow.add(drawnCard);     //dovrebbe funzionare uguale a instanceof
             else bottomRow.add(drawnCard);
         }
-
     }
 }

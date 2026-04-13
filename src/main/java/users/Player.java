@@ -3,17 +3,15 @@ package users;
 import cards_and_deck.Card;
 import cards_and_deck.EventCard;
 import enums.Color;
-import enums.InventorType;
 import game_board.OfferTile;
 import cards_and_deck.CharacterCard;
 import cards_and_deck.BuildingCard;
-import enums.GamePhase;
 import game_board.OfferTrack;
 
 public class Player {
     private String name;
-    private Color totemColor;
-    private Tribe tribe;
+    private final Color totemColor;
+    private final Tribe tribe;
     private OfferTile currentOfferTile;
 
     public Player(String name, Tribe tribe, Color totemColor) {
@@ -27,25 +25,20 @@ public class Player {
     public String getName() {
         return name;
     }
-
     public Color getTotemColor() {
         return totemColor;
     }
-
     public Tribe getTribe() {
         return tribe;
     }
-
     public OfferTile getCurrentOfferTile() {
         return currentOfferTile;
     }
-
     public int getFinalPoints() {
         return tribe.calculateFinalPoints();
     }
 
     //functions
-
 
     /*funzione che dipende da controller anche che è ancora da implementare, qui bozza sbagliata ma circa completa*/
     public void chooseOfferTile(int index, OfferTrack offerTrack) throws Occupied_Tile_Exception {
@@ -62,16 +55,14 @@ public class Player {
         Card card = offerTrack.getTopRow().get(index);
         if (card.getClass().equals(CharacterCard.class)) {
 
-            offerTrack.pickCharacterFromTop(index);
+            CharacterCard characterPicked = offerTrack.pickCharacterFromTop(index);
+            tribe.addCharacterToTribe(characterPicked);
         } else if (card.getClass().equals(EventCard.class)) {
             throw new Illegal_Draw_Exception();
-
         } else {
             BuildingCard buildingPurchased = offerTrack.pickBuildingFromTop(index);
             tribe.addBuildingToTribe(buildingPurchased);
-
         }
-
     }
 
 
@@ -79,15 +70,13 @@ public class Player {
         Card card = offerTrack.getTopRow().get(index);
         if (card.getClass().equals(CharacterCard.class)) {
 
-            offerTrack.pickCharacterFromBottom(index);
+           CharacterCard characterPicked = offerTrack.pickCharacterFromBottom(index);
+           tribe.addCharacterToTribe(characterPicked);
         } else if (card.getClass().equals(EventCard.class)) {
             throw new Illegal_Draw_Exception();
-
         } else {
             BuildingCard buildingPurchased = offerTrack.pickBuildingFromBottom(index);
             tribe.addBuildingToTribe(buildingPurchased);
-
         }
-
     }
 }
