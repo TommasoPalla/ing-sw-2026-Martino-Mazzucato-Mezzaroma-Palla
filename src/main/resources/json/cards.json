@@ -1,19 +1,43 @@
 {
-  "charachters": [
+  "characters": [
     {
       "era": 1,
-      "name": 1,
-      ...
+      "cardID": "E1_CH_1",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": true
     },
     {
-      "id": "2",
       "era": 1,
-      ...
+      "cardID": "E1_CH_2",
+      "numPlayersFlag": 2,
+      "role": "H",
+      "hunterIcon": true
     }
   ],
   "events": [
     {
-
+      "era": 1,
+      "cardID": "E1_E_H",
+      "eventType": "H",
+      "parameters": {
+        "F+": 1,
+        "P+": 1
+      }
+    }
+  ],
+  "buildings": [
+    {
+      "era": 1,
+      "cardID": "E1_B_1",
+      "cost": 4,
+      "activatedAt": "ON_DRAW",
+      "effectDescription": [
+        "From the moment you have this building,",
+        "take 5 food every time you complete a set",
+        "of 6 different types of Character cards."
+      ],
+      "prestige": 3
     }
   ]
 }

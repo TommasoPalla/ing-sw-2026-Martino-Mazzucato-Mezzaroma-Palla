@@ -9,7 +9,7 @@ import users.*;
 public class BuildingCard extends Card {
     private final int cost; // food cost of the building card
     private final GamePhase activatedAt; // game phase during which this building card is activated
-    private final String effectDescription;
+    private final String effectDescription; //si potrebbe fare uno switch dentro il costruttore per alleggerire il JSON
     protected Player owner; // the owner of this building, assigned when the building is purchased
     private final int prestige;
 
