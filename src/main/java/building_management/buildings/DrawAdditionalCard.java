@@ -15,8 +15,11 @@ public class DrawAdditionalCard extends BuildingCard {
      */
     @Override
     public void applyEffect(){
+
+        int index=0;//provvisorio!!
+
         if(!Game.getInstance().getOfferTrack().getTopRow().isEmpty()) {
-            owner.drawFromTopRow();
+            owner.drawFromTopRow(index, Game.getInstance().getOfferTrack());
         }
     }
 }
