@@ -14,8 +14,8 @@ public class BuildingCard extends Card {
     private final int prestige;
 
     // constructor, "overrides" Card constructor
-    public BuildingCard(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige){
-        super(era, name, cardID);
+    public BuildingCard(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige){
+        super(era, cardID);
         this.cost = cost;
         this.activatedAt = activatedAt;
         this.effectDescription = effectDescription;

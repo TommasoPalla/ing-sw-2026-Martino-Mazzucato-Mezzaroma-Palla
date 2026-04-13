@@ -25,9 +25,9 @@ public class Deck {
         }
         //da revisionare, scegliere se fare 3 file diversi per ogni tipo di carta
         CardLoader loader = new CardLoader();
-        this.allCharacterCards = loader.loadCharacters("cards.json");    //card Loader
-        this.allEventCards = loader.loadEvents("cards.json");
-        this.allBuildingCards = loader.loadBuildings("cards.json");
+        this.allCharacterCards = loader.loadCharacters();    //card Loader
+        this.allEventCards = loader.loadEvents();
+        this.allBuildingCards = loader.loadBuildings();
         initTribeDeck(numPlayers);
         initBuildingDeck();
     }
