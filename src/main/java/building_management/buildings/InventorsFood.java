@@ -13,8 +13,8 @@ import java.util.Map;
 // non si può usare InventorsPerType di tribe? invece di fare una mappa
 public class InventorsFood extends BuildingCard {
     Map<InventorType, Integer> playersInventors = new HashMap<>();
-    public InventorsFood(int era, String name, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
-        super(era, name, cardID, cost, activatedAt, effectDescription, prestige);
+    public InventorsFood(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
+        super(era, cardID, cost, activatedAt, effectDescription, prestige);
     }
 
     @Override
