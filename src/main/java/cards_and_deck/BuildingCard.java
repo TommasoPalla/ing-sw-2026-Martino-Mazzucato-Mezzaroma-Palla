@@ -13,6 +13,8 @@ public class BuildingCard extends Card {
     protected Player owner; // the owner of this building, assigned when the building is purchased
     private final int prestige;
 
+    //private final CharacterRole roleEffect;
+
     // constructor, "overrides" Card constructor
     public BuildingCard(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige){
         super(era, cardID);

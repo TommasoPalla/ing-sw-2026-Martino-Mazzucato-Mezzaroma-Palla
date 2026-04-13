@@ -2,13 +2,14 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cards_and_deck.BuildingCard;
 import org.junit.jupiter.api.*;
-import cards_and_deck.CharacterCard;
+import cards_and_deck.BuildingCard;
 import cards_and_deck.CardLoader;
 
-import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.List;
+import java.util.logging.Level;
+
 
 public class BuildingCardTest {
     private List<BuildingCard> allBuildingCards;
@@ -18,8 +19,9 @@ public class BuildingCardTest {
     public void initBuildings(){
         this.allBuildingCards = loader.loadBuildings();
         if(!allBuildingCards.isEmpty()){
-            System.out.println(this.allBuildingCards.get(0).getCardID());
-            assertEquals("E1_B_1", this.allBuildingCards.get(0).getCardID());
+            //Logger logger = new Logger;
+            //logger.log(Level.INFO, "cardID does Match"););
+            assertEquals("E1_B_1", this.allBuildingCards.get(0).getCardID(), "CardID does not match");
         }
     }
 }

@@ -33,5 +33,6 @@ public enum InventorType {
 
   @SerializedName("E")
   BREAD,
+
   NONE
 }
