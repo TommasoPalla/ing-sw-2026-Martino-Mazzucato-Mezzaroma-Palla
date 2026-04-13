@@ -1,12 +1,10 @@
 package game_board;
 
-import building_management.buildings.TurnTile;
 import cards_and_deck.*;
 import game.Game;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import users.Player;
 
 public class OfferTrack{
     private ArrayList<OfferTile> offerTiles;

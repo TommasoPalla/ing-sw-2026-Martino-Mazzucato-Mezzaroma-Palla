@@ -1,4 +1,4 @@
-package building_management.buildings;
+package game_board;
 
 import building_management.BuildingManager;
 import enums.GamePhase;
