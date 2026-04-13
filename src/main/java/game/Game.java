@@ -179,6 +179,7 @@ public class Game {
                 int j=0;
                 //classe controller richiede l'indice input
                 currentPlayer.drawFromTopRow(j, offerTrack);
+
                 //classe controller richiede l'indice input
                 currentPlayer.drawFromBottomRow(j, offerTrack);
 
@@ -199,6 +200,8 @@ public class Game {
                     .map(OfferTile::getCurrentOccupant).collect(Collectors.toCollection(ArrayList::new));
 
             this.updateCurrentPhase();//fase finale
+
+
 
             //remove bottom row
             offerTrack.moveCardsToBottom();
