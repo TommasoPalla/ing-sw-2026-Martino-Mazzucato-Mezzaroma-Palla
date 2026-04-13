@@ -14,11 +14,10 @@ public class DoublePointsBuilder extends BuildingCard {
 
     @Override
     public void applyEffect() {
-        int builderPoints = owner.getTribe().getPopulation().stream()
-                .filter(card -> card.getRole() == CharacterRole.BUILDER)
-                .map(CharacterCard::getPrestigePoints)
-                .mapToInt(opt -> opt.orElse(0)) // converts Optional<Integer> stream to int stream
-                .sum();
+        int builderPoints = 0;
+        for (CharacterCard builder: owner.getTribe().getPopulation().get(CharacterRole.BUILDER)) {
+            builderPoints += builder.getPrestigePoints().orElseThrow();
+        }
         owner.getTribe().modifyPrestigePoints(builderPoints);
     }
 }

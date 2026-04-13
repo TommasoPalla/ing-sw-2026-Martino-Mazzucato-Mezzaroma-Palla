@@ -74,16 +74,16 @@ public class OfferTrack{
         return bottomEventCards;}
 
     //actual functions
-    public Card pickCharacterFromTop(int index){
-        Card indexedCard = topRow.get(index);
-        if(indexedCard instanceof EventCard) throw new IllegalArgumentException("You can't draw an event, choose a character or a building if available.");
-        else return indexedCard;
+    public CharacterCard pickCharacterFromTop(int index){
+        CharacterCard cardPicked = (CharacterCard) topRow.get(index);
+        topRow.remove(index);
+        return cardPicked;
     }
 
-    public Card pickCharacterFromBottom(int index) {
-        Card indexedCard = topRow.get(index);
-        if (indexedCard instanceof EventCard) throw new IllegalArgumentException("You can't draw an event, choose a character or a building if available");
-        else return indexedCard;
+    public CharacterCard pickCharacterFromBottom(int index) {
+        CharacterCard cardPicked = (CharacterCard) bottomRow.get(index);
+        topRow.remove(index);
+        return cardPicked;
     }
 
     //---------------------------FORSE DA CAPIRE SE LE EXCEPTION UCCIDONO L'INPUT DELL'UTENTE--------
@@ -123,6 +123,5 @@ public class OfferTrack{
             if(drawnCard.getClass().equals(EventCard.class)) topRow.add(drawnCard);     //dovrebbe funzionare uguale a instanceof
             else bottomRow.add(drawnCard);
         }
-
     }
 }

@@ -1,14 +1,11 @@
 package building_management.buildings;
 
 import cards_and_deck.BuildingCard;
-import cards_and_deck.CharacterCard;
 import enums.CharacterRole;
 import enums.GamePhase;
-import users.Tribe;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ComboFood extends BuildingCard {
     long currentSetsNumber = 0;
@@ -21,35 +18,38 @@ public class ComboFood extends BuildingCard {
     // with the number of sets already completed in their tribe
     @Override
     public void effectOnPurchase() {
-        Map<CharacterRole, Long> occurrencesPerRole = owner.getTribe().getPopulation().stream()
-                .map(CharacterCard::getRole)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        Map<CharacterRole, Integer> occurrencesPerRole = new HashMap<>();
+        for (CharacterRole role : owner.getTribe().getPopulation().keySet()) {
+            occurrencesPerRole.put(role, owner.getTribe().getPopulation().get(role).size());
+        }
         if(occurrencesPerRole.size() == 6) {
             this.currentSetsNumber = occurrencesPerRole.values()
                     .stream()
-                    .min(Long::compare)
-                    .orElse(0L);
+                    .min(Integer::compare)
+                    .orElse(0);
         }
         else { this.currentSetsNumber = 0; }
     }
 
     @Override
     public void applyEffect() {
-        // Maps the tribe's population to the characters' types, then it maps every role to
-        // its number of occurrences
-        Map<CharacterRole, Long> occurrencesPerRole = owner.getTribe().getPopulation().stream()
-                .map(CharacterCard::getRole)
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        // Maps every character's type to the number of its occurrences in the player's tribe
+        Map<CharacterRole, Integer> occurrencesPerRole = new HashMap<>();
+        for (CharacterRole role : owner.getTribe().getPopulation().keySet()) {
+            occurrencesPerRole.put(role, owner.getTribe().getPopulation().get(role).size());
+        }
         // if there's at least one occurrence of every character's role, it extracts the
         // value of the role with fewer occurrences (the number of sets),
         // and if the number of sets has increased, the player takes 5 Food tokens
         if(occurrencesPerRole.size() == 6) {
             long setsNumber = occurrencesPerRole.values()
                     .stream()
-                    .min(Long::compare)
-                    .orElse(0L);
-            owner.getTribe().modifyFood(5);
-            currentSetsNumber++;
+                    .min(Integer::compare)
+                    .orElse(0);
+            if(setsNumber > this.currentSetsNumber) {
+                owner.getTribe().modifyFood(5);
+                currentSetsNumber++;
+            }
         }
     }
 }
