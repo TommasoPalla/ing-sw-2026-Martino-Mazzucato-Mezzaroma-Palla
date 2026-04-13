@@ -1,5 +1,6 @@
 package game_board;
 
+import building_management.buildings.TurnTile;
 import cards_and_deck.*;
 import game.Game;
 
@@ -13,6 +14,7 @@ public class OfferTrack{
     private ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
+    private TurnTile turnTile;
     private int currentPlayerTileIdx;
     private int playerNumber;
     int[] availableBuildingsPerEra;
@@ -26,6 +28,7 @@ public class OfferTrack{
         this.bottomBuildingCard = new ArrayList<BuildingCard>();
         this.currentPlayerTileIdx = -1;
         this.playerNumber = playerNumber;
+        this.turnTile = new TurnTile(playerNumber);
 
         switch (playerNumber){
             case 2:

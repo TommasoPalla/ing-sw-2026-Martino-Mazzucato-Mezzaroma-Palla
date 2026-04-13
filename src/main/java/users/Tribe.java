@@ -2,7 +2,6 @@ package users;
 
 import cards_and_deck.BuildingCard;
 import cards_and_deck.CharacterCard;
-import enums.GamePhase;
 import enums.InventorType;
 import game.Game;
 
@@ -31,43 +30,33 @@ public class  Tribe {
     public Player getTribeOwner() {
         return tribeOwner;
     }
-
     public int getPrestigePoints() {
         return prestigePoints;
     }
-
     public int getFoodReserve() {
         return foodReserve;
     }
-
     public ArrayList<CharacterCard> getPopulation() {
         return population;
     }
-
     public ArrayList<BuildingCard> getBuildings() {
         return buildings;
     }
-
     public int getHuntersNumber() {
         return huntersNumber;
     }
-
     public int getBuilderDiscount() {
         return builderDiscount;
     }
-
     public int getGatherersDiscount() {
         return gatherersDiscount;
     }
-
     public int getArtistsNumber() {
         return artistsNumber;
     }
-
     public int getShamansStars() {
         return shamansStars;
     }
-
     public int[] getInventorsPerType() {
         return inventorsPerType;
     }
@@ -78,12 +67,14 @@ public class  Tribe {
     }
 
     public void modifyFood(int food) {
-        foodReserve += food;
+        if((foodReserve + food) < 0){
+            foodReserve = 0;
+            modifyPrestigePoints(-1);
+        }
+        else foodReserve += food;
     }
 
-    public void addShamansStars(int stars) {
-        shamansStars += stars;
-    }
+    public void addShamansStars(int stars) {shamansStars += stars;}
 
     // Character is added to the player's list
     // Called in Player (?)
