@@ -11,7 +11,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class  Tribe {
-    private final Player tribeOwner;
+    private Player tribeOwner;
     private int prestigePoints;
     private int foodReserve;
     private EnumMap<CharacterRole, ArrayList<CharacterCard>> population;
@@ -23,8 +23,8 @@ public class  Tribe {
     private int shamansStars = 0;
 
     //Tribe's constructor
-    public Tribe(Player tribeOwner) {
-        this.tribeOwner = tribeOwner;
+    public Tribe() {
+        //this.tribeOwner = tribeOwner;
         this.prestigePoints=0;
         this.foodReserve=0;
         this.population=null;
@@ -71,6 +71,7 @@ public class  Tribe {
     public void modifyPrestigePoints(int pp) {
         prestigePoints += pp;
     }
+    public void setOwner(Player player){this.tribeOwner = player;}
 
     public void modifyFood(int food) {
         if((foodReserve + food) < 0){

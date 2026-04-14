@@ -19,6 +19,7 @@ public class Player {
         this.tribe = tribe;
         this.totemColor = totemColor;
         this.currentOfferTile = null;
+        tribe.setOwner(this);
     }
 
     //getters
