@@ -12,7 +12,6 @@ public class OfferTrack{
     private ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
-    private ArrayList<EventCard> bottomEventCards;
     private TurnTile turnTile;
     private int currentPlayerTileIdx;
     private int playerNumber;
@@ -67,6 +66,7 @@ public class OfferTrack{
     public int getCurrentPlayerTileIdx() {return currentPlayerTileIdx;}
     public TurnTile getTurnTile() {return turnTile;}
     public ArrayList<EventCard> getBottomEvents(){
+        ArrayList<EventCard> bottomEventCards = new ArrayList<>();
         for(Card card : bottomRow){
             if(card.getClass().equals(EventCard.class)){
                 bottomEventCards.add((EventCard) card);
@@ -74,6 +74,16 @@ public class OfferTrack{
         }
         return bottomEventCards;
     }
+    public ArrayList<EventCard> getTopEvents(){
+        ArrayList<EventCard> topEventCards = new ArrayList<>();
+        for(Card card : topRow){
+            if(card.getClass().equals(EventCard.class)){
+                topEventCards.add((EventCard) card);
+            }
+        }
+        return topEventCards;
+    }
+
 
     //actual functions
     public CharacterCard pickCharacterFromTop(int index){

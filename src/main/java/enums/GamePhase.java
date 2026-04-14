@@ -7,5 +7,6 @@ public enum GamePhase {
   END_GAME, 
   ON_EVENT, 
   END_TURN,
-  START_TURN;
+  START_TURN,
+  RETURN_TO_TILE;
 }

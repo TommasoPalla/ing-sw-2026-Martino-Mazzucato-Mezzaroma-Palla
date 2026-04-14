@@ -25,6 +25,11 @@ public class  Tribe {
     //Tribe's constructor
     public Tribe(Player tribeOwner) {
         this.tribeOwner = tribeOwner;
+        this.prestigePoints=0;
+        this.foodReserve=0;
+        this.population=null;
+        this.buildings=null;
+        this.inventorsPerType=null;
     }
 
     //getters

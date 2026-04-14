@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import building_management.BuildingManager;
 import cards_and_deck.Deck;
+import cards_and_deck.EventCard;
+import game_board.TurnTile;
 import users.Illegal_Draw_Exception;
 import users.Player;
 import game_board.OfferTrack;
@@ -29,7 +31,6 @@ public class Game {
     final private int numPlayers;
     private Player currentPlayer;
     private ArrayList<Player> turnOrder;
-    private ArrayList<Player> ranking;
     private int era;
     private int currentRound;
     private GamePhase currentPhase;
@@ -37,6 +38,7 @@ public class Game {
     private BuildingManager buildingManager;
     private EventManager eventManager;
     private static Deck deck;       //forse static non è la soluzione ma ad ora non so che altro fare
+    private TurnTile turnTile;
 
   /* Game constructor, which with the game is initialized
   *
@@ -65,9 +67,9 @@ public class Game {
             i++;
         }
         if(i==this.numPlayers-1){
-            i=0;
+            i=-1;
         }
-        return turnOrder.get(i);
+        return turnOrder.get(i+1);
     }
 
 
@@ -82,6 +84,9 @@ public class Game {
 
       offerTrack = new OfferTrack(numPlayers);
       buildingManager = new BuildingManager();
+      eventManager = new EventManager();
+      turnTile = new TurnTile(numPlayers);
+      deck = new Deck(numPlayers);
 
       //inizializzo track
       offerTrack.initializeBottomRow();
@@ -142,10 +147,9 @@ public class Game {
 
     //direi che potrebbe essere il caso di fare una classe turnManager: ci sono un sacco di cose di cui tener conto
     public void playGame() throws Illegal_Draw_Exception {
-        ArrayList <OfferTile> newTurns = null;
 
         this.startGame();
-        while(this.currentRound<10){
+        while(this.currentRound <= 10){
             //turno di player 1 da startGame()
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
 
@@ -163,8 +167,11 @@ public class Game {
             }
 
             this.updateCurrentPhase();//fase draw
+            //aggiornare turnorder qui
+            //return turnTile
+            turnOrder = turnTile.getTurnOrder(turnOrder);
 
-            for(int i=0; i<this.numPlayers;i++){//tutti scelgono le loro carte in ordine
+            for(Player player : turnOrder){//tutti scelgono le loro carte in ordine
 
                 //classe controller richiede gli indici input
                 int whichRow = 0;
@@ -187,21 +194,25 @@ public class Game {
                     }
                     buildingManager.useBuilding(currentPhase, currentPlayer);
                 }
+                //fase intermittente tra return to tile on draw
+                currentPhase = GamePhase.RETURN_TO_TILE;
+                turnTile.returnToStartingTile(turnOrder, turnOrder.indexOf(currentPlayer), buildingManager);
+                currentPhase = GamePhase.ON_DRAW;
 
                 currentPlayer=getNextPlayer();
             }
 
             this.updateCurrentPhase();//fase eventi
-
-            eventManager.resolve(offerTrack.getBottomEvents(), players, buildingManager);
-
-            for(int i=0; i<this.numPlayers;i++){//creazione newTurns per riordinare i turni
-                newTurns.add(i, currentPlayer.getCurrentOfferTile());
-                currentPlayer=getNextPlayer();
+            // If round is 10 then resolves both top and bottom rows' events.
+            if(currentRound<10){
+                eventManager.resolve(offerTrack.getBottomEvents(), players, buildingManager);
+            }else{
+                ArrayList<EventCard> allEvents = new ArrayList<>();
+                allEvents.addAll(offerTrack.getBottomEvents());
+                allEvents.addAll(offerTrack.getTopEvents());
+                eventManager.resolve(allEvents, players, buildingManager);
             }
-            //ripristino turnOrder in ordine alfabetico
-            turnOrder=newTurns.stream().sorted(Comparator.comparing(OfferTile :: getTileCode))
-                    .map(OfferTile::getCurrentOccupant).collect(Collectors.toCollection(ArrayList::new));
+
 
             this.updateCurrentPhase();//fase finale
 
@@ -209,7 +220,7 @@ public class Game {
                 buildingManager.useBuilding(currentPhase, currentPlayer);
                 currentPlayer=getNextPlayer();
             }
-            //return alle tile !!!!!!!!!!!
+
 
             //fase inizializzata
             this.updateCurrentPhase();
@@ -217,7 +228,7 @@ public class Game {
             //track inizializzata
             offerTrack.moveCardsToBottom();
             offerTrack.repopulateTopRow();
-
+            currentRound++;
         }
         currentPhase = GamePhase.END_GAME;
 
@@ -226,7 +237,8 @@ public class Game {
             currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculateFinalPoints());
             currentPlayer=getNextPlayer();
         }
-        ArrayList<Player> ranking = players.stream().sorted(Comparator.comparingInt(
+        ArrayList<Player> ranking = new ArrayList<>(players);
+        ranking=players.stream().sorted(Comparator.comparingInt(
                 (Player p) -> p.getTribe().getPrestigePoints()).reversed())
                         .collect(Collectors.toCollection(ArrayList::new));
     }
