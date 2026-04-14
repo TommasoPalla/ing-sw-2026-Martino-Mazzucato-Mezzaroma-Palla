@@ -3,18 +3,21 @@ package building_management.buildings;
 import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
 import enums.CharacterRole;
+import enums.Effect;
 import enums.Parameters;
 import enums.GamePhase;
 import event_management.EventStrategy;
 import event_management.SustenanceEvent;
 
 public class SustenanceDiscount extends BuildingCard {
-    private final CharacterRole role;
+    private final CharacterRole roleEffect;
+    private final int foodDiscount;
 
-    public SustenanceDiscount(int era, String cardID, int cost, GamePhase activatedAt,
-                               String effectDescription, int prestige, CharacterRole role) {
-        super(era, cardID, cost, activatedAt, effectDescription, prestige);
-        this.role = role;
+    public SustenanceDiscount(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
+                              String effectDescription, int prestige, CharacterRole roleEffect, int foodDiscount) {
+        super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
+        this.roleEffect = roleEffect;
+        this.foodDiscount = foodDiscount;
     }
 
     // Calculates the number of Character Cards of the specific role and adds it

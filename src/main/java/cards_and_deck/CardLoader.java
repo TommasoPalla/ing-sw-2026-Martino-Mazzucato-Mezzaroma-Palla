@@ -3,6 +3,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -20,10 +21,9 @@ public class CardLoader {
      * @return json Array to convert in a list of the specific type of card
      * @throws Exception
      */
-    private JsonArray getArrayFromRoot(String key) throws Exception{
-        String jsonPath = "json/cards.json";
+    private JsonArray getArrayFromRoot(String key, String path) throws Exception{
         try (Reader reader = new InputStreamReader(
-                getClass().getClassLoader().getResourceAsStream(jsonPath))) {
+                getClass().getClassLoader().getResourceAsStream(path))) {
 
             JsonElement rootElement = JsonParser.parseReader(reader);
             JsonObject root = rootElement.getAsJsonObject();
@@ -31,9 +31,9 @@ public class CardLoader {
         }
     }
 
-    public List<CharacterCard> loadCharacters() {
+    public List<CharacterCard> loadCharacters(String path) {
         try {
-            JsonArray array = getArrayFromRoot("characters");
+            JsonArray array = getArrayFromRoot("characters", path);
             // Definiamo il tipo
             Type listType = new TypeToken<ArrayList<CharacterCard>>(){}.getType();
             // JSON legge il file e crea la lista
@@ -43,9 +43,9 @@ public class CardLoader {
         }
     }
 
-    public List<EventCard> loadEvents() {
+    public List<EventCard> loadEvents(String path) {
         try {
-            JsonArray array = getArrayFromRoot("events");
+            JsonArray array = getArrayFromRoot("events", path);
             // Definiamo il tipo
             Type listType = new TypeToken<ArrayList<EventCard>>(){}.getType();
             // JSON legge il file e crea la lista
@@ -55,16 +55,26 @@ public class CardLoader {
         }
     }
 
-    public List<BuildingCard> loadBuildings() {
-        try {
-            JsonArray array = getArrayFromRoot("buildings");
+    public List<BuildingCard> loadBuildings(String path) {
+        List<BuildingCard> allBuildingCards = new ArrayList<>();
+
+        try (Reader jsonReader = new InputStreamReader(
+                    getClass().getClassLoader().getResourceAsStream(path))) {
+            //JsonArray array = getArrayFromRoot("buildings", path);
             // Definiamo il tipo
-            Type listType = new TypeToken<ArrayList<BuildingCard>>() {
+            Type listType = new TypeToken<ArrayList<BuildingCardDTO>>() {
             }.getType();
-            // JSON legge il file e crea la lista
-            return gson.fromJson(array, listType);
-        } catch (Exception e) {
+            List<BuildingCardDTO> dtos = gson.fromJson(jsonReader, listType);
+            if(dtos != null) {
+                for(BuildingCardDTO dto : dtos){
+                    allBuildingCards.add(BuildingCardFactory.createBuilding(dto));
+                }
+            }
+
+        } catch (IOException e) {
+            System.err.println("errore nel caricamento file JSon: "+e.getMessage());
             return new ArrayList<>();
         }
+        return allBuildingCards;
     }
 }
