@@ -26,7 +26,7 @@ public class Deck {
         CardLoader loader = new CardLoader();
         this.allCharacterCards = loader.loadCharacters();    //card Loader
         this.allEventCards = loader.loadEvents();
-        this.allBuildingCards = loader.loadBuildings();
+        this.allBuildingCards = loader.loadBuildings();//cambiare path
         initTribeDeck(numPlayers);
         initBuildingDeck();
     }
@@ -40,7 +40,7 @@ public class Deck {
      * first picks all cards suitable for the number of players, then it shuffles them and returns a deque
      */
     //method called by Game.getInstance().changeEra()
-    public void initTribeDeck(int numPlayers){
+    private void initTribeDeck(int numPlayers){
         this.tribeDeck = new ArrayDeque<>();
         for(int era = 1; era <= 3; era++){
             List<Card> tempDeck = new ArrayList<>();
@@ -72,7 +72,7 @@ public class Deck {
      * method shuffles all buildings for each era and then picks the correct number of cards for the number
      * of players
     * */
-    public void initBuildingDeck(){
+    private void initBuildingDeck(){
         this.buildingsDeck = new ArrayDeque<>();
         for(int era = 1; era <= 3; era++){
             List<BuildingCard> tempDeck = new ArrayList<>();
