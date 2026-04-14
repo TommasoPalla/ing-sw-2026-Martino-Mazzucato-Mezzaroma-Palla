@@ -52,17 +52,36 @@ public class Player {
         }
     }
 
-    public void drawFromTopRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
+    public boolean drawable(int index, OfferTrack offerTrack, int row)
+            throws Illegal_Draw_Exception, Insufficient_Food_Exception{
+        Card card;
+        if (row==0){//0 è toprow
+            card = offerTrack.getTopRow().get(index);
+        }else{
+            card = offerTrack.getBottomRow().get(index);
+        }
+        if(card.getClass().equals(EventCard.class)){
+            return false;
+        }else if(this.getTribe().getFoodReserve()<((BuildingCard)card).getCost()){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public void drawFromTopRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception, Insufficient_Food_Exception{
         Card card = offerTrack.getTopRow().get(index);
         if (card.getClass().equals(CharacterCard.class)) {
 
             CharacterCard characterPicked = offerTrack.pickCharacterFromTop(index);
             tribe.addCharacterToTribe(characterPicked);
-        } else if (card.getClass().equals(EventCard.class)) {
+        } /*else if (card.getClass().equals(EventCard.class)) {
             throw new Illegal_Draw_Exception();
-        } else {
+        } */else if(this.getTribe().getFoodReserve()>=((BuildingCard)card).getCost()){
             BuildingCard buildingPurchased = offerTrack.pickBuildingFromTop(index);
             tribe.addBuildingToTribe(buildingPurchased);
+        } else{
+            throw new Insufficient_Food_Exception();
         }
     }
 

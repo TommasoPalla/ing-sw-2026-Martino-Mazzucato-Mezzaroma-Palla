@@ -23,8 +23,8 @@ public class  Tribe {
     private int shamansStars = 0;
 
     //Tribe's constructor
-    public Tribe() {
-        //this.tribeOwner = tribeOwner;
+    public Tribe(Player tribeOwner) {
+        this.tribeOwner = tribeOwner;
         this.prestigePoints=0;
         this.foodReserve=0;
         this.population=null;
@@ -71,7 +71,7 @@ public class  Tribe {
     public void modifyPrestigePoints(int pp) {
         prestigePoints += pp;
     }
-    public void setOwner(Player player){this.tribeOwner = player;}
+    public void setOwner(Player player){this.tribeOwner=player;}
 
     public void modifyFood(int food) {
         if((foodReserve + food) < 0){
@@ -115,6 +115,7 @@ public class  Tribe {
         Game.getInstance().getBuildingManager().addBuilding(building, tribeOwner);
         // Calls effectOnPurchase for the building. It only works with the buildings who override it
         building.effectOnPurchase();
+        this.foodReserve=this.foodReserve-building.getCost();
     }
 
 

@@ -182,10 +182,16 @@ public class Game {
                 for(int j=0; j<topDrawable+bottomDrawable;j++) {
                     //getRow && index da controller
                     if (whichRow == 0 && topDrawable > 0) {
+                        while(currentPlayer.drawable(index,offerTrack, whichRow)!=true){
+                            //chiede nuovi input
+                        }
                         currentPlayer.drawFromTopRow(index, offerTrack);
                         topDrawable--;
                     }
                     else if(whichRow == 1 && bottomDrawable > 0){
+                        while(currentPlayer.drawable(index,offerTrack, whichRow)!=true){
+                            //chiede nuovi input
+                        }
                         currentPlayer.drawFromBottomRow(index, offerTrack);
                         bottomDrawable--;
                     }
