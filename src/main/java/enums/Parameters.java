@@ -3,7 +3,7 @@ import com.google.gson.annotations.SerializedName;
 
 public enum Parameters {
     @SerializedName("F+")
-    FOOD_BONUS,         //REPRESENTS A POSITIVE EFFECT e.g. DISCOUNT FOR SPECIFIC TYPE DURING SUSTENANCE
+    FOOD_BONUS,
 
     @SerializedName("F-")
     FOOD_MALUS,         //ALWAYS POSITIVE. THE MINUS SIGN IS HANDLED INSIDE THE FUNCTIONS

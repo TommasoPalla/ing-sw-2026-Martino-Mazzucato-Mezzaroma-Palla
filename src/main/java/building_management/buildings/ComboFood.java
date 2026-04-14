@@ -2,19 +2,20 @@ package building_management.buildings;
 
 import cards_and_deck.BuildingCard;
 import enums.CharacterRole;
+import enums.Effect;
 import enums.GamePhase;
-import enums.Parameters;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ComboFood extends BuildingCard {
+    private final int foodBonus;
     long currentSetsNumber = 0;
 
-    public ComboFood(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription,
-                     int prestige, EnumMap<Parameters, Integer> bonusPoints) {
-        super(era, cardID, cost, activatedAt, effectDescription, prestige, CharacterRole.NONE, bonusPoints);
+    public ComboFood(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
+                     String effectDescription, int prestige, int foodBonus) {
+        super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
+        this.foodBonus = foodBonus;
     }
 
     // When the player purchases the building, initialises the variable currentSetsNumber
@@ -22,8 +23,8 @@ public class ComboFood extends BuildingCard {
     @Override
     public void effectOnPurchase() {
         Map<CharacterRole, Integer> occurrencesPerRole = new HashMap<>();
-        for (CharacterRole role : owner.getTribe().getPopulation().keySet()) {
-            occurrencesPerRole.put(role, owner.getTribe().getPopulation().get(role).size());
+        for (CharacterRole role : this.getOwner().getTribe().getPopulation().keySet()) {
+            occurrencesPerRole.put(role, this.getOwner().getTribe().getPopulation().get(role).size());
         }
         if(occurrencesPerRole.size() == 6) {
             this.currentSetsNumber = occurrencesPerRole.values()
@@ -34,12 +35,16 @@ public class ComboFood extends BuildingCard {
         else { this.currentSetsNumber = 0; }
     }
 
+    public int getFoodBonus(){
+        return this.foodBonus;
+    }
+
     @Override
     public void applyEffect() {
         // Maps every character's type to the number of its occurrences in the player's tribe
         Map<CharacterRole, Integer> occurrencesPerRole = new HashMap<>();
-        for (CharacterRole role : owner.getTribe().getPopulation().keySet()) {
-            occurrencesPerRole.put(role, owner.getTribe().getPopulation().get(role).size());
+        for (CharacterRole role : this.getOwner().getTribe().getPopulation().keySet()) {
+            occurrencesPerRole.put(role, this.getOwner().getTribe().getPopulation().get(role).size());
         }
         // if there's at least one occurrence of every character's role, it extracts the
         // value of the role with fewer occurrences (the number of sets),
@@ -50,7 +55,7 @@ public class ComboFood extends BuildingCard {
                     .min(Integer::compare)
                     .orElse(0);
             if(setsNumber > this.currentSetsNumber) {
-                owner.getTribe().modifyFood(5);
+                this.getOwner().getTribe().modifyFood(this.foodBonus);
                 currentSetsNumber++;
             }
         }

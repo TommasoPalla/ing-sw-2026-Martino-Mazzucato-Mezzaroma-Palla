@@ -701,8 +701,10 @@
       "cardID": "E1_B_1",
       "cost": 4,
       "activatedAt": "ON_DRAW",
+      "effect": "COMBO_FOOD",
       "effectDescription": "Starting from when you have this Building, every time you complete a set of 6 different Character cards, you take 5 Food tokens. You do not receive Food tokens for sets already completed at the time of acquiring the Building.",
-      "prestige": 3
+      "prestige": 3,
+      "foodBonus": 5
     },
     {
       "era": 1,
@@ -754,7 +756,7 @@
       "era": 2,
       "cardID": "E2_B_1",
       "cost": 6,
-      "activatedAt": "ON_PURCHASE??",//
+      "activatedAt": "ON_PURCHASE??",
       "effectDescription": "During the Shamanic Ritual Event, your tribe\nhas 3 additional Shamanic Star icons.",
       "prestige": 4
     },

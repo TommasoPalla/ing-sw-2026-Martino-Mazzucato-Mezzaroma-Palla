@@ -2,7 +2,7 @@ package building_management.buildings;
 
 import building_management.EffectContext;
 import cards_and_deck.BuildingCard;
-import enums.CharacterRole;
+import enums.Effect;
 import enums.GamePhase;
 import enums.Parameters;
 import event_management.EventStrategy;
@@ -10,9 +10,9 @@ import event_management.ShamanicRitualEvent;
 
 // if the owner loses the Shamanic Ritual event, he doesn't lose any pp
 public class NoMalusRitual extends BuildingCard {
-    public NoMalusRitual(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription,
-                         int prestige) {
-        super(era, cardID, cost, activatedAt, effectDescription, prestige, CharacterRole.NONE, null);
+    public NoMalusRitual(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
+                         String effectDescription, int prestige) {
+        super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
     }
 
     @Override
