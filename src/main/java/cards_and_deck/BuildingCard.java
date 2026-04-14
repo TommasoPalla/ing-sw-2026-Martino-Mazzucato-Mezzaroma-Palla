@@ -5,6 +5,8 @@ import enums.*;
 import event_management.EventStrategy;
 import users.*;
 
+import java.util.EnumMap;
+
 
 public class BuildingCard extends Card {
     private final int cost; // food cost of the building card
@@ -12,16 +14,24 @@ public class BuildingCard extends Card {
     private final String effectDescription; //si potrebbe fare uno switch dentro il costruttore per alleggerire il JSON
     protected Player owner; // the owner of this building, assigned when the building is purchased
     private final int prestige;
-
-    //private final CharacterRole roleEffect;
+    private final CharacterRole roleEffect;
+    private final EnumMap<Parameters, Integer> parameters;
 
     // constructor, "overrides" Card constructor
-    public BuildingCard(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige){
+    public BuildingCard(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige,
+                        CharacterRole roleEffect, EnumMap<Parameters, Integer> inputPar){
         super(era, cardID);
         this.cost = cost;
         this.activatedAt = activatedAt;
         this.effectDescription = effectDescription;
-        this.prestige=prestige;
+        this.prestige = prestige;
+        this.roleEffect = roleEffect;
+        if(inputPar != null){
+            this.parameters = new EnumMap<>(inputPar);
+        }
+        else {
+            this.parameters = new EnumMap<>(Parameters.class);
+        }
         this.owner = null;
     }
 
@@ -35,6 +45,12 @@ public class BuildingCard extends Card {
     public GamePhase getActivatedAt(){ return this.activatedAt; }
     public Player getOwner(){ return this.owner; }
     public int getPrestige(){return this.prestige; }
+    public CharacterRole getRoleEffect(){
+        return this.roleEffect;
+    }
+    public int getParam(Parameters par){
+        return parameters.getOrDefault(par, 0);
+    }
 
     // actual functions
     /**

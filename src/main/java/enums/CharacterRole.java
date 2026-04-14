@@ -21,5 +21,7 @@ public enum CharacterRole {
   SHAMAN,
 
   @SerializedName("I")
-  INVENTOR
+  INVENTOR,
+
+  NONE
 }

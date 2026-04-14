@@ -716,9 +716,12 @@
       "era": 1,
       "cardID": "E1_B_3",
       "cost": 3,
-      "activatedAt": "END_TURN",
+      "activatedAt": "RETURN_TO_TILE",
       "effectDescription": "If at the end of your turn (also during the last\nround), when you move your Totem back to\nthe Turn Order tile, you place it in a space that\nprovides a bonus in Food, you immediately\ntake 1 additional Food token. If you place the\nTotem in the last space, you pay 1 Food token\nnormally, and the building has no effect.",
-      "prestige": 3
+      "prestige": 3,
+      "parameters": {
+        "F+": 1
+      }
     },
     {
       "era": 1,
@@ -726,8 +729,8 @@
       "cost": 4,
       "activatedAt": "ON_EVENT",
       "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each gatherer\n in your tribe.",
-      "prestige": 4
-      //"roleEffect": "G"
+      "prestige": 4,
+      "roleEffect": "G"
     },
     {
       "era": 1,
@@ -735,8 +738,8 @@
       "cost": 5,
       "activatedAt": "ON_EVENT",
       "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each artist\n in your tribe.",
-      "prestige": 3
-      //"roleEffect": "A"
+      "prestige": 3,
+      "roleEffect": "A"
     },
     {
       "era": 1,
@@ -762,7 +765,7 @@
       "activatedAt": "ON_EVENT",
       "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each Inventor\n in your tribe.",
       "prestige": 4,
-      //"roleEffect": "I"
+      "roleEffect": "I"
     },
     {
       "era": 2,
@@ -811,8 +814,8 @@
       "cost": 8,
       "activatedAt": "END_GAME",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Hunter\n in your tribe.",
-      "prestige": 8
-      //"roleEffect": "H"
+      "prestige": 8,
+      "roleEffect": "H"
     },
     {
       "era": 3,
@@ -820,8 +823,8 @@
       "cost": 6,
       "activatedAt": "END_GAME",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Builder\n in your tribe.",
-      "prestige": 3
-      //"roleEffect": "B"
+      "prestige": 3,
+      "roleEffect": "B"
     },
     {
       "era": 3,
@@ -829,8 +832,8 @@
       "cost": 7,
       "activatedAt": "END_GAME",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Gatherer\n in your tribe.",
-      "prestige": 6
-      //"roleEffect": "G"
+      "prestige": 6,
+      "roleEffect": "G"
     },
     {
       "era": 3,
@@ -838,8 +841,8 @@
       "cost": 7,
       "activatedAt": "END_GAME",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Artist\n in your tribe.",
-      "prestige": 4
-      //"roleEffect": "A"
+      "prestige": 4,
+      "roleEffect": "A"
     },
     {
       "era": 3,
@@ -847,8 +850,8 @@
       "cost": 6,
       "activatedAt": "END_GAME",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Inventor\n in your tribe.",
-      "prestige": 2
-      //"roleEffect": "I"
+      "prestige": 2,
+      "roleEffect": "I"
     },
     {
       "era": 3,
@@ -856,8 +859,8 @@
       "cost": 7,
       "activatedAt": "END_GAME",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Shaman\n in your tribe.",
-      "prestige": 4
-      //"roleEffect": "S"
+      "prestige": 4,
+      "roleEffect": "S"
     },
     {
       "era": 3,
@@ -865,8 +868,10 @@
       "cost": 10,
       "activatedAt": "END_GAME",
       "effectDescription": "At the end of the game, you gain\n25 Prestige Points.",
-      "prestige": 0
-      //"P+": 25 buildingCard non ha questo attributo (è incluso nella logica della classe)
+      "prestige": 0,
+      "parameters": {
+        "P+": 25
+      }
     },
     {
       "era": 3,
