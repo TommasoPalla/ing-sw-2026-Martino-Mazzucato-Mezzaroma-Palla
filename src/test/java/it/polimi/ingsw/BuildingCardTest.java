@@ -17,11 +17,10 @@ public class BuildingCardTest {
 
     @Test
     public void initBuildings(){
-        this.allBuildingCards = loader.loadBuildings();
+        this.allBuildingCards = loader.loadBuildings("json/test_card.json");
         if(!allBuildingCards.isEmpty()){
-            //Logger logger = new Logger;
-            //logger.log(Level.INFO, "cardID does Match"););
             assertEquals("E1_B_1", this.allBuildingCards.get(0).getCardID(), "CardID does not match");
+            assertEquals("ON_DRAW", this.allBuildingCards.get(0).getActivatedAt());
         }
     }
 }

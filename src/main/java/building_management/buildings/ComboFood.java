@@ -3,15 +3,18 @@ package building_management.buildings;
 import cards_and_deck.BuildingCard;
 import enums.CharacterRole;
 import enums.GamePhase;
+import enums.Parameters;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ComboFood extends BuildingCard {
     long currentSetsNumber = 0;
 
-    public ComboFood(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
-        super(era, cardID, cost, activatedAt, effectDescription, prestige);
+    public ComboFood(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription,
+                     int prestige, EnumMap<Parameters, Integer> bonusPoints) {
+        super(era, cardID, cost, activatedAt, effectDescription, prestige, CharacterRole.NONE, bonusPoints);
     }
 
     // When the player purchases the building, initialises the variable currentSetsNumber

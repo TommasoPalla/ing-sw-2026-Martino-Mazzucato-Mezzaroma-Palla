@@ -4,11 +4,15 @@ import cards_and_deck.BuildingCard;
 import cards_and_deck.CharacterCard;
 import enums.CharacterRole;
 import enums.GamePhase;
+import enums.Parameters;
+
+import java.util.EnumMap;
 
 public class InventorsFood extends BuildingCard {
     int inventorsNumber;
-    public InventorsFood(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
-        super(era, cardID, cost, activatedAt, effectDescription, prestige);
+    public InventorsFood(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription,
+                         int prestige, CharacterRole role, EnumMap<Parameters, Integer> foodBonus) {
+        super(era, cardID, cost, activatedAt, effectDescription, prestige, role, foodBonus);
     }
 
     @Override

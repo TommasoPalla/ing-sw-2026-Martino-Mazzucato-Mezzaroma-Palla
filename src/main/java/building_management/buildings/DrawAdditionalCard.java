@@ -1,6 +1,7 @@
 package building_management.buildings;
 
 import cards_and_deck.BuildingCard;
+import enums.CharacterRole;
 import enums.GamePhase;
 import game.Game;
 
@@ -8,7 +9,7 @@ import game.Game;
 // card (paying its cost) from the top row
 public class DrawAdditionalCard extends BuildingCard {
     public DrawAdditionalCard(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription, int prestige) {
-        super(era, cardID, cost, activatedAt, effectDescription, prestige);
+        super(era, cardID, cost, activatedAt, effectDescription, prestige, CharacterRole.NONE, null);
     }
 
     /* Se la topRow non è vuota, pesca una carta in più a fine turno

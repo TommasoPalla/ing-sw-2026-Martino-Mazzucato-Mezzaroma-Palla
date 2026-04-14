@@ -8,12 +8,14 @@ import enums.GamePhase;
 import event_management.EventStrategy;
 import event_management.SustenanceEvent;
 
+import java.util.EnumMap;
+
 public class SustenanceDiscount extends BuildingCard {
     private final CharacterRole role;
 
-    public SustenanceDiscount(int era, String cardID, int cost, GamePhase activatedAt,
-                               String effectDescription, int prestige, CharacterRole role) {
-        super(era, cardID, cost, activatedAt, effectDescription, prestige);
+    public SustenanceDiscount(int era, String cardID, int cost, GamePhase activatedAt, String effectDescription,
+                              int prestige, CharacterRole role, EnumMap<Parameters, Integer> discount) {
+        super(era, cardID, cost, activatedAt, effectDescription, prestige, role, discount);
         this.role = role;
     }
 
