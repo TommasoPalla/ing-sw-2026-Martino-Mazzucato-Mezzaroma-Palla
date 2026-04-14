@@ -17,8 +17,7 @@ public class CharacterCardTest {
     @Test
     public void initCharacters(){
         this.allCharacterCards = loader.loadCharacters("json/test_card.json");
-        System.out.println(this.allCharacterCards.get(1).getRole());
-        assertEquals(CharacterRole.HUNTER, this.allCharacterCards.get(1).getRole());
-        assertEquals(2, this.allCharacterCards.get(1).getNumPlayersFlag());
+        assertEquals(CharacterRole.HUNTER, this.allCharacterCards.get(0).getRole());
+        assertEquals(2, this.allCharacterCards.get(0).getNumPlayersFlag());
     }
 }
