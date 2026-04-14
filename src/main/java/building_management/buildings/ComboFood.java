@@ -35,6 +35,10 @@ public class ComboFood extends BuildingCard {
         else { this.currentSetsNumber = 0; }
     }
 
+    public int getFoodBonus(){
+        return this.foodBonus;
+    }
+
     @Override
     public void applyEffect() {
         // Maps every character's type to the number of its occurrences in the player's tribe

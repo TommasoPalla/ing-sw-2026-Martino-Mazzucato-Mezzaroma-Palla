@@ -18,18 +18,18 @@ public class InventorsFood extends BuildingCard {
 
     @Override
     public void effectOnPurchase() {
-        this.inventorsNumber = owner.getTribe().getPopulation().get(CharacterRole.INVENTOR).size();
+        this.inventorsNumber = this.getOwner().getTribe().getPopulation().get(CharacterRole.INVENTOR).size();
     }
 
     @Override
     public void applyEffect() {
         // ATT!! Si basa sul presupposto che la carta pescata si trovi all'ultimo posto nell'array population della tribe
         // if the drew card is an inventor...
-        if(owner.getTribe().getPopulation().get(CharacterRole.INVENTOR).size() > this.inventorsNumber) {
+        if(this.getOwner().getTribe().getPopulation().get(CharacterRole.INVENTOR).size() > this.inventorsNumber) {
             this.inventorsNumber++;
-            CharacterCard inventor = owner.getTribe().getPopulation().get(CharacterRole.INVENTOR).getLast();
-            if(owner.getTribe().getInventorsPerType().get(inventor.getInventorType()) % 2 == 0) {
-                owner.getTribe().modifyFood(3);
+            CharacterCard inventor = this.getOwner().getTribe().getPopulation().get(CharacterRole.INVENTOR).getLast();
+            if(this.getOwner().getTribe().getInventorsPerType().get(inventor.getInventorType()) % 2 == 0) {
+                this.getOwner().getTribe().modifyFood(this.foodBonus);
             }
         }
     }

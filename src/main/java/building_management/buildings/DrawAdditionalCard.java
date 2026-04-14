@@ -21,7 +21,7 @@ public class DrawAdditionalCard extends BuildingCard {
         int index=0;//provvisorio!!
 
         if(!Game.getInstance().getOfferTrack().getTopRow().isEmpty()) {
-            owner.drawFromTopRow(index, Game.getInstance().getOfferTrack());
+            this.getOwner().drawFromTopRow(index, Game.getInstance().getOfferTrack());
         }
     }
 }

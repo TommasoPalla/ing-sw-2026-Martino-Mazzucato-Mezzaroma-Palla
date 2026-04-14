@@ -32,7 +32,7 @@ public class ComboPoints extends BuildingCard {
                     .stream()
                     .min(Integer::compare)
                     .orElse(0);
-           owner.getTribe().modifyPrestigePoints((int) (6 * setsNumber));
+           this.getOwner().getTribe().modifyPrestigePoints((int) (this.prestigeBonus * setsNumber));
         }
     }
 }

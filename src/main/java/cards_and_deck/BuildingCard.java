@@ -29,8 +29,8 @@ public class BuildingCard extends Card {
     }
 
     // getters
-    public String getEffect(){
-        return this.effectDescription;
+    public Effect getEffect(){
+        return this.effect;
     }
     public int getCost(){
         return this.cost;
@@ -38,6 +38,9 @@ public class BuildingCard extends Card {
     public GamePhase getActivatedAt(){ return this.activatedAt; }
     public Player getOwner(){ return this.owner; }
     public int getPrestige(){return this.prestige; }
+    public String getEffectDescription(){
+        return this.effectDescription;
+    }
 
     // actual functions
     /**

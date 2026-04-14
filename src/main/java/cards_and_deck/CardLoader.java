@@ -62,9 +62,12 @@ public class CardLoader {
                     getClass().getClassLoader().getResourceAsStream(path))) {
             //JsonArray array = getArrayFromRoot("buildings", path);
             // Definiamo il tipo
+            JsonElement rootElement = JsonParser.parseReader(jsonReader);
+            JsonObject root = rootElement.getAsJsonObject();
+            JsonArray array =  root.getAsJsonArray("buildings");
             Type listType = new TypeToken<ArrayList<BuildingCardDTO>>() {
             }.getType();
-            List<BuildingCardDTO> dtos = gson.fromJson(jsonReader, listType);
+            List<BuildingCardDTO> dtos = gson.fromJson(array, listType);
             if(dtos != null) {
                 for(BuildingCardDTO dto : dtos){
                     allBuildingCards.add(BuildingCardFactory.createBuilding(dto));

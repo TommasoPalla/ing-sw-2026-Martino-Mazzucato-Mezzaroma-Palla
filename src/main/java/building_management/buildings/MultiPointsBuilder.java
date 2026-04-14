@@ -19,9 +19,9 @@ public class MultiPointsBuilder extends BuildingCard {
     @Override
     public void applyEffect() {
         int builderPoints = 0;
-        for (CharacterCard builder: owner.getTribe().getPopulation().get(CharacterRole.BUILDER)) {
-            builderPoints += builder.getPrestigePoints().orElseThrow();
+        for (CharacterCard builder: this.getOwner().getTribe().getPopulation().get(CharacterRole.BUILDER)) {
+            builderPoints += builder.getPrestigePoints().orElseThrow()*multiplier;
         }
-        owner.getTribe().modifyPrestigePoints(builderPoints);
+        this.getOwner().getTribe().modifyPrestigePoints(builderPoints);
     }
 }

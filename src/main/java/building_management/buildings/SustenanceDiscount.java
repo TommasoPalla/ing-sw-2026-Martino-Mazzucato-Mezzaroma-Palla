@@ -24,9 +24,9 @@ public class SustenanceDiscount extends BuildingCard {
     // to the Food discount
     @Override
     public void applyEffect(EffectContext context) {
-        int characterNumber = owner.getTribe().getPopulation().get(role).size();
+        int characterNumber = this.getOwner().getTribe().getPopulation().get(this.roleEffect).size();
         int currentFoodToPay = context.getParam(Parameters.FOOD_MALUS);
-        context.putParam(Parameters.FOOD_MALUS, currentFoodToPay - characterNumber);
+        context.putParam(Parameters.FOOD_MALUS, currentFoodToPay - characterNumber*this.foodDiscount);
     }
 
     @Override

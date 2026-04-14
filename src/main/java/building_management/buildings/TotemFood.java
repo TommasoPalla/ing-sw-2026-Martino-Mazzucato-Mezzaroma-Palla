@@ -18,9 +18,9 @@ public class TotemFood extends BuildingCard {
 
     @Override
     public void applyEffect() {
-        int playerTurn = Game.getInstance().getTurnOrder().indexOf(owner);
+        int playerTurn = Game.getInstance().getTurnOrder().indexOf(this.getOwner());
         if(Game.getInstance().getOfferTrack().getTurnTile().getTileModifier()[playerTurn] > 0){
-            owner.getTribe().modifyFood(1);
+            this.getOwner().getTribe().modifyFood(this.foodBonus);
         }
     }
 }
