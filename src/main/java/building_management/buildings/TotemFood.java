@@ -2,6 +2,7 @@ package building_management.buildings;
 
 import cards_and_deck.BuildingCard;
 import enums.GamePhase;
+import game.Game;
 
 // If at the end of every turn, when the owner moves his totem back to the Turn
 // Order tile, they place it in a space that provides a bonus in food, they immediately
@@ -13,6 +14,9 @@ public class TotemFood extends BuildingCard {
 
     @Override
     public void applyEffect() {
-        owner.getTribe().modifyFood(1);
+        int playerTurn = Game.getInstance().getTurnOrder().indexOf(owner);
+        if(Game.getInstance().getOfferTrack().getTurnTile().getTileModifier()[playerTurn] > 0){
+            owner.getTribe().modifyFood(1);
+        }
     }
 }

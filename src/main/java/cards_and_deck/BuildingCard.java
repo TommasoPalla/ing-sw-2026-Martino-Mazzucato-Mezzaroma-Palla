@@ -51,8 +51,8 @@ public class BuildingCard extends Card {
     }
 
 
-    // Called in Player when the building is purchased. Used for buildings
-    // "ComboFood" and "InventorsFood"
+    // Called in Tribe when the building is purchased. Used for buildings
+    // "ComboFood","InventorsFood" and "BonusStars".
     public void effectOnPurchase(){
     }
 

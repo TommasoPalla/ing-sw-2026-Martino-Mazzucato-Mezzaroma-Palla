@@ -10,7 +10,7 @@ public class BonusStars extends BuildingCard {
     }
 
     @Override
-    public void applyEffect() {
+    public void effectOnPurchase() {
         owner.getTribe().addShamansStars(3);
     }
 }

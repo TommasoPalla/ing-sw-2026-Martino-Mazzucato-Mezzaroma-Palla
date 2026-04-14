@@ -26,6 +26,8 @@ public class TurnTile {
 
         }
     }
+
+    public int[] getTileModifier() {return tileModifier;}
     // ATT!!! in questo modo non si rispetta l'ordine dettato dal gioco in cui la turn tile si popola
     // progressivamente e il cibo è preso dal giocatore appena finisce di pescare le sue carte
     public void foodReward(ArrayList<Player> turnOrder, BuildingManager buildingManager){

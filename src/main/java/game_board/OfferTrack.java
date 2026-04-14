@@ -65,13 +65,15 @@ public class OfferTrack{
     public ArrayList<BuildingCard> getTopBuildingCard() {return topBuildingCard;}
     public ArrayList<BuildingCard> getBottomBuildingCard() {return bottomBuildingCard;}
     public int getCurrentPlayerTileIdx() {return currentPlayerTileIdx;}
+    public TurnTile getTurnTile() {return turnTile;}
     public ArrayList<EventCard> getBottomEvents(){
         for(Card card : bottomRow){
             if(card.getClass().equals(EventCard.class)){
                 bottomEventCards.add((EventCard) card);
             }
         }
-        return bottomEventCards;}
+        return bottomEventCards;
+    }
 
     //actual functions
     public CharacterCard pickCharacterFromTop(int index){
