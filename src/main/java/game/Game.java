@@ -31,7 +31,6 @@ public class Game {
     final private int numPlayers;
     private Player currentPlayer;
     private ArrayList<Player> turnOrder;
-    private ArrayList<Player> ranking;
     private int era;
     private int currentRound;
     private GamePhase currentPhase;
@@ -238,7 +237,8 @@ public class Game {
             currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculateFinalPoints());
             currentPlayer=getNextPlayer();
         }
-        ArrayList<Player> ranking = players.stream().sorted(Comparator.comparingInt(
+        ArrayList<Player> ranking = new ArrayList<>(players);
+        ranking=players.stream().sorted(Comparator.comparingInt(
                 (Player p) -> p.getTribe().getPrestigePoints()).reversed())
                         .collect(Collectors.toCollection(ArrayList::new));
     }
