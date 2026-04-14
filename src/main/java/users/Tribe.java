@@ -23,13 +23,15 @@ public class  Tribe {
     private int shamansStars = 0;
 
     //Tribe's constructor
-    public Tribe(Player tribeOwner) {
-        this.tribeOwner = tribeOwner;
-        this.prestigePoints=0;
-        this.foodReserve=0;
-        this.population=null;
-        this.buildings=null;
-        this.inventorsPerType=null;
+    public Tribe() {
+        this.prestigePoints = 0;
+        this.foodReserve = 0;
+        this.population = new EnumMap<>(CharacterRole.class);
+        for(CharacterRole role : CharacterRole.values()){
+            population.put(role, new ArrayList<>());
+        }
+        this.buildings = new ArrayList<>();
+        this.inventorsPerType = new EnumMap<>(InventorType.class);
     }
 
     //getters
@@ -42,7 +44,7 @@ public class  Tribe {
     public int getFoodReserve() {
         return foodReserve;
     }
-    public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() {
+    public EnumMap<CharacterRole, ArrayList<CharacterCard>> getPopulation() {
         return population;
     }
     public ArrayList<BuildingCard> getBuildings() {
@@ -75,8 +77,8 @@ public class  Tribe {
 
     public void modifyFood(int food) {
         if((foodReserve + food) < 0){
+            modifyPrestigePoints(food + foodReserve);
             foodReserve = 0;
-            modifyPrestigePoints(-1);
         }
         else foodReserve += food;
     }
@@ -88,14 +90,17 @@ public class  Tribe {
     public void addCharacterToTribe(CharacterCard character) {
         population.get(character.getRole()).add(character);
         switch(character.getRole()){
+            case HUNTER:
+                if(character.isAlphaHunter().orElse(false)) foodReserve += population.get(CharacterRole.HUNTER).size();
+                break;
             case BUILDER:
-                builderDiscount += character.getBuildingDiscount().orElseThrow();
+                builderDiscount += character.getBuildingDiscount().orElse(0);
                 break;
             case GATHERER:
-                gatherersDiscount += 3;
+                gatherersDiscount += 3;     //da gettare tramite i parametri della carta
                 break;
             case SHAMAN:
-                shamansStars += character.getShamanStars().orElseThrow();
+                shamansStars += character.getShamanStars().orElse(0);
                 break;
             case INVENTOR:
                 inventorsPerType.putIfAbsent(character.getInventorType(), 0);
@@ -115,7 +120,7 @@ public class  Tribe {
         Game.getInstance().getBuildingManager().addBuilding(building, tribeOwner);
         // Calls effectOnPurchase for the building. It only works with the buildings who override it
         building.effectOnPurchase();
-        this.foodReserve=this.foodReserve-building.getCost();
+        this.foodReserve -= building.getCost();
     }
 
 
@@ -142,8 +147,6 @@ public class  Tribe {
             numInventors += inventorsPerType.get(invention);
         }
         int inventorsPoints = numInventors * inventorsPerType.size();
-
-
 
         return (artistsPoints + populationPoints + buildingPoints + inventorsPoints);
     }

@@ -35,7 +35,7 @@ public class Game {
     private int currentRound;
     private GamePhase currentPhase;
     private OfferTrack offerTrack;
-    private BuildingManager buildingManager;
+    private BuildingManager buildingManager = new BuildingManager();
     private EventManager eventManager;
     private static Deck deck;       //forse static non è la soluzione ma ad ora non so che altro fare
     private TurnTile turnTile;
@@ -43,8 +43,8 @@ public class Game {
   /* Game constructor, which with the game is initialized
   *
    */
-    public Game(Game gameID, ArrayList<Player> players) {
-      instance = gameID;
+    public Game(ArrayList<Player> players) {
+      instance = this;
       this.players = players;
       this.numPlayers = players.size();
     }
@@ -83,7 +83,7 @@ public class Game {
       era = 1;
 
       offerTrack = new OfferTrack(numPlayers);
-      buildingManager = new BuildingManager();
+      //buildingManager = new BuildingManager();
       eventManager = new EventManager();
       turnTile = new TurnTile(numPlayers);
       deck = new Deck(numPlayers);

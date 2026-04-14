@@ -2,24 +2,49 @@ package it.polimi.ingsw;
 
 import enums.Color;
 import game_board.OfferTile;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.*;
 import users.Player;
 import users.Tribe;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class OfferTileTest {
-    OfferTile tile = new OfferTile('A');
-    Player player = new Player("palle", new Tribe(), Color.BLACK);
+    OfferTile tileA = new OfferTile('A');
+    OfferTile tileG = new OfferTile('G');
+    Player player = new Player("AAA", new Tribe(), Color.BLACK);
     @Test
     void initOfferTile(){
-        assertEquals(0, tile.getCardsFromAbove());
-        assertEquals(0, tile.getCardsFromBelow());
-        assertEquals(false, tile.isOccupied());
-        assertEquals(3, tile.getFoodBonus());
-        assertEquals(null, tile.getCurrentOccupant());
-        tile.occupy(player);
-        assertEquals(true, tile.isOccupied());
-        assertEquals(player, tile.getCurrentOccupant());
+        //tile A test
+        assertEquals(0, tileA.getCardsFromAbove());
+        assertEquals(0, tileA.getCardsFromBelow());
+        assertFalse(tileA.isOccupied());
+        assertEquals(3, tileA.getFoodBonus());
+        assertNull(tileA.getCurrentOccupant());
 
+        //tile G test
+        assertEquals(2, tileG.getCardsFromAbove());
+        assertEquals(1, tileG.getCardsFromBelow());
+        assertFalse(tileG.isOccupied());
+        assertEquals(0, tileG.getFoodBonus());
+        assertNull(tileG.getCurrentOccupant());
+    }
+    @Test
+    void occupyOfferTileA(){
+        //tile A test
+        tileA.occupy(player);
+        assertTrue(tileA.isOccupied());
+        assertEquals(player, tileA.getCurrentOccupant());
+        tileA.free();
+        assertFalse(tileA.isOccupied());
+        assertNull(tileA.getCurrentOccupant());
+
+        //tile G test
+        tileG.occupy(player);
+        assertTrue(tileG.isOccupied());
+        assertEquals(player, tileG.getCurrentOccupant());
+        tileG.free();
+        assertFalse(tileG.isOccupied());
+        assertNull(tileG.getCurrentOccupant());
     }
 }
