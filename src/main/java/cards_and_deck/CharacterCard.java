@@ -74,4 +74,9 @@ public class CharacterCard extends Card {
     public Optional<Boolean> isAlphaHunter(){
         return Optional.ofNullable(this.hunterIcon);
     }
+
+    @Override
+    public void accept(Visitor visitor){
+        visitor.visitCharacter(this);
+    }
 }

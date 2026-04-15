@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class OfferTrack{
     private ArrayList<OfferTile> offerTiles;
     private ArrayList<Card> topRow;
-    private ArrayList<Card> bottomRow;
+    public ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
     private TurnTile turnTile;
@@ -56,7 +56,6 @@ public class OfferTrack{
     }
 
 
-
     //getters
     public ArrayList<OfferTile> getOfferTiles() {return offerTiles;}
     public ArrayList<Card> getTopRow() {return topRow;}
@@ -67,19 +66,37 @@ public class OfferTrack{
     public TurnTile getTurnTile() {return turnTile;}
     public ArrayList<EventCard> getBottomEvents(){
         ArrayList<EventCard> bottomEventCards = new ArrayList<>();
+        /**
+         * Here visitor pattern is used to identify only the Event Cards
+         * among cards in the bottom row of the offer track.
+         * Once found, event cards are added to bottomEventCards list
+         * @return bottomEventCards
+         */
+        VisitorAdapter visitor = new VisitorAdapter() {
+            @Override
+            public void visitEvent(EventCard event){
+                bottomEventCards.add(event);
+            }
+        };
         for(Card card : bottomRow){
+            /* old implementation, anti-pattern:
             if(card.getClass().equals(EventCard.class)){
                 bottomEventCards.add((EventCard) card);
-            }
+            }*/
+            card.accept(visitor);
         }
         return bottomEventCards;
     }
     public ArrayList<EventCard> getTopEvents(){
         ArrayList<EventCard> topEventCards = new ArrayList<>();
-        for(Card card : topRow){
-            if(card.getClass().equals(EventCard.class)){
-                topEventCards.add((EventCard) card);
+        VisitorAdapter visitor = new VisitorAdapter() {
+            @Override
+            public void visitEvent(EventCard event){
+                topEventCards.add(event);
             }
+        };
+        for(Card card : topRow){
+            card.accept(visitor);
         }
         return topEventCards;
     }
@@ -132,12 +149,25 @@ public class OfferTrack{
         }
     }
 
+    //da testare con il visitor
     public void initializeBottomRow(){
         bottomRow = new ArrayList<>();  //size sarà certamente nulla
         while(bottomRow.size() < playerNumber + 1){
+
+            //visitor pattern
+            VisitorAdapter visitor = new VisitorAdapter() {
+                @Override
+                public void visitCharacter(CharacterCard character){
+                    bottomRow.add(character);
+                }
+                @Override
+                public void visitEvent(EventCard event){
+                    topRow.add(event);
+                }
+            };
+
             Card drawnCard = Game.getDeck().drawCard();
-            if(drawnCard.getClass().equals(EventCard.class)) topRow.add(drawnCard);     //dovrebbe funzionare uguale a instanceof
-            else bottomRow.add(drawnCard);
+            drawnCard.accept(visitor);
         }
     }
 }

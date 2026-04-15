@@ -30,4 +30,8 @@ public class EventCard extends Card{
     public int getParam(Parameters par){
         return parameters.getOrDefault(par, 0);
     }
+
+    public void accept(Visitor visitor){
+        visitor.visitEvent(this);
+    }
 }

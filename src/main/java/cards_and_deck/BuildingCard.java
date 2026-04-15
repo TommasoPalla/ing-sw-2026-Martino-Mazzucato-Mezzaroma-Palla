@@ -75,4 +75,8 @@ public abstract class BuildingCard extends Card {
     public boolean isUsedIn(Class<? extends EventStrategy> eventType){
         return false;
     }
+
+    public void accept(Visitor visitor){
+        visitor.visitBuilding(this);
+    }
 }

@@ -15,4 +15,5 @@ public abstract class Card {
     public int getEra(){
         return this.era;
     }
+    public abstract void accept(Visitor visitor);
 }
