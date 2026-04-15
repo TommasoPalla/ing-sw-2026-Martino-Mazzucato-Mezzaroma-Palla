@@ -22,12 +22,6 @@ public enum Effect {
     @SerializedName("CP")
     COMBO_POINTS,
 
-    @SerializedName("MR")
-    MULTIPLIER_RITUAL,
-
-    @SerializedName("MB")
-    MULTIPLIER_BUILDER,
-
     @SerializedName("DC")
     DRAW_CARD,
 
@@ -35,6 +29,12 @@ public enum Effect {
     INVENTORS_FOOD,
 
     @SerializedName("MR")
+    MULTIPLIER_RITUAL,
+
+    @SerializedName("MB")
+    MULTIPLIER_BUILDER,
+
+    @SerializedName("NR")
     NO_MALUS_RITUAL,
 
     @SerializedName("PR")

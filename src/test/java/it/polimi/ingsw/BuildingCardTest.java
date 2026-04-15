@@ -20,7 +20,7 @@ public class BuildingCardTest {
 
     @Test
     public void initBuildings(){
-        this.allBuildingCards = loader.loadBuildings("json/cardsTest.json");
+        this.allBuildingCards = loader.loadBuildings("json/cards.json");
         if(!allBuildingCards.isEmpty()){
             //Logger logger = new Logger;
             //logger.log(Level.INFO, "cardID does Match"););

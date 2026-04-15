@@ -701,7 +701,7 @@
       "cardID": "E1_B_1",
       "cost": 4,
       "activatedAt": "ON_DRAW",
-      "effect": "COMBO_FOOD",
+      "effect": "CF",
       "effectDescription": "Starting from when you have this Building, every time you complete a set of 6 different Character cards, you take 5 Food tokens. You do not receive Food tokens for sets already completed at the time of acquiring the Building.",
       "prestige": 3,
       "foodBonus": 5
@@ -711,43 +711,49 @@
       "cardID": "E1_B_2",
       "cost": 3,
       "activatedAt": "ON_DRAW",
-      "effectDescription": "Starting from when you have this Building, every time you complete a set of 6 different Character cards, you take 5 Food tokens. You do not receive Food tokens for sets already completed at the time of acquiring the Building.",
-      "prestige": 4
+      "effect": "IF",
+      "effectDescription": "Starting from when you have this Building, every time you obtain a pair of identical Inventors (with the same Invention icon), you take 3 Food tokens. You do not take Food for pairs already owned at the time of acquiring the Building",
+      "prestige": 4,
+      "foodBonus": 3
     },
     {
       "era": 1,
       "cardID": "E1_B_3",
       "cost": 3,
       "activatedAt": "RETURN_TO_TILE",
+      "effect": "TF",
       "effectDescription": "If at the end of your turn (also during the last\nround), when you move your Totem back to\nthe Turn Order tile, you place it in a space that\nprovides a bonus in Food, you immediately\ntake 1 additional Food token. If you place the\nTotem in the last space, you pay 1 Food token\nnormally, and the building has no effect.",
       "prestige": 3,
-      "parameters": {
-        "F+": 1
-      }
+      "foodBonus": 1
     },
     {
       "era": 1,
       "cardID": "E1_B_4",
       "cost": 4,
       "activatedAt": "ON_EVENT",
+      "effect": "SD",
       "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each gatherer\n in your tribe.",
       "prestige": 4,
-      "roleEffect": "G"
+      "roleEffect": "G",
+      "foodDiscount": 1
     },
     {
       "era": 1,
       "cardID": "E1_B_5",
       "cost": 5,
       "activatedAt": "ON_EVENT",
+      "effect": "SD",
       "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each artist\n in your tribe.",
       "prestige": 3,
-      "roleEffect": "A"
+      "roleEffect": "A",
+      "foodDiscount": 1
     },
     {
       "era": 1,
       "cardID": "E1_B_6",
       "cost": 5,
       "activatedAt": "ON_EVENT",
+      "effect": "MR",
       "effectDescription": "During the Shamanic Ritual Event, you do not\nlose Prestige Points if you have fewer Shamanic Star icons\nthan all other players.",
       "prestige": 2
     },
@@ -756,58 +762,73 @@
       "era": 2,
       "cardID": "E2_B_1",
       "cost": 6,
-      "activatedAt": "ON_PURCHASE??",
+      "activatedAt": "ON_PURCHASE??",//
+      "effect": "BS",
       "effectDescription": "During the Shamanic Ritual Event, your tribe\nhas 3 additional Shamanic Star icons.",
-      "prestige": 4
+      "prestige": 4,
+      "starBonus": 3
     },
     {
       "era": 2,
       "cardID": "E2_B_2",
       "cost": 7,
       "activatedAt": "ON_EVENT",
+      "effect": "SD",
       "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each Inventor\n in your tribe.",
       "prestige": 4,
-      "roleEffect": "I"
+      "roleEffect": "I",
+      "foodDiscount": 1
     },
     {
       "era": 2,
       "cardID": "E2_B_3",
       "cost": 7,
       "activatedAt": "ON_EVENT",
+      "effect": "CH",
       "effectDescription": "During the Hunt Event, you take 1 Food token\nand gain 1 additional Prestige Point for each\nHunter in your tribe.",
-      "prestige": 2
+      "prestige": 2,
+      "foodBonus": 1,
+      "prestigeBonus": 1
     },
     {
       "era": 2,
       "cardID": "E2_B_4",
       "cost": 5,
       "activatedAt": "ON_EVENT",
+      "effect": "AF",
       "effectDescription": "During the Cave Paintings Event, you take\n1 Food token for each Artist in your tribe.",
-      "prestige": 6
+      "prestige": 6,
+      "foodBonus": 1
     },
     {
       "era": 2,
       "cardID": "E2_B_5",
       "cost": 7,
       "activatedAt": "ON_EVENT",
+      "effect": "NR",
       "effectDescription": "During the Shamanic Ritual Event, if you have\nmore Shamanic Star icons than any of the other players,\nyou gain double the indicated Prestige Points.\nYou still gain Prestige Points in case of a tie.",
-      "prestige": 0
+      "multiplier": 2
     },
     {
       "era": 2,
       "cardID": "E2_B_6",
       "cost": 6,
       "activatedAt": "END_GAME",
+      "effect": "MB",
       "effectDescription": "At the end of the game, you gain double the\nPrestige Points indicated on the Builder cards\nin your tribe.",
-      "prestige": 4
+      "prestige": 4,
+      "multiplier": 2
     },
     {
       "era": 2,
       "cardID": "E2_B_7",
       "cost": 5,
       "activatedAt": "END_GAME",
+      "effect": "CP",
       "effectDescription": "At the end of the game, you gain 6 Prestige\nPoints for each set of 6 different Character\ncards in your tribe.",
-      "prestige": 6
+      "prestige": 6,
+      "prestigeBonus": 6
+
     },
 
     {
@@ -815,71 +836,82 @@
       "cardID": "E3_B_1",
       "cost": 8,
       "activatedAt": "END_GAME",
+      "effect": "PR",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Hunter\n in your tribe.",
       "prestige": 8,
-      "roleEffect": "H"
+      "roleEffect": "H",
+      "prestigeBonus": 3
     },
     {
       "era": 3,
       "cardID": "E3_B_2",
       "cost": 6,
       "activatedAt": "END_GAME",
+      "effect": "PR",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Builder\n in your tribe.",
       "prestige": 3,
-      "roleEffect": "B"
+      "roleEffect": "B",
+      "prestigeBonus": 4
     },
     {
       "era": 3,
       "cardID": "E3_B_3",
       "cost": 7,
       "activatedAt": "END_GAME",
+      "effect": "PR",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Gatherer\n in your tribe.",
       "prestige": 6,
-      "roleEffect": "G"
+      "roleEffect": "G",
+      "prestigeBonus": 4
     },
     {
       "era": 3,
       "cardID": "E3_B_4",
       "cost": 7,
       "activatedAt": "END_GAME",
+      "effect": "PR",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Artist\n in your tribe.",
       "prestige": 4,
-      "roleEffect": "A"
+      "roleEffect": "A",
+      "prestigeBonus": 4
     },
     {
       "era": 3,
       "cardID": "E3_B_5",
       "cost": 6,
       "activatedAt": "END_GAME",
+      "effect": "PR",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Inventor\n in your tribe.",
-      "prestige": 2,
-      "roleEffect": "I"
+      "prestige": 6,
+      "roleEffect": "I",
+      "prestigeBonus": 2
     },
     {
       "era": 3,
       "cardID": "E3_B_6",
       "cost": 7,
       "activatedAt": "END_GAME",
+      "effect": "PR",
       "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Shaman\n in your tribe.",
       "prestige": 4,
-      "roleEffect": "S"
+      "roleEffect": "S",
+      "prestigeBonus": 4
     },
     {
       "era": 3,
       "cardID": "E3_B_7",
       "cost": 10,
       "activatedAt": "END_GAME",
+      "effect": "BP",
       "effectDescription": "At the end of the game, you gain\n25 Prestige Points.",
-      "prestige": 0,
-      "parameters": {
-        "P+": 25
-      }
+      "prestigeBonus": 25
     },
     {
       "era": 3,
       "cardID": "E3_B_8",
       "cost": 9,
       "activatedAt": "END_TURN",
+      "effect": "DC",
       "effectDescription": "After resolving all actions (once all Totems\nhave been moved back to the Turn Order tile)\nand before the End of the Round phase, you\ncan take 1 Character or 1 Building card (paying\nits cost) from the top row.",
       "prestige": 3
     }

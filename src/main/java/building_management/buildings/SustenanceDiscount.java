@@ -11,7 +11,7 @@ import event_management.SustenanceEvent;
 
 public class SustenanceDiscount extends BuildingCard {
     private final CharacterRole roleEffect;
-    private final int foodDiscount;
+    private final int foodDiscount; //stored as a positive number
 
     public SustenanceDiscount(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                               String effectDescription, int prestige, CharacterRole roleEffect, int foodDiscount) {
