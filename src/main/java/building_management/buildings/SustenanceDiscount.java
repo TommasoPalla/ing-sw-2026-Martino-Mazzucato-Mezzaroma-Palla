@@ -20,6 +20,15 @@ public class SustenanceDiscount extends BuildingCard {
         this.foodDiscount = foodDiscount;
     }
 
+    @Override
+    public CharacterRole getRoleEffect(){
+        return this.roleEffect;
+    }
+    @Override
+    public int getFoodDiscount(){
+        return this.foodDiscount;
+    }
+
     // Calculates the number of Character Cards of the specific role and adds it
     // to the Food discount
     @Override

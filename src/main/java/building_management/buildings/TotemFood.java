@@ -10,10 +10,16 @@ import game.Game;
 // take 1 additional Food token. The building has no effect if the totem is placed in the last place.
 public class TotemFood extends BuildingCard {
     private final int foodBonus;
+
     public TotemFood(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                      String effectDescription, int prestige, int foodBonus) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.foodBonus = foodBonus;
+    }
+
+    @Override
+    public int getFoodBonus(){
+        return this.foodBonus;
     }
 
     @Override

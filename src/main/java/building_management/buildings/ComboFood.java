@@ -18,7 +18,12 @@ public class ComboFood extends BuildingCard {
         this.foodBonus = foodBonus;
     }
 
-    // When the player purchases the building, initialises the variable currentSetsNumber
+    @Override
+    public int getFoodBonus(){
+        return this.foodBonus;
+    }
+
+    // When the player purchases the building, initializes the variable currentSetsNumber
     // with the number of sets already completed in their tribe
     @Override
     public void effectOnPurchase() {
@@ -33,10 +38,6 @@ public class ComboFood extends BuildingCard {
                     .orElse(0);
         }
         else { this.currentSetsNumber = 0; }
-    }
-
-    public int getFoodBonus(){
-        return this.foodBonus;
     }
 
     @Override

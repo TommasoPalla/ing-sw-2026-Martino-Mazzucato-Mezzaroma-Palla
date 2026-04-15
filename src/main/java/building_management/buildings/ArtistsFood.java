@@ -12,11 +12,17 @@ import event_management.EventStrategy;
 // artist in his tribe
 public class ArtistsFood extends BuildingCard {
     private final int foodBonus;
+
     public ArtistsFood(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                        String effectDescription, int prestige, int foodBonus) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.foodBonus = foodBonus;
     }
+    @Override
+    public int getFoodBonus(){
+        return this.foodBonus;
+    }
+
     @Override
     public void applyEffect(EffectContext context){
         int artistsNumber = context.getPlayer().getTribe().getArtistsNumber();

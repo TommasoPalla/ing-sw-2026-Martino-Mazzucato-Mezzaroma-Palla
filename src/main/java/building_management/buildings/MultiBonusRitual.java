@@ -12,10 +12,16 @@ import event_management.ShamanicRitualEvent;
 // he gains double the indicated Prestige Points
 public class MultiBonusRitual extends BuildingCard {
     private final int multiplier;
+
     public MultiBonusRitual(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                             String effectDescription, int multiplier) {    //no prestige
         super(era, cardID, cost, activatedAt, effect, effectDescription, 0);
         this.multiplier = multiplier;
+    }
+
+    @Override
+    public int getMultiplier(){
+        return this.multiplier;
     }
 
     @Override

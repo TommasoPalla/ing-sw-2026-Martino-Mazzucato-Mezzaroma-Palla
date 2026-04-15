@@ -10,10 +10,16 @@ import enums.GamePhase;
 // on the Builder cards in his tribe
 public class MultiPointsBuilder extends BuildingCard {
     private final int multiplier;
+
     public MultiPointsBuilder(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                               String effectDescription, int prestige, int multiplier) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.multiplier = multiplier;
+    }
+
+    @Override
+    public int getMultiplier(){
+        return this.multiplier;
     }
 
     @Override

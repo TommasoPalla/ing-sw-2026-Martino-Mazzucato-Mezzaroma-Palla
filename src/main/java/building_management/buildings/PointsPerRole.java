@@ -11,12 +11,20 @@ public class PointsPerRole extends BuildingCard {
     private final CharacterRole roleEffect;
     private final int prestigeBonus;
 
-
     public PointsPerRole(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                          String effectDescription, int prestige, CharacterRole roleEffect, int prestigeBonus) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.roleEffect = roleEffect;
         this.prestigeBonus = prestigeBonus;
+    }
+
+    @Override
+    public CharacterRole getRoleEffect(){
+        return this.roleEffect;
+    }
+    @Override
+    public int getPrestigeBonus(){
+        return this.prestigeBonus;
     }
 
     // Calculates the number of Character Cards of the specific role and multiplies it by the BonusPoints

@@ -14,11 +14,21 @@ public class ComboHunters extends BuildingCard {
 
     private final int foodBonus;
     private final int prestigeBonus;
+
     public ComboHunters(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                         String effectDescription, int prestige, int foodBonus, int prestigeBonus) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.foodBonus = foodBonus;
         this.prestigeBonus = prestigeBonus;
+    }
+
+    @Override
+    public int getFoodBonus(){
+        return this.foodBonus;
+    }
+    @Override
+    public int getPrestigeBonus(){
+        return this.prestigeBonus;
     }
 
     @Override

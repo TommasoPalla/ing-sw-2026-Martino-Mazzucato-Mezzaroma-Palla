@@ -12,12 +12,17 @@ import java.util.Map;
 // different Character cards in their tribe
 public class ComboPoints extends BuildingCard {
     private final int prestigeBonus;
+
     public ComboPoints(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                        String effectDescription, int prestige, int prestigeBonus) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.prestigeBonus = prestigeBonus;
     }
 
+    @Override
+    public int getPrestigeBonus(){
+        return this.prestigeBonus;
+    }
     @Override
     public void applyEffect() {
         // Maps every character's type to the number of its occurrences in the player's tribe
