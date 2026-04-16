@@ -77,6 +77,6 @@ public class CharacterCard extends Card {
 
     @Override
     public void accept(Visitor visitor){
-        visitor.visitCharacter(this);
+        visitor.visitCard(this);
     }
 }

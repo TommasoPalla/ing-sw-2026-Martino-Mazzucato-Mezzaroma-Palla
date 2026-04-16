@@ -77,6 +77,6 @@ public abstract class BuildingCard extends Card {
     }
 
     public void accept(Visitor visitor){
-        visitor.visitBuilding(this);
+        visitor.visitCard(this);
     }
 }

@@ -32,6 +32,6 @@ public class EventCard extends Card{
     }
 
     public void accept(Visitor visitor){
-        visitor.visitEvent(this);
+        visitor.visitCard(this);
     }
 }

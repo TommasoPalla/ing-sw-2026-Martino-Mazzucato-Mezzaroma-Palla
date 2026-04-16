@@ -6,7 +6,7 @@ package cards_and_deck;
  * of cards but in different ways.
  */
 public interface Visitor {
-    void visitBuilding(BuildingCard building);
-    void visitCharacter(CharacterCard character);
-    void visitEvent(EventCard event);
+    void visitCard(BuildingCard building);
+    void visitCard(CharacterCard character);
+    void visitCard(EventCard event);
 }

@@ -1,5 +1,4 @@
 package cards_and_deck;
-
 /**
  * class VisitorAdapter overrides visit methods with blank bodies
  * to avoid further useless ones:
@@ -8,9 +7,9 @@ package cards_and_deck;
  */
 public abstract class VisitorAdapter implements Visitor{
     @Override
-    public void visitBuilding(BuildingCard building){}
+    public void visitCard(BuildingCard building){}
     @Override
-    public void visitCharacter(CharacterCard character){}
+    public void visitCard(CharacterCard character){}
     @Override
-    public void visitEvent(EventCard event){}
+    public void visitCard(EventCard event){}
 }

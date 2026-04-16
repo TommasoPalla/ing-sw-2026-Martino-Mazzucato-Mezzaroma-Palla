@@ -74,7 +74,7 @@ public class OfferTrack{
          */
         VisitorAdapter visitor = new VisitorAdapter() {
             @Override
-            public void visitEvent(EventCard event){
+            public void visitCard(EventCard event){
                 bottomEventCards.add(event);
             }
         };
@@ -91,7 +91,7 @@ public class OfferTrack{
         ArrayList<EventCard> topEventCards = new ArrayList<>();
         VisitorAdapter visitor = new VisitorAdapter() {
             @Override
-            public void visitEvent(EventCard event){
+            public void visitCard(EventCard event){
                 topEventCards.add(event);
             }
         };
@@ -157,11 +157,11 @@ public class OfferTrack{
             //visitor pattern
             VisitorAdapter visitor = new VisitorAdapter() {
                 @Override
-                public void visitCharacter(CharacterCard character){
+                public void visitCard(CharacterCard character){
                     bottomRow.add(character);
                 }
                 @Override
-                public void visitEvent(EventCard event){
+                public void visitCard(EventCard event){
                     topRow.add(event);
                 }
             };
