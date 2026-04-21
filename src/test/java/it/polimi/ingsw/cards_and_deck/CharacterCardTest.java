@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.cards_and_deck;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;

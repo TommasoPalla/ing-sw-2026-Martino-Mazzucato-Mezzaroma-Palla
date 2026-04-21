@@ -89,7 +89,7 @@ public class Game {
       //buildingManager = new BuildingManager();
       eventManager = new EventManager();
       turnTile = new TurnTile(numPlayers);
-      deck = new Deck(numPlayers);
+      deck = new Deck(numPlayers, "json/cards.json");
 
       //inizializzo track
       offerTrack.initializeBottomRow();

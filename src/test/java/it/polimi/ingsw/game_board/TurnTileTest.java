@@ -1,14 +1,12 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.game_board;
 
 import enums.Color;
 import game.Game;
-import game_board.OfferTile;
 import game_board.OfferTrack;
 import game_board.TurnTile;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import cards_and_deck.*;
 import org.junit.jupiter.api.*;
 import users.Player;
 

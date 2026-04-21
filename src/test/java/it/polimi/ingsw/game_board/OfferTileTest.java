@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.game_board;
 
 import enums.Color;
 import game_board.OfferTile;

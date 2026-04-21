@@ -1,18 +1,13 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.building_management.buildings;
 
 import building_management.BuildingManager;
 import building_management.buildings.ArtistsFood;
-import building_management.buildings.BonusPoints;
-import building_management.buildings.InventorsFood;
 import cards_and_deck.BuildingCard;
 import cards_and_deck.CharacterCard;
 import cards_and_deck.EventCard;
 import enums.*;
 import event_management.CavePaintingsEvent;
-import event_management.EventManager;
-import event_management.EventStrategy;
 import game.Game;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import users.Player;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,7 +1,6 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.users;
 
 import building_management.buildings.BonusPoints;
-import building_management.buildings.MultiBonusRitual;
 import cards_and_deck.BuildingCard;
 import cards_and_deck.CharacterCard;
 import enums.*;

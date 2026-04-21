@@ -82,5 +82,35 @@
     }
   ],
   "buildings": [
+    {
+      "era": 1,
+      "cardID": "E1_B_1",
+      "cost": 4,
+      "activatedAt": "ON_DRAW",
+      "effect": "CF",
+      "effectDescription": "Starting from when you have this Building, every time you complete a set of 6 different Character cards, you take 5 Food tokens. You do not receive Food tokens for sets already completed at the time of acquiring the Building.",
+      "prestige": 3,
+      "foodBonus": 5
+    },
+    {
+      "era": 2,
+      "cardID": "E2_B_7",
+      "cost": 5,
+      "activatedAt": "END_GAME",
+      "effect": "CP",
+      "effectDescription": "At the end of the game, you gain 6 Prestige\nPoints for each set of 6 different Character\ncards in your tribe.",
+      "prestige": 6,
+      "prestigeBonus": 6
+
+    },
+    {
+    "era": 3,
+    "cardID": "E3_B_8",
+    "cost": 9,
+    "activatedAt": "END_TURN",
+    "effect": "DC",
+    "effectDescription": "After resolving all actions (once all Totems\nhave been moved back to the Turn Order tile)\nand before the End of the Round phase, you\ncan take 1 Character or 1 Building card (paying\nits cost) from the top row.",
+    "prestige": 3
+    }
   ]
 }

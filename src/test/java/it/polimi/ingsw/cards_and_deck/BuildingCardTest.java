@@ -1,12 +1,10 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.cards_and_deck;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import building_management.buildings.ComboFood;
 import enums.Color;
 import enums.Effect;
-import enums.EventType;
 import enums.GamePhase;
 import event_management.SustenanceEvent;
 import org.junit.jupiter.api.*;
@@ -14,9 +12,7 @@ import cards_and_deck.BuildingCard;
 import cards_and_deck.CardLoader;
 import users.Player;
 
-import java.util.logging.Logger;
 import java.util.List;
-import java.util.logging.Level;
 
 
 public class BuildingCardTest {

@@ -15,7 +15,7 @@ public class Deck {
     private final List<BuildingCard> allBuildingCards;    //from JSON
 
     //constructor called by game.Game.startGame()
-    public Deck(int numPlayers){
+    public Deck(int numPlayers, String jsonPath){
         switch (numPlayers){
             case 2 -> this.buildingsDeckLength = new int[]{1, 2, 3};
             case 3 -> this.buildingsDeckLength = new int[]{2, 2, 4};
@@ -24,9 +24,9 @@ public class Deck {
         }
 
         CardLoader loader = new CardLoader();
-        this.allCharacterCards = loader.loadCharacters("json/cards.json");    //card Loader
-        this.allEventCards = loader.loadEvents("json/cards.json");
-        this.allBuildingCards = loader.loadBuildings("json/cards.json");//cambiare path
+        this.allCharacterCards = loader.loadCharacters(jsonPath);   //card Loader
+        this.allEventCards = loader.loadEvents(jsonPath);
+        this.allBuildingCards = loader.loadBuildings(jsonPath);     //cambiare path
         initTribeDeck(numPlayers);
         initBuildingDeck();
     }
