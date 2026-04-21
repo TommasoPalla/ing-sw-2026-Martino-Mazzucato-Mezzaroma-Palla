@@ -3,6 +3,7 @@ package building_management;
 import cards_and_deck.BuildingCard;
 import enums.GamePhase;
 import event_management.EventStrategy;
+import game.Game;
 import users.Player;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class BuildingManager {
         }
     }
 
+    // Getters
+    public Map<GamePhase, Map<Player, ArrayList<BuildingCard>>> getBuildingsMap() { return buildingsMap; }
     public void addBuilding(BuildingCard buildingCard, Player player) {
         GamePhase gamePhase = buildingCard.getActivatedAt();
         buildingsMap.get(gamePhase).putIfAbsent(player, new ArrayList<>());

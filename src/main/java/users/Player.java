@@ -13,9 +13,9 @@ public class Player {
     private final Tribe tribe;
     private OfferTile currentOfferTile;
 
-    public Player(String name, Tribe tribe, Color totemColor) {
+    public Player(String name, Color totemColor) {
         this.name = name;
-        this.tribe = tribe;
+        this.tribe = new Tribe();
         this.totemColor = totemColor;
         this.currentOfferTile = null;
         tribe.setOwner(this);
@@ -43,10 +43,12 @@ public class Player {
     public void chooseOfferTile(int index, OfferTrack offerTrack) throws Occupied_Tile_Exception {
         /*logica di input*/
         OfferTile chosen = offerTrack.getOfferTiles().get(index);
+        System.out.println(chosen);
         if (chosen.isOccupied()) {
             throw new Occupied_Tile_Exception();
         } else {
             chosen.occupy(this);
+            currentOfferTile = chosen;
         }
     }
 

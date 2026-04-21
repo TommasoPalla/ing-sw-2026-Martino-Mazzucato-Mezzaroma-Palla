@@ -3,7 +3,6 @@ package event_management;
 import java.util.ArrayList;
 
 import building_management.BuildingManager;
-import cards_and_deck.BuildingCard;
 import cards_and_deck.EventCard;
 import users.Player;
 
