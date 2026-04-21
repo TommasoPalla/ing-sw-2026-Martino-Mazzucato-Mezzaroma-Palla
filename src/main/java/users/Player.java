@@ -50,7 +50,7 @@ public class Player {
         }
     }
 
-    //implementato visitor
+    //returns true if building is affordable to player or if the card is a character, returns false otherwise
     public boolean drawable(int index, OfferTrack offerTrack, int row)
             throws Illegal_Draw_Exception, Insufficient_Food_Exception{
         Card card;
@@ -64,6 +64,7 @@ public class Player {
                     isDrawable.set(true);
                 } else {
                     isDrawable.set(false);
+                    throw new Insufficient_Food_Exception();
                 }
             }
             @Override
@@ -74,6 +75,7 @@ public class Player {
             @Override
             public void visitCard(EventCard event) {
                isDrawable.set(false);
+               throw new Illegal_Draw_Exception();
             }
         };
         if (row == 0){//0 è toprow
@@ -98,27 +100,17 @@ public class Player {
         VisitorAdapter visitor = new VisitorAdapter() {
             @Override
             public void visitCard(BuildingCard building) {
-                if(drawable(index, offerTrack, 0)) { //Player.this.drawable() sarebbe la stessa cosa (se c'è il problema non è per questo)
-                    BuildingCard buildingPurchased = offerTrack.pickBuildingFromTop(index);
-                    tribe.addBuildingToTribe(buildingPurchased);
-                } else {
-                    throw new Insufficient_Food_Exception();
-                }
+                    tribe.addBuildingToTribe(building);
             }
 
             @Override
             public void visitCard(CharacterCard character) {
-                CharacterCard charPicked = offerTrack.pickCharacterFromTop(index);
-                tribe.addCharacterToTribe(charPicked);
-            }
-
-            @Override
-            public void visitCard(EventCard event) {
-                throw new Illegal_Draw_Exception();
+                tribe.addCharacterToTribe(character);
             }
         };
-        card.accept(visitor);
-
+        if(this.drawable(index, offerTrack, 0)) {
+            card.accept(visitor);
+        };
         /* old implementation:
         if (card.getClass().equals(CharacterCard.class)) {
 
