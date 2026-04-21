@@ -12,10 +12,14 @@ import java.util.Map;
 
 public class BuildingManager {
     Map<GamePhase, Map<Player, ArrayList<BuildingCard>>> buildingsMap = new HashMap<>();
+    ArrayList<Player> players = new ArrayList<>();
 
-    public BuildingManager() {
+    public BuildingManager(ArrayList<Player> players) {
         for (GamePhase gamePhase : GamePhase.values()) {
             buildingsMap.put(gamePhase, new HashMap<>());
+            for (Player player : players) {
+                buildingsMap.get(gamePhase).put(player, new ArrayList<>());
+            }
         }
     }
 

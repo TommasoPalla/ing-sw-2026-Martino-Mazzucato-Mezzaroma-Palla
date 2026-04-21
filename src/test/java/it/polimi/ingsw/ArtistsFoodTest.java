@@ -6,8 +6,11 @@ import building_management.buildings.BonusPoints;
 import building_management.buildings.InventorsFood;
 import cards_and_deck.BuildingCard;
 import cards_and_deck.CharacterCard;
+import cards_and_deck.EventCard;
 import enums.*;
+import event_management.CavePaintingsEvent;
 import event_management.EventManager;
+import event_management.EventStrategy;
 import game.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +34,25 @@ public class ArtistsFoodTest {
         players.add(player2);
         Game game = new Game(players);
         buildingManager = Game.getInstance().getBuildingManager();
+        // CavePaintingsEvent INIT
+        EnumMap<Parameters, Integer> inputPar = new EnumMap<>(Parameters.class);
+        inputPar.put(Parameters.PRESTIGE_BONUS, 1);
+        inputPar.put(Parameters.PRESTIGE_MALUS, 1);
+        inputPar.put(Parameters.ARTIST_NUM, 1);
+        EventCard cavePaintingsEventCard = new EventCard(1, "CV", EventType.CAVE_PAINTINGS, inputPar);
+        CavePaintingsEvent cavePaintingsEvent = new CavePaintingsEvent();
         // ARTISTSFOOD TEST
+        CharacterCard artist1 = new CharacterCard(1, "A1", 3, CharacterRole.ARTIST, null, null, null, null, null);
+        CharacterCard artist2 = new CharacterCard(2, "A2", 3, CharacterRole.ARTIST, null, null, null, null, null);
+        player1.getTribe().addCharacterToTribe(artist1);
+        player1.getTribe().addCharacterToTribe(artist2);
+        player1.getTribe().modifyFood(7);
         player1.getTribe().addBuildingToTribe(artistsFood);
-        buildingManager.useBuilding(GamePhase.ON_EVENT, player1);
+        assertEquals(0, player1.getTribe().getFoodReserve());
+        assertEquals(0, player1.getTribe().getPrestigePoints()); // before calling the event building the player has 0 food and 0 pp
+        cavePaintingsEvent.apply(cavePaintingsEventCard, players, buildingManager);
+        assertEquals(2, player1.getTribe().getFoodReserve());
+        assertEquals(2, player1.getTribe().getPrestigePoints()); // player1 should have 2 more food thanks to the building and 2 pp
+        assertEquals(-1, player2.getTribe().getPrestigePoints()); // player2 should lose 1 point because of the event
     }
 }

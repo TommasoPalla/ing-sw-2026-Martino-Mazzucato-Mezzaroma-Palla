@@ -17,7 +17,7 @@ import java.util.EnumMap;
 public class BuildingManagerTest {
     BuildingManager buildingManager;
     EnumMap<Parameters, Integer> mapca =  new EnumMap<>(Parameters.class);
-    BuildingCard bonusPoints = new BonusPoints(2, "BP", 10, GamePhase.END_GAME, Effect.BONUS_POINTS, "+25 points", 0);
+    BuildingCard bonusPoints = new BonusPoints(2, "BP", 10, GamePhase.END_GAME, Effect.BONUS_POINTS, "+25 points", 25);
 
     @Test
     public void buildingManagerTest() {

@@ -35,7 +35,7 @@ public class Game {
     private int currentRound;
     private GamePhase currentPhase;
     private OfferTrack offerTrack;
-    private BuildingManager buildingManager = new BuildingManager();
+    private BuildingManager buildingManager;
     private EventManager eventManager = new EventManager();
     private static Deck deck;      //forse static non è la soluzione ma ad ora non so che altro fare
     private TurnTile turnTile;
@@ -48,6 +48,7 @@ public class Game {
       this.players = players;
       this.numPlayers = players.size();
       this.turnTile = new TurnTile(numPlayers);
+      this.buildingManager = new BuildingManager(players);
     }
 
     //getters
@@ -59,6 +60,7 @@ public class Game {
     public int getNumPlayer(){return numPlayers;}
     public OfferTrack getOfferTrack(){return offerTrack;}
     public BuildingManager getBuildingManager(){return buildingManager;}
+    public EventManager getEventManager(){return eventManager;}
     public ArrayList<Player> getTurnOrder(){return turnOrder;}
     public int getEra(){return era;}
 
