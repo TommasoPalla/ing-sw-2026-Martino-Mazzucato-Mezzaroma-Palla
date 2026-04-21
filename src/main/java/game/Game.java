@@ -36,8 +36,8 @@ public class Game {
     private GamePhase currentPhase;
     private OfferTrack offerTrack;
     private BuildingManager buildingManager = new BuildingManager();
-    private EventManager eventManager;
-    private static Deck deck;       //forse static non è la soluzione ma ad ora non so che altro fare
+    private EventManager eventManager = new EventManager();
+    private static Deck deck;      //forse static non è la soluzione ma ad ora non so che altro fare
     private TurnTile turnTile;
 
   /* Game constructor, which with the game is initialized
@@ -47,6 +47,7 @@ public class Game {
       instance = this;
       this.players = players;
       this.numPlayers = players.size();
+      this.turnTile = new TurnTile(numPlayers);
     }
 
     //getters

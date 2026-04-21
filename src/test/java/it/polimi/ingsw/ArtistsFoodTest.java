@@ -1,11 +1,13 @@
 package it.polimi.ingsw;
 
 import building_management.BuildingManager;
+import building_management.buildings.ArtistsFood;
 import building_management.buildings.BonusPoints;
 import building_management.buildings.InventorsFood;
 import cards_and_deck.BuildingCard;
 import cards_and_deck.CharacterCard;
 import enums.*;
+import event_management.EventManager;
 import game.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-public class BuildingManagerTest {
+public class ArtistsFoodTest {
     BuildingManager buildingManager;
     EnumMap<Parameters, Integer> mapca =  new EnumMap<>(Parameters.class);
-    BuildingCard bonusPoints = new BonusPoints(2, "BP", 10, GamePhase.END_GAME, Effect.BONUS_POINTS, "+25 points", 0);
+    BuildingCard artistsFood = new ArtistsFood(2, "AF", 7, GamePhase.ON_EVENT, Effect.ARTISTS_FOOD, "ciao", 5, 1);
 
     @Test
-    public void buildingManagerTest() {
+    public void artistsFoodTest() {
         // GAME AND BUILDINGMANAGER INIT
         Player player1 =  new Player("giocatore1", Color.BLUE);
         Player player2 =  new Player("giocatore2", Color.RED);
@@ -29,13 +31,8 @@ public class BuildingManagerTest {
         players.add(player2);
         Game game = new Game(players);
         buildingManager = Game.getInstance().getBuildingManager();
-        // BONUSPOINTS TEST
-        player1.getTribe().modifyPrestigePoints(50);
-        player1.getTribe().addBuildingToTribe(bonusPoints);
-        assertEquals(player1.getTribe().getBuildings().getFirst(), bonusPoints); // checks if player's tribe saved the building
-        assertEquals(bonusPoints.getOwner(), player1);
-        assertEquals(buildingManager.getBuildingsMap().get(bonusPoints.getActivatedAt()).get(player1).getFirst(), bonusPoints); // checks if BuildingManager saved the building in the map
-        buildingManager.useBuilding(GamePhase.END_GAME, player1);
-        assertEquals(75, player1.getTribe().getPrestigePoints()); // checks if the building worked
+        // ARTISTSFOOD TEST
+        player1.getTribe().addBuildingToTribe(artistsFood);
+        buildingManager.useBuilding(GamePhase.ON_EVENT, player1);
     }
 }
