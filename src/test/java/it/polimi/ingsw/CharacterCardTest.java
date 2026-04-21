@@ -14,9 +14,11 @@ public class CharacterCardTest {
     CardLoader loader = new CardLoader();
 
     @Test
-    public void initCharacters(){
-        this.allCharacterCards = loader.loadCharacters("json/test_card.json");
-        assertEquals(CharacterRole.HUNTER, this.allCharacterCards.get(0).getRole());
-        assertEquals(2, this.allCharacterCards.get(0).getNumPlayersFlag());
+    public void parserCardTest(){
+        allCharacterCards = loader.loadCharacters("json/test_card.json");
+        assertEquals(CharacterRole.HUNTER, allCharacterCards.getFirst().getRole());
+        assertEquals(2, allCharacterCards.getFirst().getNumPlayersFlag());
+        assertEquals("E1_CH_1", allCharacterCards.getFirst().getCardID());
+        //assertEquals("E3_CS_5", allCharacterCards.getLast().getCardID()); //non funziona parser character
     }
 }

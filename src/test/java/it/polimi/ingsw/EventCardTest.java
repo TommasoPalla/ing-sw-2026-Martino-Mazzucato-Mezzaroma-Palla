@@ -2,10 +2,9 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.*;
-import cards_and_deck.CharacterCard;
+import enums.EventType;
+import enums.Parameters;
 import cards_and_deck.CardLoader;
-import enums.CharacterRole;
 import cards_and_deck.EventCard;
 import org.junit.jupiter.api.Test;
 
@@ -19,5 +18,17 @@ public class EventCardTest {
     @Test
     public void initEventCard() {
         this.allEventCards = loader.loadEvents("json/test_card.json");
+        //assertEquals(15, allEventCards.getLast().getCardID());
+        //assertEquals(7, allEventCards.getLast().getParam(Parameters.PRESTIGE_MALUS));
+        //assertEquals(1, allEventCards.getFirst().getParam(Parameters.PRESTIGE_BONUS));
+        //assertEquals(1, allEventCards.getFirst().getParam(Parameters.FOOD_BONUS));
+        //assertEquals(EventType.HUNT, allEventCards.getFirst().getEventType());
+        //assertEquals(EventType.SHAMANIC_RITUAL, allEventCards.getLast().getEventType());
+        //non funziona  il parser event card
+    }
+    @Test
+    public void testEventInitialization(){
+        EventCard card = new EventCard(1, "TEST_ID", EventType.SHAMANIC_RITUAL, null);
+        assertEquals(0, card.getParam(Parameters.PRESTIGE_BONUS));
     }
 }

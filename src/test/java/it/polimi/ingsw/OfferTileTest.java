@@ -5,14 +5,13 @@ import game_board.OfferTile;
 
 import org.junit.jupiter.api.*;
 import users.Player;
-import users.Tribe;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class OfferTileTest {
     OfferTile tileA = new OfferTile('A');
     OfferTile tileG = new OfferTile('G');
-    Player player = new Player("AAA", new Tribe(), Color.BLACK);
+    Player player = new Player("AAA", Color.BLACK);
     @Test
     void initOfferTile(){
         //tile A test

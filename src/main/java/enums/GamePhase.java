@@ -8,5 +8,6 @@ public enum GamePhase {
   ON_EVENT, 
   END_TURN,
   START_TURN,
-  RETURN_TO_TILE;
+  RETURN_TO_TILE,
+  ON_PURCHASE;
 }

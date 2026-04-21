@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TribeTest {
     Tribe tribe = new Tribe();
-    Player player = new Player("aaa", tribe, Color.BLUE);
+    Player player = new Player("aaa", Color.BLUE);
     @Test
     void initTribe(){
         assertEquals(player, tribe.getTribeOwner());
@@ -87,7 +87,7 @@ public class TribeTest {
     @Test
     void buildingsPoints(){
 
-        Player player2 = new Player("pluto", new Tribe(), Color.RED);
+        Player player2 = new Player("pluto", Color.RED);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
         players.add(player2);

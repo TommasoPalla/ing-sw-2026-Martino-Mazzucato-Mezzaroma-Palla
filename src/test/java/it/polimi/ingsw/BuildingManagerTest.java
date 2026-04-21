@@ -35,6 +35,6 @@ public class BuildingManagerTest {
         assertEquals(bonusPoints.getOwner(), player1);
         assertEquals(Game.getInstance().getBuildingManager().getBuildingsMap().get(bonusPoints.getActivatedAt()).get(player1).getFirst(), bonusPoints);
         buildingManager.useBuilding(GamePhase.END_GAME, player1);
-        //assertEquals(player.getTribe().getPrestigePoints(), 75);
+        assertEquals(player1.getTribe().getPrestigePoints(), 75);
     }
 }

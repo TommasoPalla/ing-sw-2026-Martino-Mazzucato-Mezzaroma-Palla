@@ -762,7 +762,7 @@
       "era": 2,
       "cardID": "E2_B_1",
       "cost": 6,
-      "activatedAt": "ON_PURCHASE??",//
+      "activatedAt": "ON_PURCHASE",
       "effect": "BS",
       "effectDescription": "During the Shamanic Ritual Event, your tribe\nhas 3 additional Shamanic Star icons.",
       "prestige": 4,
