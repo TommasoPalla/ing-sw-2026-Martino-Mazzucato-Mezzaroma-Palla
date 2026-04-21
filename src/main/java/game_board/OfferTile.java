@@ -13,6 +13,7 @@ public class OfferTile {
     public OfferTile(char offerTileID){
         this.occupied = false;
         this.currentOccupant = null;
+        this.offerTileID = offerTileID;
         switch (offerTileID){
             case 'A':
                 this.cardsFromAbove = 0;

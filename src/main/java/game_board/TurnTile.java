@@ -32,28 +32,19 @@ public class TurnTile {
     public int[] getTileModifier() {return tileModifier;}
     // ATT!!! in questo modo non si rispetta l'ordine dettato dal gioco in cui la turn tile si popola
     // progressivamente e il cibo è preso dal giocatore appena finisce di pescare le sue carte
+    // Questo errore qui sopra dovrebbe essere stato risolto con l'aggiunta di TurnTile
+    // qualcuno che possa confermare elimini questi commenti se e' d'accordo
 
-    /*public ArrayList<Player> getTurnOrder(ArrayList<Player> turnOrder){
-        ArrayList<Player> newTurns = new ArrayList<>();
-        for(Player player : turnOrder){//creazione newTurns per riordinare i turni
-            newTurns.add(player);
-        }
-        newTurns=newTurns.stream().sorted(Comparator.comparing( OfferTile :: getTileCode))
-                .map(OfferTile::getCurrentOccupant).collect(Collectors.toCollection(ArrayList::new));
-        return newTurns;
-    }*/
     public ArrayList<Player> getTurnOrder(ArrayList<Player> turnOrder){
-
         return turnOrder.stream().sorted(Comparator.comparing(
                 p -> p.getCurrentOfferTile().getTileCode()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-    public void returnToStartingTile(ArrayList<Player> turnOrder, int j, BuildingManager buildingManager){
-        int foodModifier = tileModifier[j];
-        if(foodModifier > 0) buildingManager.useBuilding(GamePhase.RETURN_TO_TILE, turnOrder.get(j));
-        turnOrder.get(j).getCurrentOfferTile().free();
-        turnOrder.get(j).getTribe().modifyFood(tileModifier[j]);
 
+    public void returnToStartingTile(ArrayList<Player> turnOrder, Player returningPlayer, BuildingManager buildingManager){
+        int foodModifier = tileModifier[turnOrder.indexOf(returningPlayer)];
+        if(foodModifier > 0) buildingManager.useBuilding(GamePhase.RETURN_TO_TILE, returningPlayer);
+        returningPlayer.getCurrentOfferTile().free();
+        returningPlayer.getTribe().modifyFood(foodModifier);
     }
-
 }

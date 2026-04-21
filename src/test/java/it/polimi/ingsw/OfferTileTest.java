@@ -20,6 +20,7 @@ public class OfferTileTest {
         assertFalse(tileA.isOccupied());
         assertEquals(3, tileA.getFoodBonus());
         assertNull(tileA.getCurrentOccupant());
+        assertEquals('A', tileA.getTileCode());
 
         //tile G test
         assertEquals(2, tileG.getCardsFromAbove());
@@ -27,6 +28,7 @@ public class OfferTileTest {
         assertFalse(tileG.isOccupied());
         assertEquals(0, tileG.getFoodBonus());
         assertNull(tileG.getCurrentOccupant());
+        assertEquals('G', tileG.getTileCode());
     }
     @Test
     void occupyOfferTileA(){

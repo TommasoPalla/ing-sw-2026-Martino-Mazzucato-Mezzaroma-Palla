@@ -205,7 +205,7 @@ public class Game {
                 }
                 //fase intermittente tra return to tile on draw
                 currentPhase = GamePhase.RETURN_TO_TILE;
-                turnTile.returnToStartingTile(turnOrder, turnOrder.indexOf(currentPlayer), buildingManager);
+                turnTile.returnToStartingTile(turnOrder, currentPlayer, buildingManager);
                 currentPhase = GamePhase.ON_DRAW;
 
                 currentPlayer=getNextPlayer();
