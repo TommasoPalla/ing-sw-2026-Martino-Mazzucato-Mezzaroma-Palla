@@ -3,7 +3,6 @@ package building_management;
 import cards_and_deck.BuildingCard;
 import enums.GamePhase;
 import event_management.EventStrategy;
-import game.Game;
 import users.Player;
 
 import java.util.ArrayList;

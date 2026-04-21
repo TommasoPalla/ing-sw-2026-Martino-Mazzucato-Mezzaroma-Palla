@@ -74,6 +74,7 @@ public class  Tribe {
         prestigePoints += pp;
     }
     public void setOwner(Player player){this.tribeOwner=player;}
+    public void modifyBuildingDiscount(int discount){ this.builderDiscount += discount; }
 
     public void modifyFood(int food) {
         if((foodReserve + food) < 0){
@@ -84,29 +85,13 @@ public class  Tribe {
     }
 
     public void addShamansStars(int stars) {shamansStars += stars;}
-
+    public void modifyGatherersDiscount(int discount){ gatherersDiscount += discount; }
+    public void addHunterFood(int food) { foodReserve += food; }
     // Character is added to the player's list
-    // Called in Player (?)
+    // Called in Player
     public void addCharacterToTribe(CharacterCard character) {
         population.get(character.getRole()).add(character);
-        switch(character.getRole()){
-            case HUNTER:
-                if(character.isAlphaHunter().orElse(false)) foodReserve += population.get(CharacterRole.HUNTER).size();
-                break;
-            case BUILDER:
-                builderDiscount += character.getBuildingDiscount().orElse(0);
-                break;
-            case GATHERER:
-                gatherersDiscount += 3;     //da gettare tramite i parametri della carta
-                break;
-            case SHAMAN:
-                shamansStars += character.getShamanStars().orElse(0);
-                break;
-            case INVENTOR:
-                inventorsPerType.putIfAbsent(character.getInventorType(), 0);
-                inventorsPerType.put(character.getInventorType(), inventorsPerType.get(character.getInventorType()) + 1);
-                break;
-        }
+        character.applyEffect(tribeOwner);
     }
 
     // The owner of the building card is assigned and the building is added to the player's list
@@ -129,7 +114,7 @@ public class  Tribe {
         // Points from builders
         int populationPoints = 0;
         for (CharacterCard character : population.get(CharacterRole.BUILDER)) {
-            populationPoints = populationPoints + character.getPrestigePoints().orElse(0);
+            populationPoints = populationPoints + character.getPrestigePoints(); //prima c'era .orElse(0)
         }
 
         // Points from buildings
