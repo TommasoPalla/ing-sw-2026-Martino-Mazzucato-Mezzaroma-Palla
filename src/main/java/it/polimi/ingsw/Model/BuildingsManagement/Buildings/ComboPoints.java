@@ -1,9 +1,9 @@
-package building_management.buildings;
+package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 
-import cards_and_deck.BuildingCard;
-import enums.CharacterRole;
-import enums.Effect;
-import enums.GamePhase;
+import it.polimi.ingsw.Enums.CharacterRole;
+import it.polimi.ingsw.Enums.Effect;
+import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 
 import java.util.HashMap;
 import java.util.Map;

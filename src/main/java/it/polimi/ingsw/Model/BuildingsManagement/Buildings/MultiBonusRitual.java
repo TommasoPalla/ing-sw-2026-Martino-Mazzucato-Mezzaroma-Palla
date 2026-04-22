@@ -1,12 +1,12 @@
-package building_management.buildings;
+package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 
-import building_management.EffectContext;
-import cards_and_deck.BuildingCard;
-import enums.Effect;
-import enums.GamePhase;
-import enums.Parameters;
-import event_management.EventStrategy;
-import event_management.ShamanicRitualEvent;
+import it.polimi.ingsw.Enums.Effect;
+import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Enums.Parameters;
+import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.EventManagement.EventStrategy;
+import it.polimi.ingsw.Model.EventManagement.ShamanicRitualEvent;
 
 // If the owner is one of the winners of the Shamanic Ritual event
 // he gains double the indicated Prestige Points

@@ -1,8 +1,8 @@
-package building_management.buildings;
-import cards_and_deck.BuildingCard;
+package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 
-import enums.GamePhase;
-import enums.Effect;
+import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Enums.Effect;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 
 // At the end of the game, the owner gains 25 Prestige Points
 public class BonusPoints extends BuildingCard {

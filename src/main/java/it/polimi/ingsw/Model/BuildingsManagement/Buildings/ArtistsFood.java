@@ -1,12 +1,12 @@
-package building_management.buildings;
+package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 
-import building_management.EffectContext;
-import cards_and_deck.BuildingCard;
-import enums.Parameters;
-import enums.GamePhase;
-import enums.Effect;
-import event_management.CavePaintingsEvent;
-import event_management.EventStrategy;
+import it.polimi.ingsw.Enums.Parameters;
+import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Enums.Effect;
+import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.EventManagement.CavePaintingsEvent;
+import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 
 // During the Cave Paintings event, the owner takes 1 food token for every
 // artist in his tribe

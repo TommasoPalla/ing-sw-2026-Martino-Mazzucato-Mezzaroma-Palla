@@ -1,9 +1,9 @@
-package building_management.buildings;
+package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 
-import cards_and_deck.BuildingCard;
-import enums.Effect;
-import enums.GamePhase;
-import game.Game;
+import it.polimi.ingsw.Enums.Effect;
+import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Game.Game;
 
 // If at the end of every turn, when the owner moves his totem back to the Turn
 // Order tile, they place it in a space that provides a bonus in food, they immediately

@@ -1,10 +1,10 @@
-package building_management.buildings;
+package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 
-import cards_and_deck.BuildingCard;
-import cards_and_deck.CharacterCard;
-import enums.CharacterRole;
-import enums.Effect;
-import enums.GamePhase;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Enums.CharacterRole;
+import it.polimi.ingsw.Enums.Effect;
+import it.polimi.ingsw.Enums.GamePhase;
 
 // At the end of the game, the owner gains double the Prestige Points indicated
 // on the Builder cards in his tribe
