@@ -53,6 +53,10 @@ public class Player {
     }
 
     //returns true if building is affordable to player or if the card is a character, returns false otherwise
+
+
+    //visitor to be external class
+
     public boolean drawable(int index, OfferTrack offerTrack, int row)
             throws Illegal_Draw_Exception, Insufficient_Food_Exception{
         Card card;
@@ -135,27 +139,17 @@ public class Player {
         VisitorAdapter visitor = new VisitorAdapter() {
             @Override
             public void visitCard(BuildingCard building) {
-                if(drawable(index, offerTrack, 0)) { //Player.this.drawable() sarebbe la stessa cosa (se c'è il problema non è per questo)
-                    BuildingCard buildingPurchased = offerTrack.pickBuildingFromBottom(index);
-                    tribe.addBuildingToTribe(buildingPurchased);
-                } else {
-                    throw new Insufficient_Food_Exception();
-                }
+                    tribe.addBuildingToTribe(building);
             }
 
             @Override
             public void visitCard(CharacterCard character) {
-                CharacterCard charPicked = offerTrack.pickCharacterFromBottom(index);
-                tribe.addCharacterToTribe(charPicked);
-            }
-
-            @Override
-            public void visitCard(EventCard event) {
-                throw new Illegal_Draw_Exception();
+                tribe.addCharacterToTribe(character);
             }
         };
-        card.accept(visitor);
-
+        if(this.drawable(index, offerTrack, 1)){
+            card.accept(visitor);
+        }
         /*if (card.getClass().equals(CharacterCard.class)) {
 
            CharacterCard characterPicked = offerTrack.pickCharacterFromBottom(index);

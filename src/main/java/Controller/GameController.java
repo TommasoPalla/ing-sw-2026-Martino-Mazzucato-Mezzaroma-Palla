@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import cards_and_deck.Card;
 import game.Game;
