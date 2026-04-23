@@ -8,7 +8,7 @@ public class Hunter extends CharacterCard {
     private final CharacterRole role;
 
     public Hunter(int era, String cardID, int numPlayersFlag,  boolean hunterIcon) {
-        super(era, cardID, numPlayersFlag);
+        super(era, cardID, numPlayersFlag, CharacterRole.HUNTER);
         this.hunterIcon = hunterIcon;
         this.role = CharacterRole.HUNTER;
     }

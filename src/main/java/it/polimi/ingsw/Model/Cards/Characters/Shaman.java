@@ -8,7 +8,7 @@ public class Shaman extends CharacterCard {
     private final CharacterRole role;
 
     public Shaman(int era, String cardID, int numPlayersFlag, int shamansStars) {
-        super(era, cardID, numPlayersFlag);
+        super(era, cardID, numPlayersFlag, CharacterRole.SHAMAN);
         this.shamansStars = shamansStars;
         this.role = CharacterRole.SHAMAN;
     }

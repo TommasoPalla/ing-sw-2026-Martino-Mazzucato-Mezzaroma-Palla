@@ -9,7 +9,7 @@ public class Inventor extends CharacterCard {
     private final CharacterRole role;
 
     public Inventor(int era, String cardID, int numPlayersFlag, InventorType invention) {
-        super(era, cardID, numPlayersFlag);
+        super(era, cardID, numPlayersFlag, CharacterRole.INVENTOR);
         this.invention = invention;
         this.role = CharacterRole.INVENTOR;
     }

@@ -8,7 +8,7 @@ public class Gatherer extends CharacterCard {
     private final CharacterRole role;
 
     public Gatherer(int era, String cardID, int numPlayersFlag, int gathererDiscount) {
-        super(era, cardID, numPlayersFlag);
+        super(era, cardID, numPlayersFlag, CharacterRole.GATHERER);
         this.gathererDiscount = gathererDiscount;
         this.role = CharacterRole.GATHERER;
     }

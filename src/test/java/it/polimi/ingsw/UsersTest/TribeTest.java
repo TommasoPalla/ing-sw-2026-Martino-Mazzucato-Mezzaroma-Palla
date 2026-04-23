@@ -6,6 +6,8 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Enums.*;
+import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.Tribe;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -13,8 +15,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TribeTest {
-    Tribe tribe = new Tribe();
-    Player player = new Player("aaa", Color.BLUE);
+    Game game;
+    Tribe tribe = new Tribe(game);
+    Player player = new Player(game, "aaa", Color.BLUE);
     @Test
     void initTribe(){
         assertEquals(player, tribe.getTribeOwner());

@@ -25,9 +25,9 @@ public class ClientModel {
     public ArrayList<BuildingCard> buildings;
 
     public ClientModel(Game realModel) {
-        this.currentPhase = realModel.getInstance().getGamePhase();
-        this.currentPlayerTurn = realModel.getInstance().getCurrentPlayer();
-        this.offerTrack = realModel.getInstance().getOfferTrack();
+        this.currentPhase = realModel.getGamePhase();
+        this.currentPlayerTurn = realModel.getCurrentPlayer();
+        this.offerTrack = realModel.getOfferTrack();
         this.foodReserve = 0;
         this.prestigePoints = 0;
         this.population = new HashMap<>();

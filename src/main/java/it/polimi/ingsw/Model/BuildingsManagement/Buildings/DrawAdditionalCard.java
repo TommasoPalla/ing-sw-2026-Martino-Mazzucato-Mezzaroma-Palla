@@ -8,9 +8,11 @@ import it.polimi.ingsw.Model.Game.Game;
 // After resolving all actions and before the End of the Round phase, the owner can take one Character or one Building
 // card (paying its cost) from the top row
 public class DrawAdditionalCard extends BuildingCard {
-    public DrawAdditionalCard(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
+    private final Game  game;
+    public DrawAdditionalCard(Game gameInstance, int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                               String effectDescription, int prestige) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
+        this.game = gameInstance;
     }
 
     /* Se la topRow non è vuota, pesca una carta in più a fine turno
@@ -20,8 +22,8 @@ public class DrawAdditionalCard extends BuildingCard {
 
         int index=0;//provvisorio!!
 
-        if(!Game.getInstance().getOfferTrack().getTopRow().isEmpty()) {
-            this.getOwner().drawFromTopRow(index, Game.getInstance().getOfferTrack());
+        if(!game.getOfferTrack().getTopRow().isEmpty()) {
+            this.getOwner().drawFromTopRow(index, game.getOfferTrack());
         }
     }
 }

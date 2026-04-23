@@ -21,13 +21,14 @@ public class ArtistsFoodTest {
     @Test
     public void artistsFoodTest() {
         // GAME AND BUILDINGMANAGER INIT
-        Player player1 =  new Player("giocatore1", Color.BLUE);
-        Player player2 =  new Player("giocatore2", Color.RED);
+        Game game = null;
+        Player player1 =  new Player(game,"giocatore1", Color.BLUE);
+        Player player2 =  new Player(game,"giocatore2", Color.RED);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
-        Game game = new Game(players);
-        buildingManager = Game.getInstance().getBuildingManager();
+        game = new Game("1234", players);
+        buildingManager = game.getBuildingManager();
         // CavePaintingsEvent INIT
         EnumMap<Parameters, Integer> inputPar = new EnumMap<>(Parameters.class);
         inputPar.put(Parameters.PRESTIGE_BONUS, 1);

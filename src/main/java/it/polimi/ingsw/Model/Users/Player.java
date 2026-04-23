@@ -4,20 +4,23 @@ import it.polimi.ingsw.Model.Cards.*;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Player {
+    private final Game game;
     private final String name;
     private final Color totemColor;
     private final Tribe tribe;
     private OfferTile currentOfferTile;
 
-    public Player(String name, Color totemColor) {
+    public Player(Game gameInstance, String name, Color totemColor) {
+        this.game = gameInstance;
         this.name = name;
-        this.tribe = new Tribe();
+        this.tribe = new Tribe(gameInstance);
         this.totemColor = totemColor;
         this.currentOfferTile = null;
         tribe.setOwner(this);

@@ -5,6 +5,7 @@ import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Visitor;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
+import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Users.*;
 
 import java.util.ArrayList;

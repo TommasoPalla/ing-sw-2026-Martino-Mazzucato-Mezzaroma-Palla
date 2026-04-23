@@ -3,8 +3,10 @@ package it.polimi.ingsw.Model.Game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Deck.Deck;
 import it.polimi.ingsw.Model.Cards.EventCard;
@@ -15,16 +17,11 @@ import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.EventManagement.EventManager;
 
-
-/* Game uses the Singleton design pattern: one instance of the game is created, with a specific ID to
-* define different games' instances. A method "getInstance()" allows other classes to access the game instance
-* */
-
 /*
 * esempio Era e = Game.getInstance().getEra();
  */
 public class Game {
-    private static Game instance;
+    private final String gameID;
     final private ArrayList<Player> players;
     final private int numPlayers;
     private Player currentPlayer;
@@ -38,19 +35,25 @@ public class Game {
     private static Deck deck;      //forse static non è la soluzione ma ad ora non so che altro fare
     private TurnTile turnTile;
 
-  /* Game constructor, which with the game is initialized
-  *
+  /*
+  * Game constructor, which with the game is initialized. It initializes the players from their name and
+  * the totem color they chose.
    */
-    public Game(ArrayList<Player> players) {
-      instance = this;
-      this.players = players;
-      this.numPlayers = players.size();
-      this.turnTile = new TurnTile(numPlayers);
-      this.buildingManager = new BuildingManager(players);
+    // Ciò dovrebbe rendere più pulita l'inizializzazione, facendo seguire necessariamente l'inizializzazione
+    // dei Player a quella del game e non viceversa
+    public Game(String gameID, Map<String, Color> newPlayers) {
+        this.gameID = gameID;
+        this.numPlayers = newPlayers.size();
+        this.turnTile = new TurnTile(numPlayers);
+        this.players = new ArrayList<>();
+        for (String name : newPlayers.keySet()) {
+            Player newPlayer = new Player(this, name, newPlayers.get(name));
+            this.players.add(newPlayer);
+          }
+        this.buildingManager = new BuildingManager(players);
     }
 
     //getters
-    public static Game getInstance() {return instance;}
     // non ho assolutamente idea se sia il modo migliore per fare questa cosa
     public static Deck getDeck() {return deck;}
     public GamePhase getGamePhase(){return currentPhase;}
@@ -83,11 +86,11 @@ public class Game {
       currentRound = 1;
       era = 1;
 
-      offerTrack = new OfferTrack(numPlayers);
+      offerTrack = new OfferTrack(this, numPlayers);
       //buildingManager = new BuildingManager();
       eventManager = new EventManager();
       turnTile = new TurnTile(numPlayers);
-      deck = new Deck(numPlayers, "json/cards.json");
+      deck = new Deck(this, numPlayers, "json/cards.json");
 
       //inizializzo track
       offerTrack.initializeBottomRow();

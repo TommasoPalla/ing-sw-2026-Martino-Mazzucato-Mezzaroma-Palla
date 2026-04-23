@@ -9,6 +9,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 public class OfferTrack{
+    private final Game game;
     private ArrayList<OfferTile> offerTiles;
     private ArrayList<Card> topRow;
     public ArrayList<Card> bottomRow;
@@ -21,8 +22,8 @@ public class OfferTrack{
     private int playerNumber;
     int[] availableBuildingsPerEra;
 
-    public OfferTrack(int playerNumber){
-
+    public OfferTrack(Game gameInstance, int playerNumber){
+        this.game = gameInstance;
         this.offerTiles = new ArrayList<OfferTile>();
         this.topRow = new ArrayList<Card>();
         this.bottomRow = new ArrayList<Card>();
@@ -136,7 +137,7 @@ public class OfferTrack{
     public void repopulateTopBuildingCards(){
         topBuildingCard = new ArrayList<BuildingCard>();    //sennò size può avere un valore variabile
         ArrayDeque<BuildingCard> tempBuildings = Game.getDeck().getBuildingsDeck();
-        int era = Game.getInstance().getEra();
+        int era = game.getEra();
         while(tempBuildings.peek().getEra() == era){    //verificare che non venga letto l'elemento successivo
             topBuildingCard.add(tempBuildings.pop());
         }
@@ -159,7 +160,7 @@ public class OfferTrack{
                 }
             };
 
-            Card drawnCard = Game.getInstance().getDeck().drawCard();
+            Card drawnCard = game.getDeck().drawCard();
             drawnCard.accept(visitor);
         }
     }

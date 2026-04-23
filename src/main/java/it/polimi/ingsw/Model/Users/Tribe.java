@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 public class  Tribe {
+    private final Game game;
     private Player tribeOwner;
     private int prestigePoints;
     private int foodReserve;
@@ -22,7 +23,8 @@ public class  Tribe {
     private int shamansStars = 0;
 
     //Tribe's constructor
-    public Tribe() {
+    public Tribe(Game gameInstance) {
+        this.game = gameInstance;
         this.prestigePoints = 0;
         this.foodReserve = 0;
         this.population = new EnumMap<>(CharacterRole.class);
@@ -101,7 +103,7 @@ public class  Tribe {
     public void addBuildingToTribe(BuildingCard building) {
         buildings.add(building);
         building.assignOwner(tribeOwner);
-        Game.getInstance().getBuildingManager().addBuilding(building, tribeOwner);
+        game.getBuildingManager().addBuilding(building, tribeOwner);
         // Calls effectOnPurchase for the building. It only works with the buildings who override it
         building.effectOnPurchase();
         this.foodReserve -= building.getCost();

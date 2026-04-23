@@ -9,6 +9,7 @@ import it.polimi.ingsw.Model.Game.Game;
 import java.util.*;
 
 public class Deck {
+    private final Game game;
     private ArrayDeque<Card> tribeDeck;
     private ArrayDeque<BuildingCard> buildingsDeck;
     private int[] buildingsDeckLength;  //Number of buildingCards for each era
@@ -18,7 +19,8 @@ public class Deck {
     private final List<BuildingCard> allBuildingCards;    //from JSON
 
     //constructor called by game.Game.startGame()
-    public Deck(int numPlayers, String jsonPath){
+    public Deck(Game gameInstance, int numPlayers, String jsonPath){
+        this.game = gameInstance;
         switch (numPlayers){
             case 2 -> this.buildingsDeckLength = new int[]{1, 2, 3};
             case 3 -> this.buildingsDeckLength = new int[]{2, 2, 4};
@@ -96,9 +98,9 @@ public class Deck {
      * @return instance of Card
      */
     public Card drawCard() {
-        int era = Game.getInstance().getEra();
+        int era = game.getEra();
         if(era != 3 && tribeDeck.peek().getEra() != era){
-            Game.getInstance().changeEra();
+            game.changeEra();
         }
         return tribeDeck.pop();
     }
