@@ -1,4 +1,4 @@
-package it.polimi.ingsw.building_managementTest;
+package it.polimi.ingsw.BuildingsManagementTest;
 
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.building_managementTest.buildings;
+package it.polimi.ingsw.BuildingsManagementTest.buildings;
 
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.ArtistsFood;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;

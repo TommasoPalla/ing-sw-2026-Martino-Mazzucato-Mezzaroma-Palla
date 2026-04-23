@@ -1,4 +1,4 @@
-package it.polimi.ingsw.usersTest;
+package it.polimi.ingsw.UsersTest;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;

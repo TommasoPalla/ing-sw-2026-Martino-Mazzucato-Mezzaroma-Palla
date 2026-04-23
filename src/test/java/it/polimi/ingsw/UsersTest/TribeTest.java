@@ -1,4 +1,4 @@
-package it.polimi.ingsw.usersTest;
+package it.polimi.ingsw.UsersTest;
 
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;

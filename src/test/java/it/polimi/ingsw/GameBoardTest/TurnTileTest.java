@@ -1,4 +1,4 @@
-package it.polimi.ingsw.game_boardTest;
+package it.polimi.ingsw.GameBoardTest;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;

@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Player {
     private final String name;
     private final Color totemColor;
-    private final Tribe tribe;
+    final Tribe tribe;
     private OfferTile currentOfferTile;
 
     public Player(String name, Color totemColor) {
@@ -55,112 +55,52 @@ public class Player {
     }
 
     //returns true if building is affordable to player or if the card is a character, returns false otherwise
-
-
-    //visitor to be external class
-
-    public boolean drawable(int index, OfferTrack offerTrack, int row)
-            throws Illegal_Draw_Exception, Insufficient_Food_Exception{
+    public boolean drawable(int index, OfferTrack offerTrack, int row) {
         Card card;
-        AtomicBoolean isDrawable = new AtomicBoolean(false);
-        CardVisitor visitor = new CardVisitor() {
-            @Override
-            public void visitCard(BuildingCard building) {
-                int discountedCost = building.getCost() - Player.this.getTribe().getGatherersDiscount();
-                int foodReserve = Player.this.getTribe().getFoodReserve();  //verificare che Player.this vada bene
-                if (foodReserve >= discountedCost) {
-                    isDrawable.set(true);
-                } else {
-                    isDrawable.set(false);
-                    throw new Insufficient_Food_Exception();
-                }
-            }
-            @Override
-            public void visitCard(CharacterCard character) {
-                isDrawable.set(true);
-            }
-
-            @Override
-            public void visitCard(EventCard event) {
-               isDrawable.set(false);
-               throw new Illegal_Draw_Exception();
-            }
-        };
-        if (row == 0){//0 è toprow
+        DrawableCardVisitor visitor = new DrawableCardVisitor();
+        if (row == 0) {//0 è toprow
             card = offerTrack.getTopRow().get(index);
-        }else{
+        } else {
             card = offerTrack.getBottomRow().get(index);
         }
-        card.accept(visitor);
-        return isDrawable.get();
-        /*  old implementation:
-        if(card.getClass().equals(EventCard.class)){
-            return false;
-        }else if(this.getTribe().getFoodReserve()<((BuildingCard)card).getCost()){
-            return false;
-        }else{
-            return true;
-        }*/
+        try {
+            card.accept(visitor, this);
+        } catch (Illegal_Draw_Exception | Insufficient_Food_Exception e){
+            System.err.println("Mossa non consentita: " + e.getMessage());
+
+            //va gestito con le view, da capire dopo: eventualmente lanciare l'eccezione al metodo più esterno
+            //che verosimilmente sarà del controller e sarà lui a mostrare l'errore
+
+        }
+        return visitor.isDrawable();
     }
 
     public void drawFromTopRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception, Insufficient_Food_Exception{
         Card card = offerTrack.getTopRow().get(index);
-        CardVisitor visitor = new CardVisitor() {
-            @Override
-            public void visitCard(BuildingCard building) {
-                    tribe.addBuildingToTribe(building);
-            }
+        AddCardVisitor visitor = new AddCardVisitor();
+        if(this.drawable(index, offerTrack, 0)){
 
-            @Override
-            public void visitCard(CharacterCard character) {
-                tribe.addCharacterToTribe(character);
-            }
-        };
-        if(this.drawable(index, offerTrack, 0)) {
-            card.accept(visitor);
-        };
-        /* old implementation:
-        if (card.getClass().equals(CharacterCard.class)) {
-
-            CharacterCard characterPicked = offerTrack.pickCharacterFromTop(index);
-            tribe.addCharacterToTribe(characterPicked);
-        } else if (card.getClass().equals(EventCard.class)) {
-            throw new Illegal_Draw_Exception();
-        } else if(this.getTribe().getFoodReserve()>=((BuildingCard)card).getCost()){
-            BuildingCard buildingPurchased = offerTrack.pickBuildingFromTop(index);
-            tribe.addBuildingToTribe(buildingPurchased);
-        } else{
-            throw new Insufficient_Food_Exception();
-        }*/
+            /*accept method calls VisitCard method that depending on the card's type does the following:
+            - add the building to the player's tribe, if BuildingCard
+            - add the character to the player's tribe, if CharacterCard
+            - nothing, if EventCard; in this case 'then branch' is not executed.
+             */
+            card.accept(visitor, this);
+        }
     }
 
 
     public void drawFromBottomRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
         Card card = offerTrack.getTopRow().get(index);
-        //visitor implemented
-        CardVisitor visitor = new CardVisitor() {
-            @Override
-            public void visitCard(BuildingCard building) {
-                    tribe.addBuildingToTribe(building);
-            }
-
-            @Override
-            public void visitCard(CharacterCard character) {
-                tribe.addCharacterToTribe(character);
-            }
-        };
+        AddCardVisitor visitor = new AddCardVisitor();
         if(this.drawable(index, offerTrack, 1)){
-            card.accept(visitor);
-        }
-        /*if (card.getClass().equals(CharacterCard.class)) {
 
-           CharacterCard characterPicked = offerTrack.pickCharacterFromBottom(index);
-           tribe.addCharacterToTribe(characterPicked);
-        } else if (card.getClass().equals(EventCard.class)) {
-            throw new Illegal_Draw_Exception();
-        } else {
-            BuildingCard buildingPurchased = offerTrack.pickBuildingFromBottom(index);
-            tribe.addBuildingToTribe(buildingPurchased);
-        }*/
+            /*accept method calls VisitCard method that depending on the card's type does the following:
+            - add the building to the player's tribe, if BuildingCard
+            - add the character to the player's tribe, if CharacterCard
+            - nothing, if EventCard; in this case 'then branch' is not executed.
+             */
+            card.accept(visitor, this);
+        }
     }
 }

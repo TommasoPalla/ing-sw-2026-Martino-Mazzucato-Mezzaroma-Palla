@@ -1,4 +1,4 @@
-package it.polimi.ingsw.game_boardTest;
+package it.polimi.ingsw.GameBoardTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
