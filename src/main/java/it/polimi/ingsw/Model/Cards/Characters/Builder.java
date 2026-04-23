@@ -6,20 +6,15 @@ import it.polimi.ingsw.Model.Users.Player;
 public class Builder extends CharacterCard {
     private final int prestigePoints;
     private final int buildingDiscount;
-    private final CharacterRole role;
 
     public Builder(int era, String cardID, int numPlayersFlag, int prestigePoints, int buildingDiscount) {
-        super(era, cardID, numPlayersFlag);
+        super(era, cardID, numPlayersFlag, CharacterRole.BUILDER);
         this.prestigePoints = prestigePoints;
         this.buildingDiscount = buildingDiscount;
-        this.role = CharacterRole.BUILDER;
+
     }
 
     // getters
-    @Override
-    public CharacterRole getRole() {
-        return role;
-    }
     @Override
     public int getPrestigePoints() {
         return prestigePoints;

@@ -1,10 +1,17 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
+import it.polimi.ingsw.Model.Users.Illegal_Action_Phase_Exception;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.View.ClientController;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 * Game controller of a single game instance, used to extract
@@ -15,25 +22,40 @@ public class GameController {
     /*
     * This is the attributed of the game model associated to the controller
      */
-    Game gameModel;
+    private final Game gameModel;
 
     // Da definire il client handler di un player
-   // private final Map<Player, ClientHandler> connectedClients;
+   private Map<Player, ClientController> connectedClients;
 
     // costruttore del controller
     public GameController(Game gameModel) {
         this.gameModel = gameModel;
+        this.connectedClients = new HashMap<>();
     }
 
     public Game getGameModel() {
         return gameModel;
     }
 
-    //public ArrayList<Player> getConnectedClients() {
-    //return new ArrayList<>(connectedClients.keyset());
-    //}
+    public ArrayList<Player> getConnectedClients() {
+        return new ArrayList<>(connectedClients.keySet());
+    }
 
+    public void addClient(Player player, ClientController clientController) {
+        connectedClients.put(player, clientController);
+    }
+    public void removeClient(Player player) {
+        connectedClients.remove(player);
+    }
     // esempi di metodi del controller
+
+    /*
+    * checks if the action is done during the right game phase
+     */
+    public boolean checkPhase(GamePhase phase) throws Illegal_Action_Phase_Exception {
+        return phase == gameModel.getGamePhase();
+    }
+
     public synchronized void handleChooseOfferTile (Player player, int index, OfferTrack offerTrack) {
         try {
             player.chooseOfferTile(index, offerTrack);

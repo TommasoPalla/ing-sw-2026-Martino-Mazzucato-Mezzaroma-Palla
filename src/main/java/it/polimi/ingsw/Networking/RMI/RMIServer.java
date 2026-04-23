@@ -1,11 +1,8 @@
 package it.polimi.ingsw.Networking.RMI;
 
-import it.polimi.ingsw.Controller.MainController;
+import it.polimi.ingsw.Networking.Shared.ServerInterface;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class RMIServer implements ServerInterface{
+public class RMIServer implements ServerInterface {
     /*final MainController controller;
     final List<ClientInterface> clients = new ArrayList<>();*/
 }

@@ -7,7 +7,8 @@ import it.polimi.ingsw.Model.Cards.Visitor;
 import it.polimi.ingsw.Model.Users.Player;
 
 public abstract class CharacterCard extends Card {
-    private final int numPlayersFlag;   //3 stands for 3+, 4 for 4+. How many players are required to use the card
+    private final int numPlayersFlag;//3 stands for 3+, 4 for 4+. How many players are required to use the card
+    private CharacterRole role;
 //    private final CharacterRole role;
 //    private final Integer prestigePoints;
 //    private final InventorType inventorType;
@@ -44,10 +45,10 @@ public abstract class CharacterCard extends Card {
 //    }
 
     // constructor
-    public CharacterCard(int era, String cardID, int numPlayersFlag){
+    public CharacterCard(int era, String cardID, int numPlayersFlag, CharacterRole role) {
         super(era, cardID);
         this.numPlayersFlag = numPlayersFlag;
-//        this.role = role;
+        this.role = role;
 //        this.prestigePoints = prestigePoints;
 //        this.inventorType = inventorType;
 //        this.shamanStars = shamanStars;
@@ -58,7 +59,7 @@ public abstract class CharacterCard extends Card {
     // getters. A getter of a specific attribute normally returns 0 (or null) except if that getter is overridden in the specific character class
     public int getNumPlayersFlag() { return this.numPlayersFlag;}
     public CharacterRole getRole(){
-        return null;
+        return role;
     }
     public int getPrestigePoints(){
         return 0;
