@@ -6,6 +6,8 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Visitor;
 import it.polimi.ingsw.Model.Users.Player;
 
+import java.util.ArrayList;
+
 public abstract class CharacterCard extends Card {
     private final int numPlayersFlag;//3 stands for 3+, 4 for 4+. How many players are required to use the card
     private CharacterRole role;
@@ -81,6 +83,10 @@ public abstract class CharacterCard extends Card {
     @Override
     public void accept(Visitor visitor, Player player){
         visitor.visitCard(this, player);
+    }
+    @Override
+    public void accept(Visitor visitor, ArrayList<Card> array){
+        visitor.visitCard(this, array);
     }
 
     public void applyEffect(Player player){}

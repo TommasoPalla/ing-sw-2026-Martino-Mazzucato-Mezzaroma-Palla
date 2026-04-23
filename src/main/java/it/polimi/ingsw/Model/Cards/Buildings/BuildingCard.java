@@ -7,6 +7,8 @@ import it.polimi.ingsw.Model.Cards.Visitor;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.Users.*;
 
+import java.util.ArrayList;
+
 public abstract class BuildingCard extends Card {
     private final int cost; // food cost of the building card
     private final GamePhase activatedAt; // game phase during which this building card is activated
@@ -81,5 +83,9 @@ public abstract class BuildingCard extends Card {
     @Override
     public void accept(Visitor visitor, Player player){
         visitor.visitCard(this, player);
+    }
+    @Override
+    public void accept(Visitor visitor, ArrayList<Card> array){
+        visitor.visitCard(this, array);
     }
 }

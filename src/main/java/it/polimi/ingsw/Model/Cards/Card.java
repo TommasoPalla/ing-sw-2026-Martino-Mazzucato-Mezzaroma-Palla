@@ -2,6 +2,8 @@ package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Model.Users.Player;
 
+import java.util.ArrayList;
+
 public abstract class Card {
     private final int era;
     private final String cardID;
@@ -18,4 +20,5 @@ public abstract class Card {
         return this.era;
     }
     public abstract void accept(Visitor visitor, Player player);
+    public abstract void accept(Visitor visitor, ArrayList<Card> array);
 }

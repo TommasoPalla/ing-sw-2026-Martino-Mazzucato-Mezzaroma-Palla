@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Player {
     private final String name;
     private final Color totemColor;
-    final Tribe tribe;
+    private final Tribe tribe;
     private OfferTile currentOfferTile;
 
     public Player(String name, Color totemColor) {

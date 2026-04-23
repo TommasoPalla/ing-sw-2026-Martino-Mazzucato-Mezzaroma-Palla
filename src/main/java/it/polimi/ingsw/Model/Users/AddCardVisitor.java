@@ -9,11 +9,11 @@ import it.polimi.ingsw.Model.Cards.VisitorAdapter;
 public class AddCardVisitor extends VisitorAdapter {
     @Override
     public void visitCard(BuildingCard building, Player player) {
-        player.tribe.addBuildingToTribe(building);
+        player.getTribe().addBuildingToTribe(building);
     }
 
     @Override
     public void visitCard(CharacterCard character, Player player) {
-        player.tribe.addCharacterToTribe(character);
+        player.getTribe().addCharacterToTribe(character);
     }
 }
