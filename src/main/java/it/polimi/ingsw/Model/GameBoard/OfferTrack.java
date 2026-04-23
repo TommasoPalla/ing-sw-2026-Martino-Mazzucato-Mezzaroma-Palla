@@ -74,7 +74,7 @@ public class OfferTrack{
          * Once found, event cards are added to bottomEventCards list
          * @return bottomEventCards
          */
-        CardVisitor visitor = new CardVisitor() {
+        VisitorAdapter visitor = new VisitorAdapter() {
             @Override
             public void visitCard(EventCard event){
                 bottomEventCards.add(event);
@@ -91,7 +91,7 @@ public class OfferTrack{
     }
     public ArrayList<EventCard> getTopEvents(){
         ArrayList<EventCard> topEventCards = new ArrayList<>();
-        CardVisitor visitor = new CardVisitor() {
+        VisitorAdapter visitor = new VisitorAdapter() {
             @Override
             public void visitCard(EventCard event){
                 topEventCards.add(event);
@@ -157,7 +157,7 @@ public class OfferTrack{
         while(bottomRow.size() < playerNumber + 1){
 
             //visitor pattern
-            CardVisitor visitor = new CardVisitor() {
+            VisitorAdapter visitor = new VisitorAdapter() {
                 @Override
                 public void visitCard(CharacterCard character){
                     bottomRow.add(character);

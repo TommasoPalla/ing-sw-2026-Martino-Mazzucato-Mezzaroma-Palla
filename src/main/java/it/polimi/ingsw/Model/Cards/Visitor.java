@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.Users.Player;
 
 /**
  * Visitor interface uses visitor Pattern in order to let
@@ -9,7 +10,7 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
  * of cards but in different ways.
  */
 public interface Visitor {
-    void visitCard(BuildingCard building);
-    void visitCard(CharacterCard character);
-    void visitCard(EventCard event);
+    void visitCard(BuildingCard building, Player player);
+    void visitCard(CharacterCard character, Player player);
+    void visitCard(EventCard event, Player player);
 }

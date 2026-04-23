@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.Parameters;
+import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.EnumMap;
 
@@ -33,7 +34,8 @@ public class EventCard extends Card{
         return parameters.getOrDefault(par, 0);
     }
 
-    public void accept(Visitor visitor){
-        visitor.visitCard(this);
+    @Override
+    public void accept(Visitor visitor, Player player){
+        visitor.visitCard(this, player);
     }
 }

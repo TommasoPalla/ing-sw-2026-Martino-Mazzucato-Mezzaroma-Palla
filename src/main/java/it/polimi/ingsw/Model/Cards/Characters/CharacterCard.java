@@ -78,8 +78,8 @@ public abstract class CharacterCard extends Card {
 //    }
 
     @Override
-    public void accept(Visitor visitor){
-        visitor.visitCard(this);
+    public void accept(Visitor visitor, Player player){
+        visitor.visitCard(this, player);
     }
 
     public void applyEffect(Player player){}

@@ -78,7 +78,8 @@ public abstract class BuildingCard extends Card {
         return false;
     }
 
-    public void accept(Visitor visitor){
-        visitor.visitCard(this);
+    @Override
+    public void accept(Visitor visitor, Player player){
+        visitor.visitCard(this, player);
     }
 }
