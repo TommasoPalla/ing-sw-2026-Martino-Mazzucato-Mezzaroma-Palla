@@ -2,9 +2,9 @@ package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
-import java.util.ArrayList;
 
 /**
  * class VisitorAdapter overrides visit methods with blank bodies
@@ -21,9 +21,9 @@ public abstract class VisitorAdapter implements Visitor{
     public void visitCard(EventCard event, Player player){}
 
     @Override
-    public void visitCard(BuildingCard building, ArrayList<Card> array){}
+    public void visitCard(BuildingCard building, OfferTrack offerTrack){}
     @Override
-    public void visitCard(CharacterCard character, ArrayList<Card> array){}
+    public void visitCard(CharacterCard character, OfferTrack offerTrack){}
     @Override
-    public void visitCard(EventCard event, ArrayList<Card> array){}
+    public void visitCard(EventCard event, OfferTrack offerTrack){}
 }

@@ -15,8 +15,6 @@ public class OfferTrack{
     public ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
-    private ArrayList<EventCard> topEventCards;
-    private ArrayList<EventCard> bottomEventCards;
     private TurnTile turnTile;
     private int currentPlayerTileIdx;
     private int playerNumber;
@@ -73,22 +71,33 @@ public class OfferTrack{
     /**
      * Here visitor pattern is used to identify only the Event Cards
      * among cards in the bottom row of the offer track.
-     * Once found, event cards are added to bottomEventCards list.
+     * Once found, event cards are added to bottomEventCards list and returned.
      */
-    public ArrayList<Card> getBottomEvents(){
-        bottomEventCards = new ArrayList<>();
-        EventsVisitor visitor = new EventsVisitor();
+    public ArrayList<EventCard> getBottomEvents(){
+        ArrayList<EventCard> bottomEventCards = new ArrayList<>();
+
+        VisitorAdapter visitor = new VisitorAdapter() {
+            @Override
+            public void visitCard(EventCard event, OfferTrack offerTrack) {
+                bottomEventCards.add(event);
+            }
+        };
         for(Card card : bottomRow){
-            card.accept(visitor, bottomEventCards);
+            card.accept(visitor, this);
         }
         return bottomEventCards;
     }
 
-    public ArrayList<Card> getTopEvents(){
-        ArrayList<Card> topEventCards = new ArrayList<>();
-        EventsVisitor visitor = new EventsVisitor();
+    public ArrayList<EventCard> getTopEvents(){
+        ArrayList<EventCard> topEventCards = new ArrayList<>();
+        VisitorAdapter visitor = new VisitorAdapter() {
+            @Override
+            public void visitCard(EventCard event, OfferTrack offerTrack) {
+                topEventCards.add(event);
+            }
+        };
         for(Card card : topRow){
-            card.accept(visitor, topEventCards);
+            card.accept(visitor, this);
         }
         return topEventCards;
     }
@@ -117,9 +126,7 @@ public class OfferTrack{
 
     public BuildingCard pickBuildingFromBottom(int index){
         if(index >= bottomBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
-        BuildingCard cardPicked = bottomBuildingCard.get(index);
-        bottomBuildingCard.remove(index);
-        return cardPicked;
+        return bottomBuildingCard.remove(index);
     }
     //-----------------------------------------------------------------------------------------------
     public void moveCardsToBottom(){bottomRow = topRow;}
@@ -130,13 +137,13 @@ public class OfferTrack{
     public void repopulateTopRow() {
         while(topRow.size() < playerNumber + 4) {
             //
-            topRow.add(Game.getDeck().drawCard());
+            topRow.add(game.getDeck().drawCard());
         }
     }
     //forse si può fare meglio, così però non serve drawBuilding
     public void repopulateTopBuildingCards(){
         topBuildingCard = new ArrayList<BuildingCard>();    //sennò size può avere un valore variabile
-        ArrayDeque<BuildingCard> tempBuildings = Game.getDeck().getBuildingsDeck();
+        ArrayDeque<BuildingCard> tempBuildings = game.getDeck().getBuildingsDeck();
         int era = game.getEra();
         while(tempBuildings.peek().getEra() == era){    //verificare che non venga letto l'elemento successivo
             topBuildingCard.add(tempBuildings.pop());
@@ -148,20 +155,8 @@ public class OfferTrack{
         bottomRow = new ArrayList<>();  //size sarà certamente nulla
         RowInitializerVisitor visitor = new RowInitializerVisitor();
         while(bottomRow.size() < playerNumber + 1){
-
-            VisitorAdapter visitor = new VisitorAdapter() {
-                @Override
-                public void visitCard(CharacterCard character){
-                    bottomRow.add(character);
-                }
-                @Override
-                public void visitCard(EventCard event){
-                    topRow.add(event);
-                }
-            };
-
             Card drawnCard = game.getDeck().drawCard();
-            drawnCard.accept(visitor);
+            drawnCard.accept(visitor, this);
         }
     }
 }

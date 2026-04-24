@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Visitor;
+import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
@@ -85,8 +86,8 @@ public abstract class CharacterCard extends Card {
         visitor.visitCard(this, player);
     }
     @Override
-    public void accept(Visitor visitor, ArrayList<Card> array){
-        visitor.visitCard(this, array);
+    public void accept(Visitor visitor, OfferTrack offerTrack){
+        visitor.visitCard(this, offerTrack);
     }
 
     public void applyEffect(Player player){}
