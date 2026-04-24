@@ -2,9 +2,9 @@ package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
-import java.util.ArrayList;
 
 /**
  * Visitor interface uses visitor Pattern in order to let
@@ -16,7 +16,7 @@ public interface Visitor {
     void visitCard(CharacterCard character, Player player);
     void visitCard(EventCard event, Player player);
 
-    void visitCard(BuildingCard building, ArrayList<Card> array);
-    void visitCard(CharacterCard character, ArrayList<Card> array);
-    void visitCard(EventCard event, ArrayList<Card> array);
+    void visitCard(BuildingCard building, OfferTrack offerTrack);
+    void visitCard(CharacterCard character, OfferTrack offerTrack);
+    void visitCard(EventCard event, OfferTrack offerTrack);
 }

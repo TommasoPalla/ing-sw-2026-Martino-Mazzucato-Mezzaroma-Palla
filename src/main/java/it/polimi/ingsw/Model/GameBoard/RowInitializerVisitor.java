@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 public class RowInitializerVisitor extends VisitorAdapter {
     @Override
-    public void visitCard(CharacterCard character, ArrayList<Card> array) {
-        array.add(character);
+    public void visitCard(CharacterCard character, OfferTrack offerTrack) {
+        offerTrack.getBottomRow().add(character);
     }
     @Override
-    public void visitCard(EventCard event, ArrayList<Card> array){
-        array.add(event);
+    public void visitCard(EventCard event, OfferTrack offerTrack){
+        offerTrack.getBottomRow().add(event);
     }
 }

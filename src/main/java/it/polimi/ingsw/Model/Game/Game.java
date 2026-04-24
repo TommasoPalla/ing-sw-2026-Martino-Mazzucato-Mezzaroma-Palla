@@ -55,7 +55,7 @@ public class Game {
 
     //getters
     // non ho assolutamente idea se sia il modo migliore per fare questa cosa
-    public static Deck getDeck() {return deck;}
+    public Deck getDeck() {return deck;}
     public GamePhase getGamePhase(){return currentPhase;}
     public Player getCurrentPlayer(){return currentPlayer;}
     public int getNumPlayer(){return numPlayers;}

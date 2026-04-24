@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Visitor;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.Game.Game;
+import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
 
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public abstract class BuildingCard extends Card {
         visitor.visitCard(this, player);
     }
     @Override
-    public void accept(Visitor visitor, ArrayList<Card> array){
-        visitor.visitCard(this, array);
+    public void accept(Visitor visitor, OfferTrack offerTrack){
+        visitor.visitCard(this, offerTrack);
     }
 }

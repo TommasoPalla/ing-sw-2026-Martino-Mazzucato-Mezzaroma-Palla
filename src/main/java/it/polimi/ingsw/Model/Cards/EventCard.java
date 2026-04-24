@@ -2,9 +2,9 @@ package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.Parameters;
+import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 
 
@@ -40,7 +40,7 @@ public class EventCard extends Card{
         visitor.visitCard(this, player);
     }
     @Override
-    public void accept(Visitor visitor, ArrayList<Card> array){
-        visitor.visitCard(this, array);
+    public void accept(Visitor visitor, OfferTrack offerTrack){
+        visitor.visitCard(this, offerTrack);
     }
 }
