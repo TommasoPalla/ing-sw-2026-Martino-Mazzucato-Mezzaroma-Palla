@@ -104,6 +104,10 @@ public class OfferTrack{
 
 
     //actual functions
+
+    /*queste due funzioni sembrano ridondanti, in player c'è già draw che fa la stessa cosa
+    inoltre qui non c'è nessun controllo sulla "pescabilità" della carta
+
     public CharacterCard pickCharacterFromTop(int index){
         CharacterCard cardPicked = (CharacterCard) topRow.get(index);
         topRow.remove(index);
@@ -115,7 +119,7 @@ public class OfferTrack{
         topRow.remove(index);
         return cardPicked;
     }
-
+    //stesso problema dei due metodi sopra, già risolto in player con drawCard che chiama drawable
     //---------------------------FORSE DA CAPIRE SE LE EXCEPTION UCCIDONO L'INPUT DELL'UTENTE--------
     public BuildingCard pickBuildingFromTop(int index){
         if(index >= topBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
@@ -127,16 +131,20 @@ public class OfferTrack{
     public BuildingCard pickBuildingFromBottom(int index){
         if(index >= bottomBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
         return bottomBuildingCard.remove(index);
-    }
+    }*/
     //-----------------------------------------------------------------------------------------------
-    public void moveCardsToBottom(){bottomRow = topRow;}
+
+    //la botttomRow sarà sicuramente vuota? dove viene fatto il contorllo che la svuota?
+    public void moveCardsToBottom(){
+        bottomRow = topRow;
+        topRow =new ArrayList<Card>();
+
+    }
     public void moveBuildings(){bottomBuildingCard = topBuildingCard;}
 
-    //per niente sicuro che tutto questo funzioni
-    //!!!!!NON FUNZIONA!!!!
+
     public void repopulateTopRow() {
         while(topRow.size() < playerNumber + 4) {
-            //
             topRow.add(game.getDeck().drawCard());
         }
     }
@@ -151,9 +159,15 @@ public class OfferTrack{
     }
 
     //da testare con il visitor
+
+    /**initializeBottomRow method is called only at the beginning of a new game,
+     * therefore bottomRow and topRow will be empty new arrays (created by constructor).
+     * CharacterCards will be added to the bottomRow while EventCards to the topRow,
+     * as prescribed by the rules.
+     */
     public void initializeBottomRow(){
-        bottomRow = new ArrayList<>();  //size sarà certamente nulla
         RowInitializerVisitor visitor = new RowInitializerVisitor();
+        //size sarà certamente nulla perchè il metodo è chiamato poco dopo il costruttore di offertrack
         while(bottomRow.size() < playerNumber + 1){
             Card drawnCard = game.getDeck().drawCard();
             drawnCard.accept(visitor, this);

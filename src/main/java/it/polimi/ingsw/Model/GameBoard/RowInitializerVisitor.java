@@ -7,6 +7,9 @@ import it.polimi.ingsw.Model.Cards.VisitorAdapter;
 
 import java.util.ArrayList;
 
+/**Implementation of Visitor Pattern that is used by OfferTrack.initializeBottomRow,
+ * to organize new drawn cards: characters to the bottomRow and Events to the topRow.
+ */
 public class RowInitializerVisitor extends VisitorAdapter {
     @Override
     public void visitCard(CharacterCard character, OfferTrack offerTrack) {
@@ -14,6 +17,6 @@ public class RowInitializerVisitor extends VisitorAdapter {
     }
     @Override
     public void visitCard(EventCard event, OfferTrack offerTrack){
-        offerTrack.getBottomRow().add(event);
+        offerTrack.getTopRow().add(event);
     }
 }
