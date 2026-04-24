@@ -1,22 +1,20 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.GameController;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
-import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Model.Users.Player;
-import it.polimi.ingsw.Networking.Shared.ServerInterface;
+import it.polimi.ingsw.Networking.Shared.ServerConnection;
 
 public class ClientController {
     private Player player;
     GameController gameController;
-    ServerInterface server;
+    ServerConnection connection;
     ClientModel localModel;
 
     public ClientController(GameController gameController, Player player) {
-        //this.server = server;
+        //this.connection = connection;
         this.player = player;
         this.gameController = gameController;
 
