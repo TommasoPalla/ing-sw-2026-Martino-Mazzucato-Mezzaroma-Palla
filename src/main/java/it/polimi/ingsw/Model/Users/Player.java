@@ -1,14 +1,11 @@
 package it.polimi.ingsw.Model.Users;
 
 import it.polimi.ingsw.Model.Cards.*;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Player {
     private final Game game;
@@ -89,9 +86,9 @@ public class Player {
             - nothing, if EventCard; in this case 'then branch' is not executed.
              */
             card.accept(visitor, this);
+            offerTrack.getTopRow().remove(index);
         }
     }
-
 
     public void drawFromBottomRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
         Card card = offerTrack.getTopRow().get(index);
@@ -104,6 +101,7 @@ public class Player {
             - nothing, if EventCard; in this case 'then branch' is not executed.
              */
             card.accept(visitor, this);
+            offerTrack.getBottomRow().remove(index);
         }
     }
 }

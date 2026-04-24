@@ -4,7 +4,7 @@ import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.VisitorAdapter;
 
-/**Implementation of Visitor Pattern to add a card to a player, both got as inputs.
+/**Implementation of Visitor Pattern to add a card to a player's tribe, both got as inputs.
  */
 public class AddCardVisitor extends VisitorAdapter {
     @Override
