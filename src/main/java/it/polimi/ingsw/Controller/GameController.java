@@ -27,10 +27,18 @@ public class GameController {
     // Da definire il client handler di un player
    private Map<Player, ClientController> connectedClients;
 
-    // costruttore del controller
+    /*
+    * GameController's constructor is called in the GameManager when a new game is added
+     */
     public GameController(Game gameModel) {
         this.gameModel = gameModel;
         this.connectedClients = new HashMap<>();
+        // da aggiungere gli handler, non so come
+
+        for (Player player : gameModel.getPlayers()) {
+            new ClientController(this, player);
+        }
+        gameModel.startGame();
     }
 
     public Game getGameModel() {
@@ -74,5 +82,14 @@ public class GameController {
         }
     }
 
+    public synchronized void handleDrawFromBottomRow (Player player, int index, OfferTrack offerTrack) {
+        try {
+            player.drawFromTopRow(index, offerTrack);
+        }
+        catch (Illegal_Draw_Exception e) {
+            // messaggio di errore per carta evento non pescabile
+        }
+    }
 
+    public synchronized void updateView()
 }

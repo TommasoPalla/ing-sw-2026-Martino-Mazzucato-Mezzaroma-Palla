@@ -33,4 +33,8 @@ public class ClientModel {
         this.population = new HashMap<>();
         this.buildings = new ArrayList<>();
     }
+
+    public boolean drawable(int index, int row) {}
+
+    public boolean isOccupied(int index) { return offerTrack.getOfferTiles().get(index).isOccupied(); }
 }

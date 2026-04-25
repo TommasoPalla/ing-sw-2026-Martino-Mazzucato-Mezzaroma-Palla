@@ -14,21 +14,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+
 public class BuildingManagerTest {
     BuildingManager buildingManager;
-    EnumMap<Parameters, Integer> mapca =  new EnumMap<>(Parameters.class);
     BuildingCard bonusPoints = new BonusPoints(2, "BP", 10, GamePhase.END_GAME, Effect.BONUS_POINTS, "+25 points", 25);
 
     @Test
     public void buildingManagerTest() {
         // GAME AND BUILDINGMANAGER INIT
-        Game game = null;
-        Player player1 =  new Player(game,"giocatore1", Color.BLUE);
-        Player player2 =  new Player(game,"giocatore2", Color.RED);
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(player1);
-        players.add(player2);
-        game = new Game("1234", players);
+        Map<String, Color> players = new HashMap<>();
+        players.put("giocatore1", Color.BLUE);
+        players.put("giocatore2", Color.RED);
+        Game game = new Game("1234", players);
+        Player player1 = game.getPlayers().getFirst();
+        Player player2 = game.getPlayers().getLast();
         buildingManager = game.getBuildingManager();
 
         // BONUSPOINTS TEST

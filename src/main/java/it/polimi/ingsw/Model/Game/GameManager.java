@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.Game;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 
 import java.util.Map;
@@ -31,9 +32,14 @@ public class GameManager {
         return activeGames.get(gameID);
     }
 
+    /*
+    * This method adds a new game to the list of active games
+    *  and instantiates his game controller, so the game can start
+     */
     public synchronized Game addNewGame(String gameID, Map<String, Color> players) {
         Game newGame = new Game(gameID, players);
         activeGames.put(gameID, newGame);
+        new GameController(newGame);
         return newGame;
     }
 
