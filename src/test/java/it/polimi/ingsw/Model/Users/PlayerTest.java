@@ -1,8 +1,7 @@
-package it.polimi.ingsw.UsersTest;
+package it.polimi.ingsw.Model.Users;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
-import it.polimi.ingsw.Model.Users.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

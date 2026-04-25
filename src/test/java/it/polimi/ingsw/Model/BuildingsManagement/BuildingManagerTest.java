@@ -1,19 +1,15 @@
-package it.polimi.ingsw.BuildingsManagementTest;
+package it.polimi.ingsw.Model.BuildingsManagement;
 
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
-import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Enums.Parameters;
 import it.polimi.ingsw.Model.Game.Game;
 import org.junit.jupiter.api.Test;
 import it.polimi.ingsw.Model.Users.Player;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 

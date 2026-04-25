@@ -1,9 +1,7 @@
-package it.polimi.ingsw.GameBoardTest;
+package it.polimi.ingsw.Model.GameBoard;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
-import it.polimi.ingsw.Model.GameBoard.OfferTrack;
-import it.polimi.ingsw.Model.GameBoard.TurnTile;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

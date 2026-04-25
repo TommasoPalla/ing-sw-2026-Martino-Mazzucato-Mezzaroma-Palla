@@ -1,8 +1,7 @@
-package it.polimi.ingsw.GameBoardTest;
+package it.polimi.ingsw.Model.GameBoard;
 
 import it.polimi.ingsw.Enums.Color;
 
-import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Model.Users.Player;
 
