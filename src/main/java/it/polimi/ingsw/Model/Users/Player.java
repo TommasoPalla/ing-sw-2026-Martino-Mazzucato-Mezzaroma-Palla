@@ -42,7 +42,7 @@ public class Player {
 
     //functions
     /*funzione che dipende da controller anche che è ancora da implementare, qui bozza sbagliata ma circa completa*/
-    public void chooseOfferTile(int index, OfferTrack offerTrack) throws Occupied_Tile_Exception {
+    public OfferTile chooseOfferTile(int index, OfferTrack offerTrack) throws Occupied_Tile_Exception {
         /*logica di input*/
         OfferTile chosen = offerTrack.getOfferTiles().get(index);
         System.out.println(chosen);
@@ -51,6 +51,7 @@ public class Player {
         } else {
             chosen.occupy(this);
             currentOfferTile = chosen;
+            return chosen;
         }
     }
 

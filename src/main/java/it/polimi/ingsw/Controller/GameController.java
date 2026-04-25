@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Game.Game;
+import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Illegal_Action_Phase_Exception;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
@@ -66,7 +67,10 @@ public class GameController {
 
     public synchronized void handleChooseOfferTile (Player player, int index, OfferTrack offerTrack) {
         try {
-            player.chooseOfferTile(index, offerTrack);
+            OfferTile chosen = player.chooseOfferTile(index, offerTrack);
+            for(ClientController client : connectedClients.values()) {
+                client.updateCurrentOfferTile(player, chosen);
+            }
         }
         catch (Occupied_Tile_Exception e) {
             // qui bisogna notificare l'errore al player e richiedergli di riselezionare un'altra tile

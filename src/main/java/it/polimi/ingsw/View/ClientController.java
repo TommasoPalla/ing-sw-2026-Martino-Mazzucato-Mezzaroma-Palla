@@ -2,12 +2,13 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Model.ClientModel;
+import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 
-public class ClientController {
+public class ClientController implements ClientViewUpdate {
     private Player player;
     GameController gameController;
     ServerConnection connection;
@@ -37,5 +38,23 @@ public class ClientController {
     public void onChooseOfferTile(int index) {
         if(localModel.isOccupied(index)) throw new Occupied_Tile_Exception();
         gameController.handleChooseOfferTile(player, index, gameController.getGameModel().getOfferTrack());
+    }
+
+    @Override
+    public void updateFoodReserve(Player updatedPlayer, int food) {
+        if(updatedPlayer == player) localModel.updateFoodReserve(food);
+        else localModel.updateOtherFoodReserves(updatedPlayer, food);
+    }
+
+    @Override
+    public void updatePrestigePoints(Player updatedPlayer, int pp) {
+        if(updatedPlayer == player) localModel.updatePrestigePoints(pp);
+        else localModel.updateOtherPrestigePoints(updatedPlayer, pp);
+    }
+
+    @Override
+    public void updateCurrentOfferTile(Player updatedPlayer, OfferTile offerTile) {
+        if(updatedPlayer == player) localModel.updateCurrentOfferTile(offerTile);
+        else localModel.updateOtherOfferTile(player, offerTile);
     }
 }
