@@ -8,6 +8,11 @@ import it.polimi.ingsw.Model.Game.Game;
 
 import java.util.*;
 
+/**The Deck class represents the actual game's deck,
+ * with a tribe deck that consists of characters and events
+ * and a building deck. Deck also has lists of all cards,
+ * divided by type, instantiated by CardLoader methods.
+ */
 public class Deck {
     private final Game game;
     private ArrayDeque<Card> tribeDeck;
@@ -18,7 +23,7 @@ public class Deck {
     private final List<EventCard> allEventCards;
     private final List<BuildingCard> allBuildingCards;    //from JSON
 
-    //constructor called by game.Game.startGame()
+    //constructor called by game.startGame()
     public Deck(Game gameInstance, int numPlayers, String jsonPath){
         this.game = gameInstance;
         switch (numPlayers){
@@ -37,14 +42,15 @@ public class Deck {
     }
 
     //getters
-    public int getCardsNumber(){return tribeDeck.size();}   //serve?
     public ArrayDeque<Card> getTribeDeck() {return tribeDeck;}
     public ArrayDeque<BuildingCard> getBuildingsDeck() {return buildingsDeck;}
 
-    /** method intTribeDeck creates a new deck with characters and events
-     * first picks all cards suitable for the number of players, then it shuffles them and returns a deque
+    /** Method intTribeDeck creates a new deck with characters and events:
+     * first picks all cards suitable for the number of players,
+     * then it shuffles them and moves the cards to the private tribeDeck field.
+     * The method is defined as 'private' because it can only be invoked
+     * by the class constructor.
      */
-    //method called by Game.getInstance().changeEra()
     private void initTribeDeck(int numPlayers){
         this.tribeDeck = new ArrayDeque<>();
         for(int era = 1; era <= 3; era++){
@@ -54,7 +60,7 @@ public class Deck {
                     tempDeck.add(charCard);
                 }
             }
-            // forse si può migliorare la gestione delle carte Evento Finale
+            //It adds all eventCards except for the final events
             for(EventCard evCard: allEventCards){
                 if(evCard.getEra() == era && (era != 3 ||
                         (evCard.getEventType() != EventType.SUSTENANCE && evCard.getEventType() != EventType.SHAMANIC_RITUAL))){
@@ -73,10 +79,12 @@ public class Deck {
         }
     }
 
-    /** method initBuildingDeck creates a deck with buildings
-     * method shuffles all buildings for each era and then picks the correct number of cards for the number
-     * of players
-    * */
+    /** The initBuildingDeck method creates a deck with buildings:
+     * it shuffles all buildings for each era and then picks
+     * the correct number of cards for the number of players.
+     * The method is defined as 'private' because it can only be invoked
+     * by the class constructor.
+    */
     private void initBuildingDeck(){
         this.buildingsDeck = new ArrayDeque<>();
         for(int era = 1; era <= 3; era++){
@@ -94,7 +102,8 @@ public class Deck {
         }
     }
 
-    /** drawCard method is used to repopulate topRow and bottomRow, drawing cards from Deck
+    /** The drawCard method is used to repopulate topRow and bottomRow,
+     *  drawing cards from Deck of character and events.
      * @return instance of Card
      */
     public Card drawCard() {

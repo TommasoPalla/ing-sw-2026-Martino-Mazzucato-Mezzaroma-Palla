@@ -2,31 +2,37 @@ package it.polimi.ingsw.Model.GameBoard;
 
 import it.polimi.ingsw.Model.Cards.*;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Game.Game;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 
+/**OfferTrack class represents game board, with current available cards,
+ * divided in top and bottom row, and the offer tiles suitable for current number
+ * of players.
+ */
 public class OfferTrack{
     private final Game game;
-    private ArrayList<OfferTile> offerTiles;
+    private final ArrayList<OfferTile> offerTiles;
     private ArrayList<Card> topRow;
     public ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
-    private TurnTile turnTile;
+    private /* forse final*/ TurnTile turnTile;
+
+    /**@deprecated
+     */
     private int currentPlayerTileIdx;
-    private int playerNumber;
+
+    private final int playerNumber;
     int[] availableBuildingsPerEra;
 
     public OfferTrack(Game gameInstance, int playerNumber){
         this.game = gameInstance;
-        this.offerTiles = new ArrayList<OfferTile>();
-        this.topRow = new ArrayList<Card>();
-        this.bottomRow = new ArrayList<Card>();
-        this.topBuildingCard = new ArrayList<BuildingCard>();
-        this.bottomBuildingCard = new ArrayList<BuildingCard>();
+        this.offerTiles = new ArrayList<>();
+        this.topRow = new ArrayList<>();
+        this.bottomRow = new ArrayList<>();
+        this.topBuildingCard = new ArrayList<>();
+        this.bottomBuildingCard = new ArrayList<>();
         this.currentPlayerTileIdx = -1;
         this.playerNumber = playerNumber;
         this.turnTile = new TurnTile(playerNumber);
@@ -65,7 +71,11 @@ public class OfferTrack{
     public ArrayList<Card> getBottomRow() {return bottomRow;}
     public ArrayList<BuildingCard> getTopBuildingCard() {return topBuildingCard;}
     public ArrayList<BuildingCard> getBottomBuildingCard() {return bottomBuildingCard;}
+
+    /**@deprecated
+     */
     public int getCurrentPlayerTileIdx() {return currentPlayerTileIdx;}
+
     public TurnTile getTurnTile() {return turnTile;}
 
     /**
@@ -105,72 +115,60 @@ public class OfferTrack{
 
     //actual functions
 
-    /*queste due funzioni sembrano ridondanti, in player c'è già draw che fa la stessa cosa
-    inoltre qui non c'è nessun controllo sulla "pescabilità" della carta
-
-    public CharacterCard pickCharacterFromTop(int index){
-        CharacterCard cardPicked = (CharacterCard) topRow.get(index);
-        topRow.remove(index);
-        return cardPicked;
-    }
-
-    public CharacterCard pickCharacterFromBottom(int index) {
-        CharacterCard cardPicked = (CharacterCard) bottomRow.get(index);
-        topRow.remove(index);
-        return cardPicked;
-    }
-    //stesso problema dei due metodi sopra, già risolto in player con drawCard che chiama drawable
-    //---------------------------FORSE DA CAPIRE SE LE EXCEPTION UCCIDONO L'INPUT DELL'UTENTE--------
-    public BuildingCard pickBuildingFromTop(int index){
-        if(index >= topBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
-        BuildingCard cardPicked = topBuildingCard.get(index);
-        topBuildingCard.remove(index);
-        return cardPicked;
-    }
-
-    public BuildingCard pickBuildingFromBottom(int index){
-        if(index >= bottomBuildingCard.toArray().length) throw new ArrayIndexOutOfBoundsException("Can't pick the indexed card, empty row or wrong index");
-        return bottomBuildingCard.remove(index);
-    }*/
-    //-----------------------------------------------------------------------------------------------
-
-    //la botttomRow sarà sicuramente vuota? dove viene fatto il contorllo che la svuota?
-    public void moveCardsToBottom(){
-        bottomRow = topRow;
-        topRow =new ArrayList<Card>();
-
-    }
-    public void moveBuildings(){bottomBuildingCard = topBuildingCard;}
-
-
-    public void repopulateTopRow() {
-        while(topRow.size() < playerNumber + 4) {
-            topRow.add(game.getDeck().drawCard());
-        }
-    }
-    //forse si può fare meglio, così però non serve drawBuilding
-    public void repopulateTopBuildingCards(){
-        topBuildingCard = new ArrayList<BuildingCard>();    //sennò size può avere un valore variabile
-        ArrayDeque<BuildingCard> tempBuildings = game.getDeck().getBuildingsDeck();
-        int era = game.getEra();
-        while(tempBuildings.peek().getEra() == era){    //verificare che non venga letto l'elemento successivo
-            topBuildingCard.add(tempBuildings.pop());
-        }
+    /**@deprecated
+     */
+    public void updatePlayerTile(int idx){
+        this.currentPlayerTileIdx = idx;
     }
 
     //da testare con il visitor
-
     /**initializeBottomRow method is called only at the beginning of a new game,
      * therefore bottomRow and topRow will be empty new arrays (created by constructor).
      * CharacterCards will be added to the bottomRow while EventCards to the topRow,
-     * as prescribed by the rules.
+     * as prescribed by the  game's rules and implemented with visitor pattern.
      */
     public void initializeBottomRow(){
         RowInitializerVisitor visitor = new RowInitializerVisitor();
-        //size sarà certamente nulla perchè il metodo è chiamato poco dopo il costruttore di offertrack
+        /*bottomRow is empty at the first iteration, because initialized
+         by class constructor right before.*/
         while(bottomRow.size() < playerNumber + 1){
             Card drawnCard = game.getDeck().drawCard();
             drawnCard.accept(visitor, this);
         }
     }
+
+    /**repopulateTopRow method is called everytime new cards are needed:
+     * both at the end of each turn and at the start of the game.
+     * When called at the end of the turn, it always comes after
+     * the topRow has been cleared by the moveCardToBottom method.
+     * When called for the first time at the start of the game,
+     * the field has been created with 'new' operand right before.
+     */
+    public void repopulateTopRow() {
+        while(topRow.size() < playerNumber + 4) {
+            topRow.add(game.getDeck().drawCard());
+        }
+    }
+
+    /**Method gets new building cards for the current era.
+     * BuildingsDeck is already built with correct number of cards for each era,
+     * considering the number of players,
+     * therefore no check is needed other than cards' era.
+     */
+    public void repopulateTopBuildingCards(){
+        topBuildingCard = new ArrayList<>();
+        int era = game.getEra();
+        while(game.getDeck().getBuildingsDeck().peek().getEra() == era){
+            // getEra potrebbe lanciare eccezione, come gestirlo?
+            topBuildingCard.add(game.getDeck().getBuildingsDeck().pop());
+        }
+    }
+
+    public void moveCardsToBottom(){
+        bottomRow = topRow;
+        topRow = new ArrayList<>();
+
+    }
+
+    public void moveBuildings(){bottomBuildingCard = topBuildingCard;}
 }
