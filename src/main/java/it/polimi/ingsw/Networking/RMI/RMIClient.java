@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Networking.RMI;
 
+import it.polimi.ingsw.Enums.Color;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 

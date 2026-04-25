@@ -84,12 +84,12 @@ public class GameController {
 
     public synchronized void handleDrawFromBottomRow (Player player, int index, OfferTrack offerTrack) {
         try {
-            player.drawFromTopRow(index, offerTrack);
+            player.drawFromBottomRow(index, offerTrack);
         }
         catch (Illegal_Draw_Exception e) {
             // messaggio di errore per carta evento non pescabile
         }
     }
 
-    public synchronized void updateView()
+    public synchronized void updateView(){}
 }

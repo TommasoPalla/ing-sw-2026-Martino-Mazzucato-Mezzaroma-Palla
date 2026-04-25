@@ -21,8 +21,8 @@ public class ClientModel {
     public OfferTrack offerTrack;
     public int foodReserve;
     public int prestigePoints;
-    public Map<CharacterRole, ArrayList<CharacterCard>> population;
-    public ArrayList<BuildingCard> buildings;
+
+
 
     public ClientModel(Game realModel) {
         this.currentPhase = realModel.getGamePhase();
@@ -30,11 +30,13 @@ public class ClientModel {
         this.offerTrack = realModel.getOfferTrack();
         this.foodReserve = 0;
         this.prestigePoints = 0;
-        this.population = new HashMap<>();
-        this.buildings = new ArrayList<>();
+        //this.population = new HashMap<>();
+        //this.buildings = new ArrayList<>();
     }
 
-    public boolean drawable(int index, int row) {}
+    public boolean drawable(int index, int row) {
+
+    }
 
     public boolean isOccupied(int index) { return offerTrack.getOfferTiles().get(index).isOccupied(); }
 }

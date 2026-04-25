@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Networking.Shared;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 
