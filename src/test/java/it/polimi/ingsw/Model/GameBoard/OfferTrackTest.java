@@ -1,4 +1,4 @@
-package it.polimi.ingsw.GameBoardTest;
+package it.polimi.ingsw.Model.GameBoard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,7 +6,6 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.EventType;
-import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.UsersTest;
+package it.polimi.ingsw.Model.Users;
 
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
@@ -6,8 +6,6 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Enums.*;
-import it.polimi.ingsw.Model.Users.Player;
-import it.polimi.ingsw.Model.Users.Tribe;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
