@@ -144,10 +144,11 @@ public class OfferTrack{
      * When called for the first time at the start of the game,
      * the field has been created with 'new' operand right before.
      */
-    public void repopulateTopRow() {
+    public ArrayList<Card> repopulateTopRow() {
         while(topRow.size() < playerNumber + 4) {
             topRow.add(game.getDeck().drawCard());
         }
+        return topRow;
     }
 
     /**Method gets new building cards for the current era.

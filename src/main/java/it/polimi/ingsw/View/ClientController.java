@@ -1,12 +1,16 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.GameController;
+import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
+
+import java.util.ArrayList;
 
 public class ClientController implements ClientViewUpdate {
     private Player player;
@@ -41,20 +45,32 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void updateFoodReserve(Player updatedPlayer, int food) {
-        if(updatedPlayer == player) localModel.updateFoodReserve(food);
-        else localModel.updateOtherFoodReserves(updatedPlayer, food);
+    public void updateFoodReserve(int food) {
+        localModel.updateFoodReserve(food);
     }
 
     @Override
-    public void updatePrestigePoints(Player updatedPlayer, int pp) {
-        if(updatedPlayer == player) localModel.updatePrestigePoints(pp);
-        else localModel.updateOtherPrestigePoints(updatedPlayer, pp);
+    public void updatePrestigePoints(int pp) {
+        localModel.updatePrestigePoints(pp);
     }
 
     @Override
-    public void updateCurrentOfferTile(Player updatedPlayer, OfferTile offerTile) {
-        if(updatedPlayer == player) localModel.updateCurrentOfferTile(offerTile);
-        else localModel.updateOtherOfferTile(player, offerTile);
+    public void updateCurrentOfferTile(OfferTile offerTile) {
+        localModel.updateCurrentOfferTile(offerTile);
+    }
+
+    @Override
+    public void updateTopRow(ArrayList<Card> newTopRow) {
+        localModel.updateTopRow(newTopRow);
+    }
+
+    @Override
+    public void updateBottomRow(ArrayList<Card> newBottomRow) {
+        localModel.updateBottomRow(newBottomRow);
+    }
+
+    @Override
+    public void updateCardDrawn(CharacterCard card) {
+        localModel.updateCardDrawn(card);
     }
 }

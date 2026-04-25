@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 /*
-* Light model for the client to be accessed. Updated when the model state is modified
+* Light model for the client to be accessed. Updated when the model state is modified. Update methods
+* are called by the Client controllers
  */
 public class ClientModel {
     private final Player player;
@@ -26,10 +27,14 @@ public class ClientModel {
     private Map<Player, Integer> otherFoodReserves;
     private Map<Player, Integer> otherPrestigePoints;
     private Map<CharacterRole, ArrayList<CharacterCard>> population;
+    private Map<Player, Map<CharacterRole, ArrayList<CharacterCard>>> otherPopulation;
     private ArrayList<BuildingCard> buildings;
     private OfferTile currentOfferTile;
     private Map<Player, OfferTile> currentOfferTiles;
-    private ArrayList<Card>
+    private ArrayList<Card> topRow;
+    public ArrayList<Card> bottomRow;
+    private ArrayList<BuildingCard> topBuildingCard;
+    private ArrayList<BuildingCard> bottomBuildingCard;
 
     public ClientModel(Player player, Game realModel) {
         this.player = player;
@@ -48,9 +53,15 @@ public class ClientModel {
         this.prestigePoints = 0;
         this.population = new HashMap<>();
         this.buildings = new ArrayList<>();
+        this.topRow = realModel.getOfferTrack().getTopRow();
+        this.bottomRow = realModel.getOfferTrack().getBottomRow();
+        this.topBuildingCard = realModel.getOfferTrack().getTopBuildingCard();
+        this.bottomBuildingCard = new ArrayList<>();
     }
 
-    public boolean drawable(int index, int row) {}
+    public boolean drawable(int index, int row) {
+
+    }
 
     public boolean isOccupied(int index) { return offerTrack.getOfferTiles().get(index).isOccupied(); }
 
@@ -58,24 +69,28 @@ public class ClientModel {
      * Update methods
      */
     public void updateFoodReserve(int food) {
-        foodReserve += food;
+        if(player == currentPlayerTurn) foodReserve += food;
+        else otherFoodReserves.put(currentPlayerTurn, otherFoodReserves.get(player) + food);
+
     }
     public void updatePrestigePoints(int pp) {
-        prestigePoints += pp;
+        if(player == currentPlayerTurn) prestigePoints += pp;
+        else otherPrestigePoints.put(currentPlayerTurn, otherPrestigePoints.get(player) + pp);
     }
 
-    public void updateOtherFoodReserves(Player player, int food) {
-        otherFoodReserves.put(player, otherFoodReserves.get(player) + food);
-    }
-
-    public void updateOtherPrestigePoints(Player player, int pp) {
-        otherPrestigePoints.put(player, otherPrestigePoints.get(player) + pp);
-    }
     public void updateCurrentOfferTile(OfferTile offerTile) {
-        currentOfferTile = offerTile;
+        if(player == currentPlayerTurn) currentOfferTile = offerTile;
+        else currentOfferTiles.put(currentPlayerTurn, offerTile);
     }
 
-    public void updateOtherOfferTile(Player player, OfferTile offerTile) {
-        currentOfferTiles.put(player, offerTile);
+    public void updateCardDrawn(CharacterCard card) {
+        if(player == currentPlayerTurn) population.get(card.getRole()).add(card);
+        else otherPopulation.get(currentPlayerTurn).get(card.getRole()).add(card);
+    }
+    public void updateTopRow(ArrayList<Card> newTopRow) {
+        this.topRow = newTopRow;
+    }
+    public void updateBottomRow(ArrayList<Card> newBottomRow) {
+        this.bottomRow = newBottomRow;
     }
 }

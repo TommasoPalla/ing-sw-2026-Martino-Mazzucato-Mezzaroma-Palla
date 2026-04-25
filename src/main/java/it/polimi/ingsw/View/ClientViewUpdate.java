@@ -1,10 +1,17 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.Users.Player;
 
+import java.util.ArrayList;
+
 public interface ClientViewUpdate {
-    public void updateFoodReserve(Player player, int food);
-    public void updatePrestigePoints(Player player, int pp);
-    public void updateCurrentOfferTile(Player player, OfferTile offerTile);
+    public void updateFoodReserve(int food);
+    public void updatePrestigePoints(int pp);
+    public void updateCurrentOfferTile(OfferTile offerTile);
+    public void updateCardDrawn(CharacterCard card);
+    public void updateTopRow(ArrayList<Card> newTopRow);
+    public void updateBottomRow(ArrayList<Card> newBottomRow);
 }
