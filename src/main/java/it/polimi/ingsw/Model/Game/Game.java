@@ -12,6 +12,8 @@ import it.polimi.ingsw.Model.Deck.Deck;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.GameBoard.TurnTile;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
+import it.polimi.ingsw.Model.Users.Last_Player_ofTurn_Exception;
+import it.polimi.ingsw.Model.Users.Last_Round_Exception;
 import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Enums.GamePhase;
@@ -46,6 +48,7 @@ public class Game {
         this.numPlayers = newPlayers.size();
         this.turnTile = new TurnTile(numPlayers);
         this.players = new ArrayList<>();
+        this.currentRound = 0;
         // Players initialization
         for (String name : newPlayers.keySet()) {
             Player newPlayer = new Player(this, name, newPlayers.get(name));
@@ -67,29 +70,22 @@ public class Game {
     public ArrayList<Player> getTurnOrder(){return turnOrder;}
     public int getEra(){return era;}
 
-    private Player getNextPlayer() /*throws No_More_Players_Exception*/{
-        int i=0;
-        while(turnOrder.get(i)!=currentPlayer && i<this.numPlayers){
-            i++;
-        }
-        if(i==this.numPlayers-1){
-            i=-1;
-        }
-        return turnOrder.get(i+1);
+    public Player getNextPlayer() {
+        int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
+        if  (currentPlayerIndex < turnOrder.size()-1) return turnOrder.get(currentPlayerIndex+1);
+        else throw new Last_Player_ofTurn_Exception("Last player of turn has played");
     }
-
 
     public void startGame(){
 
       turnOrder = new ArrayList<>(players);
       Collections.shuffle(turnOrder);
 
-      currentPlayer = turnOrder.getFirst();
       currentRound = 1;
       era = 1;
+      currentPlayer = turnOrder.getFirst();
 
       offerTrack = new OfferTrack(this, numPlayers);
-      //buildingManager = new BuildingManager();
       eventManager = new EventManager();
       turnTile = new TurnTile(numPlayers);
       deck = new Deck(this, numPlayers, "json/cards.json");
@@ -100,7 +96,6 @@ public class Game {
       offerTrack.repopulateTopBuildingCards();
 
       giveInitialFood(numPlayers);
-
       currentPhase = GamePhase.START_TURN;
     }
 
@@ -114,7 +109,20 @@ public class Game {
      */
 
     //actual functions
-    private void setCurrentPlayer(){currentPlayer = getNextPlayer();}
+    public Player setNextPlayer(){
+        return currentPlayer = getNextPlayer();
+    }
+
+    /*
+    * Called in "startTurn()" in GameController, return the next round, throws Last_Round_Exception if
+    * the last round has been played
+     */
+    public int getNextRound() {
+        if(currentRound == 10) {
+            throw new Last_Round_Exception("Fine del gioco raggiunta");
+        }
+        return currentRound++;
+    }
 
     private void giveInitialFood(int numPlayers){
         turnOrder.get(0).getTribe().modifyFood(2);

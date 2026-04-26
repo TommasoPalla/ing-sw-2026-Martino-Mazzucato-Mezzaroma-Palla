@@ -42,7 +42,7 @@ public class Player {
 
     //functions
     /*funzione che dipende da controller anche che è ancora da implementare, qui bozza sbagliata ma circa completa*/
-    public void chooseOfferTile(int index, OfferTrack offerTrack) throws Occupied_Tile_Exception {
+    public OfferTile chooseOfferTile(int index, OfferTrack offerTrack) throws Occupied_Tile_Exception {
         /*logica di input*/
         OfferTile chosen = offerTrack.getOfferTiles().get(index);
         System.out.println(chosen);
@@ -51,6 +51,7 @@ public class Player {
         } else {
             chosen.occupy(this);
             currentOfferTile = chosen;
+            return chosen;
         }
     }
 
@@ -75,7 +76,7 @@ public class Player {
         return visitor.isDrawable();
     }
 
-    public void drawFromTopRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception, Insufficient_Food_Exception{
+    public Card drawFromTopRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception, Insufficient_Food_Exception{
         Card card = offerTrack.getTopRow().get(index);
         AddCardVisitor visitor = new AddCardVisitor();
         if(this.drawable(index, offerTrack, 0)){
@@ -88,9 +89,10 @@ public class Player {
             card.accept(visitor, this);
             offerTrack.getTopRow().remove(index);
         }
+        return card;
     }
 
-    public void drawFromBottomRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
+    public Card drawFromBottomRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
         Card card = offerTrack.getTopRow().get(index);
         AddCardVisitor visitor = new AddCardVisitor();
         if(this.drawable(index, offerTrack, 1)){
@@ -103,5 +105,6 @@ public class Player {
             card.accept(visitor, this);
             offerTrack.getBottomRow().remove(index);
         }
+        return card;
     }
 }

@@ -1,11 +1,16 @@
 package it.polimi.ingsw.Networking.Shared;
 
 /**
- * this class has all the method of the model and some other
+ * This class has all the method of the model and some other
+ * It is called by RMIServer and SocketServer, allowing them to modify
+ * the model state without directly giving them access to it.
  */
 
 public class ServerController {
-    /*final Model model;
+    //questa classe deve inoltre essere in grado di notificare TUTTI i client,
+    //indipendentemente dal protocollo, dei cambiamenti avvuti
+
+    /*final Model model;        istanziare il Game oppure una nuova classe model??
 
     public ServerController(){this.model = new Model();}    // il model del server e' inizializzato qui a una partita vuota e poi e' modificato giocando
 

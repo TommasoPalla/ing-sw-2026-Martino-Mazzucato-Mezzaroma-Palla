@@ -1,9 +1,12 @@
 package it.polimi.ingsw.Model.Cards;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.Enums.Effect;
+import it.polimi.ingsw.Model.BuildingsManagement.Buildings.ArtistsFood;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCardDTO;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCardFactory;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingRegistry;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 
 import java.io.InputStreamReader;
@@ -18,6 +21,10 @@ import java.util.List;
  */
 public class CardLoader {
     private final Gson gson = new Gson();
+
+    public void setupCardsData() {
+        BuildingRegistry.addBuilding(Effect.ARTISTS_FOOD, ArtistsFood::new);
+    }
 
     /**
      *

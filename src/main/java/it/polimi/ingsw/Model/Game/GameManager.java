@@ -6,9 +6,9 @@ import it.polimi.ingsw.Enums.Color;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/*
-* This classes manages different games instances. It's uses a Singleton design pattern. When a new game is added,
-* a game ID, and a list of players (mapped from nickname to totem color) are passed as parameters
+/**
+ * This classes manages different games instances. It's uses a Singleton design pattern. When a new game is added,
+ * a game ID, and a list of players (mapped from nickname to totem color) are passed as parameters
  */
 public class GameManager {
     private static GameManager instance;
@@ -32,9 +32,9 @@ public class GameManager {
         return activeGames.get(gameID);
     }
 
-    /*
-    * This method adds a new game to the list of active games
-    *  and instantiates his game controller, so the game can start
+    /**
+     * This method adds a new game to the list of active games
+     *  and instantiates his game controller, so the game can start
      */
     public synchronized Game addNewGame(String gameID, Map<String, Color> players) {
         Game newGame = new Game(gameID, players);
