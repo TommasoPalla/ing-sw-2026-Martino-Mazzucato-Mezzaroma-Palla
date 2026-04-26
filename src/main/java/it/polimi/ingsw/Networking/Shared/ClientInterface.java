@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Users.Player;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -12,14 +13,19 @@ import java.rmi.RemoteException;
 //  |   intendi da server al client?
 //  |
 public interface ClientInterface extends Remote {
-    void showUpdate() throws RemoteException;
-    void reportError(String errorMessage) throws RemoteException;
 
-    void choosenTotem(Color totemColor);
+    public void showUpdate() throws RemoteException{
 
-    void choosenTile(int index);
+    }
+    public void reportError(String errorMessage) throws RemoteException{
 
-    void drawnCard(boolean isTopRow, int index);
+    }
+
+    public void choosenTotem(Player player, Color totemColor);
+
+    public void choosenTile(int index);
+
+    public void drawnCard(boolean isTopRow, int index);
 
     //void giveUp();
 

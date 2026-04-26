@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model;
 
 import it.polimi.ingsw.Enums.CharacterRole;
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
@@ -24,6 +25,7 @@ public class ClientModel {
     private int currentRound;
     private Player currentPlayerTurn;
     private OfferTrack offerTrack;
+    private Map<Player, Color> totemColors;
     private int prestigePoints;
     private int foodReserve;
     private Map<Player, Integer> otherFoodReserves;
@@ -112,5 +114,9 @@ public class ClientModel {
     }
     public void updateBottomRow(ArrayList<Card> newBottomRow) {
         this.bottomRow = newBottomRow;
+    }
+
+    public void chosenTotemColor(Player player, Color color){
+        totemColors.put(player, color);
     }
 }
