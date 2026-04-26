@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-* Game controller of a single game instance, used to extract
-* information from the View, such as player inputs, and
-* to route them to the associated game model by the calls of its methods
+/**
+ * Game controller of a single game instance, used to extract
+ * information from the View, such as player inputs, and
+ * to route them to the associated game model by the calls of its methods
  */
 public class GameController {
     /*
@@ -30,8 +30,8 @@ public class GameController {
     // Da definire il client handler di un player
    private Map<Player, ClientController> connectedClients;
 
-    /*
-    * GameController's constructor is called in the GameManager when a new game is added
+    /**
+     * GameController's constructor is called in the GameManager when a new game is added
      */
     public GameController(Game gameModel) {
         this.gameModel = gameModel;
@@ -59,14 +59,14 @@ public class GameController {
         connectedClients.remove(player);
     }
 
-    /*
-    * checks if the action is done during the right game phase
+    /**
+     * checks if the action is done during the right game phase
      */
     public synchronized boolean checkPhase(GamePhase phase) throws Illegal_Action_Phase_Exception {
         return phase == gameModel.getGamePhase();
     }
 
-    public synchronized Player setNextPlayer() {}
+    public synchronized Player setNextPlayer() {return null;}
     public synchronized void handleChooseOfferTile (Player player, int index, OfferTrack offerTrack) {
         try {
             OfferTile chosen = player.chooseOfferTile(index, offerTrack);

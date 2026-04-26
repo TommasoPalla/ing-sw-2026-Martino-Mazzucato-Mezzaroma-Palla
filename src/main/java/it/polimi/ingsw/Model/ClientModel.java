@@ -5,6 +5,7 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
@@ -60,7 +61,17 @@ public class ClientModel {
     }
 
     public boolean drawable(int index, int row) {
-
+        switch (row){
+            case 0:
+                if(topRow.get(index).getCardID().equals(EventCard.class)) return false;
+                return true;
+            case 1:
+                if(bottomRow.get(index).getCardID().equals(EventCard.class)) return false;
+                return true;
+            default:
+                System.out.println("Invalid row exception");
+                return false;
+        }
     }
 
     public boolean isOccupied(int index) { return offerTrack.getOfferTiles().get(index).isOccupied(); }

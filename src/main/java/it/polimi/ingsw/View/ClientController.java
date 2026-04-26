@@ -25,9 +25,9 @@ public class ClientController implements ClientViewUpdate {
 
     }
 
-    /*
-    * Before making a call to the game controller methods, the client controller checks
-    * if the player's draw is legal by checking the client light model
+    /**
+     * Before making a call to the game controller methods, the client controller checks
+     * if the player's draw is legal by checking the client light model
      */
     public void onDrawFromTopRow(int index) {
         if(!localModel.drawable(index, 0)) throw new Illegal_Draw_Exception();
