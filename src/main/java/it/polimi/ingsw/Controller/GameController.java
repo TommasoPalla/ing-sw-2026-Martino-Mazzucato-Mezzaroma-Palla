@@ -6,10 +6,7 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
-import it.polimi.ingsw.Model.Users.Illegal_Action_Phase_Exception;
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
-import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.*;
 import it.polimi.ingsw.View.ClientController;
 
 import java.util.ArrayList;
@@ -66,7 +63,42 @@ public class GameController {
         return phase == gameModel.getGamePhase();
     }
 
-    public synchronized Player setNextPlayer() {return null;}
+    public synchronized Player setNextPlayer() {
+        try {
+            Player nextPlayer =  gameModel.setNextPlayer();
+            for (ClientController client : connectedClients.values()) {
+                client.updateCurrentPlayer(nextPlayer);
+            }
+            return nextPlayer;
+        }
+        catch (Last_Player_ofTurn_Exception e) {
+            return null;
+        }
+    }
+
+    /*
+    * When a new round starts, after all the events are resolved and the rows are repopulated
+    * @param turnOrder: the current order for placing totems
+     */
+    // ANCORA IN BOZZA. NO PLAYGAME() IN GAME MA FLOW DEL GAME DA ATTURARE TRAMITE CHIAMATE DI METODI NEL GAME CONTROLLER
+    public void startTurn(ArrayList<Player> turnOrder) {
+        try {
+            int newRound = gameModel.getNextRound();
+            for (ClientController client : connectedClients.values()) {
+                client.updateCurrentRound();
+                client.updateCurrentPlayer(turnOrder.getFirst());
+            }
+            this.playTurn(turnOrder.getFirst());
+        }
+        catch (Last_Round_Exception) {
+            throw EndOfGame_Exception()
+        }
+    }
+
+    public void playTurn(Player player) {
+        //????
+    }
+
     public synchronized void handleChooseOfferTile (Player player, int index, OfferTrack offerTrack) {
         try {
             OfferTile chosen = player.chooseOfferTile(index, offerTrack);

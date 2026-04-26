@@ -45,6 +45,16 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
+    public void updateCurrentPlayer(Player nextPlayer) {
+        localModel.setNextPlayer(nextPlayer);
+    }
+
+    @Override
+    public void updateCurrentRound() {
+        localModel.setNextRound();
+    }
+
+    @Override
     public void updateFoodReserve(int food) {
         localModel.updateFoodReserve(food);
     }

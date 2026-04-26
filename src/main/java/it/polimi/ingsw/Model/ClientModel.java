@@ -21,6 +21,7 @@ import java.util.Map;
 public class ClientModel {
     private final Player player;
     private GamePhase currentPhase;
+    private int currentRound;
     private Player currentPlayerTurn;
     private OfferTrack offerTrack;
     private int prestigePoints;
@@ -48,6 +49,7 @@ public class ClientModel {
             currentOfferTiles.put(otherPlayer, null);
         }
         this.currentPhase = realModel.getGamePhase();
+        this.currentRound = 0;
         this.currentPlayerTurn = realModel.getCurrentPlayer();
         this.offerTrack = realModel.getOfferTrack();
         this.foodReserve = 0;
@@ -79,6 +81,13 @@ public class ClientModel {
     /*
      * Update methods
      */
+    public void setNextPlayer(Player nextPlayer) {
+        currentPlayerTurn = nextPlayer;
+    }
+    public void setNextRound() {
+        currentRound++;
+    }
+
     public void updateFoodReserve(int food) {
         if(player == currentPlayerTurn) foodReserve += food;
         else otherFoodReserves.put(currentPlayerTurn, otherFoodReserves.get(player) + food);

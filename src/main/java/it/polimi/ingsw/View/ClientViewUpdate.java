@@ -14,4 +14,6 @@ public interface ClientViewUpdate {
     public void updateCardDrawn(CharacterCard card);
     public void updateTopRow(ArrayList<Card> newTopRow);
     public void updateBottomRow(ArrayList<Card> newBottomRow);
+    public void updateCurrentPlayer(Player nextPlayer);
+    public void updateCurrentRound();
 }
