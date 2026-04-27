@@ -11,6 +11,7 @@ import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.GameBoard.TurnTile;
+import it.polimi.ingsw.Model.Users.AddCardVisitor;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ import java.util.Map;
  */
 public class ClientModel {
     private String gameId;
-    private ArrayList< Player> players;
+    private int numPlayers;
+    private Map< String, LightTribe> players;
     private GamePhase currentPhase;
     private int currentRound;
     private Player currentPlayerTurn;
@@ -31,18 +33,10 @@ public class ClientModel {
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
     private Map<Player, Color> totemColors;
-    private int prestigePoints;
-    private int foodReserve;
-    private Map<Player, Integer> otherFoodReserves;
-    private Map<Player, Integer> otherPrestigePoints;
-    private Map<CharacterRole, ArrayList<CharacterCard>> population;
-    private Map<Player, Map<CharacterRole, ArrayList<CharacterCard>>> otherPopulation;
-    private ArrayList<BuildingCard> buildings;
-    private OfferTile currentOfferTile;
-    private Map<Player, OfferTile> currentOfferTiles;
-    private TurnTile turnTIle;
-    private ArrayList<OfferTile> offerTiles;
-    //lightTribe
+    private Map<String, Integer> currentOfferTiles;
+    private ArrayList<String> turnTile;
+    private ArrayList<String> offerTiles;
+    //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
 
     /*public ClientModel(Game realModel) {
         //this.player = player;
@@ -67,22 +61,20 @@ public class ClientModel {
         this.topBuildingCard = realModel.getOfferTrack().getTopBuildingCard();
         this.bottomBuildingCard = new ArrayList<>();
     }*/
-    public ClientModel(String gameId, int numPlayer){
+    public ClientModel(String gameId, int numPlayers){
         this.gameId=gameId;
-        this.players= new ArrayList<>();
+        this.numPlayers=numPlayers;
         this.currentPhase = GamePhase.START_GAME;
         this.currentRound = 0;
-        this.otherFoodReserves = new HashMap<>();
-        this.otherPrestigePoints = new HashMap<>();
         this.currentOfferTiles = new HashMap<>();
-        this.foodReserve = 0;
-        this.prestigePoints = 0;
-        this.population = new HashMap<>();
-        this.buildings = new ArrayList<>();
         this.topRow = new ArrayList<>();
         this.bottomRow = new ArrayList<>();
         this.topBuildingCard = new ArrayList<>();
         this.bottomBuildingCard = new ArrayList<>();
+        this.turnTile=new ArrayList<>();
+        this.offerTiles= new ArrayList<>();
+
+
     }
 
     public boolean drawable(int index, int row) {
@@ -110,34 +102,52 @@ public class ClientModel {
     public void setNextRound() {
         currentRound++;
     }
-
-    public void updateFoodReserve(int food) {
-        if(player == currentPlayerTurn) foodReserve += food;
-        else otherFoodReserves.put(currentPlayerTurn, otherFoodReserves.get(player) + food);
-
-    }
-    public void updatePrestigePoints(int pp) {
-        if(player == currentPlayerTurn) prestigePoints += pp;
-        else otherPrestigePoints.put(currentPlayerTurn, otherPrestigePoints.get(player) + pp);
+    public void addPlayer(String id){
+        if(players.size()<=numPlayers){
+            LightTribe lightTribe= new LightTribe(id);
+            players.put(id, lightTribe);
+        }
     }
 
-    public void updateCurrentOfferTile(OfferTile offerTile) {
-        if(player == currentPlayerTurn) currentOfferTile = offerTile;
-        else currentOfferTiles.put(currentPlayerTurn, offerTile);
-    }
 
-    public void updateCardDrawn(CharacterCard card) {
-        if(player == currentPlayerTurn) population.get(card.getRole()).add(card);
-        else otherPopulation.get(currentPlayerTurn).get(card.getRole()).add(card);
+    public void updateFoodReserve(int food, String id) {
+        players.get(id).addFood(food);
+    }
+    public void updatePrestigePoints(int pp, String id) {
+        players.get(id).addPrestigePoints(pp);
+    }
+    public void updateShamansStars(int stars, String id) {
+        players.get(id).addShamansStars(stars);
+    }
+    public void updateOfferTile(int index, String id) {
+        currentOfferTiles.put(id, index);
+    }
+    public void updateTurnTile(ArrayList<String> distantTurnTile){
+        turnTile=distantTurnTile;
+    }
+    public void updateOfferTiles(ArrayList<String> distantOfferTile){
+        offerTiles=distantOfferTile;
     }
     public void updateTopRow(ArrayList<Card> newTopRow) {
         this.topRow = newTopRow;
     }
-    public void updateBottomRow(ArrayList<Card> newBottomRow) {
+    public void updateBottomRowCharacters(ArrayList<Card> newBottomRow) {
         this.bottomRow = newBottomRow;
     }
-
+    public void updateTopRowBuildings(ArrayList<BuildingCard> newTopRowBuildings) {
+        this.topBuildingCard = newTopRowBuildings;
+    }
+    public void updateBottomRowBuildings (ArrayList<BuildingCard> newBottomRowBuildings) {
+        this.bottomBuildingCard = newBottomRowBuildings;
+    }
     public void chosenTotemColor(Player player, Color color){
         totemColors.put(player, color);
     }
+    public void updateCardDrawn(Card card) {
+
+        if(player == currentPlayerTurn) population.get(card.getRole()).add(card);
+        else otherPopulation.get(currentPlayerTurn).get(card.getRole()).add(card);
+    }
+    public ArrayList<Card> getTopRow(){return topRow;};
+    public LightTribe getPlayerTribe(String id){return players.get(id);}
 }
