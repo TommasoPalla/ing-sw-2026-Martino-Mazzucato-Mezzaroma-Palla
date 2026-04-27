@@ -12,8 +12,8 @@ import java.io.IOException;
 public interface ServerConnection {
     //void connect(ClientInterface client) throws RemoteException;
 
-    public void connect(String nickName);
-    public void disconnect(String nickName);
+    public void connect();
+    public void disconnect();
     public void chooseTotem(Color totemColor);
     public void chooseOfferTile(int index) throws Occupied_Tile_Exception;
     public void drawCardFromTop(int index) throws Illegal_Draw_Exception;

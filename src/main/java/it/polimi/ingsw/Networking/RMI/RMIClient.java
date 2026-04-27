@@ -36,7 +36,10 @@ public class RMIClient implements VirtualRMIClient, ClientInterface {
         System.out.println(errorMessage);
     }
 
-
+    @Override
+    public void gameStarted(String gameID, int numPlayers) {
+        controller.onGameStarted(gameId, numPlayers);
+    }
     @Override
     public void choosenTotem(Player player, Color totemColor){
         controller.onChoosenTotemColor(player, totemColor);

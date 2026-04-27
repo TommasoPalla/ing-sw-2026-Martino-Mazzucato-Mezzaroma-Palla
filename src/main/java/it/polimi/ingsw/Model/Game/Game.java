@@ -43,9 +43,10 @@ public class Game {
    */
     // Ciò dovrebbe rendere più pulita l'inizializzazione, facendo seguire necessariamente l'inizializzazione
     // dei Player a quella del game e non viceversa
-    public Game(String gameID, Map<String, Color> newPlayers) {
+    public Game(String gameID, /*Map<String, Color> newPlayers*/int numPlayers) {
         this.gameID = gameID;
-        this.numPlayers = newPlayers.size();
+        //this.numPlayers = newPlayers.size();
+        this.numPlayers=numPlayers;
         this.turnTile = new TurnTile(numPlayers);
         this.players = new ArrayList<>();
         this.currentRound = 0;

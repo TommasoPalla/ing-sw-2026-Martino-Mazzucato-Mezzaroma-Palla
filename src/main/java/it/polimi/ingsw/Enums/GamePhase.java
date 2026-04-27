@@ -9,5 +9,6 @@ public enum GamePhase {
   END_TURN,
   START_TURN,
   RETURN_TO_TILE,
-  ON_PURCHASE;
+  ON_PURCHASE,
+  START_GAME;
 }

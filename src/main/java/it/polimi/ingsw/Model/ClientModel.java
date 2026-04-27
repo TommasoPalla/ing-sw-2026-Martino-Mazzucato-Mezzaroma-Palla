@@ -20,7 +20,7 @@ import java.util.Map;
 * are called by the Client controllers
  */
 public class ClientModel {
-    private final Player player;
+    //private final Player player;
     private GamePhase currentPhase;
     private int currentRound;
     private Player currentPlayerTurn;
@@ -40,8 +40,8 @@ public class ClientModel {
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
 
-    public ClientModel(Player player, Game realModel) {
-        this.player = player;
+    /*public ClientModel(Game realModel) {
+        //this.player = player;
         this.otherFoodReserves = new HashMap<>();
         this.otherPrestigePoints = new HashMap<>();
         this.currentOfferTiles = new HashMap<>();
@@ -61,6 +61,22 @@ public class ClientModel {
         this.topRow = realModel.getOfferTrack().getTopRow();
         this.bottomRow = realModel.getOfferTrack().getBottomRow();
         this.topBuildingCard = realModel.getOfferTrack().getTopBuildingCard();
+        this.bottomBuildingCard = new ArrayList<>();
+    }*/
+    public ClientModel(String gameId, int numPlayer){
+        this.currentPhase = GamePhase.START_GAME;
+        this.currentRound = 0;
+        this.otherFoodReserves = new HashMap<>();
+        this.otherPrestigePoints = new HashMap<>();
+        this.currentOfferTiles = new HashMap<>();
+        this.offerTrack = new OfferTrack(numPlayer);
+        this.foodReserve = 0;
+        this.prestigePoints = 0;
+        this.population = new HashMap<>();
+        this.buildings = new ArrayList<>();
+        this.topRow = new ArrayList<>();
+        this.bottomRow = new ArrayList<>();
+        this.topBuildingCard = new ArrayList<>();
         this.bottomBuildingCard = new ArrayList<>();
     }
 

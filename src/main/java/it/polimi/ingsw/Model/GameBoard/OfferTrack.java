@@ -26,8 +26,8 @@ public class OfferTrack{
     private final int playerNumber;
     int[] availableBuildingsPerEra;
 
-    public OfferTrack(Game gameInstance, int playerNumber){
-        this.game = gameInstance;
+    public OfferTrack(/*Game gameInstance,*/ int playerNumber){
+        this.game = new Game(playerNumber);
         this.offerTiles = new ArrayList<>();
         this.topRow = new ArrayList<>();
         this.bottomRow = new ArrayList<>();

@@ -14,18 +14,17 @@ import java.rmi.RemoteException;
 //  |
 public interface ClientInterface extends Remote {
 
-    public void showUpdate() throws RemoteException{
+    public void showUpdate() throws RemoteException;
 
-    }
-    public void reportError(String errorMessage) throws RemoteException{
-
-    }
+    public void reportError(String errorMessage) throws RemoteException;
 
     public void choosenTotem(Player player, Color totemColor);
 
     public void choosenTile(int index);
 
     public void drawnCard(boolean isTopRow, int index);
+
+    public void gameStarted(String gameID, int numPlayers);
 
     //void giveUp();
 

@@ -14,13 +14,16 @@ public class ClientController {
     ServerConnection connection;
     ClientModel localModel;
 
-    public ClientController(GameController gameController, Player player) {
+    /*public ClientController(/*GameController gameController, Player player) {
         //this.connection = connection;
         this.player = player;
-        this.gameController = gameController;
+        //this.gameController = gameController;
 
+    }*/
+
+    public void onGameStarted(String gameId, int num){
+        this.localModel=new ClientModel(gameId, num);
     }
-
     /*
     * Before making a call to the game controller methods, the client controller checks
     * if the player's draw is legal by checking the client light model
