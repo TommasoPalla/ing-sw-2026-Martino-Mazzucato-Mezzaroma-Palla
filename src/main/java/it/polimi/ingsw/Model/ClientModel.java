@@ -10,6 +10,7 @@ import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
+import it.polimi.ingsw.Model.GameBoard.TurnTile;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
@@ -20,11 +21,15 @@ import java.util.Map;
 * are called by the Client controllers
  */
 public class ClientModel {
-    //private final Player player;
+    private String gameId;
+    private ArrayList< Player> players;
     private GamePhase currentPhase;
     private int currentRound;
     private Player currentPlayerTurn;
-    private OfferTrack offerTrack;
+    private ArrayList<Card> topRow;
+    private ArrayList<Card> bottomRow;
+    private ArrayList<BuildingCard> topBuildingCard;
+    private ArrayList<BuildingCard> bottomBuildingCard;
     private Map<Player, Color> totemColors;
     private int prestigePoints;
     private int foodReserve;
@@ -35,10 +40,9 @@ public class ClientModel {
     private ArrayList<BuildingCard> buildings;
     private OfferTile currentOfferTile;
     private Map<Player, OfferTile> currentOfferTiles;
-    private ArrayList<Card> topRow;
-    public ArrayList<Card> bottomRow;
-    private ArrayList<BuildingCard> topBuildingCard;
-    private ArrayList<BuildingCard> bottomBuildingCard;
+    private TurnTile turnTIle;
+    private ArrayList<OfferTile> offerTiles;
+    //lightTribe
 
     /*public ClientModel(Game realModel) {
         //this.player = player;
@@ -64,12 +68,13 @@ public class ClientModel {
         this.bottomBuildingCard = new ArrayList<>();
     }*/
     public ClientModel(String gameId, int numPlayer){
+        this.gameId=gameId;
+        this.players= new ArrayList<>();
         this.currentPhase = GamePhase.START_GAME;
         this.currentRound = 0;
         this.otherFoodReserves = new HashMap<>();
         this.otherPrestigePoints = new HashMap<>();
         this.currentOfferTiles = new HashMap<>();
-        this.offerTrack = new OfferTrack(numPlayer);
         this.foodReserve = 0;
         this.prestigePoints = 0;
         this.population = new HashMap<>();
