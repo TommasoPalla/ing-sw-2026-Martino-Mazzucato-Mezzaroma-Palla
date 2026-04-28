@@ -7,6 +7,7 @@ import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.EventManagement.ShamanicRitualEvent;
+import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 // If the owner is one of the winners of the Shamanic Ritual event
 // he gains double the indicated Prestige Points
@@ -17,6 +18,11 @@ public class MultiBonusRitual extends BuildingCard {
                             String effectDescription, int multiplier) {    //no prestige
         super(era, cardID, cost, activatedAt, effect, effectDescription, 0);
         this.multiplier = multiplier;
+    }
+    public MultiBonusRitual(BuildingCardDTO buildingData){
+        super(buildingData.era, buildingData.cardID, buildingData.cost,
+                buildingData.activatedAt, buildingData.effect, buildingData.effectDescription, 0);
+        this.multiplier = buildingData.multiplier;
     }
 
     @Override

@@ -8,6 +8,7 @@ import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.EventManagement.SustenanceEvent;
+import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 public class SustenanceDiscount extends BuildingCard {
     private final CharacterRole roleEffect;
@@ -18,6 +19,13 @@ public class SustenanceDiscount extends BuildingCard {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.roleEffect = roleEffect;
         this.foodDiscount = foodDiscount;
+    }
+    public SustenanceDiscount(BuildingCardDTO buildingData){
+        super(buildingData.era, buildingData.cardID, buildingData.cost,
+                buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,
+                buildingData.prestige);
+        this.roleEffect = buildingData.roleEffect;
+        this.foodDiscount = buildingData.foodDiscount;
     }
 
     @Override
