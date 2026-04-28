@@ -9,6 +9,11 @@ import it.polimi.ingsw.Model.Users.Player;
 import java.util.ArrayList;
 
 public class VisitorModel extends VisitorAdapter {
+    private final String playerId;
+
+    public VisitorModel(String playerId) {
+        this.playerId = playerId;
+    }
 
     @Override
     public void visitCard(BuildingCard building, ClientModel localModel) {
@@ -16,11 +21,11 @@ public class VisitorModel extends VisitorAdapter {
     }
 
     @Override
-    public void visitCard(CharacterCard character, ClientModel localModel, String id) {
+    public void visitCard(CharacterCard character, ClientModel localModel) {
         localModel.getTopRow().remove(character);
         ArrayList<Card> arr = localModel.getTopRow();
         localModel.updateTopRow(arr);
-        localModel.getPlayerTribe(id).addToPopulation(character);//esempio
+        localModel.getPlayerTribe(id).addToPopulation(character, character.getRole());//esempio
 
     }
 
