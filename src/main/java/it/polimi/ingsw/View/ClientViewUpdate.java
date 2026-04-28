@@ -18,4 +18,5 @@ public interface ClientViewUpdate {
     public void updateCurrentPlayer(Player nextPlayer);
     public void updateCurrentRound();
     public void updateChosenOfferTile(String playerName, Color color);
+    public void addPlayer(String id);
 }

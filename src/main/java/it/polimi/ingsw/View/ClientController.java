@@ -49,6 +49,12 @@ public class ClientController implements ClientViewUpdate{
     public void onChoosenTotemColor(String playerName, Color color){
 
     }
+
+    @Override
+    public void addPlayer(String id) {
+        localModel.addPlayer(id);
+    }
+
     @Override
     public void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id){
         if(isTopRow){
