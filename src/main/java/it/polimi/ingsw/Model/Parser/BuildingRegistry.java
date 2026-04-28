@@ -28,7 +28,7 @@ public class BuildingRegistry {
         registry.put(Effect.TOTEM_FOOD, TotemFood.class);
     }
     //mainly used for testing and future implementation
-    public void addBuilding(Effect effect, Class<? extends BuildingCard> buildingType) {
+    public void addBuildingType(Effect effect, Class<? extends BuildingCard> buildingType) {
         registry.put(effect, buildingType);
     }
 

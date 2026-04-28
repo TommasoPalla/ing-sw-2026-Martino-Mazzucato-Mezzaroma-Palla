@@ -1,24 +1,21 @@
 package it.polimi.ingsw.Model.Cards.Characters;
 
 import it.polimi.ingsw.Enums.CharacterRole;
+import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
 import it.polimi.ingsw.Model.Users.Player;
 
 public class Hunter extends CharacterCard {
     private final boolean hunterIcon;
-    private final CharacterRole role;
 
     public Hunter(int era, String cardID, int numPlayersFlag,  boolean hunterIcon) {
         super(era, cardID, numPlayersFlag, CharacterRole.HUNTER);
         this.hunterIcon = hunterIcon;
-        this.role = CharacterRole.HUNTER;
+    }
+    public Hunter(CharacterCardDTO characterData) {
+        super(characterData.era, characterData.cardID, characterData.numPlayersFlag, CharacterRole.HUNTER);
+        this.hunterIcon = characterData.hunterIcon;
     }
 
-    // getters
-
-    @Override
-    public CharacterRole getRole() {
-        return role;
-    }
     @Override
     public boolean isAlphaHunter() {
         return hunterIcon;
