@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 public class InventorsFood extends BuildingCard {
     private int inventorsNumber;
@@ -15,6 +16,13 @@ public class InventorsFood extends BuildingCard {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.inventorsNumber = 0;
         this.foodBonus = foodBonus;
+    }
+    public InventorsFood(BuildingCardDTO buildingData){
+        super(buildingData.era, buildingData.cardID, buildingData.cost,
+                buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,
+                buildingData.prestige);
+        this.foodBonus = buildingData.foodBonus;
+        this.inventorsNumber = 0;
     }
 
     @Override

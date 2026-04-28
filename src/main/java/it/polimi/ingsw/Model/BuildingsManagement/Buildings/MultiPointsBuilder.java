@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 // At the end of the game, the owner gains double the Prestige Points indicated
 // on the Builder cards in his tribe
@@ -15,6 +16,12 @@ public class MultiPointsBuilder extends BuildingCard {
                               String effectDescription, int prestige, int multiplier) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.multiplier = multiplier;
+    }
+    public MultiPointsBuilder(BuildingCardDTO buildingData){
+        super(buildingData.era, buildingData.cardID, buildingData.cost,
+                buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,
+                buildingData.prestige);
+        this.multiplier = buildingData.multiplier;
     }
 
     @Override

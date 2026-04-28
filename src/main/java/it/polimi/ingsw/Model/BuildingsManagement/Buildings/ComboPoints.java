@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,12 @@ public class ComboPoints extends BuildingCard {
                        String effectDescription, int prestige, int prestigeBonus) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.prestigeBonus = prestigeBonus;
+    }
+    public ComboPoints(BuildingCardDTO buildingData){
+        super(buildingData.era, buildingData.cardID, buildingData.cost,
+                buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,
+                buildingData.prestige);
+        this.prestigeBonus = buildingData.prestigeBonus;
     }
 
     @Override

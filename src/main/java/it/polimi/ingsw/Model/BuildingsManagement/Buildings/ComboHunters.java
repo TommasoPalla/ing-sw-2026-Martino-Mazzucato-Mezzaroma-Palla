@@ -7,6 +7,7 @@ import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.EventManagement.HuntEvent;
+import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 // During the Hunt event, the owner takes 1 Food token and gains
 // 1 additional Prestige Point for each Hunter in his tribe
@@ -21,7 +22,13 @@ public class ComboHunters extends BuildingCard {
         this.foodBonus = foodBonus;
         this.prestigeBonus = prestigeBonus;
     }
-
+    public ComboHunters(BuildingCardDTO buildingData){
+        super(buildingData.era, buildingData.cardID, buildingData.cost,
+                buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,
+                buildingData.prestige);
+        this.foodBonus = buildingData.foodBonus;
+        this.prestigeBonus = buildingData.prestigeBonus;
+    }
     @Override
     public int getFoodBonus(){
         return this.foodBonus;
