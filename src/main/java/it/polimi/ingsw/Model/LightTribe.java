@@ -24,6 +24,7 @@ public class LightTribe {
     private int turnTilePosition;
 
 
+
     public LightTribe(String id) {
         this.idPlayer = id;
         this.prestigePoints = 0;

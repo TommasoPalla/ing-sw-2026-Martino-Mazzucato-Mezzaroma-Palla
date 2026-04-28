@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
@@ -16,4 +17,5 @@ public interface ClientViewUpdate {
     public void updateBottomRow(ArrayList<Card> newBottomRow);
     public void updateCurrentPlayer(Player nextPlayer);
     public void updateCurrentRound();
+    public void updateChosenOfferTile(String playerName, Color color);
 }

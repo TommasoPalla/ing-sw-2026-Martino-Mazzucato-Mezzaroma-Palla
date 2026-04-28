@@ -33,7 +33,7 @@ public class ClientModel {
     private ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
-    private Map<Player, Color> totemColors;
+    private Map<String, Color> totemColors;
     private Map<String, Integer> currentOfferTiles;
     private TurnTile turnTile;
     private ArrayList<OfferTile> offerTiles;
@@ -141,8 +141,8 @@ public class ClientModel {
     public void updateBottomRowBuildings (ArrayList<BuildingCard> newBottomRowBuildings) {
         this.bottomBuildingCard = newBottomRowBuildings;
     }
-    public void chosenTotemColor(Player player, Color color){
-        totemColors.put(player, color);
+    public void chosenTotemColor(String playerName, Color color){
+        totemColors.put(playerName, color);
     }
     public void updateCharacterDrawn(Card card, String id) {
         players.get(id).addC

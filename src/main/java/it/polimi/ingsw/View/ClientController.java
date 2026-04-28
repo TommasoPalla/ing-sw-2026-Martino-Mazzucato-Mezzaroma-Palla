@@ -35,13 +35,14 @@ public class ClientController implements ClientViewUpdate{
     public void bindConnection(ServerConnection connection){
         this.connection = connection;
     }
-    public void onChooseOfferTile(int index, String id) {
+    public void onChooseOfferTile(int index, String playerName) {
         if(localModel.isOccupied(index)) throw new Occupied_Tile_Exception();
-        gameController.handleChooseOfferTile(player, index, gameController.getGameModel().getOfferTrack());
+        //gameController.handleChooseOfferTile(playerName, index, gameController.getGameModel().getOfferTrack());
+        connection.chooseOfferTile()
     }
 
-    public void onChoosenTotemColor(Player player, Color color){
-        localModel.chosenTotemColor(player, color);
+    public void onChoosenTotemColor(String playerName, Color color){
+
     }
     @Override
     public void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id){
@@ -67,6 +68,11 @@ public class ClientController implements ClientViewUpdate{
             }
 
         }
+    }
+
+    @Override
+    public void updateChosenOfferTile(String playerName, Color color) {
+        localModel.chosenTotemColor(playerName, color);
     }
 
     @Override
