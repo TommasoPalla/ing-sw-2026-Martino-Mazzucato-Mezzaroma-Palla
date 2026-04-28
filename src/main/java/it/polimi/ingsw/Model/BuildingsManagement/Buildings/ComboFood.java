@@ -3,7 +3,8 @@ package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,10 +13,18 @@ public class ComboFood extends BuildingCard {
     private final int foodBonus;
     long currentSetsNumber = 0;
 
+    //constructor mainly used for testing
     public ComboFood(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                      String effectDescription, int prestige, int foodBonus) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
         this.foodBonus = foodBonus;
+    }
+    //constructor used to parse JSON data
+    public ComboFood(BuildingCardDTO buildingData){
+        super(buildingData.era, buildingData.cardID, buildingData.cost,
+                buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,
+                buildingData.prestige);
+        this.foodBonus = buildingData.foodBonus;
     }
 
     @Override

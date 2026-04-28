@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Game.Game;
 
 // If at the end of every turn, when the owner moves his totem back to the Turn

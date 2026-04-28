@@ -92,6 +92,9 @@ public class Player {
         return card;
     }
 
+    //aggiungere drawBuilding
+
+
     public Card drawFromBottomRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
         Card card = offerTrack.getTopRow().get(index);
         AddCardVisitor visitor = new AddCardVisitor();

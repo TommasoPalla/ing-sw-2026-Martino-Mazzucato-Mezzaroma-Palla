@@ -3,7 +3,7 @@ package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 
 // At the end of the game, the owner gains the indicated amount of Prestige Points for each Character card
 // of the indicated role in his tribe

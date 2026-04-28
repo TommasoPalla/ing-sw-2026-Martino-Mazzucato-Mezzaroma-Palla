@@ -4,7 +4,7 @@ import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Enums.Parameters;
 import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.EventManagement.ShamanicRitualEvent;
 

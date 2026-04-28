@@ -1,9 +1,12 @@
-package it.polimi.ingsw.Model.Cards.Buildings;
+package it.polimi.ingsw.Model.Parser;
 
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 
+/**BuildingCardDTO class is used to temporarily store data parsed from JSON file,
+ * in order to then store buildingCard instances, each of its subclass.
+ */
 public class BuildingCardDTO {
     public int era;
     public String cardID;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model.GameBoard;
 
 import it.polimi.ingsw.Model.Cards.*;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Game.Game;
 
 import java.util.ArrayList;
