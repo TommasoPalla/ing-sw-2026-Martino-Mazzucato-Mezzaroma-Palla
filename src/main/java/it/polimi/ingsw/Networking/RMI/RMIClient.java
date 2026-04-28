@@ -43,7 +43,8 @@ public class RMIClient implements VirtualRMIClient, ClientInterface {
     @Override
     public void drawnCard(boolean isTopRow, int index){}
 
-    public void updateRound(){
+    //bozza di messaggio di update dal server
+    public void updateMessage(){
         controller.updateCurrentRound();
     }
 

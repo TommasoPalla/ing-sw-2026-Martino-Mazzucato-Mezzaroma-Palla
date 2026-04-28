@@ -74,8 +74,6 @@ public class ClientModel {
         this.bottomBuildingCard = new ArrayList<>();
         this.turnTile = new TurnTile(numPlayers);
         this.offerTiles= new ArrayList<>();
-
-
     }
 
     public boolean drawable(int index, int row) {

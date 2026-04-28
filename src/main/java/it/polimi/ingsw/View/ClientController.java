@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 public class ClientController implements ClientViewUpdate{
     GameController gameController;
+    String name;
     ServerConnection connection;
     ClientModel localModel;
 
@@ -23,6 +24,10 @@ public class ClientController implements ClientViewUpdate{
         this.connection = connection;
         //this.gameController = gameController;
 
+    }
+
+    public void setPlayerName(String playerName) {
+        this.name = playerName;
     }
 
     public void onGameStarted(String gameId, int num){

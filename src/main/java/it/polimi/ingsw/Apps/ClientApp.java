@@ -33,7 +33,12 @@ public class ClientApp {
         }
         connection.connect();
         clientController.bindConnection(connection);        //binding connessione-controller cosi' che parli con il server
-
+        /*
+         * Al player viene chiesto il nickname da usare durante la partita
+         */
+        System.out.println("Scegli nickname:");
+        String playerName = scanner.nextLine();
+        clientController.setPlayerName(playerName);
         //si fara' una cosa molto simile a quella sopra per istanziare TUI o GUI:
         /*
         System.out.println("choose visualization method:\n1 -> TUI\n2 -> GUI");
