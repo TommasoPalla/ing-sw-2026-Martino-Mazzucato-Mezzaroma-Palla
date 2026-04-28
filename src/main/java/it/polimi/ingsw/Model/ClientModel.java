@@ -1,18 +1,12 @@
 package it.polimi.ingsw.Model;
 
-import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
-import it.polimi.ingsw.Model.Cards.Visitor;
-import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
-import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.GameBoard.TurnTile;
-import it.polimi.ingsw.Model.Users.AddCardVisitor;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
@@ -35,8 +29,8 @@ public class ClientModel {
     private ArrayList<BuildingCard> bottomBuildingCard;
     private Map<Player, Color> totemColors;
     private Map<String, Integer> currentOfferTiles;
-    private ArrayList<String> turnTile;
-    private ArrayList<String> offerTiles;
+    private TurnTile turnTile;
+    private ArrayList<OfferTile> offerTiles;
     //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
 
     /*public ClientModel(Game realModel) {
@@ -72,8 +66,8 @@ public class ClientModel {
         this.bottomRow = new ArrayList<>();
         this.topBuildingCard = new ArrayList<>();
         this.bottomBuildingCard = new ArrayList<>();
-        this.turnTile=new ArrayList<>();
-        this.offerTiles= new ArrayList<>();
+        this.turnTile = new TurnTile(numPlayers);
+        this.offerTiles = new ArrayList<>();
 
 
     }
@@ -92,7 +86,7 @@ public class ClientModel {
         }
     }
 
-    public boolean isOccupied(int index) { return offerTrack.getOfferTiles().get(index).isOccupied(); }
+    public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
 
     /*
      * Update methods
@@ -111,23 +105,23 @@ public class ClientModel {
     }
 
 
-    public void updateFoodReserve(int food, String id) {
-        players.get(id).addFood(food);
+    public void updateFoodReserve(int food, String playerId) {
+        players.get(playerId).addFood(food);
     }
-    public void updatePrestigePoints(int pp, String id) {
-        players.get(id).addPrestigePoints(pp);
+    public void updatePrestigePoints(int pp, String playerId) {
+        players.get(playerId).addPrestigePoints(pp);
     }
-    public void updateShamansStars(int stars, String id) {
-        players.get(id).addShamansStars(stars);
+    public void updateShamansStars(int stars, String playerId) {
+        players.get(playerId).addShamansStars(stars);
     }
     public void updateOfferTile(int index, String id) {
         currentOfferTiles.put(id, index);
     }
-    public void updateTurnTile(ArrayList<String> distantTurnTile){
-        turnTile=distantTurnTile;
+    public void updateTurnTile(TurnTile remoteTurnTile){
+        turnTile = remoteTurnTile;
     }
-    public void updateOfferTiles(ArrayList<String> distantOfferTile){
-        offerTiles=distantOfferTile;
+    public void updateOfferTiles(ArrayList<OfferTile> remoteOfferTile){
+        offerTiles = remoteOfferTile;
     }
     public void updateTopRow(ArrayList<Card> newTopRow) {
         this.topRow = newTopRow;

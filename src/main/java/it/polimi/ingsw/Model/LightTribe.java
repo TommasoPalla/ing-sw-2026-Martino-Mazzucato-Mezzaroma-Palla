@@ -42,10 +42,10 @@ public class LightTribe {
     public void addShamansStars(int stars) {shamansStars += stars;}
     public void addFood(int food) {foodReserve += food;}
     public void addPrestigePoints(int prestigePoints) {prestigePoints += prestigePoints;}
-    public void addToPopulation(Card card){
+    public void addToPopulation(CharacterCard character){
         population
-                .computeIfAbsent(card.getRole(), k -> new ArrayList<>())
-                .add(card);    }
+                .computeIfAbsent(character.getRole(), k -> new ArrayList<>())
+                .add(character);    }
 
 
 

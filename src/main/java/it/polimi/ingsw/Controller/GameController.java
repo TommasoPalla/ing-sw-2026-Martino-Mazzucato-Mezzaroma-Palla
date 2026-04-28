@@ -41,7 +41,7 @@ public class GameController {
         // da aggiungere gli handler, non so come
 
         for (Player player : gameInstance.getPlayers()) {
-            new ClientController(this, player);
+            new ClientController();
         }
         gameInstance.startGame();
     }
@@ -95,8 +95,8 @@ public class GameController {
             }
             this.playTurn(turnOrder.getFirst());
         }
-        catch (Last_Round_Exception) {
-            throw EndOfGame_Exception()
+        catch (Last_Round_Exception e) {
+            //throw EndOfGame_Exception();
         }
     }
 

@@ -23,7 +23,7 @@ public class CardLoader {
     private final Gson gson = new Gson();
 
     public void setupCardsData() {
-        BuildingRegistry.addBuilding(Effect.ARTISTS_FOOD, ArtistsFood::new);
+        //BuildingRegistry.addBuilding(Effect.ARTISTS_FOOD, ArtistsFood::new);
     }
 
     /**
