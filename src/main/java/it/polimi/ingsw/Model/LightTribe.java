@@ -43,8 +43,9 @@ public class LightTribe {
     public void addFood(int food) {foodReserve += food;}
     public void addPrestigePoints(int prestigePoints) {prestigePoints += prestigePoints;}
     public void addToPopulation(Card card){
-        population.put(card);//visitor sul type
-    }
+        population
+                .computeIfAbsent(card.getRole(), k -> new ArrayList<>())
+                .add(card);    }
 
 
 

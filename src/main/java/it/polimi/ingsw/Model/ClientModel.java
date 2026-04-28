@@ -7,6 +7,7 @@ import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
+import it.polimi.ingsw.Model.Cards.Visitor;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
@@ -24,7 +25,7 @@ import java.util.Map;
 public class ClientModel {
     private String gameId;
     private int numPlayers;
-    private Map< String, LightTribe> players;
+    private Map<String, LightTribe> players;
     private GamePhase currentPhase;
     private int currentRound;
     private Player currentPlayerTurn;
@@ -131,7 +132,7 @@ public class ClientModel {
     public void updateTopRow(ArrayList<Card> newTopRow) {
         this.topRow = newTopRow;
     }
-    public void updateBottomRowCharacters(ArrayList<Card> newBottomRow) {
+    public void updateBottomRow(ArrayList<Card> newBottomRow) {
         this.bottomRow = newBottomRow;
     }
     public void updateTopRowBuildings(ArrayList<BuildingCard> newTopRowBuildings) {
@@ -143,11 +144,16 @@ public class ClientModel {
     public void chosenTotemColor(Player player, Color color){
         totemColors.put(player, color);
     }
-    public void updateCardDrawn(Card card) {
+    public void updateCharacterDrawn(Card card, String id) {
+    }
+    public void updateBuildingDrawn(BuildingCard building, String id){
 
-        if(player == currentPlayerTurn) population.get(card.getRole()).add(card);
-        else otherPopulation.get(currentPlayerTurn).get(card.getRole()).add(card);
     }
     public ArrayList<Card> getTopRow(){return topRow;};
+    public ArrayList<Card> getBottomRow(){return bottomRow;};
+    public ArrayList<BuildingCard> getTopRowBuildings(){return topBuildingCard;};
+    public ArrayList<BuildingCard> getBottomRowBuildings(){return bottomBuildingCard;};
+
+
     public LightTribe getPlayerTribe(String id){return players.get(id);}
 }

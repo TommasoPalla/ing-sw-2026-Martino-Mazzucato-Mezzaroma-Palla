@@ -39,7 +39,7 @@ public class RMIClient implements VirtualRMIClient, ClientInterface {
 
     @Override
     public void gameStarted(String gameID, int numPlayers) {
-        controller.onGameStarted(gameId, numPlayers);
+        controller.onGameStarted(gameID, numPlayers);
     }
     @Override
     public void choosenTotem(Player player, Color totemColor){
