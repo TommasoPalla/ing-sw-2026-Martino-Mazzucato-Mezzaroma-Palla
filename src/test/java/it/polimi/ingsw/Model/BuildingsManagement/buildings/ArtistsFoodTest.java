@@ -3,6 +3,7 @@ package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.ArtistsFood;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Characters.Artist;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.EventManagement.CavePaintingsEvent;
 import it.polimi.ingsw.Model.Game.Game;
@@ -27,19 +28,18 @@ public class ArtistsFoodTest {
         ArrayList<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
-        game = new Game("1234", players);
+        game = new Game("1234", players.size());
         buildingManager = game.getBuildingManager();
         // CavePaintingsEvent INIT
         EnumMap<Parameters, Integer> inputPar = new EnumMap<>(Parameters.class);
         inputPar.put(Parameters.PRESTIGE_BONUS, 1);
         inputPar.put(Parameters.PRESTIGE_MALUS, 1);
         inputPar.put(Parameters.ARTIST_NUM, 1);
-        EventCard cavePaintingsEventCard = new EventCard(1, "CV", EventType.CAVE_PAINTINGS, inputPar);
-        CavePaintingsEvent cavePaintingsEvent = new CavePaintingsEvent();
+        CavePaintingsEvent cavePaintingsEvent = new CavePaintingsEvent(1, "CV", 1, 1, 1);
         // ARTISTSFOOD TEST
 
-        //CharacterCard artist1 = new CharacterCard(1, "A1", 3, CharacterRole.ARTIST, null, null, null, null, null);
-        //CharacterCard artist2 = new CharacterCard(2, "A2", 3, CharacterRole.ARTIST, null, null, null, null, null);
+        Artist artist1 = new Artist(1, "A1", 3);
+        Artist artist2 = new Artist(2, "A2", 3);
 
 
         player1.getTribe().addCharacterToTribe(artist1);
@@ -48,7 +48,7 @@ public class ArtistsFoodTest {
         player1.getTribe().addBuildingToTribe(artistsFood);
         assertEquals(0, player1.getTribe().getFoodReserve());
         assertEquals(0, player1.getTribe().getPrestigePoints()); // before calling the event building the player has 0 food and 0 pp
-        cavePaintingsEvent.apply(cavePaintingsEventCard, players, buildingManager);
+        cavePaintingsEvent.apply(cavePaintingsEvent, players, buildingManager);
         assertEquals(2, player1.getTribe().getFoodReserve());
         assertEquals(2, player1.getTribe().getPrestigePoints()); // player1 should have 2 more food thanks to the building and 2 pp
         assertEquals(-1, player2.getTribe().getPrestigePoints()); // player2 should lose 1 point because of the event

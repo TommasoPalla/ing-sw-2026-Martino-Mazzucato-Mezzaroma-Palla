@@ -19,8 +19,8 @@ public class CharacterRegistry {
         registry.put(CharacterRole.SHAMAN, Shaman.class);
     }
     //mainly used for testing and future implementation
-    public void addCharacterType(CharacterRole role, Class<? extends CharacterCard> characterType) {
-        registry.put(role, characterType);
+    public void addCharacterType(CharacterRole role, Class<? extends CharacterCard> characterClass) {
+        registry.put(role, characterClass);
     }
 
     public CharacterCard createCharacter(CharacterCardDTO characterData) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {

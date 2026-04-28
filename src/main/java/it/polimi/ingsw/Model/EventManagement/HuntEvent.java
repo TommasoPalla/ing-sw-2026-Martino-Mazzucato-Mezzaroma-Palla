@@ -1,22 +1,47 @@
 package it.polimi.ingsw.Model.EventManagement;
 
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Enums.Parameters;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Parser.EventCardDTO;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
 
-public class HuntEvent implements EventStrategy{
+public class HuntEvent extends EventCard implements EventStrategy{
+    private final int prestigeBonus;
+    private final int foodBonus;
+
+    public HuntEvent(int era, String cardID, int prestigeBonus, int foodBonus){
+        super(era, cardID, EventType.HUNT);
+        this.foodBonus = foodBonus;
+        this.prestigeBonus = prestigeBonus;
+    }
+    public HuntEvent(EventCardDTO eventData){
+        super(eventData.era, eventData.cardID, EventType.HUNT);
+        this.foodBonus = eventData.foodBonus;
+        this.prestigeBonus = eventData.prestigeBonus;
+    }
+
+    //getters
+    @Override
+    public int getFoodBonus(){
+        return this.foodBonus;
+    }
+    public int getPrestigeBonus(){
+        return this.prestigeBonus;
+    }
+
     @Override
     public void apply(EventCard eventCard, ArrayList<Player> players, BuildingManager buildingManager) {
         for(Player player : players){
             //inizializzo i bonus di cibo e di punti solo considerando i cacciatori nella tribe
             int huntersNumber = player.getTribe().getHuntersNumber();
-            int initialPrestigeBonus = huntersNumber * eventCard.getParam(Parameters.PRESTIGE_BONUS);
-            int initialFoodBonus = huntersNumber * eventCard.getParam(Parameters.FOOD_BONUS);
+            int initialPrestigeBonus = huntersNumber * eventCard.getPrestigeBonus();
+            int initialFoodBonus = huntersNumber * eventCard.getFoodBonus();
 
             //metto questi valori nel context
             EffectContext context = new EffectContext(player);

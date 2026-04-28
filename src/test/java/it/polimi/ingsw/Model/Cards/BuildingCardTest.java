@@ -7,6 +7,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.EventManagement.SustenanceEvent;
+import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Parser.CardLoader;
 import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Model.Users.Player;
@@ -35,8 +36,9 @@ public class BuildingCardTest {
     }
     @Test
     public void otherMethods(){
+        Game game = new Game("abc", 4);
         allBuildingCards = loader.loadBuildings("json/cards.json");
-        Player player = new Player("provola", Color.RED);
+        Player player = new Player(game,"provola", Color.RED);
         allBuildingCards.getFirst().assignOwner(player);
         assertEquals(player, allBuildingCards.getFirst().getOwner());
         assertTrue(allBuildingCards.get(3).isUsedIn(SustenanceEvent.class));

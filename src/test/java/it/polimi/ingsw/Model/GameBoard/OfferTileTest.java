@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.GameBoard;
 
 import it.polimi.ingsw.Enums.Color;
 
+import it.polimi.ingsw.Model.Game.Game;
 import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Model.Users.Player;
 
@@ -10,7 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OfferTileTest {
     OfferTile tileA = new OfferTile('A');
     OfferTile tileG = new OfferTile('G');
-    Player player = new Player("AAA", Color.BLACK);
+    Game game = new Game("adf", 4);
+    Player player = new Player(game,"AAA", Color.BLACK);
     @Test
     void initOfferTile(){
         //tile A test

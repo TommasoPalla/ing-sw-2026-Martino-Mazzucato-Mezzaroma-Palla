@@ -2,8 +2,11 @@ package it.polimi.ingsw.Model.Users;
 
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Characters.Artist;
+import it.polimi.ingsw.Model.Cards.Characters.Builder;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 
+import it.polimi.ingsw.Model.Cards.Characters.Inventor;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Enums.*;
 import org.junit.jupiter.api.*;
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TribeTest {
-    Game game;
+    Game game = new Game("12", 4);
     Tribe tribe = new Tribe(game);
     Player player = new Player(game, "aaa", Color.BLUE);
     @Test
@@ -53,10 +56,10 @@ public class TribeTest {
     }
     @Test
     void charactersPoints(){
-        CharacterCard inventor = new CharacterCard(1, "hello", 2, CharacterRole.INVENTOR, 0, InventorType.BOAT, 0, 0, false);
-        CharacterCard inventor2 = new CharacterCard(1, "hello", 2, CharacterRole.INVENTOR, 0, InventorType.BOWL, 0, 0, false);
-        CharacterCard inventor3 = new CharacterCard(1, "hello", 2, CharacterRole.INVENTOR, 0, InventorType.NECKLACE, 0, 0, false);
-        CharacterCard inventor4 = new CharacterCard(1, "hello", 2, CharacterRole.INVENTOR, 0, InventorType.DOLL, 0, 0, false);
+        Inventor inventor = new Inventor(1, "hello", 2, InventorType.BOAT);
+        Inventor inventor2 = new Inventor(1, "hello", 2, InventorType.BOWL);
+        Inventor inventor3 = new Inventor(1, "hello", 2, InventorType.NECKLACE);
+        Inventor inventor4 = new Inventor(1, "hello", 2, InventorType.DOLL);
 
         tribe.addCharacterToTribe(inventor);
         tribe.addCharacterToTribe(inventor);
@@ -71,12 +74,12 @@ public class TribeTest {
         tribe.addCharacterToTribe(inventor4);
         assertEquals(24, tribe.calculateFinalPoints());
 
-        CharacterCard builder = new CharacterCard(1, "hello",2 , CharacterRole.BUILDER, 1,null, 0, 0, false);
+        Builder builder = new Builder(1, "hello", 2, 1, 4);
         tribe.addCharacterToTribe(builder);
         assertEquals(1, tribe.getPopulation().get(builder.getRole()).size());
         assertEquals(25, tribe.calculateFinalPoints());
 
-        CharacterCard artist = new CharacterCard(1, "hello", 2, CharacterRole.ARTIST, null, null, null, null, null);
+        Artist artist = new Artist(3, "A5", 5);
         tribe.addCharacterToTribe(artist);
         tribe.addCharacterToTribe(artist);
         assertEquals(2, tribe.getPopulation().get(artist.getRole()).size());
@@ -84,12 +87,11 @@ public class TribeTest {
     }
     @Test
     void buildingsPoints(){
-
-        Player player2 = new Player("pluto", Color.RED);
+        Game game = new Game("34", 5);
+        Player player2 = new Player(game, "pluto", Color.RED);
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
         players.add(player2);
-        Game game = new Game(players);
         BuildingCard bonusPoints = new BonusPoints(3, "hello", 10, GamePhase.END_GAME, Effect.BONUS_POINTS, "description", 25);
 
         tribe.addBuildingToTribe(bonusPoints);

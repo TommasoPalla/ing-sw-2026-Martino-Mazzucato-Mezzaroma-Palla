@@ -25,7 +25,7 @@ public class InventorsFoodTest {
         ArrayList<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
-        game = new Game("1234", players);
+        game = new Game("1234", players.size());
         // INVENTORSFOOD TEST
         buildingManager = game.getBuildingManager();
         /*CharacterCard inv1 = new CharacterCard(1, "A", 3, CharacterRole.INVENTOR, null, InventorType.BOAT, null, null, null);

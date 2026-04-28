@@ -1,17 +1,42 @@
 package it.polimi.ingsw.Model.EventManagement;
 
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Enums.Parameters;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Parser.EventCardDTO;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
-public class ShamanicRitualEvent implements EventStrategy{
+public class ShamanicRitualEvent extends EventCard implements EventStrategy{
+    private final int prestigeBonus;
+    private final int prestigeMalus;
+
+    public ShamanicRitualEvent(int era, String cardID, int prestigeBonus, int prestigeMalus){
+        super(era, cardID, EventType.SHAMANIC_RITUAL);
+        this.prestigeMalus = prestigeMalus;
+        this.prestigeBonus = prestigeBonus;
+    }
+    public ShamanicRitualEvent(EventCardDTO eventData){
+        super(eventData.era, eventData.cardID, EventType.SHAMANIC_RITUAL);
+        this.prestigeMalus = eventData.prestigeMalus;
+        this.prestigeBonus = eventData.prestigeBonus;
+    }
+
+    @Override
+    public int getPrestigeBonus(){
+        return this.prestigeBonus;
+    }
+    @Override
+    public int getPrestigeMalus(){
+        return this.prestigeMalus;
+    }
+
     @Override
     public void apply(EventCard eventCard, ArrayList<Player> players, BuildingManager buildingManager){
         OptionalInt maxShamanStars = players.stream()
@@ -33,7 +58,7 @@ public class ShamanicRitualEvent implements EventStrategy{
         for(Player player : eventWinners){
             //inizializzo il context: player corrente con bonus di punti che dipende dalla carta evento (Era)
             EffectContext context = new EffectContext(player);
-            context.putParam(Parameters.PRESTIGE_BONUS, eventCard.getParam(Parameters.PRESTIGE_BONUS));
+            context.putParam(Parameters.PRESTIGE_BONUS, eventCard.getPrestigeBonus());
 
             //qui chiedo al building manager di fare le sue cose (nello specifico di raddoppiare i punti per chi vince)
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
@@ -45,7 +70,7 @@ public class ShamanicRitualEvent implements EventStrategy{
         //stessa identica cosa per i loser
         for(Player player : eventLosers){
             EffectContext context = new EffectContext(player);
-            context.putParam(Parameters.PRESTIGE_MALUS, eventCard.getParam(Parameters.PRESTIGE_MALUS));
+            context.putParam(Parameters.PRESTIGE_MALUS, eventCard.getPrestigeMalus());
 
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
 

@@ -3,10 +3,14 @@ package it.polimi.ingsw.Model.Parser;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.Cards.EventCard;
 
-//da cambiare con nuova gerarchia
+
 public class EventCardDTO {
-    private EventType type;
-    public EventType getType(){
-        return this.type;
-    }
+    public int era;
+    public String cardID;
+    public EventType type;
+    public int artistThreshold;
+    public int prestigeMalus;
+    public int prestigeBonus;
+    public int foodMalus;
+    public int foodBonus;
 }

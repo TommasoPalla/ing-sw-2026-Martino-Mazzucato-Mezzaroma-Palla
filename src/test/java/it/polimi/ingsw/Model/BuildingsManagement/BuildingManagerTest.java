@@ -23,7 +23,7 @@ public class BuildingManagerTest {
         Map<String, Color> players = new HashMap<>();
         players.put("giocatore1", Color.BLUE);
         players.put("giocatore2", Color.RED);
-        Game game = new Game("1234", players);
+        Game game = new Game("1234", players.size());
         Player player1 = game.getPlayers().getFirst();
         Player player2 = game.getPlayers().getLast();
         buildingManager = game.getBuildingManager();

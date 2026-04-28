@@ -35,9 +35,9 @@ public class Deck {
         }
 
         CardLoader loader = new CardLoader();
-        this.allCharacterCards = loader.loadCharacters(jsonPath);   //card Loader
+        this.allCharacterCards = loader.loadCharacters(jsonPath);
         this.allEventCards = loader.loadEvents(jsonPath);
-        this.allBuildingCards = loader.loadBuildings(jsonPath);     //cambiare path
+        this.allBuildingCards = loader.loadBuildings(jsonPath);
         initTribeDeck(numPlayers);
         initBuildingDeck();
     }
