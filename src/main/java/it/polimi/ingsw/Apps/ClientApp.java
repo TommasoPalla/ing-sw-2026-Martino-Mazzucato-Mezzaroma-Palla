@@ -32,6 +32,7 @@ public class ClientApp {
             }
         }
         connection.connect();
+        clientController.bindConnection(connection);        //binding connessione-controller cosi' che parli con il server
 
         //si fara' una cosa molto simile a quella sopra per istanziare TUI o GUI:
         /*

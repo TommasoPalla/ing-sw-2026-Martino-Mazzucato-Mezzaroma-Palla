@@ -6,15 +6,8 @@ import it.polimi.ingsw.Networking.Shared.ClientInterface;
 import it.polimi.ingsw.View.ClientController;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
 public class RMIClient implements VirtualRMIClient, ClientInterface {
-    /*public class RMIClient extends UnicastRemoteObject implements VirtualRMIClient {
-        final ServerConnection server;
-        public RMIClient(ServerConnection server) throws RemoteException {
-            this.server = server;
-        }
-         */
 
     private final ClientController controller;
     public RMIClient(ClientController controller) {

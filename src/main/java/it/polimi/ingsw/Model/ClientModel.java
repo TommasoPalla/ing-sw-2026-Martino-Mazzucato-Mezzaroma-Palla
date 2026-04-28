@@ -1,10 +1,18 @@
 package it.polimi.ingsw.Model;
 
+import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
+import it.polimi.ingsw.Model.Cards.Visitor;
+import it.polimi.ingsw.Model.Game.Game;
+import it.polimi.ingsw.Model.GameBoard.OfferTile;
+import it.polimi.ingsw.Model.GameBoard.OfferTrack;
+import it.polimi.ingsw.Model.GameBoard.TurnTile;
+import it.polimi.ingsw.Model.Users.AddCardVisitor;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
