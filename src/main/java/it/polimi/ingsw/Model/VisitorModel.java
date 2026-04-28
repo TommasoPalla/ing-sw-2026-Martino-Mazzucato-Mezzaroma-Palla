@@ -6,11 +6,11 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.VisitorAdapter;
 
 import java.util.ArrayList;
-
+/*
 public class VisitorModel extends VisitorAdapter {
     private final String playerId;
 
-    public VisitorModel(String playerId) {
+    public ModelVisitor(String playerId) {
         this.playerId = playerId;
     }
 

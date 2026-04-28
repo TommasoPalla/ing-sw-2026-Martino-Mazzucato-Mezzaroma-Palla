@@ -3,7 +3,7 @@ package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
@@ -35,8 +35,8 @@ public class ClientModel {
     private ArrayList<BuildingCard> bottomBuildingCard;
     private Map<Player, Color> totemColors;
     private Map<String, Integer> currentOfferTiles;
-    private ArrayList<String> turnTile;
-    private ArrayList<String> offerTiles;
+    private TurnTile turnTile;
+    private ArrayList<OfferTile> offerTiles;
     //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
 
     /*public ClientModel(Game realModel) {
@@ -72,7 +72,7 @@ public class ClientModel {
         this.bottomRow = new ArrayList<>();
         this.topBuildingCard = new ArrayList<>();
         this.bottomBuildingCard = new ArrayList<>();
-        this.turnTile=new ArrayList<>();
+        this.turnTile = new TurnTile(numPlayers);
         this.offerTiles= new ArrayList<>();
 
 
@@ -92,7 +92,7 @@ public class ClientModel {
         }
     }
 
-    public boolean isOccupied(int index) { return offerTrack.getOfferTiles().get(index).isOccupied(); }
+    public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
 
     /*
      * Update methods
@@ -123,11 +123,11 @@ public class ClientModel {
     public void updateOfferTile(int index, String id) {
         currentOfferTiles.put(id, index);
     }
-    public void updateTurnTile(ArrayList<String> distantTurnTile){
-        turnTile=distantTurnTile;
+    public void updateTurnTile(TurnTile remoteTurnTile){
+        turnTile = remoteTurnTile;
     }
-    public void updateOfferTiles(ArrayList<String> distantOfferTile){
-        offerTiles=distantOfferTile;
+    public void updateOfferTiles(ArrayList<OfferTile> remoteOfferTile){
+        offerTiles = remoteOfferTile;
     }
     public void updateTopRow(ArrayList<Card> newTopRow) {
         this.topRow = newTopRow;
@@ -145,6 +145,7 @@ public class ClientModel {
         totemColors.put(player, color);
     }
     public void updateCharacterDrawn(Card card, String id) {
+        players.get(id).addC
     }
     public void updateBuildingDrawn(BuildingCard building, String id){
 

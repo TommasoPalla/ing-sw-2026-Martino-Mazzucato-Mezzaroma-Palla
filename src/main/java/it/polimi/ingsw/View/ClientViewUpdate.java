@@ -11,7 +11,7 @@ public interface ClientViewUpdate {
     public void updateFoodReserve(int food);
     public void updatePrestigePoints(int pp);
     public void updateCurrentOfferTile(OfferTile offerTile);
-    public void updateCardDrawn(CharacterCard card);
+    public void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
     public void updateTopRow(ArrayList<Card> newTopRow);
     public void updateBottomRow(ArrayList<Card> newBottomRow);
     public void updateCurrentPlayer(Player nextPlayer);
