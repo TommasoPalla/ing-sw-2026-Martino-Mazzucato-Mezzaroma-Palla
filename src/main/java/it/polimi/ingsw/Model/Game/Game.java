@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Model.Game;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import it.polimi.ingsw.Enums.Color;
@@ -11,10 +11,7 @@ import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Deck.Deck;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.GameBoard.TurnTile;
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
-import it.polimi.ingsw.Model.Users.Last_Player_ofTurn_Exception;
-import it.polimi.ingsw.Model.Users.Last_Round_Exception;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.*;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.EventManagement.EventManager;
@@ -24,7 +21,8 @@ import it.polimi.ingsw.Model.EventManagement.EventManager;
  */
 public class Game {
     private final String gameID;
-    final private ArrayList<Player> players;
+    private ArrayList<Player> players;
+    private ArrayList<String> playersNames;
     final private int numPlayers;
     private Player currentPlayer;
     private ArrayList<Player> turnOrder;
@@ -45,18 +43,11 @@ public class Game {
     // dei Player a quella del game e non viceversa
     public Game(String gameID, /*Map<String, Color> newPlayers*/int numPlayers) {
         this.gameID = gameID;
-        //this.numPlayers = newPlayers.size();
         this.numPlayers=numPlayers;
         this.turnTile = new TurnTile(numPlayers);
         this.players = new ArrayList<>();
+        this.playersNames = new ArrayList<>();
         this.currentRound = 0;
-        // Players initialization
-        /*for (String name : newPlayers.keySet()) {
-            Player newPlayer = new Player(this, name, newPlayers.get(name));
-            this.players.add(newPlayer);
-          }
-
-         */
         this.buildingManager = new BuildingManager(players);
     }
 
@@ -65,6 +56,7 @@ public class Game {
     public Deck getDeck() {return deck;}
     public GamePhase getGamePhase(){return currentPhase;}
     public Player getCurrentPlayer(){return currentPlayer;}
+    public ArrayList<String> getPlayersNames(){return playersNames;}
     public ArrayList<Player> getPlayers(){ return players; }
     public int getNumPlayer(){return numPlayers;}
     public OfferTrack getOfferTrack(){return offerTrack;}
@@ -79,31 +71,34 @@ public class Game {
         else throw new Last_Player_ofTurn_Exception("Last player of turn has played");
     }
 
-    public void addPlayer(Player player) {
-        this.players.add(player);
+    public void addPlayer(String playerName, Color color) {
+        Player newPlayer = new Player(this, playerName, color);
+        players.add(newPlayer);
+        playersNames.add(playerName);
+        //if(players.size() == numPlayers) currentPhase = READY_TO_START; Se il numero di giocatori necessario
+        // è stato raggiunto, cambia la fase da IN_LOBBY a READY_TO_START
     }
 
     public void startGame(){
+        if(players.size() < numPlayers){
+            throw new Illegal_Action_Phase_Exception("Non ci sono abbastanza giocatori connessi per cominciare la partita!");
+        }
+        turnOrder = new ArrayList<>(players);
+        Collections.shuffle(turnOrder);
+        currentRound = 1;
+        era = 1;
+        currentPlayer = turnOrder.getFirst();
 
-      turnOrder = new ArrayList<>(players);
-      Collections.shuffle(turnOrder);
-
-      currentRound = 1;
-      era = 1;
-      currentPlayer = turnOrder.getFirst();
-
-      offerTrack = new OfferTrack(this, numPlayers);
-      eventManager = new EventManager();
-      turnTile = new TurnTile(numPlayers);
-      deck = new Deck(this, numPlayers, "json/cards.json");
-
-      //inizializzo track
-      offerTrack.initializeBottomRow();
-      offerTrack.repopulateTopRow();
-      offerTrack.repopulateTopBuildingCards();
-
-      giveInitialFood(numPlayers);
-      currentPhase = GamePhase.START_TURN;
+        offerTrack = new OfferTrack(this, numPlayers);
+        eventManager = new EventManager();
+        turnTile = new TurnTile(numPlayers);
+        deck = new Deck(this, numPlayers, "json/cards.json");
+        //inizializzo track
+        offerTrack.initializeBottomRow();
+        offerTrack.repopulateTopRow();
+        offerTrack.repopulateTopBuildingCards();
+        giveInitialFood(numPlayers);
+        currentPhase = GamePhase.START_TURN;
     }
 
 

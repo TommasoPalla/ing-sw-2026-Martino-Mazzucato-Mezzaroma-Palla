@@ -31,19 +31,10 @@ public class GameController {
     /**
      * GameController's constructor is called in the GameManager when a new game is added
      */
-    public GameController(Game gameInstance, Map<String, Color> players) {
+    public GameController(Game gameInstance) {
         this.gameInstance = gameInstance;
         this.connectedClients = new HashMap<>();
-        for (String name : players.keySet()) {
-            Player newPlayer = new Player(gameInstance, name, players.get(name));
-            this.gameInstance.addPlayer(newPlayer);
-        }
         // da aggiungere gli handler, non so come
-
-        for (Player player : gameInstance.getPlayers()) {
-            new ClientController();
-        }
-        gameInstance.startGame();
     }
 
     public Game getGameModel() {
@@ -52,6 +43,14 @@ public class GameController {
 
     public ArrayList<Player> getConnectedClients() {
         return new ArrayList<>(connectedClients.keySet());
+    }
+
+    /*
+    * This method calls the respective method in Game to add a player while in Lobby State
+     */
+    public void addPlayer(String playerName, Color color) {
+        if(gameInstance.getPlayersNames().contains(playerName)) throw new IllegalArgumentException("Player already exists");
+        gameInstance.addPlayer(playerName, color);
     }
 
     public void addClient(Player player, ClientController clientController) {
@@ -78,6 +77,18 @@ public class GameController {
         }
         catch (Last_Player_ofTurn_Exception e) {
             return null;
+        }
+    }
+
+    // chiamata da parte client quando il player vuole startare il game.
+    // catcha l'eccezione se cerca di far partire il game senza che tutti i giocatori siano entrati
+    // (fase del game = INLOBBY)
+    public void startGame() {
+        try {
+            gameInstance.startGame();
+        }
+        catch (Illegal_Action_Phase_Exception e) {
+
         }
     }
 

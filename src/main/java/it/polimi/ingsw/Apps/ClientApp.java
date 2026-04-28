@@ -5,6 +5,7 @@ import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
 import it.polimi.ingsw.View.ClientController;
+import it.polimi.ingsw.View.TUIView;
 
 import java.util.Scanner;
 
@@ -40,17 +41,24 @@ public class ClientApp {
         String playerName = scanner.nextLine();
         clientController.setPlayerName(playerName);
         //si fara' una cosa molto simile a quella sopra per istanziare TUI o GUI:
-        /*
+
         System.out.println("choose visualization method:\n1 -> TUI\n2 -> GUI");
-        int view = scanner.nextInt();
-        scanner.nextLine();
-        View view;      //interfaccia implementata da GUI e TUI
-        switch(view){
-            ...
+        boolean valid = false;
+        int UIType;
+        while(!valid){
+            UIType = scanner.nextInt();
+            scanner.nextLine();
+            if(UIType == 1 || UIType == 2) valid = true;
+            else System.out.println("invalid choice, please try again...");
+        }
+        /*View view;      //interfaccia implementata da GUI e TUI
+        switch(UIType){
+            case 1:
+                ...
+            case 2:
+                ...
         }
         view.start();   //da qui si fa partire la GUI o la TUI e da li si prende l'input
-         */
-
-
     }
+         */
 }
