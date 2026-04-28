@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
 import it.polimi.ingsw.Model.EventManagement.SustenanceEvent;
+import it.polimi.ingsw.Model.Parser.CardLoader;
 import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Model.Users.Player;
 

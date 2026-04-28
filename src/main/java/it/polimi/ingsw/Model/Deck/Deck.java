@@ -2,9 +2,10 @@ package it.polimi.ingsw.Model.Deck;
 
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.Cards.*;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Game.Game;
+import it.polimi.ingsw.Model.Parser.CardLoader;
 
 import java.util.*;
 

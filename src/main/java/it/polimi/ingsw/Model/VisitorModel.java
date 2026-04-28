@@ -1,10 +1,9 @@
 package it.polimi.ingsw.Model;
 
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.VisitorAdapter;
-import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
 

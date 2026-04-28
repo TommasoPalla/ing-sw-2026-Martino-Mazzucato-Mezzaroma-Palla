@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.Parameters;
+import it.polimi.ingsw.Model.Parser.CardLoader;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

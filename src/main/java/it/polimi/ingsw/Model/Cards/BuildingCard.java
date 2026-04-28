@@ -1,16 +1,11 @@
-package it.polimi.ingsw.Model.Cards.Buildings;
+package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Enums.*;
-import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Visitor;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
-import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
-
-import java.util.ArrayList;
 
 public abstract class BuildingCard extends Card {
     private final int cost; // food cost of the building card

@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.InventorsFood;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Enums.*;
 import org.junit.jupiter.api.Test;

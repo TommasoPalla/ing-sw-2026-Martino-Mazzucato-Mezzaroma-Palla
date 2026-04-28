@@ -3,6 +3,7 @@ package it.polimi.ingsw.Model.Cards;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.Parser.CardLoader;
 import org.junit.jupiter.api.*;
 import it.polimi.ingsw.Enums.CharacterRole;
 

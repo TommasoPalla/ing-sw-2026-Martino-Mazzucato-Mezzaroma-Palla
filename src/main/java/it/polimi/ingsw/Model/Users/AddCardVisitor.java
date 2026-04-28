@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Model.Users;
 
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.VisitorAdapter;
 
