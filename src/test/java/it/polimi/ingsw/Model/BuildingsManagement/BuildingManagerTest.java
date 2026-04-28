@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model.BuildingsManagement;
 
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
-import it.polimi.ingsw.Model.Cards.Buildings.BuildingCard;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
