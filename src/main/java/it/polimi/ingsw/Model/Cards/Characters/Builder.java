@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Cards.Characters;
 
 import it.polimi.ingsw.Enums.CharacterRole;
+import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
 import it.polimi.ingsw.Model.Users.Player;
 
 public class Builder extends CharacterCard {
@@ -11,7 +12,11 @@ public class Builder extends CharacterCard {
         super(era, cardID, numPlayersFlag, CharacterRole.BUILDER);
         this.prestigePoints = prestigePoints;
         this.buildingDiscount = buildingDiscount;
-
+    }
+    public Builder(CharacterCardDTO characterData) {
+        super(characterData.era, characterData.cardID, characterData.numPlayersFlag, CharacterRole.BUILDER);
+        this.prestigePoints = characterData.prestigePoints;
+        this.buildingDiscount = characterData.buildingDiscount;
     }
 
     // getters
