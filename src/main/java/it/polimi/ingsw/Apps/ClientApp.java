@@ -4,6 +4,7 @@ import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
+import it.polimi.ingsw.View.ClientController;
 
 import java.util.Scanner;
 
@@ -15,6 +16,7 @@ import java.util.Scanner;
 public class ClientApp {
     public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
+        ClientController clientController = new ClientController();
 
         System.out.println("choose connection protocol: Socket / RMI");
         String protocol = scanner.nextLine();
@@ -23,7 +25,7 @@ public class ClientApp {
         //do{}while perche' si prova fintanto che sono ip e porta validi (=> helper class??)
         switch (protocol.toUpperCase()){
             case "SOCKET" -> connection = new SocketServerAdapter(ServerConfigs.DEFAULT_SOCKET_SERVER_IP_ADDR, ServerConfigs.DEFAULT_SOCKET_SERVER_PORT);
-            case "RMI" -> connection = new RMIServerAdapter(ServerConfigs.DEFAULT_RMI_SERVER_NAME, ServerConfigs.DEFAULT_RMI_SERVER_PORT);
+            case "RMI" -> connection = new RMIServerAdapter(ServerConfigs.DEFAULT_RMI_SERVER_NAME, ServerConfigs.DEFAULT_RMI_SERVER_PORT, clientController);
             default -> {
                 System.out.println("protocollo non valido");
                 return;

@@ -28,6 +28,7 @@ public class RMIClient implements VirtualRMIClient, ClientInterface {
     @Override
     //verosimilmente si dovra' passare per parametro il model e poi chiamare System.out.println(model.toString()) o simile
     public void showUpdate() throws RemoteException {
+        // call to client controller update methods
         System.out.println("state model updated");
     }
 
@@ -48,5 +49,9 @@ public class RMIClient implements VirtualRMIClient, ClientInterface {
     public void choosenTile(int index){}
     @Override
     public void drawnCard(boolean isTopRow, int index){}
+
+    public void updateRound(){
+        controller.updateCurrentRound();
+    }
 
 }

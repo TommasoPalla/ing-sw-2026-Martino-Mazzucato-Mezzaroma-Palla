@@ -51,10 +51,12 @@ public class Game {
         this.players = new ArrayList<>();
         this.currentRound = 0;
         // Players initialization
-        for (String name : newPlayers.keySet()) {
+        /*for (String name : newPlayers.keySet()) {
             Player newPlayer = new Player(this, name, newPlayers.get(name));
             this.players.add(newPlayer);
           }
+
+         */
         this.buildingManager = new BuildingManager(players);
     }
 
@@ -75,6 +77,10 @@ public class Game {
         int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
         if  (currentPlayerIndex < turnOrder.size()-1) return turnOrder.get(currentPlayerIndex+1);
         else throw new Last_Player_ofTurn_Exception("Last player of turn has played");
+    }
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
     }
 
     public void startGame(){

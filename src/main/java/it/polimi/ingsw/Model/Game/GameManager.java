@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.Game;
 
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Networking.Shared.ServerController;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,9 +38,9 @@ public class GameManager {
      *  and instantiates his game controller, so the game can start
      */
     public synchronized Game addNewGame(String gameID, Map<String, Color> players) {
-        Game newGame = new Game(gameID, players);
+        Game newGame = new Game(gameID, players.size());
         activeGames.put(gameID, newGame);
-        new GameController(newGame);
+        new GameController(newGame, players);
         return newGame;
     }
 

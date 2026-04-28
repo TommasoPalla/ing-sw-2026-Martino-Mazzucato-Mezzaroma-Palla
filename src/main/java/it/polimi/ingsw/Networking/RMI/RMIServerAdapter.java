@@ -1,8 +1,10 @@
 package it.polimi.ingsw.Networking.RMI;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
+import it.polimi.ingsw.View.ClientController;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -18,10 +20,10 @@ public class RMIServerAdapter implements ServerConnection {
     private final String host;
     private final int port;
 
-    public RMIServerAdapter(String host, int port){
+    public RMIServerAdapter(String host, int port, ClientController clientController) {
         this.host = host;
         this.port = port;
-        this.client = new RMIClient();
+        this.client = new RMIClient(clientController);
     }
 
     @Override
@@ -46,18 +48,22 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void chooseOfferTile() throws Occupied_Tile_Exception {
+    public void chooseOfferTile(int index) throws Occupied_Tile_Exception {
 
     }
 
     @Override
-    public void drawCardFromTop() throws Illegal_Draw_Exception {
+    public void drawCardFromTop(int index) throws Illegal_Draw_Exception {
 
     }
 
     @Override
-    public void drawCardFromBottom() throws Illegal_Draw_Exception {
+    public void drawCardFromBottom(int index) throws Illegal_Draw_Exception {
 
     }
 
+    @Override
+    public void chooseTotem(Color totemColor) {
+
+    }
 }

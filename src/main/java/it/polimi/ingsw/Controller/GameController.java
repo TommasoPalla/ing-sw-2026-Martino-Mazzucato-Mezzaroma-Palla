@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
@@ -22,7 +23,7 @@ public class GameController {
     /*
     * This is the attributed of the game model associated to the controller
      */
-    private final Game gameModel;
+    private final Game gameInstance;
 
     // Da definire il client handler di un player
    private Map<Player, ClientController> connectedClients;
@@ -30,19 +31,23 @@ public class GameController {
     /**
      * GameController's constructor is called in the GameManager when a new game is added
      */
-    public GameController(Game gameModel) {
-        this.gameModel = gameModel;
+    public GameController(Game gameInstance, Map<String, Color> players) {
+        this.gameInstance = gameInstance;
         this.connectedClients = new HashMap<>();
+        for (String name : players.keySet()) {
+            Player newPlayer = new Player(gameInstance, name, players.get(name));
+            this.gameInstance.addPlayer(newPlayer);
+        }
         // da aggiungere gli handler, non so come
 
-        for (Player player : gameModel.getPlayers()) {
+        for (Player player : gameInstance.getPlayers()) {
             new ClientController(this, player);
         }
-        gameModel.startGame();
+        gameInstance.startGame();
     }
 
     public Game getGameModel() {
-        return gameModel;
+        return gameInstance;
     }
 
     public ArrayList<Player> getConnectedClients() {
@@ -60,12 +65,12 @@ public class GameController {
      * checks if the action is done during the right game phase
      */
     public synchronized boolean checkPhase(GamePhase phase) throws Illegal_Action_Phase_Exception {
-        return phase == gameModel.getGamePhase();
+        return phase == gameInstance.getGamePhase();
     }
 
     public synchronized Player setNextPlayer() {
         try {
-            Player nextPlayer =  gameModel.setNextPlayer();
+            Player nextPlayer =  gameInstance.setNextPlayer();
             for (ClientController client : connectedClients.values()) {
                 client.updateCurrentPlayer(nextPlayer);
             }
@@ -83,9 +88,9 @@ public class GameController {
     // ANCORA IN BOZZA. NO PLAYGAME() IN GAME MA FLOW DEL GAME DA ATTURARE TRAMITE CHIAMATE DI METODI NEL GAME CONTROLLER
     public void startTurn(ArrayList<Player> turnOrder) {
         try {
-            int newRound = gameModel.getNextRound();
+            int newRound = gameInstance.getNextRound();
             for (ClientController client : connectedClients.values()) {
-                client.updateCurrentRound();
+                //inoltra chiamata a server controller per update round a tutti i player
                 client.updateCurrentPlayer(turnOrder.getFirst());
             }
             this.playTurn(turnOrder.getFirst());
@@ -117,7 +122,7 @@ public class GameController {
             CharacterCard cardDrawn = (CharacterCard) card;
             for(ClientController client : connectedClients.values()) {
                 client.updateCardDrawn(cardDrawn);
-                client.updateTopRow(gameModel.getOfferTrack().getTopRow());
+                client.updateTopRow(gameInstance.getOfferTrack().getTopRow());
             }
         }
         catch (Illegal_Draw_Exception e) {
@@ -131,7 +136,7 @@ public class GameController {
             CharacterCard cardDrawn = (CharacterCard) card;
             for(ClientController client : connectedClients.values()) {
                 client.updateCardDrawn(cardDrawn);
-                client.updateBottomRow(gameModel.getOfferTrack().getTopRow());
+                client.updateBottomRow(gameInstance.getOfferTrack().getTopRow());
             }
         }
         catch (Illegal_Draw_Exception e) {
@@ -141,7 +146,7 @@ public class GameController {
 
     public synchronized void repopulateTopRow (Player player) {
         // Sarebbe sensato fare un try catch con un eccezione per quando finisce il gioco?
-        ArrayList<Card> newTopRow = gameModel.getOfferTrack().repopulateTopRow();
+        ArrayList<Card> newTopRow = gameInstance.getOfferTrack().repopulateTopRow();
         for(ClientController client : connectedClients.values()) {
             client.updateTopRow(newTopRow);
         }

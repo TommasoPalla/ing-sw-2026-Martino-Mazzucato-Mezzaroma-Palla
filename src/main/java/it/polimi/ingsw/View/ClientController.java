@@ -8,18 +8,16 @@ import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 
-public class ClientController {
-    private Player player;
+public class ClientController implements ClientViewUpdate{
     GameController gameController;
     ServerConnection connection;
     ClientModel localModel;
 
-    /*public ClientController(/*GameController gameController, Player player) {
+    public ClientController() {
         //this.connection = connection;
-        this.player = player;
         //this.gameController = gameController;
 
-    }*/
+    }
 
     public void onGameStarted(String gameId, int num){
         this.localModel=new ClientModel(gameId, num);
@@ -45,5 +43,10 @@ public class ClientController {
 
     public void onChoosenTotemColor(Player player, Color color){
         localModel.chosenTotemColor(player, color);
+    }
+
+    @Override
+    public void updateCurrentRound() {
+
     }
 }
