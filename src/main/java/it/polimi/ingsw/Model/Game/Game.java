@@ -192,25 +192,38 @@ public class Game {
                 //classe controller richiede gli indici input
                 int whichRow = 0;
                 int index = 0;
+                boolean isBuilding = true;
 
                 int topDrawable = currentPlayer.getCurrentOfferTile().getCardsFromAbove();
                 int bottomDrawable = currentPlayer.getCurrentOfferTile().getCardsFromBelow();
-                for(int j=0; j<topDrawable+bottomDrawable;j++) {
+                for(int j = 0; j < topDrawable + bottomDrawable; j++) {
                     //getRow && index da controller
-                    if (whichRow == 0 && topDrawable > 0) {
-                        while(currentPlayer.drawable(index,offerTrack, whichRow)!=true){
+
+                    //da verificare che cardsLeft funzioni bene
+                    int cardsLeft = (whichRow == 0) ? topDrawable : bottomDrawable;
+                    if(cardsLeft > 0){
+                        while(currentPlayer.drawable(index, whichRow, isBuilding, offerTrack) == false){
                             //chiede nuovi input
                         }
-                        currentPlayer.drawFromTopRow(index, offerTrack);
+                        currentPlayer.drawCard(index, whichRow, isBuilding, offerTrack);
+                        if(whichRow == 0) topDrawable--;
+                        else bottomDrawable--;
+                    }
+                    /* versione non ottimizzata
+                    if (whichRow == 0 && topDrawable > 0) {
+                        while(currentPlayer.drawable(index, whichRow, isBuilding, offerTrack) == false){
+                            //chiede nuovi input
+                        }
+                        currentPlayer.drawCard(index, whichRow, isBuilding, offerTrack);
                         topDrawable--;
                     }
                     else if(whichRow == 1 && bottomDrawable > 0){
-                        while(currentPlayer.drawable(index,offerTrack, whichRow)!=true){
+                        while(currentPlayer.drawable(index, whichRow, isBuilding, offerTrack) == false){
                             //chiede nuovi input
                         }
-                        currentPlayer.drawFromBottomRow(index, offerTrack);
+                        currentPlayer.drawCard(index, whichRow, isBuilding, offerTrack);
                         bottomDrawable--;
-                    }
+                    }*/
                     else{
                         throw new Illegal_Draw_Exception();
                     }

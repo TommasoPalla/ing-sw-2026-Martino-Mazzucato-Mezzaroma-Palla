@@ -11,10 +11,10 @@ import it.polimi.ingsw.Model.Cards.VisitorAdapter;
  * a BuildingCard can be drawn only if the player can afford it.
  */
 public class DrawableCardVisitor extends VisitorAdapter {
-    private boolean isDrawable = false;
+    private boolean drawable = false;
 
     public boolean isDrawable(){
-        return isDrawable;
+        return drawable;
     }
 
     @Override
@@ -22,20 +22,20 @@ public class DrawableCardVisitor extends VisitorAdapter {
         int discountedCost = building.getCost() - player.getTribe().getGatherersDiscount();
         int foodReserve = player.getTribe().getFoodReserve();
         if (foodReserve >= discountedCost) {
-            isDrawable = true;
+            drawable = true;
         } else {
-            isDrawable = false;
+            drawable = false;
             throw new Insufficient_Food_Exception();
         }
     }
     @Override
     public void visitCard(CharacterCard character, Player player){
-    isDrawable = true;
+    drawable = true;
     }
 
     @Override
     public void visitCard(EventCard event, Player player) {
-        isDrawable = false;
+        drawable = false;
         throw new Illegal_Draw_Exception();
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model.Users;
 
 import it.polimi.ingsw.Model.Cards.*;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
@@ -56,18 +57,21 @@ public class Player {
     }
 
     //returns true if building is affordable to player or if the card is a character, returns false otherwise
-    public boolean drawable(int index, OfferTrack offerTrack, int row) {
+    public boolean drawable(int index, int row, boolean isBuilding, OfferTrack offerTrack) {
         Card card;
         DrawableCardVisitor visitor = new DrawableCardVisitor();
-        if (row == 0) {//0 è toprow
-            card = offerTrack.getTopRow().get(index);
-        } else {
-            card = offerTrack.getBottomRow().get(index);
+        if(isBuilding){
+            card = (row == 0) ? offerTrack.getTopBuildingCard().get(index)
+                    : offerTrack.getBottomBuildingCard().get(index);
+        }
+        else {
+            card = (row == 0) ? offerTrack.getTopRow().get(index)
+                    : offerTrack.getBottomRow().get(index);
         }
         try {
             card.accept(visitor, this);
         } catch (Illegal_Draw_Exception | Insufficient_Food_Exception e){
-            System.err.println("Mossa non consentita: " + e.getMessage());
+            System.err.println("Can't draw this card: " + e.getMessage());
 
             //va gestito con le view, da capire dopo: eventualmente lanciare l'eccezione al metodo più esterno
             //che verosimilmente sarà del controller e sarà lui a mostrare l'errore
@@ -76,38 +80,34 @@ public class Player {
         return visitor.isDrawable();
     }
 
-    public Card drawFromTopRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception, Insufficient_Food_Exception{
-        Card card = offerTrack.getTopRow().get(index);
-        AddCardVisitor visitor = new AddCardVisitor();
-        if(this.drawable(index, offerTrack, 0)){
-
-            /*accept method calls VisitCard method that depending on the card's type does the following:
-            - add the building to the player's tribe, if BuildingCard
-            - add the character to the player's tribe, if CharacterCard
-            - nothing, if EventCard; in this case 'then branch' is not executed.
-             */
-            card.accept(visitor, this);
-            offerTrack.getTopRow().remove(index);
+    /**drawCard method is called when a player tries to add one
+     * of the cards on the OfferTrack to their tribe.
+     * @param index position of the card in its specific array
+     * @param row top (0) or bottom (1)
+     * @param isBuilding true if the card to draw is in buildings arrays, false otherwise
+     * @return the drawn card, if the card can be drawn, returns null otherwise
+     */
+    public Card drawCard(int index, int row, boolean isBuilding, OfferTrack offerTrack){
+        Card drawnCard = null;
+        if(this.drawable(index, row, isBuilding, offerTrack)){
+            if(isBuilding){
+                if(row == 0){   //top row
+                    drawnCard = offerTrack.getTopBuildingCard().remove(index);
+                } else {
+                    drawnCard = offerTrack.getBottomBuildingCard().remove(index);
+                }
+                getTribe().addBuildingToTribe((BuildingCard) drawnCard);
+            }
+            else {
+                if(row == 0){
+                    drawnCard = offerTrack.getTopRow().remove(index);
+                }
+                else {
+                    drawnCard = offerTrack.getBottomRow().remove(index);
+                }
+                getTribe().addCharacterToTribe((CharacterCard) drawnCard);
+            }
         }
-        return card;
-    }
-
-    //aggiungere drawBuilding
-
-
-    public Card drawFromBottomRow(int index, OfferTrack offerTrack) throws Illegal_Draw_Exception {
-        Card card = offerTrack.getTopRow().get(index);
-        AddCardVisitor visitor = new AddCardVisitor();
-        if(this.drawable(index, offerTrack, 1)){
-
-            /*accept method calls VisitCard method that depending on the card's type does the following:
-            - add the building to the player's tribe, if BuildingCard
-            - add the character to the player's tribe, if CharacterCard
-            - nothing, if EventCard; in this case 'then branch' is not executed.
-             */
-            card.accept(visitor, this);
-            offerTrack.getBottomRow().remove(index);
-        }
-        return card;
+        return drawnCard;
     }
 }
