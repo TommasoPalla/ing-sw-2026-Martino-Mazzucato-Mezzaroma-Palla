@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public abstract class CharacterCard extends Card {
     private final int numPlayersFlag;//3 stands for 3+, 4 for 4+. How many players are required to use the card
     private final CharacterRole role;
-//    private final CharacterRole role;
 //    private final Integer prestigePoints;
 //    private final InventorType inventorType;
 //    private final Integer shamanStars;

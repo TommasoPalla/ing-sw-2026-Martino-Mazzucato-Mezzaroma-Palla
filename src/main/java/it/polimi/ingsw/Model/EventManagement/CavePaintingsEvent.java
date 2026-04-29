@@ -12,7 +12,7 @@ import it.polimi.ingsw.Model.Users.Player;
 import java.util.ArrayList;
 
 public class CavePaintingsEvent extends EventCard implements EventStrategy{
-    private final int artistThreshold;
+    private final int artistThreshold;  //under(<) this threshold prestigeMalus is applied
     private final int prestigeMalus;
     private final int prestigeBonus;
 
