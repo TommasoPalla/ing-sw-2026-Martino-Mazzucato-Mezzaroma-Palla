@@ -40,6 +40,16 @@ public class LightTribe {
         this.shamansStars=0;
     }
 
+    public int getFoodReserve() {
+        return foodReserve;
+    }
+    public int getPrestigePoints() {
+        return prestigePoints;
+    }
+    public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() {
+        return population;
+    }
+
     public void addShamansStars(int stars) {shamansStars += stars;}
     public void addFood(int food) {foodReserve += food;}
     public void addPrestigePoints(int prestigePoints) {prestigePoints += prestigePoints;}

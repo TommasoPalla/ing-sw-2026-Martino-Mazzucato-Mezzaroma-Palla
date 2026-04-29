@@ -152,7 +152,13 @@ public class ClientModel {
     public ArrayList<Card> getBottomRow(){return bottomRow;};
     public ArrayList<BuildingCard> getTopRowBuildings(){return topBuildingCard;};
     public ArrayList<BuildingCard> getBottomRowBuildings(){return bottomBuildingCard;};
+    public Map<String, Integer> getCurrentOfferTiles(){
+        return currentOfferTiles;
+    }
+    public ArrayList<OfferTile> getOfferTiles(){
+        return offerTiles;
+    }
 
 
-    public LightTribe getPlayerTribe(String id){return players.get(id);}
+    public LightTribe getPlayerTribe(String name){return players.get(name);}
 }
