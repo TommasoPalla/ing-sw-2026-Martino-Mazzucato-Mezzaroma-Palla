@@ -37,9 +37,9 @@ public class RMIClient implements VirtualRMIClient {
         controller.onChoosenTotemColor(playerName, totemColor);
     }
     @Override
-    public void choosenTile(int index){}
+    public void choosenTile(String playerName, int index){}
     @Override
-    public void drawnCard(boolean isTopRow, int index){}
+    public void drawnCard(String playerName, boolean isTopRow, int index){}
 
     //bozza di messaggio di update dal server
     public void updateMessage(){

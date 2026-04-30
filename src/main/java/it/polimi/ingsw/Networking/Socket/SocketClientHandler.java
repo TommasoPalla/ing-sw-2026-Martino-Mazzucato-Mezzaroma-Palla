@@ -23,7 +23,7 @@ public class SocketClientHandler implements VirtualSocketClient, Runnable {
     @Override
     public void run() {
         server.connect(this);
-        //while(legge input da tastiera){
+        //while(client connesso){
         //  logica di parsing dei messaggi inviati dal client al server
         //  da qui poi si chiameranno i metodi di server parsando i messaggi
         //}
@@ -45,12 +45,12 @@ public class SocketClientHandler implements VirtualSocketClient, Runnable {
     }
 
     @Override
-    public void choosenTile(int index) {
+    public void choosenTile(String playerName, int index) {
 
     }
 
     @Override
-    public void drawnCard(boolean isTopRow, int index) {
+    public void drawnCard(String playerName, boolean isTopRow, int index) {
 
     }
 

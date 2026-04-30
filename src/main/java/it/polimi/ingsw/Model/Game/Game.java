@@ -43,7 +43,7 @@ public class Game {
     // dei Player a quella del game e non viceversa
     public Game(String gameID, /*Map<String, Color> newPlayers*/int numPlayers) {
         this.gameID = gameID;
-        this.numPlayers=numPlayers;
+        this.numPlayers = numPlayers;
         this.turnTile = new TurnTile(numPlayers);
         this.players = new ArrayList<>();
         this.playersNames = new ArrayList<>();
