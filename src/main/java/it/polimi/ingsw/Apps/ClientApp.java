@@ -27,7 +27,7 @@ public class ClientApp {
             case "SOCKET" ->
                     connection = new SocketServerAdapter(ServerConfigs.DEFAULT_SOCKET_SERVER_IP_ADDR, ServerConfigs.DEFAULT_SOCKET_SERVER_PORT);
             case "RMI" ->
-                    connection = new RMIServerAdapter(ServerConfigs.DEFAULT_RMI_SERVER_NAME, ServerConfigs.DEFAULT_RMI_SERVER_PORT, clientController);
+                    connection = new RMIServerAdapter(ServerConfigs.DEFAULT_RMI_IP_ADDR, ServerConfigs.DEFAULT_RMI_SERVER_PORT, clientController);
             default -> {
                 System.out.println("protocollo non valido");
                 return;

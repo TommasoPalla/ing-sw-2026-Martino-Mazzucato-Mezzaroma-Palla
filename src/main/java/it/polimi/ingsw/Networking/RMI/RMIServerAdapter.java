@@ -3,6 +3,7 @@ package it.polimi.ingsw.Networking.RMI;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
+import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Controller.ClientController;
 
@@ -31,7 +32,7 @@ public class RMIServerAdapter implements ServerConnection {
         try {
             System.setProperty("java.rmi.server.hostname", "127.0.0.1");    //forces the server to use 127.0.0.1 as localhost
             Registry registry = LocateRegistry.getRegistry(host, port);
-            serverStub = (VirtualRMIServer) registry.lookup("MesosServer");
+            serverStub = (VirtualRMIServer) registry.lookup(ServerConfigs.DEFAULT_RMI_SERVER_NAME);
             clientStub = (VirtualRMIClient) UnicastRemoteObject.exportObject(client, 0);
             serverStub.connect(clientStub);
         } catch (RemoteException e){
@@ -44,7 +45,11 @@ public class RMIServerAdapter implements ServerConnection {
 
     @Override
     public void disconnect() {
-        serverStub.disconnect(clientStub);
+        try{
+            serverStub.disconnect(clientStub);
+        } catch (RemoteException e){
+            System.out.println("Error during server disconnection: " + e.getMessage());
+        }
     }
 
     @Override

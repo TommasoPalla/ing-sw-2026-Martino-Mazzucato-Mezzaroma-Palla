@@ -1,13 +1,11 @@
 package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.Player;
-import it.polimi.ingsw.Networking.Shared.ClientInterface;
 import it.polimi.ingsw.Controller.ClientController;
 
 import java.rmi.RemoteException;
 
-public class RMIClient implements VirtualRMIClient, ClientInterface {
+public class RMIClient implements VirtualRMIClient {
 
     private final ClientController controller;
     public RMIClient(ClientController controller) {

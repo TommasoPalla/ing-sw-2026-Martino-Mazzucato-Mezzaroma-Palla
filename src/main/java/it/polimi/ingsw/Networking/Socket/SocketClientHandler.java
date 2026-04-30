@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Networking.Socket;
 
+import it.polimi.ingsw.Enums.Color;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,5 +37,25 @@ public class SocketClientHandler implements VirtualSocketClient, Runnable {
     @Override
     public void reportError(String errorMessage) throws IOException {
         outStream.println("[ERROR]: " + errorMessage);
+    }
+
+    @Override
+    public void choosenTotem(String playerName, Color totemColor) {
+
+    }
+
+    @Override
+    public void choosenTile(int index) {
+
+    }
+
+    @Override
+    public void drawnCard(boolean isTopRow, int index) {
+
+    }
+
+    @Override
+    public void gameStarted(String gameID, int numPlayers) {
+
     }
 }
