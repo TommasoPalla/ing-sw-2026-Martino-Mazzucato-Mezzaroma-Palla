@@ -23,7 +23,8 @@ public class ClientModel {
     private Map<String, LightTribe> players;
     private GamePhase currentPhase;
     private int currentRound;
-    private Player currentPlayerTurn;
+    private String currentPlayer;
+    private int era;
     private ArrayList<Card> topRow;
     private ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildingCard;
@@ -65,8 +66,8 @@ public class ClientModel {
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
 
     //update methods
-    public void setNextPlayer(Player nextPlayer) {
-        currentPlayerTurn = nextPlayer;
+    public void setNextPlayer(String playerName) {
+        currentPlayer = playerName;
     }
     public void setNextRound() {
         currentRound++;
@@ -117,19 +118,35 @@ public class ClientModel {
     }
     public void updateBuildingDrawn(BuildingCard building, String playerName){
         //players.get(playerName).addToBuildings(building);
-
     }
-    public ArrayList<Card> getTopRow(){return topRow;};
-    public ArrayList<Card> getBottomRow(){return bottomRow;};
+    public void updateCurrentRound(int newCurrentRound){
+        currentRound = newCurrentRound;
+    }
+    public void updateEra(int newEra){
+        era = newEra;
+    }
+
+    public void updateGamePhase(GamePhase phase){
+        currentPhase = phase;
+    }
+
+
+    //getters
+    public String getGameId(){return gameId;}
+    public int getNumPlayers(){return numPlayers;}
+    public LightTribe getPlayerTribe(String playerName){return players.get(playerName);}
+    //gamephase inutile?
+    public int getCurrentRound(){return currentRound;}
+    public String getCurrentPlayer(){return currentPlayer;}
+    public int getEra(){return era;}
+    public ArrayList<Card> getTopRow(){return topRow;}
+    public ArrayList<Card> getBottomRow(){return bottomRow;}
     public ArrayList<BuildingCard> getTopRowBuildings(){return topBuildingCard;};
     public ArrayList<BuildingCard> getBottomRowBuildings(){return bottomBuildingCard;};
-    public Map<String, Integer> getCurrentOfferTiles(){
-        return currentOfferTiles;
-    }
-    public ArrayList<OfferTile> getOfferTiles(){
-        return offerTiles;
-    }
+    public Color getColors(String playerName){return totemColors.get(playerName);}
+    public int getOfferTiles(String playerName){return currentOfferTiles.get(playerName);}
+    public TurnTile getTurnTile(){return turnTile;}
+    public ArrayList getOfferTilesNumber(){return offerTiles;}
 
 
-    public LightTribe getPlayerTribe(String playerName){return players.get(playerName);}
 }

@@ -42,8 +42,8 @@ public class RMIClient implements VirtualRMIClient {
     public void drawnCard(String playerName, boolean isTopRow, int index){}
 
     //bozza di messaggio di update dal server
-    public void updateMessage(){
-        controller.updateCurrentRound();
+    public void updateMessage(int round){
+        controller.updateCurrentRound(round);
     }
 
 }
