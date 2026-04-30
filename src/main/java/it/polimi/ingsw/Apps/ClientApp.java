@@ -4,8 +4,7 @@ import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
-import it.polimi.ingsw.View.ClientController;
-import it.polimi.ingsw.View.TUIView;
+import it.polimi.ingsw.Controller.ClientController;
 
 import java.util.Scanner;
 
@@ -15,7 +14,7 @@ import java.util.Scanner;
  * It does the same thing for TUI or GUI
  */
 public class ClientApp {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ClientController clientController = new ClientController();
 
@@ -24,9 +23,11 @@ public class ClientApp {
         ServerConnection connection;
         //in futuro si puo' fare un do{}while che prende in input l'ip e la porta desiderata
         //do{}while perche' si prova fintanto che sono ip e porta validi (=> helper class??)
-        switch (protocol.toUpperCase()){
-            case "SOCKET" -> connection = new SocketServerAdapter(ServerConfigs.DEFAULT_SOCKET_SERVER_IP_ADDR, ServerConfigs.DEFAULT_SOCKET_SERVER_PORT);
-            case "RMI" -> connection = new RMIServerAdapter(ServerConfigs.DEFAULT_RMI_SERVER_NAME, ServerConfigs.DEFAULT_RMI_SERVER_PORT, clientController);
+        switch (protocol.toUpperCase()) {
+            case "SOCKET" ->
+                    connection = new SocketServerAdapter(ServerConfigs.DEFAULT_SOCKET_SERVER_IP_ADDR, ServerConfigs.DEFAULT_SOCKET_SERVER_PORT);
+            case "RMI" ->
+                    connection = new RMIServerAdapter(ServerConfigs.DEFAULT_RMI_SERVER_NAME, ServerConfigs.DEFAULT_RMI_SERVER_PORT, clientController);
             default -> {
                 System.out.println("protocollo non valido");
                 return;
@@ -45,10 +46,10 @@ public class ClientApp {
         System.out.println("choose visualization method:\n1 -> TUI\n2 -> GUI");
         boolean valid = false;
         int UIType;
-        while(!valid){
+        while (!valid) {
             UIType = scanner.nextInt();
             scanner.nextLine();
-            if(UIType == 1 || UIType == 2) valid = true;
+            if (UIType == 1 || UIType == 2) valid = true;
             else System.out.println("invalid choice, please try again...");
         }
         /*View view;      //interfaccia implementata da GUI e TUI
@@ -61,4 +62,5 @@ public class ClientApp {
         view.start();   //da qui si fa partire la GUI o la TUI e da li si prende l'input
     }
          */
+    }
 }

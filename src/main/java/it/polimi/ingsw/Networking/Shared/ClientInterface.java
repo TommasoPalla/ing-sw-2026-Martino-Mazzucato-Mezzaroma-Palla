@@ -18,7 +18,7 @@ public interface ClientInterface extends Remote {
 
     public void reportError(String errorMessage) throws RemoteException;
 
-    public void choosenTotem(Player player, Color totemColor);
+    public void choosenTotem(String playerName, Color totemColor);
 
     public void choosenTile(int index);
 

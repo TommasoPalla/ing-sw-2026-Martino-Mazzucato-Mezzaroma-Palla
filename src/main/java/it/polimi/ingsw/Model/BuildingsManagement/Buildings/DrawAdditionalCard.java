@@ -31,10 +31,15 @@ public class DrawAdditionalCard extends BuildingCard {
     @Override
     public void applyEffect(){
 
-        int index=0;//provvisorio!!
+        //IMPORTANTE
+        //da chiedere l'input all'utente che carta vuole pescare e impostare fromBuilding al valore corrispondente
+        //stessa cosa per index.
+
+        int index=0;
+        boolean fromBuilding = true;
 
         if(!game.getOfferTrack().getTopRow().isEmpty()) {
-            this.getOwner().drawFromTopRow(index, game.getOfferTrack());
+            this.getOwner().drawCard(true, fromBuilding, index, game.getOfferTrack());
         }
     }
 }

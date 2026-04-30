@@ -19,7 +19,7 @@ public class DrawableCardVisitor extends VisitorAdapter {
 
     @Override
     public void visitCard(BuildingCard building, Player player) {
-        int discountedCost = building.getCost() - player.getTribe().getGatherersDiscount();
+        int discountedCost = building.getCost() - player.getTribe().getBuilderDiscount();
         int foodReserve = player.getTribe().getFoodReserve();
         if (foodReserve >= discountedCost) {
             drawable = true;

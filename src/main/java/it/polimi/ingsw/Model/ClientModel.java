@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.TurnTile;
@@ -12,9 +13,9 @@ import it.polimi.ingsw.Model.Users.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-/*
-* Light model for the client to be accessed. Updated when the model state is modified. Update methods
-* are called by the Client controllers
+/**
+ * Light model for the client to be accessed. Updated when the model state is modified. Update methods
+ * are called by the Client controllers
  */
 public class ClientModel {
     private String gameId;
@@ -33,29 +34,6 @@ public class ClientModel {
     private ArrayList<OfferTile> offerTiles;
     //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
 
-    /*public ClientModel(Game realModel) {
-        //this.player = player;
-        this.otherFoodReserves = new HashMap<>();
-        this.otherPrestigePoints = new HashMap<>();
-        this.currentOfferTiles = new HashMap<>();
-        for(Player otherPlayer : realModel.getPlayers()) {
-            otherFoodReserves.put(otherPlayer, 0);
-            otherPrestigePoints.put(otherPlayer, 0);
-            currentOfferTiles.put(otherPlayer, null);
-        }
-        this.currentPhase = realModel.getGamePhase();
-        this.currentRound = 0;
-        this.currentPlayerTurn = realModel.getCurrentPlayer();
-        this.offerTrack = realModel.getOfferTrack();
-        this.foodReserve = 0;
-        this.prestigePoints = 0;
-        this.population = new HashMap<>();
-        this.buildings = new ArrayList<>();
-        this.topRow = realModel.getOfferTrack().getTopRow();
-        this.bottomRow = realModel.getOfferTrack().getBottomRow();
-        this.topBuildingCard = realModel.getOfferTrack().getTopBuildingCard();
-        this.bottomBuildingCard = new ArrayList<>();
-    }*/
     public ClientModel(String gameId, int numPlayers){
         this.gameId=gameId;
         this.numPlayers=numPlayers;
@@ -70,7 +48,6 @@ public class ClientModel {
         this.offerTiles= new ArrayList<>();
     }
 
-    //da migliorare, si può usare il visitor ispirandosi al metodo drawable di Player
     public boolean drawable(int index, int row) {
         switch (row){
             case 0:
@@ -87,34 +64,32 @@ public class ClientModel {
 
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
 
-    /*
-     * Update methods
-     */
+    //update methods
     public void setNextPlayer(Player nextPlayer) {
         currentPlayerTurn = nextPlayer;
     }
     public void setNextRound() {
         currentRound++;
     }
-    public void addPlayer(String id){
+    public void addPlayer(String playerName){
         if(players.size()<=numPlayers){
-            LightTribe lightTribe= new LightTribe(id);
-            players.put(id, lightTribe);
+            LightTribe lightTribe= new LightTribe(playerName);
+            players.put(playerName, lightTribe);
         }
     }
 
 
-    public void updateFoodReserve(int food, String id) {
-        players.get(id).addFood(food);
+    public void updateFoodReserve(String playerName, int food) {
+        players.get(playerName).addFood(food);
     }
-    public void updatePrestigePoints(int pp, String id) {
-        players.get(id).addPrestigePoints(pp);
+    public void updatePrestigePoints(String playerName, int pp) {
+        players.get(playerName).addPrestigePoints(pp);
     }
-    public void updateShamansStars(int stars, String id) {
-        players.get(id).addShamansStars(stars);
+    public void updateShamansStars(String playerName, int stars) {
+        players.get(playerName).addShamansStars(stars);
     }
-    public void updateOfferTile(int index, String id) {
-        currentOfferTiles.put(id, index);
+    public void updateOfferTile(String playerName, int index) {
+        currentOfferTiles.put(playerName, index);
     }
     public void updateTurnTile(TurnTile remoteTurnTile){
         turnTile = remoteTurnTile;
@@ -137,10 +112,11 @@ public class ClientModel {
     public void chosenTotemColor(String playerName, Color color){
         totemColors.put(playerName, color);
     }
-    public void updateCharacterDrawn(Card card, String id) {
-        players.get(id); //addC????
+    public void updateCharacterDrawn(CharacterCard character, String playerName) {
+        players.get(playerName).addToPopulation(character);
     }
-    public void updateBuildingDrawn(BuildingCard building, String id){
+    public void updateBuildingDrawn(BuildingCard building, String playerName){
+        //players.get(playerName).addToBuildings(building);
 
     }
     public ArrayList<Card> getTopRow(){return topRow;};
@@ -155,5 +131,5 @@ public class ClientModel {
     }
 
 
-    public LightTribe getPlayerTribe(String name){return players.get(name);}
+    public LightTribe getPlayerTribe(String playerName){return players.get(playerName);}
 }

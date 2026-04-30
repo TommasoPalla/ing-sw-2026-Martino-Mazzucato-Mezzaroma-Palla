@@ -2,6 +2,7 @@ package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
+import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
@@ -23,8 +24,8 @@ public class RMIServer implements VirtualRMIServer {
     public void startServer(){
         try{
             VirtualRMIServer serverStub = (VirtualRMIServer) UnicastRemoteObject.exportObject(this, 0);
-            Registry registry = LocateRegistry.createRegistry(1099);
-            registry.rebind("MesosServer", serverStub);
+            Registry registry = LocateRegistry.createRegistry(ServerConfigs.DEFAULT_RMI_SERVER_PORT);
+            registry.rebind(ServerConfigs.DEFAULT_RMI_SERVER_NAME, serverStub);
         } catch (RemoteException e){
             System.out.println("Error during RMI server initialization\n" + e.getMessage());
         }

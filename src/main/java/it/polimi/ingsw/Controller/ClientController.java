@@ -1,29 +1,23 @@
-package it.polimi.ingsw.View;
+package it.polimi.ingsw.Controller;
 
-import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
+import it.polimi.ingsw.View.ClientViewUpdate;
 
 import java.util.ArrayList;
 
-public class ClientController implements ClientViewUpdate{
-    GameController gameController;
+public class ClientController implements ClientViewUpdate {
     String name;
     ServerConnection connection;
     ClientModel localModel;
 
     public ClientController() {
-        this.connection = connection;
-        //this.gameController = gameController;
-
     }
 
     public void setPlayerName(String playerName) {
@@ -33,17 +27,15 @@ public class ClientController implements ClientViewUpdate{
     public void onGameStarted(String gameId, int num){
         this.localModel=new ClientModel(gameId, num);
     }
-    /*
-    * Before making a call to the game controller methods, the client controller checks
-    * if the player's draw is legal by checking the client light model
+    /* Before making a call to the game controller methods, the client controller checks
+    if the player's draw is legal by checking the client light model
      */
     public void bindConnection(ServerConnection connection){
         this.connection = connection;
     }
     public void onChooseOfferTile(int index, String playerName) {
         if(localModel.isOccupied(index)) throw new Occupied_Tile_Exception();
-        //gameController.handleChooseOfferTile(playerName, index, gameController.getGameModel().getOfferTrack());
-        connection.chooseOfferTile()
+        connection.chooseOfferTile(index);
     }
 
     public void onChoosenTotemColor(String playerName, Color color){
@@ -56,9 +48,9 @@ public class ClientController implements ClientViewUpdate{
     }
 
     @Override
-    public void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id){
-        if(isTopRow){
-            if(isBuilding){
+    public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String id){
+        if(fromTopRow){
+            if(fromBuilding){
                 localModel.getTopRowBuildings().remove(index);
                 ArrayList<BuildingCard> arr = localModel.getTopRowBuildings();
                 localModel.updateTopRowBuildings(arr);
@@ -68,7 +60,7 @@ public class ClientController implements ClientViewUpdate{
                 localModel.updateTopRow(arr);
             }
         }else{
-            if(isBuilding){
+            if(fromBuilding){
                 localModel.getTopRowBuildings().remove(index);
                 ArrayList<BuildingCard> arr=localModel.getBottomRowBuildings();
                 localModel.updateBottomRowBuildings(arr);
@@ -87,18 +79,18 @@ public class ClientController implements ClientViewUpdate{
     }
 
     @Override
-    public void updateFoodReserve(int food) {
-
+    public void updateFoodReserve(String playerName, int food) {
+        localModel.updateFoodReserve(playerName, food);
     }
 
     @Override
-    public void updatePrestigePoints(int pp) {
-
+    public void updatePrestigePoints(String playerName, int pp) {
+        localModel.updatePrestigePoints(playerName, pp);
     }
 
     @Override
-    public void updateCurrentOfferTile(OfferTile offerTile) {
-
+    public void updateCurrentOfferTile(String playerName, int index) {
+        localModel.updateOfferTile(playerName, index);
     }
 
     @Override

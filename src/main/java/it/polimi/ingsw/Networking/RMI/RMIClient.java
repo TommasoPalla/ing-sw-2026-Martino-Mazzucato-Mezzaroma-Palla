@@ -3,7 +3,7 @@ package it.polimi.ingsw.Networking.RMI;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.Networking.Shared.ClientInterface;
-import it.polimi.ingsw.View.ClientController;
+import it.polimi.ingsw.Controller.ClientController;
 
 import java.rmi.RemoteException;
 
@@ -35,8 +35,8 @@ public class RMIClient implements VirtualRMIClient, ClientInterface {
         controller.onGameStarted(gameID, numPlayers);
     }
     @Override
-    public void choosenTotem(Player player, Color totemColor){
-        controller.onChoosenTotemColor(player, totemColor);
+    public void choosenTotem(String playerName, Color totemColor){
+        controller.onChoosenTotemColor(playerName, totemColor);
     }
     @Override
     public void choosenTile(int index){}

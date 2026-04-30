@@ -1,12 +1,9 @@
-/*
 package it.polimi.ingsw.Model.Game;
-
 
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,11 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * This classes manages different games instances. It's uses a Singleton design pattern. When a new game is added,
  * a game ID, and a list of players (mapped from nickname to totem color) are passed as parameters
  */
-/*
 public class GameManager {
     private static GameManager instance;
     private ConcurrentHashMap<String, Game> activeGames;
-    private Co
+
     public GameManager() {
         activeGames = new ConcurrentHashMap<>();
     }
@@ -41,20 +37,15 @@ public class GameManager {
      * This method adds a new game to the list of active games
      *  and instantiates his game controller, so the game can start
      */
-/*
+    @Deprecated
     public synchronized Game addNewGame(String gameID, Map<String, Color> players) {
         Game newGame = new Game(gameID, players.size());
         activeGames.put(gameID, newGame);
         new GameController(newGame);
         return newGame;
     }
-    public synchronized Game startGame(String gameID) {
-        activeGames.put
-    }
 
     public Game endGame(String gameID) {
         return activeGames.remove(gameID);
     }
 }
- */
-

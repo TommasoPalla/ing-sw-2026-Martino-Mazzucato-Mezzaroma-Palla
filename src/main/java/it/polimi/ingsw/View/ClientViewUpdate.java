@@ -9,9 +9,9 @@ import it.polimi.ingsw.Model.Users.Player;
 import java.util.ArrayList;
 
 public interface ClientViewUpdate {
-    public void updateFoodReserve(int food);
-    public void updatePrestigePoints(int pp);
-    public void updateCurrentOfferTile(OfferTile offerTile);
+    public void updateFoodReserve(String playerName, int food);
+    public void updatePrestigePoints(String playerName, int pp);
+    public void updateCurrentOfferTile(String playerName, int offerTileIndex);
     public void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
     public void updateTopRow(ArrayList<Card> newTopRow);
     public void updateBottomRow(ArrayList<Card> newBottomRow);

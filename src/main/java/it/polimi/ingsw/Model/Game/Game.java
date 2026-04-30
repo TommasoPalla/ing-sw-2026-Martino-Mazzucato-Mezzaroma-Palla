@@ -65,6 +65,11 @@ public class Game {
     public ArrayList<Player> getTurnOrder(){return turnOrder;}
     public int getEra(){return era;}
 
+    public Player getPlayerByName(String playerName){
+        return players.stream().filter(p -> p.getName().equals(playerName))
+                .findFirst().orElse(null);
+    }
+
     public Player getNextPlayer() {
         int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
         if  (currentPlayerIndex < turnOrder.size()-1) return turnOrder.get(currentPlayerIndex+1);
@@ -190,7 +195,7 @@ public class Game {
             for(Player player : turnOrder){//tutti scelgono le loro carte in ordine
 
                 //classe controller richiede gli indici input
-                int whichRow = 0;
+                boolean fromTopRow = false;
                 int index = 0;
                 boolean isBuilding = true;
 
@@ -200,28 +205,28 @@ public class Game {
                     //getRow && index da controller
 
                     //da verificare che cardsLeft funzioni bene
-                    int cardsLeft = (whichRow == 0) ? topDrawable : bottomDrawable;
+                    int cardsLeft = (fromTopRow) ? topDrawable : bottomDrawable;
                     if(cardsLeft > 0){
-                        while(currentPlayer.drawable(index, whichRow, isBuilding, offerTrack) == false){
+                        while(currentPlayer.drawable(fromTopRow, isBuilding, index, offerTrack) == false){
                             //chiede nuovi input
                         }
-                        currentPlayer.drawCard(index, whichRow, isBuilding, offerTrack);
-                        if(whichRow == 0) topDrawable--;
+                        currentPlayer.drawCard(fromTopRow, isBuilding, index, offerTrack);
+                        if (fromTopRow) topDrawable--;
                         else bottomDrawable--;
                     }
                     /* versione non ottimizzata
-                    if (whichRow == 0 && topDrawable > 0) {
-                        while(currentPlayer.drawable(index, whichRow, isBuilding, offerTrack) == false){
+                    if (fromTopRow == 0 && topDrawable > 0) {
+                        while(currentPlayer.drawable(index, fromTopRow, isBuilding, offerTrack) == false){
                             //chiede nuovi input
                         }
-                        currentPlayer.drawCard(index, whichRow, isBuilding, offerTrack);
+                        currentPlayer.drawCard(index, fromTopRow, isBuilding, offerTrack);
                         topDrawable--;
                     }
-                    else if(whichRow == 1 && bottomDrawable > 0){
-                        while(currentPlayer.drawable(index, whichRow, isBuilding, offerTrack) == false){
+                    else if(fromTopRow == 1 && bottomDrawable > 0){
+                        while(currentPlayer.drawable(index, fromTopRow, isBuilding, offerTrack) == false){
                             //chiede nuovi input
                         }
-                        currentPlayer.drawCard(index, whichRow, isBuilding, offerTrack);
+                        currentPlayer.drawCard(index, fromTopRow, isBuilding, offerTrack);
                         bottomDrawable--;
                     }*/
                     else{

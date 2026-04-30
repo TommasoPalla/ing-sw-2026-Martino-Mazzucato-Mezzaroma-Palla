@@ -2,13 +2,13 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
-import it.polimi.ingsw.View.ClientController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class GameController {
     private final Game gameInstance;
 
     // Da definire il client handler di un player
-   private Map<Player, ClientController> connectedClients;
+   private Map<String, ClientController> connectedClients;
 
     /**
      * GameController's constructor is called in the GameManager when a new game is added
@@ -41,7 +41,7 @@ public class GameController {
         return gameInstance;
     }
 
-    public ArrayList<Player> getConnectedClients() {
+    public ArrayList<String> getConnectedClients() {
         return new ArrayList<>(connectedClients.keySet());
     }
 
@@ -53,11 +53,11 @@ public class GameController {
         gameInstance.addPlayer(playerName, color);
     }
 
-    public void addClient(Player player, ClientController clientController) {
-        connectedClients.put(player, clientController);
+    public void addClient(String playerName, ClientController clientController) {
+        connectedClients.put(playerName, clientController);
     }
-    public void removeClient(Player player) {
-        connectedClients.remove(player);
+    public void removeClient(String playerName) {
+        connectedClients.remove(playerName);
     }
 
     /**
@@ -119,7 +119,7 @@ public class GameController {
         try {
             OfferTile chosen = player.chooseOfferTile(index, offerTrack);
             for(ClientController client : connectedClients.values()) {
-                client.updateCurrentOfferTile(chosen);
+                client.updateCurrentOfferTile(player.getName(), index);
             }
         }
         catch (Occupied_Tile_Exception e) {
@@ -127,32 +127,14 @@ public class GameController {
         }
     }
 
-    public synchronized void handleDrawFromTopRow (Player player, int index, OfferTrack offerTrack) {
-        try {
-            Card card = player.drawFromTopRow(index, offerTrack);
-            CharacterCard cardDrawn = (CharacterCard) card;
-            for(ClientController client : connectedClients.values()) {
-                client.updateCardDrawn(cardDrawn);
-                client.updateTopRow(gameInstance.getOfferTrack().getTopRow());
-            }
-        }
-        catch (Illegal_Draw_Exception e) {
-            // messaggio di errore per carta evento non pescabile
-        }
-    }
+    public synchronized void handleDraw(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
+            Player currPlayer = gameInstance.getPlayerByName(playerName);
+            OfferTrack offerTrack = gameInstance.getOfferTrack();
+            boolean cardIsDrawable = currPlayer.drawable(fromTopRow, fromBuilding, index, offerTrack);
 
-    public synchronized void handleDrawFromBottomRow (Player player, int index, OfferTrack offerTrack) {
-        try {
-            Card card = player.drawFromBottomRow(index, offerTrack);
-            CharacterCard cardDrawn = (CharacterCard) card;
-            for(ClientController client : connectedClients.values()) {
-                client.updateCardDrawn(cardDrawn);
-                client.updateBottomRow(gameInstance.getOfferTrack().getTopRow());
+            if(cardIsDrawable){
+                currPlayer.drawCard(fromTopRow, fromBuilding, index, this.getGameModel().getOfferTrack());
             }
-        }
-        catch (Illegal_Draw_Exception e) {
-            // messaggio di errore per carta evento non pescabile
-        }
     }
 
     public synchronized void repopulateTopRow (Player player) {

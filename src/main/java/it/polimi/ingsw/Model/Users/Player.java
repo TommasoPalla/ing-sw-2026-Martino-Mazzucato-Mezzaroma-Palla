@@ -57,15 +57,15 @@ public class Player {
     }
 
     //returns true if building is affordable to player or if the card is a character, returns false otherwise
-    public boolean drawable(int index, int row, boolean isBuilding, OfferTrack offerTrack) {
+    public boolean drawable(boolean fromTopRow, boolean fromBuilding, int index, OfferTrack offerTrack) {
         Card card;
         DrawableCardVisitor visitor = new DrawableCardVisitor();
-        if(isBuilding){
-            card = (row == 0) ? offerTrack.getTopBuildingCard().get(index)
+        if(fromBuilding){
+            card = fromTopRow ? offerTrack.getTopBuildingCard().get(index)
                     : offerTrack.getBottomBuildingCard().get(index);
         }
         else {
-            card = (row == 0) ? offerTrack.getTopRow().get(index)
+            card = fromTopRow ? offerTrack.getTopRow().get(index)
                     : offerTrack.getBottomRow().get(index);
         }
         try {
@@ -83,31 +83,38 @@ public class Player {
     /**drawCard method is called when a player tries to add one
      * of the cards on the OfferTrack to their tribe.
      * @param index position of the card in its specific array
-     * @param row top (0) or bottom (1)
-     * @param isBuilding true if the card to draw is in buildings arrays, false otherwise
+     * @param fromTopRow
+     * @param fromBuilding true if the card to draw is in buildings arrays, false otherwise
      * @return the drawn card, if the card can be drawn, returns null otherwise
      */
-    public Card drawCard(int index, int row, boolean isBuilding, OfferTrack offerTrack){
-        Card drawnCard = null;
-        if(this.drawable(index, row, isBuilding, offerTrack)){
-            if(isBuilding){
-                if(row == 0){   //top row
-                    drawnCard = offerTrack.getTopBuildingCard().remove(index);
+    public Card drawCard(boolean fromTopRow, boolean fromBuilding, int index, OfferTrack offerTrack){
+        if(this.drawable(fromTopRow, fromBuilding, index, offerTrack)){
+            if(fromBuilding){
+                BuildingCard drawnBuilding;
+                if(fromTopRow){
+                    drawnBuilding = offerTrack.getTopBuildingCard().remove(index);
                 } else {
-                    drawnCard = offerTrack.getBottomBuildingCard().remove(index);
+                    drawnBuilding = offerTrack.getBottomBuildingCard().remove(index);
                 }
-                getTribe().addBuildingToTribe((BuildingCard) drawnCard);
+                int discountedCost = drawnBuilding.getCost() - getTribe().getBuilderDiscount();
+                if(discountedCost < 0) discountedCost = 0;
+                getTribe().modifyFood(-discountedCost);
+
+                getTribe().addBuildingToTribe(drawnBuilding);
+                return (Card) drawnBuilding;
             }
             else {
-                if(row == 0){
-                    drawnCard = offerTrack.getTopRow().remove(index);
+                CharacterCard drawnCharacter;
+                if(fromTopRow){
+                    drawnCharacter = (CharacterCard) offerTrack.getTopRow().remove(index);
                 }
                 else {
-                    drawnCard = offerTrack.getBottomRow().remove(index);
+                    drawnCharacter = (CharacterCard) offerTrack.getBottomRow().remove(index);
                 }
-                getTribe().addCharacterToTribe((CharacterCard) drawnCard);
+                getTribe().addCharacterToTribe(drawnCharacter);
+                return (Card) drawnCharacter;
             }
         }
-        return drawnCard;
+        return null;
     }
 }

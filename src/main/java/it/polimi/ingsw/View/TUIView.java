@@ -1,11 +1,11 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.LightTribe;
-import it.polimi.ingsw.Model.Users.Tribe;
 
 import java.util.ArrayList;
 

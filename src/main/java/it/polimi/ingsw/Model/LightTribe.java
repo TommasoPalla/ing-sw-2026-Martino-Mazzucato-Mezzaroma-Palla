@@ -35,9 +35,9 @@ public class LightTribe {
         }
         this.buildings = new ArrayList<>();
         this.inventorsPerType = new EnumMap<>(InventorType.class);
-        this.builderDiscount=0;
-        this.gatherersDiscount=0;
-        this.shamansStars=0;
+        this.builderDiscount = 0;
+        this.gatherersDiscount = 0;
+        this.shamansStars = 0;
     }
 
     public int getFoodReserve() {
@@ -52,11 +52,15 @@ public class LightTribe {
 
     public void addShamansStars(int stars) {shamansStars += stars;}
     public void addFood(int food) {foodReserve += food;}
-    public void addPrestigePoints(int prestigePoints) {prestigePoints += prestigePoints;}
+    public void addPrestigePoints(int prestigePoints) {this.prestigePoints += prestigePoints;}
     public void addToPopulation(CharacterCard character){
         population
                 .computeIfAbsent(character.getRole(), k -> new ArrayList<>())
-                .add(character);    }
+                .add(character);
+    }
+    public void addToBuildings(BuildingCard building){
+        buildings.add(building);
+    }
 
 
 
