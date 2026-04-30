@@ -30,11 +30,11 @@ public class RMIClient implements VirtualRMIClient {
 
     @Override
     public void gameStarted(String gameID, int numPlayers) {
-        controller.onGameStarted(gameID, numPlayers);
+        controller.createLocalModel(gameID, numPlayers);
     }
     @Override
     public void choosenTotem(String playerName, Color totemColor){
-        controller.onChoosenTotemColor(playerName, totemColor);
+        controller.chooseTotem(totemColor);
     }
     @Override
     public void choosenTile(String playerName, int index){}

@@ -5,31 +5,30 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.ClientModel;
-import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
-import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
+import it.polimi.ingsw.View.ClientViewCommands;
 
 import java.util.ArrayList;
 
-public class ClientController implements ClientViewUpdate {
-    String name;
-    ServerConnection connection;
-    ClientModel localModel;
+public class ClientController implements ClientViewUpdate, ClientViewCommands {
+    private String playerName;
+    private ServerConnection connection;
+    private ClientModel localModel;
 
-    public ClientController() {
-    }
-
+    /*no constructor defined, default constructor is used,
+    then setPlayerName, onGameStarted , bindConnection are used to initialize private fields
+    * */
     public void setPlayerName(String playerName) {
-        this.name = playerName;
+        this.playerName = playerName;
     }
     public ClientModel getLocalModel() {
         return localModel;
     }
 
-    public void onGameStarted(String gameId, int num){
-        this.localModel=new ClientModel(gameId, num);
+    public void createLocalModel(String gameId, int num){
+        this.localModel = new ClientModel(gameId, num);
     }
     /* Before making a call to the game controller methods, the client controller checks
     if the player's draw is legal by checking the client light model
@@ -37,15 +36,39 @@ public class ClientController implements ClientViewUpdate {
     public void bindConnection(ServerConnection connection){
         this.connection = connection;
     }
-    public void onChooseOfferTile(int index, String playerName) {
+
+    /*ClientViewCommands interface override:methods used for client's requests,
+     ClientController checks if localModel allows them and then send to server,
+     identified by connection field (RMI/socket)*/
+    @Override
+    public void chooseTotem(Color color){
+        if(localModel.isColorAvailable(color)) throw new IllegalArgumentException();
+        connection.chooseTotem(color);
+    }
+
+    @Override
+    public void chooseOfferTile(int index) {
         if(localModel.isOccupied(index)) throw new Occupied_Tile_Exception();
         connection.chooseOfferTile(index);
     }
 
-    public void onChoosenTotemColor(String playerName, Color color){
 
+    /*da definire: pensavo che il giocatore può mettere in pausa con un timer
+    che scade in automatico. (volevo fare che se tutti sono d'accordo il game
+    viene sospeso a tempo indefinito ma lasciamo stare)*/
+    @Override
+    public void pauseGame(){
+        //mostra schermata di pausa (dentro la view)
+        //fa partire il timer
+        //manda l'info al server per notificare gli altri player
     }
 
+    /*ClientViewUpdate interface override: update methods called by RMI/socket Client
+    when an update is sent by the server.
+    Valutare se aggiungere per ogni metodo lo show() di TUI o GUI (secondo me si),
+    eventualmente aggiungere un attributo alla classe che dice quale
+    interfaccia è stata scelta.
+    */
     @Override
     public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String id){
         if(fromTopRow){
@@ -76,6 +99,7 @@ public class ClientController implements ClientViewUpdate {
     public void addPlayer(String id) {
         localModel.addPlayer(id);
     }
+
 
     @Override
     public void updateChosenOfferTile(String playerName, Color color) {

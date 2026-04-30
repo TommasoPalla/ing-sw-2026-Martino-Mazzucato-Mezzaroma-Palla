@@ -18,8 +18,8 @@ import java.util.Map;
  * are called by the Client controllers
  */
 public class ClientModel {
-    private String gameId;
-    private int numPlayers;
+    private final String gameId;
+    private final int numPlayers;
     private Map<String, LightTribe> players;
     private GamePhase currentPhase;
     private int currentRound;
@@ -46,21 +46,19 @@ public class ClientModel {
         this.topBuildingCard = new ArrayList<>();
         this.bottomBuildingCard = new ArrayList<>();
         this.turnTile = new TurnTile(numPlayers);
-        this.offerTiles= new ArrayList<>();
+        this.offerTiles = new ArrayList<>();
     }
 
+    //da implementare con visitor pattern
     public boolean drawable(int index, int row) {
-        switch (row){
-            case 0:
-                if(topRow.get(index).getCardID().equals(EventCard.class)) return false;
-                return true;
-            case 1:
-                if(bottomRow.get(index).getCardID().equals(EventCard.class)) return false;
-                return true;
-            default:
+        return switch (row) {
+            case 0 -> !(topRow.get(index).getCardID().equals(EventCard.class));
+            case 1 -> !(bottomRow.get(index).getCardID().equals(EventCard.class));
+            default -> {
                 System.out.println("Invalid row exception");
-                return false;
-        }
+                yield false;
+            }
+        };
     }
 
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
@@ -89,6 +87,8 @@ public class ClientModel {
     public void updateShamansStars(String playerName, int stars) {
         players.get(playerName).addShamansStars(stars);
     }
+
+    //aggiungere metodo clearOfferTile()
     public void updateOfferTile(String playerName, int index) {
         currentOfferTiles.put(playerName, index);
     }
@@ -135,7 +135,9 @@ public class ClientModel {
     public String getGameId(){return gameId;}
     public int getNumPlayers(){return numPlayers;}
     public LightTribe getPlayerTribe(String playerName){return players.get(playerName);}
-    //gamephase inutile?
+    public GamePhase getCurrentPhase(){
+        return currentPhase;
+    }
     public int getCurrentRound(){return currentRound;}
     public String getCurrentPlayer(){return currentPlayer;}
     public int getEra(){return era;}
@@ -144,6 +146,9 @@ public class ClientModel {
     public ArrayList<BuildingCard> getTopRowBuildings(){return topBuildingCard;};
     public ArrayList<BuildingCard> getBottomRowBuildings(){return bottomBuildingCard;};
     public Color getColors(String playerName){return totemColors.get(playerName);}
+    public boolean isColorAvailable(Color color){
+        return totemColors.containsValue(color);
+    }
     public int getOfferTiles(String playerName){return currentOfferTiles.get(playerName);}
     public TurnTile getTurnTile(){return turnTile;}
     public ArrayList getOfferTilesNumber(){return offerTiles;}
