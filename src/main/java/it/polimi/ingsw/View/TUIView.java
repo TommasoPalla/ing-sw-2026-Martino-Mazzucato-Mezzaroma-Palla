@@ -2,23 +2,105 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.CharacterRole;
+import it.polimi.ingsw.Enums.CommandType;
+import it.polimi.ingsw.Enums.TUIState;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.LightTribe;
+import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TUIView {
     final private ClientModel localModel;
     final private ClientController clientController;
-    private final String player;
+    private String player;
+    private TUIState tuiState;
 
-    public TUIView(ClientModel localModel, ClientController clientController, String player) {
-        this.localModel = localModel;
+    public TUIView(ClientController clientController) {
         this.clientController = clientController;
-        this.player = player;
+        this.localModel = clientController.getLocalModel();
+        this.tuiState = TUIState.SETUP;
+        // Starts the thread of this TUI, using "runTUI()" as Thread.run() method
+        Thread TUIThread = new Thread(this::runTUI);
+        TUIThread.start();
+    }
 
+
+    public void runTUI() {
+        System.out.println("Benvenuto su Mesos sesos pesos quevos");
+        System.out.println("Scegli il tuo nome:");
+        Scanner scanner = new Scanner(System.in);
+        String playerName = scanner.nextLine();
+        //check della validità del nome e che non sia già utilizzato
+        clientController.setPlayerName(playerName);
+        this.player = playerName;
+        System.out.println("Scegli il colore del totem:");
+        Scanner scanner1 = new Scanner(System.in);
+        //check scelta del totem
+        String color = scanner1.nextLine();
+        // ciclo di ascolto comandi
+        Scanner commandScanner = new Scanner(System.in);
+        while(!Thread.currentThread().isInterrupted()) {
+            String command = commandScanner.nextLine();
+            // gestione instradamento command
+        }
+    }
+
+    /**
+     * TUI view of the offerTrack
+     */
+    private void offerTrackView() {
+        tuiState = TUIState.SHOW_OFFER_TRACK;
+        printAvailableActions(TUIState.SHOW_OFFER_TRACK);
+        printOfferTrack();
+    }
+
+    public void switchToState(TUIState nextState) {
+        switch (nextState) {
+            case SHOW_OFFER_TRACK:
+                offerTrackView();
+                break;
+        }
+    }
+
+    // PARSECOMMAND E COMMANDPARSERSELECTOR NON SONO FINALI E TANTO MENO CORRETTI!!!!
+    /**
+     * Takes the input command and if it's valid, calls the command router.
+     * @param command The string entered by the player.
+     */
+    private void parseCommand(String command) {
+        String regex = "^([a-zA-Z_]+)\\((.*)\\)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(command);
+        if(matcher.matches()){
+            try {
+                CommandType commandType = CommandType.valueOf(matcher.group(1).toUpperCase());
+                commandParserSelector(commandType, matcher);
+            }
+            catch (IllegalArgumentException e) {
+                System.out.println("This command does not exist, please try again...");
+            }
+        }
+        else{
+            System.out.println("Invalid command, please try again...");
+        }
+    }
+
+    /**
+     * Selects the correct method based on the command type.
+     * @param commandType
+     * @param matcher
+     */
+    private void commandParserSelector(CommandType commandType, Matcher matcher ) {
+        String args = matcher.group(2);
+        switch (commandType) {
+            case SHOW_OTHER_TRIBE -> printAvailableActions(TUIState.SHOW_OTHER_TRIBE);
+        }
     }
 
     /**
@@ -29,12 +111,10 @@ public class TUIView {
         LightTribe localTribe = localModel.getPlayerTribe(player);
         if(localTribe != null) {
             System.out.println("Food Reserve: " + localTribe.getFoodReserve());
-            System.out.println("\n");
             System.out.println("Prestige Points: " + localTribe.getPrestigePoints());
-            System.out.println("\n");
             for(CharacterRole role : CharacterRole.values()) {
                 if(localTribe.getPopulation().get(role).isEmpty()) continue;
-                System.out.println(role + ": ");
+                System.out.print(role + ": ");
                 //printRoleCardsInPopulation();
                 System.out.println("\n");
             }
@@ -98,5 +178,34 @@ public class TUIView {
             }
         }
         //da finire, e da modificare perché ho sbagliato, meglio rappresentazione verticale dell'offerTrack
+    }
+
+    /**
+     * Prints the available actions a player can make while in a certain state of the TUI.
+     * @param tuiState The state of the TUI the player is currently visualising.
+     */
+    private void printAvailableActions(TUIState tuiState) {
+        System.out.println("Available Actions:\n");
+        switch(tuiState) {
+            case SETUP:
+                //
+            case IN_LOBBY:
+                //
+            case SHOW_OFFER_TRACK:
+                //
+            case SHOW_PERSONAL_TRIBE:
+                //
+            case SHOW_OTHER_TRIBE:
+                //
+            case SHOW_TOP_ROW:
+                //
+            case SHOW_BOTTOM_ROW:
+                //
+            case SHOW_TOP_BUILDINGS:
+                //
+            case SHOW_BOTTOM_BUILDINGS:
+                //
+        }
+
     }
 }

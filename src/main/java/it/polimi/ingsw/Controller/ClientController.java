@@ -23,6 +23,9 @@ public class ClientController implements ClientViewUpdate {
     public void setPlayerName(String playerName) {
         this.name = playerName;
     }
+    public ClientModel getLocalModel() {
+        return localModel;
+    }
 
     public void onGameStarted(String gameId, int num){
         this.localModel=new ClientModel(gameId, num);
