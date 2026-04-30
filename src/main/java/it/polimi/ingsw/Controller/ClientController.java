@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.ClientModel;
@@ -46,11 +47,6 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void addPlayer(String id) {
-        localModel.addPlayer(id);
-    }
-
-    @Override
     public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String id){
         if(fromTopRow){
             if(fromBuilding){
@@ -77,6 +73,11 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
+    public void addPlayer(String id) {
+        localModel.addPlayer(id);
+    }
+
+    @Override
     public void updateChosenOfferTile(String playerName, Color color) {
         localModel.chosenTotemColor(playerName, color);
     }
@@ -98,20 +99,37 @@ public class ClientController implements ClientViewUpdate {
 
     @Override
     public void updateTopRow(ArrayList<Card> newTopRow) {
-
+        localModel.updateTopRow(newTopRow);
     }
 
     @Override
     public void updateBottomRow(ArrayList<Card> newBottomRow) {
+        localModel.updateBottomRow(newBottomRow);
+    }
+
+    @Override
+    public void updateCurrentPlayer(String playerName) {
+        localModel.setNextPlayer(playerName);
 
     }
 
     @Override
-    public void updateCurrentPlayer(Player nextPlayer) {
-
+    public void updateCurrentRound(int round) {
+        localModel.updateCurrentRound(round);
     }
-    @Override
-    public void updateCurrentRound() {
 
+    @Override
+    public void updateCurrentEra(int era) {
+        localModel.updateEra(era);
+    }
+
+    @Override
+    public void updateShamansStars(String playerName, int stars) {
+        localModel.updateShamansStars(playerName, stars);
+    }
+
+    @Override
+    public void updateGamePhase(GamePhase phase) {
+        localModel.updateGamePhase(phase);
     }
 }

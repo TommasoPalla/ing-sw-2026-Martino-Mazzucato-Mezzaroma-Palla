@@ -71,7 +71,7 @@ public class GameController {
         try {
             Player nextPlayer =  gameInstance.setNextPlayer();
             for (ClientController client : connectedClients.values()) {
-                client.updateCurrentPlayer(nextPlayer);
+                client.updateCurrentPlayer(nextPlayer.getName());
             }
             return nextPlayer;
         }
@@ -102,7 +102,7 @@ public class GameController {
             int newRound = gameInstance.getNextRound();
             for (ClientController client : connectedClients.values()) {
                 //inoltra chiamata a server controller per update round a tutti i player
-                client.updateCurrentPlayer(turnOrder.getFirst());
+                client.updateCurrentPlayer(turnOrder.getFirst().getName());
             }
             this.playTurn(turnOrder.getFirst());
         }
