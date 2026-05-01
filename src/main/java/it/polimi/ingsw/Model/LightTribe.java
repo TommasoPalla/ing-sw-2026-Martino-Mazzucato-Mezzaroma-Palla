@@ -3,7 +3,6 @@ package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
-import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class LightTribe {
-    public String idPlayer; // o name se è unico
+    public String playerName; // o name se è unico
     public int prestigePoints;
     public int foodReserve;
     public int populationSize;
@@ -26,7 +25,7 @@ public class LightTribe {
 
 
     public LightTribe(String id) {
-        this.idPlayer = id;
+        this.playerName = id;
         this.prestigePoints = 0;
         this.foodReserve = 0;
         this.population = new EnumMap<>(CharacterRole.class);

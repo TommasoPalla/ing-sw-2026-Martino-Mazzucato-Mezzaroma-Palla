@@ -53,6 +53,26 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
+    public void setPlayerName(String playerName){
+
+    }
+
+    @Override
+    public void startGame(int numPlayers){
+
+    }
+
+    @Override
+    public void joinGame(String gameId){
+
+    }
+
+    @Override
+    public void getActiveGames(){
+
+    }
+
+    @Override
     public void chooseOfferTile(int index) throws Occupied_Tile_Exception {
 
     }

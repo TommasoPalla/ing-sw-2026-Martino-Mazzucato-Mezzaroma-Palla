@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.Cards;
 
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Parser.CardLoader;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,14 @@ class CardLoaderTest {
     }
     @Test
     void loadCharacters() {
-        List<CharacterCard> allCharacters = loader.loadCharacters("json/test_card.json");
-        assertEquals("E1_CA_1", allCharacters.get(1).getCardID());
+        List<CharacterCard> allCharacters = loader.loadCharacters("json/cards.json");
+        assertEquals("E3_CS_5", allCharacters.getLast().getCardID());
+        assertEquals(2, allCharacters.get(6).getBuildingDiscount());
+    }
+    void loadEvents() {
+        List<EventCard> allEvents = loader.loadEvents("json/cards.json");
+        assertEquals(EventType.SHAMANIC_RITUAL, allEvents.getLast().getEventType());
+        assertEquals(15, allEvents.getLast().getPrestigeBonus());
+        assertEquals(7, allEvents.getLast().getPrestigeMalus());
     }
 }

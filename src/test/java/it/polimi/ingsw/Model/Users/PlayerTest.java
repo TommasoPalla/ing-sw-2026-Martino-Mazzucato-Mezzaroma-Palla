@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model.Users;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,9 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PlayerTest {
-    Player player1 = new Player("Giocatore1", Color.YELLOW);
-    Player player2 = new Player("Giocatore2", Color.RED);
-    OfferTrack  offerTrack= new OfferTrack(2);
+    Game game = new Game("01", 4);
+    Player player1 = new Player(game, "Giocatore1", Color.YELLOW);
+    Player player2 = new Player(game, "Giocatore2", Color.RED);
+    OfferTrack  offerTrack = new OfferTrack(game, 2);
     @BeforeEach
     void setUp() {
     }

@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
@@ -11,7 +12,9 @@ import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ClientViewCommands;
 
 import java.util.ArrayList;
-
+/* Before making a call to the game controller methods, the client controller checks
+if the player's draw is legal by checking the client light model
+ */
 public class ClientController implements ClientViewUpdate, ClientViewCommands {
     private String playerName;
     private ServerConnection connection;
@@ -20,24 +23,56 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
     /*no constructor defined, default constructor is used,
     then setPlayerName, onGameStarted , bindConnection are used to initialize private fields
     * */
+    public void bindConnection(ServerConnection connection){
+        this.connection = connection;
+    }
+    public ServerConnection getConnection(){    //servirà da qualche parte?
+        return connection;
+    }
+
     public void setPlayerName(String playerName) {
-        this.playerName = playerName;
+        if(localModel.checkNameAvailable(playerName)){
+            //da gestire bene con TUI e GUI
+            System.out.println("Name not valid");
+        } else {
+            connection.setPlayerName(playerName);
+            this.playerName = playerName;
+            localModel.addPlayer(playerName);
+        }
+    }
+
+    public String getPlayerName(){  //servirà da qualche parte
+        return playerName;
+    }
+
+    /*called when server responds with a successful 'startGame' request by first player
+    or next players join the game via 'joinGame' method
+    actually called by onGameStarted()*/
+    public void createLocalModel(String gameId, int num){
+        this.localModel = new ClientModel(gameId, num);
     }
     public ClientModel getLocalModel() {
         return localModel;
     }
 
-    public void createLocalModel(String gameId, int num){
-        this.localModel = new ClientModel(gameId, num);
+    public void startGame(int numPlayers){
+        //con partite multiple non serve verificare che ci sia una partita già inizializzata
+        connection.startGame(numPlayers);
     }
-    /* Before making a call to the game controller methods, the client controller checks
-    if the player's draw is legal by checking the client light model
-     */
-    public void bindConnection(ServerConnection connection){
-        this.connection = connection;
+    public void showGames(){
+        /*array<Game> games = */ connection.getActiveGames();
+        //show in TUI o GUI
+    }
+    public void joinGame(String gameId){
+        connection.joinGame(gameId);
     }
 
-    /*ClientViewCommands interface override:methods used for client's requests,
+
+
+
+    /*
+    @deprecated
+    ClientViewCommands interface override: methods used for client's requests,
      ClientController checks if localModel allows them and then send to server,
      identified by connection field (RMI/socket)*/
     @Override
@@ -70,36 +105,49 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
     interfaccia è stata scelta.
     */
     @Override
-    public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String id){
+    public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
         if(fromTopRow){
             if(fromBuilding){
-                localModel.getTopRowBuildings().remove(index);
+                BuildingCard drawn = localModel.getTopRowBuildings().remove(index);
+                localModel.getPlayerTribe(playerName).addToBuildings(drawn);
+                /* non servono le due righe successive
                 ArrayList<BuildingCard> arr = localModel.getTopRowBuildings();
-                localModel.updateTopRowBuildings(arr);
+                localModel.updateTopRowBuildings(arr);*/
             }else{
-                localModel.getTopRow().remove(index);
+                CharacterCard drawn = (CharacterCard) localModel.getTopRow().remove(index);
+                localModel.getPlayerTribe(playerName).addToPopulation(drawn);
+                /*non servono le due righe successive
                 ArrayList<Card> arr = localModel.getTopRow();
-                localModel.updateTopRow(arr);
+                localModel.updateTopRow(arr);*/
             }
         }else{
             if(fromBuilding){
-                localModel.getTopRowBuildings().remove(index);
+                BuildingCard drawn = localModel.getBottomRowBuildings().remove(index);
+                localModel.getPlayerTribe(playerName).addToBuildings(drawn);
+                /*non servono le due righe successive
                 ArrayList<BuildingCard> arr=localModel.getBottomRowBuildings();
-                localModel.updateBottomRowBuildings(arr);
+                localModel.updateBottomRowBuildings(arr);*/
             }else{
-                localModel.getBottomRow().remove(index);
+                CharacterCard drawn = (CharacterCard) localModel.getBottomRow().remove(index);
+                localModel.getPlayerTribe(playerName).addToPopulation(drawn);
+                /*
                 ArrayList<Card> arr=localModel.getBottomRow();
-                localModel.updateBottomRow(arr);
+                localModel.updateBottomRow(arr);*/
             }
-
         }
     }
 
     @Override
     public void addPlayer(String id) {
-        localModel.addPlayer(id);
-    }
+        if(!localModel.checkNameAvailable(id)){
+            localModel.addPlayer(id);
+        }
+        else {
+            //da gestire TUI o GUI
+            System.out.println("Name already taken");
+        }
 
+    }
 
     @Override
     public void updateChosenOfferTile(String playerName, Color color) {
@@ -134,7 +182,6 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
     @Override
     public void updateCurrentPlayer(String playerName) {
         localModel.setNextPlayer(playerName);
-
     }
 
     @Override

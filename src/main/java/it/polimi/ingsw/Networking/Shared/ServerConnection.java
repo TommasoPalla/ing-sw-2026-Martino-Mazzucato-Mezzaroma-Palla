@@ -14,6 +14,10 @@ public interface ServerConnection {
 
     public void connect();
     public void disconnect();
+    public void setPlayerName(String playerName);
+    public void startGame(int numPlayers);
+    public void joinGame(String gameId);
+    public void getActiveGames();
     public void chooseTotem(Color totemColor);
     public void chooseOfferTile(int index) throws Occupied_Tile_Exception;
     public void drawCardFromTop(int index) throws Illegal_Draw_Exception;

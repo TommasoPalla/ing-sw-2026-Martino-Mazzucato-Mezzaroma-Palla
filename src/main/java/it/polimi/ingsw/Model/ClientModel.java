@@ -135,6 +135,9 @@ public class ClientModel {
     public String getGameId(){return gameId;}
     public int getNumPlayers(){return numPlayers;}
     public LightTribe getPlayerTribe(String playerName){return players.get(playerName);}
+    public boolean checkNameAvailable(String name){
+        return players.containsKey(name);
+    }
     public GamePhase getCurrentPhase(){
         return currentPhase;
     }
@@ -151,7 +154,7 @@ public class ClientModel {
     }
     public int getOfferTiles(String playerName){return currentOfferTiles.get(playerName);}
     public TurnTile getTurnTile(){return turnTile;}
-    public ArrayList getOfferTilesNumber(){return offerTiles;}
+    public ArrayList<OfferTile> getOfferTilesNumber(){return offerTiles;}
 
 
 }
