@@ -4,11 +4,10 @@ import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.CommandType;
 import it.polimi.ingsw.Enums.TUIState;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
-import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.LightTribe;
-import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -18,12 +17,14 @@ import java.util.regex.Pattern;
 public class TUIView {
     final private ClientModel localModel;
     final private ClientController clientController;
+    final private CommandParser commandParser;
     private String player;
     private TUIState tuiState;
 
     public TUIView(ClientController clientController) {
         this.clientController = clientController;
         this.localModel = clientController.getLocalModel();
+        this.commandParser = new CommandParser(clientController);
         this.tuiState = TUIState.SETUP;
         // Starts the thread of this TUI, using "runTUI()" as Thread.run() method
         Thread TUIThread = new Thread(this::runTUI);
@@ -43,6 +44,7 @@ public class TUIView {
         Scanner scanner1 = new Scanner(System.in);
         //check scelta del totem
         String color = scanner1.nextLine();
+        printAvailableActions(tuiState);
         // ciclo di ascolto comandi
         Scanner commandScanner = new Scanner(System.in);
         while(!Thread.currentThread().isInterrupted()) {
@@ -54,18 +56,21 @@ public class TUIView {
     /**
      * TUI view of the offerTrack
      */
-    private void offerTrackView() {
+    private void offerTrackTUIView(String args) {
+        if (!args.trim().isEmpty()) {
+            throw new IllegalArgumentException("This method doesnt require arguments.");
+        }
         tuiState = TUIState.SHOW_OFFER_TRACK;
         printAvailableActions(TUIState.SHOW_OFFER_TRACK);
-        printOfferTrack();
+        //printOfferTrack();
     }
 
-    public void switchToState(TUIState nextState) {
-        switch (nextState) {
-            case SHOW_OFFER_TRACK:
-                offerTrackView();
-                break;
+    //  WORK IN PROGRESS
+    private String[] cardTUIView(Card card) {
+        if (card instanceof CharacterCard characterCard) {
+            CharacterRole role = characterCard.getRole();
         }
+        return null;
     }
 
     // PARSECOMMAND E COMMANDPARSERSELECTOR NON SONO FINALI E TANTO MENO CORRETTI!!!!
@@ -83,7 +88,7 @@ public class TUIView {
                 commandParserSelector(commandType, matcher);
             }
             catch (IllegalArgumentException e) {
-                System.out.println("This command does not exist, please try again...");
+                System.out.println(e.getMessage());
             }
         }
         else{
@@ -92,14 +97,18 @@ public class TUIView {
     }
 
     /**
-     * Selects the correct method based on the command type.
-     * @param commandType
-     * @param matcher
+     * Selects the correct method based on the command type and sends it to the command parser.
+     * @param commandType the type of command chose by the player
+     * @param matcher the matcher containing the information about the input string, like the
+     *                arguments of the command.
      */
     private void commandParserSelector(CommandType commandType, Matcher matcher ) {
-        String args = matcher.group(2);
+        String argsString = matcher.group(2);
+
         switch (commandType) {
-            case SHOW_OTHER_TRIBE -> printAvailableActions(TUIState.SHOW_OTHER_TRIBE);
+            case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
+            case SHOW_OTHER_TRIBE       -> offerTrackTUIView(argsString);
+            case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
         }
     }
 
@@ -115,7 +124,7 @@ public class TUIView {
             for(CharacterRole role : CharacterRole.values()) {
                 if(localTribe.getPopulation().get(role).isEmpty()) continue;
                 System.out.print(role + ": ");
-                //printRoleCardsInPopulation();
+                //printRoleCardsInPopulation(clientController.getLocalModel().getPlayerTribe(), role );
                 System.out.println("\n");
             }
         }
@@ -130,7 +139,7 @@ public class TUIView {
         ArrayList<CharacterCard> cards = playerTribe.getPopulation().get(role);
         for(CharacterCard card : cards) {
             // bisogna trovare un modo per stampare le carte anche in base al loro ruolo, possibilmente senza switch
-            System.out.println("\n");
+            System.out.println();
         }
     }
 
@@ -156,29 +165,29 @@ public class TUIView {
         // TopRowTUIView();
     }
 
-    private void printOfferTrack() {
-        for (OfferTile offerTile : localModel.getOfferTiles()) {
-            System.out.println("______ ");
-        }
-        System.out.println("\n");
-        System.out.println("|\n ");
-        for (OfferTile offerTile : localModel.getOfferTiles()) {
-                System.out.println("Food: " + offerTile.getFoodBonus() + ", ");
-                System.out.println("^ " + offerTile.getCardsFromAbove() + ", ");
-                System.out.println("v " + offerTile.getCardsFromBelow());
-                System.out.println(" | ");
-        }
-        System.out.println("\n| ");
-        for (OfferTile offerTile : localModel.getOfferTiles()) {
-            if(offerTile.isOccupied()) {
-                System.out.println(offerTile.getCurrentOccupant().getName());
-            }
-            else  {
-                System.out.println("---");
-            }
-        }
-        //da finire, e da modificare perché ho sbagliato, meglio rappresentazione verticale dell'offerTrack
-    }
+//    private void printOfferTrack() {
+//        for (OfferTile offerTile : localModel.getOfferTiles()) {
+//            System.out.println("______ ");
+//        }
+//        System.out.println("\n");
+//        System.out.println("|\n ");
+//        for (OfferTile offerTile : localModel.getOfferTiles()) {
+//                System.out.println("Food: " + offerTile.getFoodBonus() + ", ");
+//                System.out.println("^ " + offerTile.getCardsFromAbove() + ", ");
+//                System.out.println("v " + offerTile.getCardsFromBelow());
+//                System.out.println(" | ");
+//        }
+//        System.out.println("\n| ");
+//        for (OfferTile offerTile : localModel.getOfferTiles()) {
+//            if(offerTile.isOccupied()) {
+//                System.out.println(offerTile.getCurrentOccupant().getName());
+//            }
+//            else  {
+//                System.out.println("---");
+//            }
+//        }
+//        //da finire, e da modificare perché ho sbagliato, meglio rappresentazione verticale dell'offerTrack
+//    }
 
     /**
      * Prints the available actions a player can make while in a certain state of the TUI.

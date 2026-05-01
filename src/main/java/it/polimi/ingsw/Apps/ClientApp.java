@@ -5,6 +5,7 @@ import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
 import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.View.CommandParser;
 import it.polimi.ingsw.View.TUIView;
 
 import java.util.Scanner;
