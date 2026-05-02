@@ -20,11 +20,13 @@ public class ClientApp {
         Scanner scanner = new Scanner(System.in);
         ClientController clientController = new ClientController();
 
-        System.out.println("choose connection protocol: Socket / RMI");
-        String protocol = scanner.nextLine();
         ServerConnection connection;
-        //in futuro si puo' fare un do{}while che prende in input l'ip e la porta desiderata
-        //do{}while perche' si prova fintanto che sono ip e porta validi (=> helper class??)
+
+        String protocol;
+        do {
+            System.out.println("Choose connection protocol: Socket / RMI");
+            protocol = scanner.nextLine();
+        }while(!protocol.equalsIgnoreCase("SOCKET") && !protocol.equalsIgnoreCase("RMI"));
         switch (protocol.toUpperCase()) {
             case "SOCKET" ->
                     connection = new SocketServerAdapter(ServerConfigs.DEFAULT_SOCKET_SERVER_IP_ADDR, ServerConfigs.DEFAULT_SOCKET_SERVER_PORT);
@@ -37,20 +39,24 @@ public class ClientApp {
         }
         connection.connect();
         clientController.bindConnection(connection);        //binding connessione-controller cosi' che parli con il server
+        /*
+         * Al player viene chiesto il nickname da usare durante la partita
+         */
+        //System.out.println("Scegli nickname:");
+        //String playerName = scanner.nextLine();
+        //clientController.setPlayerName(playerName);
+        //si fara' una cosa molto simile a quella sopra per istanziare TUI o GUI:
 
-        System.out.println("choose visualization method:\n1 -> TUI\n2 -> GUI");
-        boolean valid = false;
-        int UIType = 0;
-        while (!valid) {
-            UIType = scanner.nextInt();
-            scanner.nextLine();
-            if (UIType == 1 || UIType == 2) valid = true;
-            else System.out.println("invalid choice, please try again...");
-        }
-        //interfaccia implementata da GUI e TUI
+        String UIType;
+        do{
+            System.out.println("Choose visualization method:\nTUI\nGUI");
+            UIType = scanner.nextLine();
+        }while(!UIType.equalsIgnoreCase("TUI") && !UIType.equalsIgnoreCase("GUI"));
+
+        //View view;      //interfaccia implementata da GUI e TUI
         switch(UIType){
-            case 1: new TUIView(clientController);
-            case 2:
+            case "TUI": new TUIView(clientController);
+            case "GUI":
                 // GUI start
         }
         /*

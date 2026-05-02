@@ -11,18 +11,19 @@ import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 public class Player {
     private final Game game;
     private final String name;
-    private final Color totemColor;
+    private Color totemColor;
     private final Tribe tribe;
     private OfferTile currentOfferTile;
 
-    public Player(Game gameInstance, String name, Color totemColor) {
+    public Player(Game gameInstance, String name) {
         this.game = gameInstance;
         this.name = name;
         this.tribe = new Tribe(gameInstance);
-        this.totemColor = totemColor;
         this.currentOfferTile = null;
         tribe.setOwner(this);
     }
+
+    public void setTotemColor(Color totemColor){this.totemColor = totemColor;}
 
     //getters
     public String getName() {
@@ -84,12 +85,12 @@ public class Player {
      * of the cards on the OfferTrack to their tribe.
      * @param index position of the card in its specific array
      * @param fromTopRow
-     * @param fromBuilding true if the card to draw is in buildings arrays, false otherwise
+     * @param fromBuildings true if the card to draw is in buildings arrays, false otherwise
      * @return the drawn card, if the card can be drawn, returns null otherwise
      */
-    public Card drawCard(boolean fromTopRow, boolean fromBuilding, int index, OfferTrack offerTrack){
-        if(this.drawable(fromTopRow, fromBuilding, index, offerTrack)){
-            if(fromBuilding){
+    public Card drawCard(boolean fromTopRow, boolean fromBuildings, int index, OfferTrack offerTrack){
+        if(this.drawable(fromTopRow, fromBuildings, index, offerTrack)){
+            if(fromBuildings){
                 BuildingCard drawnBuilding;
                 if(fromTopRow){
                     drawnBuilding = offerTrack.getTopBuildingCard().remove(index);

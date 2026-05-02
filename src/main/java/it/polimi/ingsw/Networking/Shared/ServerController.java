@@ -16,7 +16,8 @@ public class ServerController {
     //questa classe deve inoltre essere in grado di notificare TUTTI i client,
     //indipendentemente dal protocollo, dei cambiamenti avvuti
     public record GameRecord(Game game, GameController gameController) {}
-    private ConcurrentHashMap<String, GameRecord> activeGames;
+    private ConcurrentHashMap<Integer, GameRecord> activeGames;
+    private static int nextGameID = 0;
 
     //public ServerController(){this.model = new Model();}    // il model del server e' inizializzato qui a una partita vuota e poi e' modificato giocando
 
@@ -29,10 +30,12 @@ public class ServerController {
         }
     }
     */
-    public void addPlayerToGame(String gameID, String playerName, Color totemColor){
+    public void addPlayerToGame(PlayerRecord playerRecord){
         try {
+            String playerName = playerRecord.playerName();
+            int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController;
-            gameController.addPlayer(playerName, totemColor);
+            gameController.addPlayer(playerName);
         }
         catch (IllegalArgumentException e){
 
@@ -43,16 +46,34 @@ public class ServerController {
      * This method adds a new game to the list of active games
      *  and instantiates his game controller, so the game can start
     */
-    public synchronized Game addNewGame(String firstPlayerName, Color totemColor, String gameID, int playerNum) {
+    public synchronized Game crateNewGame(String firstPlayerName, int playerNum) {
+        int gameID = nextGameID;
         Game newGame = new Game(gameID, playerNum);
-        this.addPlayerToGame(gameID, firstPlayerName, totemColor);
+        PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
+        addPlayerToGame(newPlayer);
         GameController gameController = new GameController(newGame);
         activeGames.put(gameID, new GameRecord(newGame, gameController));
+
+        nextGameID += 1;
         return newGame;
     }
 
 
+    public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
+        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
+        synchronized (currentController){
+            currentController.chooseTotemColor(playerRecord, totemColor);
+        }
+    }
+
+    public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
+        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
+        synchronized (currentController){
+            currentController.handleDraw(playerRecord, fromTopRow, fromBuildings, index);
+        }
+    }
     /*
+
     ad esempio
     public void chooseOfferTile(){
         synchronized(model){

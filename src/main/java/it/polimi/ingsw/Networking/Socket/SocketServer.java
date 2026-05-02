@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Networking.Socket;
 
-import it.polimi.ingsw.Controller.MainController;
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
 import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 import it.polimi.ingsw.Networking.Shared.ServerController;
@@ -50,12 +50,12 @@ public class SocketServer implements VirtualSocketServer{
     }
 
     @Override
-    public void drawCardFromBottom() throws Illegal_Draw_Exception {
-
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) throws Illegal_Draw_Exception {
+        serverController.drawCard(clientHandler.getPlayerRecord(), fromTopRow, fromBuildings, index);
     }
 
     @Override
-    public void drawCardFromTop() throws Illegal_Draw_Exception {
-
+    public void chooseTotemColor(Color totemColor, SocketClientHandler handler) {
+        serverController.chooseTotemColor(handler.getPlayerRecord(), totemColor);
     }
 }

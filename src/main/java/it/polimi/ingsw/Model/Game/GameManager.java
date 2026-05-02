@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class GameManager {
     private static GameManager instance;
-    private ConcurrentHashMap<String, Game> activeGames;
+    private ConcurrentHashMap<Integer, Game> activeGames;
 
     public GameManager() {
         activeGames = new ConcurrentHashMap<>();
@@ -25,11 +25,11 @@ public class GameManager {
         return instance;
     }
 
-    public synchronized ConcurrentHashMap<String, Game> getActiveGames() {
+    public synchronized ConcurrentHashMap<Integer, Game> getActiveGames() {
         return activeGames;
     }
 
-    public Game getActiveGameByID(String gameID) {
+    public Game getActiveGameByID(int gameID) {
         return activeGames.get(gameID);
     }
 
@@ -38,7 +38,7 @@ public class GameManager {
      *  and instantiates his game controller, so the game can start
      */
     @Deprecated
-    public synchronized Game addNewGame(String gameID, Map<String, Color> players) {
+    public synchronized Game addNewGame(int gameID, Map<String, Color> players) {
         Game newGame = new Game(gameID, players.size());
         activeGames.put(gameID, newGame);
         new GameController(newGame);

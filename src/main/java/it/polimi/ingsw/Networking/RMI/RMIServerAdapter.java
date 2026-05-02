@@ -78,12 +78,7 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void drawCardFromTop(int index) throws Illegal_Draw_Exception {
-
-    }
-
-    @Override
-    public void drawCardFromBottom(int index) throws Illegal_Draw_Exception {
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws Illegal_Draw_Exception {
 
     }
 

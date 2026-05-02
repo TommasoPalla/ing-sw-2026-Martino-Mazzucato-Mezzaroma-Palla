@@ -6,12 +6,13 @@ import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
 
 import java.io.IOException;
 
-/*
- * Interface offered by the server to the client
+/**
+ * This interface contains all the actions that the client can do.
+ * These methods don't need player authentication, it will be handled
+ * down the line, by the respective server. These methods are called
+ * by the client, no matter what the networking protocol is.
  */
 public interface ServerConnection {
-    //void connect(ClientInterface client) throws RemoteException;
-
     public void connect();
     public void disconnect();
     public void setPlayerName(String playerName);
@@ -20,6 +21,5 @@ public interface ServerConnection {
     public void getActiveGames();
     public void chooseTotem(Color totemColor);
     public void chooseOfferTile(int index) throws Occupied_Tile_Exception;
-    public void drawCardFromTop(int index) throws Illegal_Draw_Exception;
-    public void drawCardFromBottom(int index) throws Illegal_Draw_Exception;
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index);
 }

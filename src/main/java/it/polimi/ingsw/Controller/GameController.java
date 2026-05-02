@@ -9,6 +9,7 @@ import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
+import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +21,8 @@ import java.util.Map;
  * to route them to the associated game model by the calls of its methods
  */
 public class GameController {
-    /*
-    * This is the attributed of the game model associated to the controller
-     */
     private final Game gameInstance;
-
-    // Da definire il client handler di un player
-   private Map<String, ClientController> connectedClients;
+    private Map<String, ClientController> connectedClients;
 
     /**
      * GameController's constructor is called in the GameManager when a new game is added
@@ -45,12 +41,18 @@ public class GameController {
         return new ArrayList<>(connectedClients.keySet());
     }
 
-    /*
-    * This method calls the respective method in Game to add a player while in Lobby State
+    /**
+     * This method calls the respective method in Game to add a player while in Lobby State
      */
-    public void addPlayer(String playerName, Color color) {
+
+    public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
+        gameInstance.chooseTotemColor(playerRecord.playerName(), totemColor);
+    }
+
+    //???
+    public void addPlayer(String playerName) {
         if(gameInstance.getPlayersNames().contains(playerName)) throw new IllegalArgumentException("Player already exists");
-        gameInstance.addPlayer(playerName, color);
+        gameInstance.addPlayer(playerName);
     }
 
     public void addClient(String playerName, ClientController clientController) {
@@ -59,6 +61,7 @@ public class GameController {
     public void removeClient(String playerName) {
         connectedClients.remove(playerName);
     }
+    //???
 
     /**
      * checks if the action is done during the right game phase
@@ -127,7 +130,8 @@ public class GameController {
         }
     }
 
-    public synchronized void handleDraw(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
+    public synchronized void handleDraw(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuilding, int index){
+            String playerName = playerRecord.playerName();
             Player currPlayer = gameInstance.getPlayerByName(playerName);
             OfferTrack offerTrack = gameInstance.getOfferTrack();
             boolean cardIsDrawable = currPlayer.drawable(fromTopRow, fromBuilding, index, offerTrack);

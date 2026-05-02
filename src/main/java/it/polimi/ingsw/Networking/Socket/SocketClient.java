@@ -22,17 +22,17 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void choosenTotem(String playerName, Color totemColor) {
+    public void chosenTotemColor(String playerName, Color totemColor) {
 
     }
 
     @Override
-    public void choosenTile(String playerName, int index) {
+    public void chosenTile(String playerName, int index) {
 
     }
 
     @Override
-    public void drawnCard(String playerName, boolean isTopRow, int index) {
+    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
 
     }
 

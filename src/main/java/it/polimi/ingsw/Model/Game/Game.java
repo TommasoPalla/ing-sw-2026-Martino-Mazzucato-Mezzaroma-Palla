@@ -1,9 +1,7 @@
 package it.polimi.ingsw.Model.Game;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import it.polimi.ingsw.Enums.Color;
@@ -20,7 +18,7 @@ import it.polimi.ingsw.Model.EventManagement.EventManager;
 * esempio Era e = Game.getInstance().getEra();
  */
 public class Game {
-    private final String gameID;
+    private final int gameID;
     private ArrayList<Player> players;
     private ArrayList<String> playersNames;
     final private int numPlayers;
@@ -34,6 +32,8 @@ public class Game {
     private EventManager eventManager = new EventManager();
     private static Deck deck;      //forse static non è la soluzione ma ad ora non so che altro fare
     private TurnTile turnTile;
+    private ArrayList<Color> availableColors;
+    private Map<Color, String> colorNameMap = new HashMap<>();
 
   /*
   * Game constructor, which with the game is initialized. It initializes the players from their name and
@@ -41,7 +41,7 @@ public class Game {
    */
     // Ciò dovrebbe rendere più pulita l'inizializzazione, facendo seguire necessariamente l'inizializzazione
     // dei Player a quella del game e non viceversa
-    public Game(String gameID, /*Map<String, Color> newPlayers*/int numPlayers) {
+    public Game(int gameID, int numPlayers) {
         this.gameID = gameID;
         this.numPlayers = numPlayers;
         this.turnTile = new TurnTile(numPlayers);
@@ -49,6 +49,7 @@ public class Game {
         this.playersNames = new ArrayList<>();
         this.currentRound = 0;
         this.buildingManager = new BuildingManager(players);
+        Collections.addAll(availableColors, Color.values());
     }
 
     //getters
@@ -64,6 +65,7 @@ public class Game {
     public EventManager getEventManager(){return eventManager;}
     public ArrayList<Player> getTurnOrder(){return turnOrder;}
     public int getEra(){return era;}
+    public ArrayList<Color> getAvailableColors(){return availableColors;}
 
     public Player getPlayerByName(String playerName){
         return players.stream().filter(p -> p.getName().equals(playerName))
@@ -76,8 +78,21 @@ public class Game {
         else throw new Last_Player_ofTurn_Exception("Last player of turn has played");
     }
 
-    public void addPlayer(String playerName, Color color) {
-        Player newPlayer = new Player(this, playerName, color);
+    //not sure about the logic here but also can't see anything horribly wrong
+    //maybe the control logic should con in GameController and here the values
+    //are only set to what they should be and nothing more
+    public void chooseTotemColor(String playerName, Color totemColor){
+        if(!availableColors.contains(totemColor)){
+            System.out.println("colore non disponibile");   //throw exception
+            return;
+        }
+        availableColors.remove(totemColor);
+        colorNameMap.put(totemColor, playerName);
+        return;
+    }
+
+    public void addPlayer(String playerName) {
+        Player newPlayer = new Player(this, playerName);
         players.add(newPlayer);
         playersNames.add(playerName);
         //if(players.size() == numPlayers) currentPhase = READY_TO_START; Se il numero di giocatori necessario
