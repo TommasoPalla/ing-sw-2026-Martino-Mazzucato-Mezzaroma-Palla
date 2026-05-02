@@ -3,7 +3,7 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
+import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.UnavailableColorException;
 
 /**
@@ -96,7 +96,7 @@ public record CommandParser(ClientController clientController) {
 
         try {
             //clientController.drawCard(commandArgs[0], commandArgs[1], commandArgs[2]);
-        } catch (Illegal_Draw_Exception e) {
+        } catch (IllegalDrawException e) {
             throw new IllegalArgumentException("ERROR: invalid index.");
         }
     }

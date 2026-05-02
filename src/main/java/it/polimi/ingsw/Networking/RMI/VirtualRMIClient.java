@@ -6,11 +6,10 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface VirtualRMIClient extends Remote {
-    public void showUpdate() throws RemoteException;
-    public void reportError(String errorMessage) throws RemoteException;
-    public void chosenTotem(String playerName, Color totemColor) throws RemoteException;
-    public void chosenTile(String playerName, int index) throws RemoteException;
-    public void drawnCard(String playerName, boolean isTopRow, int index) throws RemoteException;
-    public void gameStarted(String gameID, int numPlayers) throws RemoteException;
-
+    void showUpdate() throws RemoteException;
+    void reportError(String errorMessage) throws RemoteException;
+    void chosenTotem(String playerName, Color totemColor) throws RemoteException;
+    void chosenTile(String playerName, int index) throws RemoteException;
+    void drawnCard(String playerName, boolean isTopRow, int index) throws RemoteException;
+    void gameStarted(String gameID, int numPlayers) throws RemoteException;
 }

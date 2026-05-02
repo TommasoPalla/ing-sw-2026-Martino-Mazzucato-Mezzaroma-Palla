@@ -2,9 +2,7 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
@@ -66,7 +64,7 @@ public class GameController {
     /**
      * checks if the action is done during the right game phase
      */
-    public synchronized boolean checkPhase(GamePhase phase) throws Illegal_Action_Phase_Exception {
+    public synchronized boolean checkPhase(GamePhase phase) throws IllegalActionPhaseException {
         return phase == gameInstance.getGamePhase();
     }
 
@@ -78,7 +76,7 @@ public class GameController {
             }
             return nextPlayer;
         }
-        catch (Last_Player_ofTurn_Exception e) {
+        catch (LastPlayerOfTurnException e) {
             return null;
         }
     }
@@ -90,7 +88,7 @@ public class GameController {
         try {
             gameInstance.startGame();
         }
-        catch (Illegal_Action_Phase_Exception e) {
+        catch (IllegalActionPhaseException e) {
 
         }
     }
@@ -109,7 +107,7 @@ public class GameController {
             }
             this.playTurn(turnOrder.getFirst());
         }
-        catch (Last_Round_Exception e) {
+        catch (LastRoundException e) {
             //throw EndOfGame_Exception();
         }
     }
@@ -125,7 +123,7 @@ public class GameController {
                 client.updateCurrentOfferTile(player.getName(), index);
             }
         }
-        catch (Occupied_Tile_Exception e) {
+        catch (OccupiedTileException e) {
             // qui bisogna notificare l'errore al player e richiedergli di riselezionare un'altra tile
         }
     }

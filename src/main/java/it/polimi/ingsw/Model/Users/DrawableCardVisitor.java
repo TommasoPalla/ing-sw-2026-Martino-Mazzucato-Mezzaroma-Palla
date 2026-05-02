@@ -25,7 +25,7 @@ public class DrawableCardVisitor extends VisitorAdapter {
             drawable = true;
         } else {
             drawable = false;
-            throw new Insufficient_Food_Exception();
+            throw new InsufficientFoodException();
         }
     }
     @Override
@@ -36,6 +36,6 @@ public class DrawableCardVisitor extends VisitorAdapter {
     @Override
     public void visitCard(EventCard event, Player player) {
         drawable = false;
-        throw new Illegal_Draw_Exception();
+        throw new IllegalDrawException();
     }
 }

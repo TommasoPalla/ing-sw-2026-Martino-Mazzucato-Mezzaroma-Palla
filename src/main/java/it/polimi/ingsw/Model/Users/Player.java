@@ -44,12 +44,12 @@ public class Player {
 
     //functions
     /*funzione che dipende da controller anche che è ancora da implementare, qui bozza sbagliata ma circa completa*/
-    public OfferTile chooseOfferTile(int index, OfferTrack offerTrack) throws Occupied_Tile_Exception {
+    public OfferTile chooseOfferTile(int index, OfferTrack offerTrack) throws OccupiedTileException {
         /*logica di input*/
         OfferTile chosen = offerTrack.getOfferTiles().get(index);
         System.out.println(chosen);
         if (chosen.isOccupied()) {
-            throw new Occupied_Tile_Exception();
+            throw new OccupiedTileException();
         } else {
             chosen.occupy(this);
             currentOfferTile = chosen;
@@ -71,7 +71,7 @@ public class Player {
         }
         try {
             card.accept(visitor, this);
-        } catch (Illegal_Draw_Exception | Insufficient_Food_Exception e){
+        } catch (IllegalDrawException | InsufficientFoodException e){
             System.err.println("Can't draw this card: " + e.getMessage());
 
             //va gestito con le view, da capire dopo: eventualmente lanciare l'eccezione al metodo più esterno

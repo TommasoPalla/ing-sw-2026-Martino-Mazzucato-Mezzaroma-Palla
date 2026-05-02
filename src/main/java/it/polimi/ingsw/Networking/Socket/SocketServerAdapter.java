@@ -2,8 +2,8 @@ package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
-import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
+import it.polimi.ingsw.Model.Users.IllegalDrawException;
+import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 
 import java.io.BufferedReader;
@@ -71,7 +71,7 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void joinGame(String gameId){
+    public void joinGame(String playerName, int gameID){
 
     }
 
@@ -81,12 +81,12 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void chooseOfferTile(int index) throws Occupied_Tile_Exception {
+    public void chooseOfferTile(int index) throws OccupiedTileException {
 
     }
 
     @Override
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws Illegal_Draw_Exception {
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException {
         SocketMessageDTO message = new SocketMessageDTO("DrawCard", fromTopRow, fromBuildings, index);
         outStream.println(gson.toJson(message));
     }

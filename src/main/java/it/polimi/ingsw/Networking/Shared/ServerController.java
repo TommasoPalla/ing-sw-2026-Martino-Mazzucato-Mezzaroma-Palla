@@ -16,20 +16,20 @@ public class ServerController {
     //questa classe deve inoltre essere in grado di notificare TUTTI i client,
     //indipendentemente dal protocollo, dei cambiamenti avvuti
     public record GameRecord(Game game, GameController gameController) {}
-    private ConcurrentHashMap<Integer, GameRecord> activeGames;
+    private final ConcurrentHashMap<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
     private static int nextGameID = 0;
 
-    //public ServerController(){this.model = new Model();}    // il model del server e' inizializzato qui a una partita vuota e poi e' modificato giocando
-
-
-    // le chiamate alle funzioni sono sempre dei blocchi con questa forma:
-    /*
-    public void f(x){
-        synchronized(model){
-            model.f(x);
+    public void removePlayerFromGame(PlayerRecord playerRecord){
+        try {
+            String playerName = playerRecord.playerName();
+            int gameID = playerRecord.gameID();
+            GameController gameController = activeGames.get(gameID).gameController;
+            gameController.removeClient(playerName);
+        } catch (IllegalArgumentException e){
+            System.out.println("ERROR: could not remove player from game\n" + e.getMessage());
         }
     }
-    */
+
     public void addPlayerToGame(PlayerRecord playerRecord){
         try {
             String playerName = playerRecord.playerName();
@@ -38,7 +38,7 @@ public class ServerController {
             gameController.addPlayer(playerName);
         }
         catch (IllegalArgumentException e){
-
+            System.out.println("ERROR: could not add player to game\n" + e.getMessage());
         }
     }
 
@@ -59,20 +59,13 @@ public class ServerController {
     }
 
 
-    public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
-        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
-        synchronized (currentController){
-            currentController.chooseTotemColor(playerRecord, totemColor);
-        }
-    }
-
-    public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
-        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
-        synchronized (currentController){
-            currentController.handleDraw(playerRecord, fromTopRow, fromBuildings, index);
-        }
-    }
+    // le chiamate alle funzioni sono sempre dei blocchi con questa forma:
     /*
+    public void f(x){
+        synchronized(model){
+            model.f(x);
+        }
+    }
 
     ad esempio
     public void chooseOfferTile(){
@@ -81,4 +74,19 @@ public class ServerController {
         }
     }
      */
+
+    public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
+        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
+        synchronized (currentController){
+            currentController.chooseTotemColor(playerRecord, totemColor);
+        }
+
+    }
+
+    public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
+        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
+        synchronized (currentController){
+            currentController.handleDraw(playerRecord, fromTopRow, fromBuildings, index);
+        }
+    }
 }

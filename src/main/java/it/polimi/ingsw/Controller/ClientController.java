@@ -6,7 +6,7 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
-import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
+import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ClientViewCommands;
@@ -63,8 +63,8 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
         /*array<Game> games = */ connection.getActiveGames();
         //show in TUI o GUI
     }
-    public void joinGame(String gameId){
-        connection.joinGame(gameId);
+    public void joinGame(String playerName, int gameID){
+        connection.joinGame(playerName, gameID);
     }
 
 
@@ -83,7 +83,7 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
 
     @Override
     public void chooseOfferTile(int index) {
-        if(localModel.isOccupied(index)) throw new Occupied_Tile_Exception();
+        if(localModel.isOccupied(index)) throw new OccupiedTileException();
         connection.chooseOfferTile(index);
     }
 

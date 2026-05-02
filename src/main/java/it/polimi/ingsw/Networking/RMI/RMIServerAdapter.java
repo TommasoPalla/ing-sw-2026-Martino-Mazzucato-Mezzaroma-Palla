@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
-import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
+import it.polimi.ingsw.Model.Users.IllegalDrawException;
+import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Controller.ClientController;
@@ -63,8 +63,12 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void joinGame(String gameId){
-
+    public void joinGame(String playerName, int gameID){
+        try{
+            serverStub.joinGame(clientStub, playerName, gameID);
+        } catch (RemoteException e){
+            System.out.println("ERROR: remote error, could not join game " + gameID + "\n" + e.getMessage());
+        }
     }
 
     @Override
@@ -73,17 +77,22 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void chooseOfferTile(int index) throws Occupied_Tile_Exception {
+    public void chooseOfferTile(int index) throws OccupiedTileException {
 
     }
 
     @Override
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws Illegal_Draw_Exception {
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException {
 
     }
 
     @Override
     public void chooseTotem(Color totemColor) {
+        try{
+            serverStub.chooseTotemColor(totemColor);
+        } catch (RemoteException e){
+            System.out.println("ERROR: remote error, could not choose " + totemColor + "\n" + e.getMessage());
+        }
 
     }
 }

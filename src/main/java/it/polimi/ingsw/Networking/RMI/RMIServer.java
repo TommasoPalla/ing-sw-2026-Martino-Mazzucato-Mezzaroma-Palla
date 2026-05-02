@@ -1,9 +1,10 @@
 package it.polimi.ingsw.Networking.RMI;
 
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
-import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
+import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Users.IllegalDrawException;
+import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
-import it.polimi.ingsw.Networking.Shared.ServerConnection;
+import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
 import java.rmi.RemoteException;
@@ -12,10 +13,15 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RMIServer implements VirtualRMIServer {
     final ServerController serverController;
-    final List<VirtualRMIClient> clients = new ArrayList<>();
+    final List<VirtualRMIClient> clients = new ArrayList<>();   //lista dei client connessi al server in generale
+
+    //Mappa che associa ad ogni client il proprio player record (nome e gameID) DOPO che ha joinato un game
+    private Map<VirtualRMIClient, PlayerRecord> clientRecords = new ConcurrentHashMap<>();
 
     public RMIServer(ServerController serverController){
         this.serverController = serverController;
@@ -38,23 +44,33 @@ public class RMIServer implements VirtualRMIServer {
     }
 
     @Override
+    public void joinGame(VirtualRMIClient client, String playerName, int gameID) throws RemoteException {
+        PlayerRecord playerRecord = new PlayerRecord(gameID, playerName);
+        this.clientRecords.put(client, playerRecord);
+        serverController.addPlayerToGame(playerRecord);
+        System.out.println(playerRecord + "added to game");
+    }
+
+    @Override
     public void disconnect(VirtualRMIClient clientStub) {
         this.clients.remove(clientStub);
-        System.out.println(clientStub + "removed from RMI server");
+        serverController.removePlayerFromGame(clientRecords.get(clientStub));
+        PlayerRecord player = clientRecords.get(clientStub);
+        System.out.println(player + "removed from RMI server");
     }
 
     @Override
-    public void chooseOfferTile() throws Occupied_Tile_Exception {
+    public void chooseOfferTile(int index) throws OccupiedTileException {
 
     }
 
     @Override
-    public void drawCardFromBottom() throws Illegal_Draw_Exception {
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException {
 
     }
 
     @Override
-    public void drawCardFromTop() throws Illegal_Draw_Exception {
+    public void chooseTotemColor(Color totemColor) throws RemoteException {
 
     }
 }

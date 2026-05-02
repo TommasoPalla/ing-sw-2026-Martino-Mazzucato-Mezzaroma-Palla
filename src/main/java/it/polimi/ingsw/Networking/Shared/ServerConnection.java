@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
-import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
-
-import java.io.IOException;
+import it.polimi.ingsw.Model.Users.OccupiedTileException;
 
 /**
  * This interface contains all the actions that the client can do.
@@ -13,13 +10,13 @@ import java.io.IOException;
  * by the client, no matter what the networking protocol is.
  */
 public interface ServerConnection {
-    public void connect();
-    public void disconnect();
-    public void setPlayerName(String playerName);
-    public void startGame(int numPlayers);
-    public void joinGame(String gameId);
-    public void getActiveGames();
-    public void chooseTotem(Color totemColor);
-    public void chooseOfferTile(int index) throws Occupied_Tile_Exception;
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index);
+    void connect();
+    void disconnect();
+    void setPlayerName(String playerName);
+    void startGame(int numPlayers);
+    void joinGame(String playerName, int gameID);
+    void getActiveGames();
+    void chooseTotem(Color totemColor);
+    void chooseOfferTile(int index) throws OccupiedTileException;
+    void drawCard(boolean fromTopRow, boolean fromBuildings, int index);
 }

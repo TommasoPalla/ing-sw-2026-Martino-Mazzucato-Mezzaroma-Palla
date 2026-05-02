@@ -81,7 +81,7 @@ public class SocketClientHandler implements VirtualSocketClient, Runnable {
     }
 
     @Override
-    public void reportError(String errorMessage) throws IOException {
+    public void reportError(String errorMessage){
         outStream.println("[ERROR]: " + errorMessage);
     }
 

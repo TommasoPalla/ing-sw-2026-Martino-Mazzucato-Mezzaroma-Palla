@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.Illegal_Draw_Exception;
-import it.polimi.ingsw.Model.Users.Occupied_Tile_Exception;
+import it.polimi.ingsw.Model.Users.IllegalDrawException;
+import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
 import java.io.IOException;
@@ -45,12 +45,12 @@ public class SocketServer implements VirtualSocketServer{
     }
 
     @Override
-    public void chooseOfferTile() throws Occupied_Tile_Exception {
+    public void chooseOfferTile() throws OccupiedTileException {
 
     }
 
     @Override
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) throws Illegal_Draw_Exception {
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) throws IllegalDrawException {
         serverController.drawCard(clientHandler.getPlayerRecord(), fromTopRow, fromBuildings, index);
     }
 

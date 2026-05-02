@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Model.Game;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,7 +74,7 @@ public class Game {
     public Player getNextPlayer() {
         int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
         if  (currentPlayerIndex < turnOrder.size()-1) return turnOrder.get(currentPlayerIndex+1);
-        else throw new Last_Player_ofTurn_Exception("Last player of turn has played");
+        else throw new LastPlayerOfTurnException("Last player of turn has played");
     }
 
     //not sure about the logic here but also can't see anything horribly wrong
@@ -101,7 +100,7 @@ public class Game {
 
     public void startGame(){
         if(players.size() < numPlayers){
-            throw new Illegal_Action_Phase_Exception("Non ci sono abbastanza giocatori connessi per cominciare la partita!");
+            throw new IllegalActionPhaseException("Non ci sono abbastanza giocatori connessi per cominciare la partita!");
         }
         turnOrder = new ArrayList<>(players);
         Collections.shuffle(turnOrder);
@@ -141,7 +140,7 @@ public class Game {
      */
     public int getNextRound() {
         if(currentRound == 10) {
-            throw new Last_Round_Exception("Fine del gioco raggiunta");
+            throw new LastRoundException("Fine del gioco raggiunta");
         }
         return currentRound++;
     }
@@ -182,7 +181,7 @@ public class Game {
 
 
     //direi che potrebbe essere il caso di fare una classe turnManager: ci sono un sacco di cose di cui tener conto
-    public void playGame() throws Illegal_Draw_Exception {
+    public void playGame() throws IllegalDrawException {
 
         this.startGame();
         while(this.currentRound <= 10){
@@ -245,7 +244,7 @@ public class Game {
                         bottomDrawable--;
                     }*/
                     else{
-                        throw new Illegal_Draw_Exception();
+                        throw new IllegalDrawException();
                     }
                     buildingManager.useBuilding(currentPhase, currentPlayer);
                 }
