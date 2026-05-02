@@ -83,13 +83,18 @@ public class RMIServerAdapter implements ServerConnection {
 
     @Override
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException {
+        try {
+            serverStub.drawCard(clientStub, fromTopRow, fromBuildings, index);
+        } catch (RemoteException e) {
+            System.out.println("ERROR: remote error, could not draw card" + e.getMessage());
+        }
 
     }
 
     @Override
     public void chooseTotem(Color totemColor) {
         try{
-            serverStub.chooseTotemColor(totemColor);
+            serverStub.chooseTotemColor(clientStub, totemColor);
         } catch (RemoteException e){
             System.out.println("ERROR: remote error, could not choose " + totemColor + "\n" + e.getMessage());
         }

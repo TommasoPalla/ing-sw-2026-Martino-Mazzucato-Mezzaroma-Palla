@@ -7,6 +7,7 @@ import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
+import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public class GameController {
     private final Game gameInstance;
-    private Map<String, ClientController> connectedClients;
+    private final Map<String, ClientNotifier> connectedClients;
 
     /**
      * GameController's constructor is called in the GameManager when a new game is added
@@ -28,7 +29,6 @@ public class GameController {
     public GameController(Game gameInstance) {
         this.gameInstance = gameInstance;
         this.connectedClients = new HashMap<>();
-        // da aggiungere gli handler, non so come
     }
 
     public Game getGameModel() {
@@ -43,23 +43,43 @@ public class GameController {
      * This method calls the respective method in Game to add a player while in Lobby State
      */
 
+    //TODO: capire se metodi come questo devono fare il controllo loro oppure lo si fa in Game e si lancia l'eccezione da li'
     public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
-        gameInstance.chooseTotemColor(playerRecord.playerName(), totemColor);
+        Player player = gameInstance.getPlayerByName(playerRecord.playerName());
+        try {
+            player.setTotemColor(totemColor);
+            gameInstance.chooseTotemColor(playerRecord.playerName(), totemColor);
+            for(ClientNotifier notifier : connectedClients.values()){
+                notifier.notifyTotemColor(playerRecord.playerName(), totemColor);
+            }
+        } catch (UnavailableColorException e){
+            System.out.println("Unavailable color\n" + e.getMessage());
+        }
+
     }
 
-    //???
+    /**
+     * Adds player to the game creating the Player object
+     * @param playerName
+     */
     public void addPlayer(String playerName) {
         if(gameInstance.getPlayersNames().contains(playerName)) throw new IllegalArgumentException("Player already exists");
         gameInstance.addPlayer(playerName);
     }
 
-    public void addClient(String playerName, ClientController clientController) {
-        connectedClients.put(playerName, clientController);
+    /**
+     * Adds a ClientNotifier to connectedClients. This is used to broadcast an update
+     * to everyone, regardless of what networking protocol they are using
+     * @param playerName
+     * @param notifier
+     */
+    public void addClient(String playerName, ClientNotifier notifier) {
+        connectedClients.put(playerName, notifier);
     }
+
     public void removeClient(String playerName) {
         connectedClients.remove(playerName);
     }
-    //???
 
     /**
      * checks if the action is done during the right game phase
@@ -71,8 +91,9 @@ public class GameController {
     public synchronized Player setNextPlayer() {
         try {
             Player nextPlayer =  gameInstance.setNextPlayer();
-            for (ClientController client : connectedClients.values()) {
-                client.updateCurrentPlayer(nextPlayer.getName());
+            for (ClientNotifier client : connectedClients.values()) {
+                //client.updateCurrentPlayer(nextPlayer.getName()); @Deprecated
+                //client.notifyCurrentPlayer(...)   TODO: funzione da fare in ClientNotifier
             }
             return nextPlayer;
         }
@@ -93,17 +114,18 @@ public class GameController {
         }
     }
 
-    /*
-    * When a new round starts, after all the events are resolved and the rows are repopulated
-    * @param turnOrder: the current order for placing totems
+    /**
+     * When a new round starts, after all the events are resolved and the rows are repopulated
+     * @param turnOrder: the current order for placing totems
      */
     // ANCORA IN BOZZA. NO PLAYGAME() IN GAME MA FLOW DEL GAME DA ATTURARE TRAMITE CHIAMATE DI METODI NEL GAME CONTROLLER
     public void startTurn(ArrayList<Player> turnOrder) {
         try {
             int newRound = gameInstance.getNextRound();
-            for (ClientController client : connectedClients.values()) {
+            for (ClientNotifier client : connectedClients.values()) {
                 //inoltra chiamata a server controller per update round a tutti i player
-                client.updateCurrentPlayer(turnOrder.getFirst().getName());
+                //client.updateCurrentPlayer(turnOrder.getFirst().getName()); @Deprecated
+                //client.notifyNewCurrentPlayer(); TODO: funzione da fare in ClientNotifier
             }
             this.playTurn(turnOrder.getFirst());
         }
@@ -119,8 +141,9 @@ public class GameController {
     public synchronized void handleChooseOfferTile (Player player, int index, OfferTrack offerTrack) {
         try {
             OfferTile chosen = player.chooseOfferTile(index, offerTrack);
-            for(ClientController client : connectedClients.values()) {
-                client.updateCurrentOfferTile(player.getName(), index);
+            for(ClientNotifier client : connectedClients.values()) {
+                //client.updateCurrentOfferTile(player.getName(), index); @Deprecated
+                //client.notifyChosenOfferTile(...); TODO: funzione da fare in ClientNotifier
             }
         }
         catch (OccupiedTileException e) {
@@ -142,8 +165,9 @@ public class GameController {
     public synchronized void repopulateTopRow (Player player) {
         // Sarebbe sensato fare un try catch con un eccezione per quando finisce il gioco?
         ArrayList<Card> newTopRow = gameInstance.getOfferTrack().repopulateTopRow();
-        for(ClientController client : connectedClients.values()) {
-            client.updateTopRow(newTopRow);
+        for(ClientNotifier client : connectedClients.values()) {
+            //client.updateTopRow(newTopRow);   @Deprecated
+            //client.notifyNewTopRow(...)   TODO: funzione da fare in ClientNotifier
         }
     }
 }

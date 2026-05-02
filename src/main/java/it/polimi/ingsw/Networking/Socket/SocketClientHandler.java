@@ -2,6 +2,7 @@ package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
 import java.io.BufferedReader;
@@ -15,7 +16,7 @@ import java.net.Socket;
  * via JSON messages
  */
 
-public class SocketClientHandler implements VirtualSocketClient, Runnable {
+public class SocketClientHandler implements ClientNotifier, Runnable {
     private final Gson gson = new Gson();
     private final BufferedReader inStream;
     private final PrintWriter outStream;
@@ -34,12 +35,15 @@ public class SocketClientHandler implements VirtualSocketClient, Runnable {
      * to be called (written in the JSON message) and calls it with the parameters
      * contained in the same JSON message.
      */
-
     @Override
     public void run() {
         server.connect(this);
         try{
             String incomingMessage;
+            //while(client connesso){
+            //  logica di parsing dei messaggi inviati dal client al server
+            //  da qui poi si chiameranno i metodi di server parsando i messaggi
+            //}
             while((incomingMessage = inStream.readLine()) != null){
                 SocketMessageDTO incomingCommand = gson.fromJson(incomingMessage, SocketMessageDTO.class);
 
@@ -48,7 +52,7 @@ public class SocketClientHandler implements VirtualSocketClient, Runnable {
                         String playerName = (String) incomingCommand.getParameters()[0];
                         int gameID = (int) incomingCommand.getParameters()[1];
                         this.playerRecord = new PlayerRecord(gameID, playerName);
-                        server.connect(this);
+                        server.joinGame(this);
                         break;
                     case "ChooseTotemColor":
                         Color totemColor = Color.valueOf((String) incomingCommand.getParameters()[0]) ;
@@ -66,42 +70,20 @@ public class SocketClientHandler implements VirtualSocketClient, Runnable {
             }
 
         } catch (Exception e){}
-        //while(client connesso){
-        //  logica di parsing dei messaggi inviati dal client al server
-        //  da qui poi si chiameranno i metodi di server parsando i messaggi
-        //}
     }
 
     public PlayerRecord getPlayerRecord(){return playerRecord;}
 
     //CALLBACKS
     @Override
-    public void showUpdate() throws IOException {
-        outStream.println("Model state updated");
+    public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
+        SocketMessageDTO message = new SocketMessageDTO("DrawnCard", playerName, fromTopRow, fromBuildings, index);
+        outStream.println(gson.toJson(message));
     }
 
     @Override
-    public void reportError(String errorMessage){
-        outStream.println("[ERROR]: " + errorMessage);
-    }
-
-    @Override
-    public void chosenTotemColor(String playerName, Color totemColor) {
-
-    }
-
-    @Override
-    public void chosenTile(String playerName, int index) {
-
-    }
-
-    @Override
-    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
-
-    }
-
-    @Override
-    public void gameStarted(String gameID, int numPlayers) {
-
+    public void notifyTotemColor(String playerName, Color totemColor) {
+        SocketMessageDTO message = new SocketMessageDTO("ChosenTotemColor", playerName, totemColor.toString());
+        outStream.println(gson.toJson(message));
     }
 }

@@ -15,4 +15,5 @@ public interface VirtualSocketServer {
     void chooseOfferTile() throws OccupiedTileException;
     void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) throws IllegalDrawException;
     void chooseTotemColor(Color totemColor, SocketClientHandler clientHandler);
+    void joinGame(SocketClientHandler clientHandler);
 }

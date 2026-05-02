@@ -12,8 +12,9 @@ import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ClientViewCommands;
 
 import java.util.ArrayList;
-/* Before making a call to the game controller methods, the client controller checks
-if the player's draw is legal by checking the client light model
+
+/** Before making a call to the game controller methods, the client controller checks
+ * if the player's draw is legal by checking the client light model
  */
 public class ClientController implements ClientViewUpdate, ClientViewCommands {
     private String playerName;

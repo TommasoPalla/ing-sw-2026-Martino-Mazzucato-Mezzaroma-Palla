@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Networking.RMI;
 
+import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
+import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
@@ -46,8 +48,9 @@ public class RMIServer implements VirtualRMIServer {
     @Override
     public void joinGame(VirtualRMIClient client, String playerName, int gameID) throws RemoteException {
         PlayerRecord playerRecord = new PlayerRecord(gameID, playerName);
-        this.clientRecords.put(client, playerRecord);
+        clientRecords.put(client, playerRecord);
         serverController.addPlayerToGame(playerRecord);
+        serverController.addNotifierToGame(playerRecord, new RMIClientNotifier(client));
         System.out.println(playerRecord + "added to game");
     }
 
@@ -55,22 +58,24 @@ public class RMIServer implements VirtualRMIServer {
     public void disconnect(VirtualRMIClient clientStub) {
         this.clients.remove(clientStub);
         serverController.removePlayerFromGame(clientRecords.get(clientStub));
-        PlayerRecord player = clientRecords.get(clientStub);
-        System.out.println(player + "removed from RMI server");
+        serverController.removeNotifierFromGame(clientRecords.get(clientStub));
+        System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
     }
 
     @Override
-    public void chooseOfferTile(int index) throws OccupiedTileException {
-
-    }
-
-    @Override
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException {
+    public void chooseOfferTile(VirtualRMIClient client, int index) throws OccupiedTileException {
 
     }
 
     @Override
-    public void chooseTotemColor(Color totemColor) throws RemoteException {
+    public void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException {
+        PlayerRecord callerRecord = clientRecords.get(client);
+        serverController.drawCard(callerRecord, fromTopRow, fromBuildings, index);
+    }
 
+    @Override
+    public void chooseTotemColor(VirtualRMIClient client, Color totemColor) throws RemoteException {
+        PlayerRecord callerRecord = clientRecords.get(client);
+        serverController.chooseTotemColor(callerRecord, totemColor);
     }
 }

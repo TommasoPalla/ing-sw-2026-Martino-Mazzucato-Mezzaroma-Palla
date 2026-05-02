@@ -39,7 +39,7 @@ public class RMIClient implements VirtualRMIClient {
     @Override
     public void chosenTile(String playerName, int index){}
     @Override
-    public void drawnCard(String playerName, boolean isTopRow, int index){}
+    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index){}
 
     //bozza di messaggio di update dal server
     public void updateMessage(int round){

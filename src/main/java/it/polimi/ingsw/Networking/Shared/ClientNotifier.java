@@ -1,14 +1,16 @@
-package it.polimi.ingsw.Networking.Socket;
+package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Enums.Color;
 
 import java.io.IOException;
 
-public interface VirtualSocketClient {
+public interface ClientNotifier {
+    /*
     void showUpdate() throws IOException;
     void reportError(String errorMessage) throws IOException;
-    void chosenTotemColor(String playerName, Color totemColor) throws  IOException;
     void chosenTile(String playerName, int index) throws  IOException;
-    void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws  IOException;
     void gameStarted(String gameID, int numPlayers) throws  IOException;
+     */
+    void notifyTotemColor(String playerName, Color totemColor);
+    void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index);
 }

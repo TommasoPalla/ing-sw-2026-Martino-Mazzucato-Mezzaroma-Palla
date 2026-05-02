@@ -4,6 +4,8 @@ import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,7 +18,7 @@ public class ServerController {
     //questa classe deve inoltre essere in grado di notificare TUTTI i client,
     //indipendentemente dal protocollo, dei cambiamenti avvuti
     public record GameRecord(Game game, GameController gameController) {}
-    private final ConcurrentHashMap<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
+    private final Map<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
     private static int nextGameID = 0;
 
     public void removePlayerFromGame(PlayerRecord playerRecord){
@@ -30,6 +32,10 @@ public class ServerController {
         }
     }
 
+    /**
+     * This method creates a Player object in the corresponding game to which it is connected
+     * @param playerRecord
+     */
     public void addPlayerToGame(PlayerRecord playerRecord){
         try {
             String playerName = playerRecord.playerName();
@@ -42,10 +48,22 @@ public class ServerController {
         }
     }
 
+    public void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
+        GameController controller = activeGames.get(playerRecord.gameID()).gameController();
+        controller.addClient(playerRecord.playerName(), clientNotifier);
+    }
+    public void removeNotifierFromGame(PlayerRecord playerRecord){
+        GameController controller = activeGames.get(playerRecord.gameID()).gameController();
+        controller.removeClient(playerRecord.playerName());
+    }
+
     /**
      * This method adds a new game to the list of active games
-     *  and instantiates his game controller, so the game can start
-    */
+     *  and instantiates its game controller, so the game can start
+     * @param firstPlayerName
+     * @param playerNum
+     * @return
+     */
     public synchronized Game crateNewGame(String firstPlayerName, int playerNum) {
         int gameID = nextGameID;
         Game newGame = new Game(gameID, playerNum);

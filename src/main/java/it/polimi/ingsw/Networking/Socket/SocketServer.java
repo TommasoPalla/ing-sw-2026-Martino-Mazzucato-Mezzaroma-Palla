@@ -3,6 +3,7 @@ package it.polimi.ingsw.Networking.Socket;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
+import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
 import java.io.IOException;
@@ -57,5 +58,12 @@ public class SocketServer implements VirtualSocketServer{
     @Override
     public void chooseTotemColor(Color totemColor, SocketClientHandler handler) {
         serverController.chooseTotemColor(handler.getPlayerRecord(), totemColor);
+    }
+
+    @Override
+    public void joinGame(SocketClientHandler handler){
+        PlayerRecord record = handler.getPlayerRecord();
+        serverController.addPlayerToGame(record);
+        serverController.addNotifierToGame(record, handler);
     }
 }
