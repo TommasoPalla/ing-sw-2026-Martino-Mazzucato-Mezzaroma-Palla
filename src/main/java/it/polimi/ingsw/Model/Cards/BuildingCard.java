@@ -2,7 +2,6 @@ package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Enums.*;
-import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
@@ -87,5 +86,5 @@ public abstract class BuildingCard extends Card {
         visitor.visitCard(this, offerTrack);
     }
     @Override
-    public void accept(Visitor visitor, ClientModel localModel){visitor.visitCard(this, localModel);}
+    public void accept(Visitor visitor){visitor.visitCard(this);}
 }

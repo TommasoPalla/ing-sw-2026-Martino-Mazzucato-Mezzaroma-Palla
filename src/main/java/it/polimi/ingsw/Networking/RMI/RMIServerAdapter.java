@@ -58,17 +58,23 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void startGame(int numPlayers){
+    public void startGame(String playerName, int numPlayers){
 
     }
 
     @Override
-    public void joinGame(String playerName, int gameID){
+    public void joinGame(String playerName, String gameID){
         try{
-            serverStub.joinGame(clientStub, playerName, gameID);
+            //cast temporaneo, decidere cosa fare: in model è string, qui è int
+            serverStub.joinGame(clientStub, playerName, Integer.parseInt(gameID));
         } catch (RemoteException e){
             System.out.println("ERROR: remote error, could not join game " + gameID + "\n" + e.getMessage());
         }
+    }
+
+    @Override
+    public void leaveGame(String playerName, String gameID){
+
     }
 
     @Override
@@ -98,6 +104,11 @@ public class RMIServerAdapter implements ServerConnection {
         } catch (RemoteException e){
             System.out.println("ERROR: remote error, could not choose " + totemColor + "\n" + e.getMessage());
         }
+
+    }
+
+    @Override
+    public void endTurn(String playerName){
 
     }
 }

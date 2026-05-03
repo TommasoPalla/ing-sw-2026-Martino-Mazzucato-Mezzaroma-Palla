@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Model.Cards;
 
-import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
@@ -22,7 +21,5 @@ public abstract class Card {
     }
     public abstract void accept(Visitor visitor, Player player);
     public abstract void accept(Visitor visitor, OfferTrack offerTrack);
-    public abstract void accept(Visitor visitor, ClientModel localModel);
-
-
+    public abstract void accept(Visitor visitor);
 }

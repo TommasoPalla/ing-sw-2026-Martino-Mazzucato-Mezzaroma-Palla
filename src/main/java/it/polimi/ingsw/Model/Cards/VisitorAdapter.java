@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
-import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
@@ -28,9 +27,9 @@ public abstract class VisitorAdapter implements Visitor{
     public void visitCard(EventCard event, OfferTrack offerTrack){}
 
     @Override
-    public void visitCard(BuildingCard building, ClientModel clientModel){}
+    public void visitCard(BuildingCard building){}
     @Override
-    public void visitCard(CharacterCard character, ClientModel clientModel){}
+    public void visitCard(CharacterCard character){}
     @Override
-    public void visitCard(EventCard event, ClientModel clientModel){}
+    public void visitCard(EventCard event){}
 }

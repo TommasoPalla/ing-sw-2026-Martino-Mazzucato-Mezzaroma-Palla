@@ -45,6 +45,9 @@ public class LightTribe {
     public int getPrestigePoints() {
         return prestigePoints;
     }
+    public int getBuilderDiscount(){
+        return builderDiscount;
+    }
     public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() {
         return population;
     }

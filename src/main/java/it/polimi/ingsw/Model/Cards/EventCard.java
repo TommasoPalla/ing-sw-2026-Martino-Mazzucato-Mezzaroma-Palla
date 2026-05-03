@@ -1,12 +1,9 @@
 package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Enums.EventType;
-import it.polimi.ingsw.Enums.Parameters;
-import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
-import java.util.EnumMap;
 
 
 public abstract class EventCard extends Card{
@@ -60,5 +57,5 @@ public abstract class EventCard extends Card{
         visitor.visitCard(this, offerTrack);
     }
     @Override
-    public void accept(Visitor visitor, ClientModel localModel){visitor.visitCard(this, localModel);}
+    public void accept(Visitor visitor){visitor.visitCard(this);}
 }

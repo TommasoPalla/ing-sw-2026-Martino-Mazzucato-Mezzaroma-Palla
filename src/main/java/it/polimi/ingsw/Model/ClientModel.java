@@ -5,10 +5,11 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
-import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.TurnTile;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.DrawableCardVisitor;
+import it.polimi.ingsw.Model.Users.IllegalDrawException;
+import it.polimi.ingsw.Model.Users.InsufficientFoodException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +28,8 @@ public class ClientModel {
     private int era;
     private ArrayList<Card> topRow;
     private ArrayList<Card> bottomRow;
-    private ArrayList<BuildingCard> topBuildingCard;
-    private ArrayList<BuildingCard> bottomBuildingCard;
+    private ArrayList<BuildingCard> topBuildings;
+    private ArrayList<BuildingCard> bottomBuildings;
     private Map<String, Color> totemColors;
     private Map<String, Integer> currentOfferTiles;
     private TurnTile turnTile;
@@ -43,22 +44,30 @@ public class ClientModel {
         this.currentOfferTiles = new HashMap<>();
         this.topRow = new ArrayList<>();
         this.bottomRow = new ArrayList<>();
-        this.topBuildingCard = new ArrayList<>();
-        this.bottomBuildingCard = new ArrayList<>();
+        this.topBuildings = new ArrayList<>();
+        this.bottomBuildings = new ArrayList<>();
         this.turnTile = new TurnTile(numPlayers);
         this.offerTiles = new ArrayList<>();
     }
 
-    //da implementare con visitor pattern
-    public boolean drawable(int index, int row) {
-        return switch (row) {
-            case 0 -> !(topRow.get(index).getCardID().equals(EventCard.class));
-            case 1 -> !(bottomRow.get(index).getCardID().equals(EventCard.class));
-            default -> {
-                System.out.println("Invalid row exception");
-                yield false;
-            }
-        };
+    public boolean drawable(boolean fromTopRow, boolean fromBuildings, int index) {
+        Card card;
+        DrawableCardVisitor visitor = new DrawableCardVisitor(this);
+        if(fromBuildings){
+            card = fromTopRow ? getTopBuildings().get(index)
+                    : getBottomBuildings().get(index);
+        }
+        else {
+            card = fromTopRow ? getTopRow().get(index)
+                    : getBottomRow().get(index);
+        }
+        try {
+            card.accept(visitor);
+        } catch (IllegalDrawException | InsufficientFoodException e){
+            System.err.println("Can't draw this card: " + e.getMessage());
+            //va gestito con le view, da capire dopo
+        }
+        return visitor.isDrawable();
     }
 
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
@@ -75,6 +84,9 @@ public class ClientModel {
             LightTribe lightTribe= new LightTribe(playerName);
             players.put(playerName, lightTribe);
         }
+    }
+    public void removePlayer(String name){
+        players.remove(name);
     }
 
 
@@ -105,10 +117,10 @@ public class ClientModel {
         this.bottomRow = newBottomRow;
     }
     public void updateTopRowBuildings(ArrayList<BuildingCard> newTopRowBuildings) {
-        this.topBuildingCard = newTopRowBuildings;
+        this.topBuildings = newTopRowBuildings;
     }
     public void updateBottomRowBuildings (ArrayList<BuildingCard> newBottomRowBuildings) {
-        this.bottomBuildingCard = newBottomRowBuildings;
+        this.bottomBuildings = newBottomRowBuildings;
     }
     public void chosenTotemColor(String playerName, Color color){
         totemColors.put(playerName, color);
@@ -146,8 +158,8 @@ public class ClientModel {
     public int getEra(){return era;}
     public ArrayList<Card> getTopRow(){return topRow;}
     public ArrayList<Card> getBottomRow(){return bottomRow;}
-    public ArrayList<BuildingCard> getTopRowBuildings(){return topBuildingCard;};
-    public ArrayList<BuildingCard> getBottomRowBuildings(){return bottomBuildingCard;};
+    public ArrayList<BuildingCard> getTopBuildings(){return topBuildings;};
+    public ArrayList<BuildingCard> getBottomBuildings(){return bottomBuildings;};
     public Color getColors(String playerName){return totemColors.get(playerName);}
     public boolean isColorAvailable(Color color){
         return totemColors.containsValue(color);
@@ -155,6 +167,5 @@ public class ClientModel {
     public int getOfferTiles(String playerName){return currentOfferTiles.get(playerName);}
     public TurnTile getTurnTile(){return turnTile;}
     public ArrayList<OfferTile> getOfferTilesNumber(){return offerTiles;}
-
 
 }

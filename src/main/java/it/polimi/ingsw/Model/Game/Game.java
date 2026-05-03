@@ -100,7 +100,7 @@ public class Game {
 
     public void startGame(){
         if(players.size() < numPlayers){
-            throw new IllegalActionPhaseException("Non ci sono abbastanza giocatori connessi per cominciare la partita!");
+            throw new IllegalActionPhaseException();
         }
         turnOrder = new ArrayList<>(players);
         Collections.shuffle(turnOrder);

@@ -66,12 +66,17 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void startGame(int numPlayers){
+    public void startGame(String playerName, int numPlayers){
 
     }
 
     @Override
-    public void joinGame(String playerName, int gameID){
+    public void joinGame(String playerName, String gameID){
+
+    }
+
+    @Override
+    public void leaveGame(String playerName, String gameID){
 
     }
 
@@ -95,6 +100,11 @@ public class SocketServerAdapter implements ServerConnection {
     public void chooseTotem(Color totemColor) {
         SocketMessageDTO message = new SocketMessageDTO("ChooseTotemColor", totemColor);
         outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void endTurn(String playerName){
+
     }
 
 

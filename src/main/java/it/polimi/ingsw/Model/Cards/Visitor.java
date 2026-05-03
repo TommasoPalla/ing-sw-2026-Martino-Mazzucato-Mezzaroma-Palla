@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
-import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
@@ -20,7 +19,7 @@ public interface Visitor {
     void visitCard(CharacterCard character, OfferTrack offerTrack);
     void visitCard(EventCard event, OfferTrack offerTrack);
 
-    void visitCard(BuildingCard building, ClientModel localModel);
-    void visitCard(CharacterCard character, ClientModel localModel);
-    void visitCard(EventCard event, ClientModel localModel);
+    void visitCard(BuildingCard building);
+    void visitCard(CharacterCard character);
+    void visitCard(EventCard event);
 }

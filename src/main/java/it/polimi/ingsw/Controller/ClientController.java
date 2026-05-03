@@ -6,29 +6,34 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
+import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
-import it.polimi.ingsw.View.ClientViewCommands;
 
 import java.util.ArrayList;
 
-/** Before making a call to the game controller methods, the client controller checks
- * if the player's draw is legal by checking the client light model
- */
-public class ClientController implements ClientViewUpdate, ClientViewCommands {
+
+public class ClientController implements ClientViewUpdate {
     private String playerName;
     private ServerConnection connection;
     private ClientModel localModel;
 
-    /*no constructor defined, default constructor is used,
-    then setPlayerName, onGameStarted , bindConnection are used to initialize private fields
-    * */
-    public void bindConnection(ServerConnection connection){
-        this.connection = connection;
+    public String getPlayerName(){  //servirà da qualche parte
+        return playerName;
     }
     public ServerConnection getConnection(){    //servirà da qualche parte?
         return connection;
+    }
+    public ClientModel getLocalModel() {
+        return localModel;
+    }
+
+    /*no constructor defined, default constructor is used,
+    then setPlayerName, onGameStarted, bindConnection methods are invoked to initialize private fields
+    * */
+    public void bindConnection(ServerConnection connection){
+        this.connection = connection;
     }
 
     public void setPlayerName(String playerName) {
@@ -42,61 +47,67 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
         }
     }
 
-    public String getPlayerName(){  //servirà da qualche parte
-        return playerName;
-    }
-
     /*called when server responds with a successful 'startGame' request by first player
     or next players join the game via 'joinGame' method
     actually called by onGameStarted()*/
     public void createLocalModel(String gameId, int num){
         this.localModel = new ClientModel(gameId, num);
     }
-    public ClientModel getLocalModel() {
-        return localModel;
-    }
 
     public void startGame(int numPlayers){
         //con partite multiple non serve verificare che ci sia una partita già inizializzata
-        connection.startGame(numPlayers);
+        connection.startGame(playerName, numPlayers);
     }
-    public void showGames(){
+    public void showActiveGames(){
         /*array<Game> games = */ connection.getActiveGames();
         //show in TUI o GUI
     }
-    public void joinGame(String playerName, int gameID){
+    public void joinGame(String playerName, String gameID){
         connection.joinGame(playerName, gameID);
     }
+    /*decidere se cancellare il model dopo l'effettivo abbandono,
+     per la resilienza potrebbe servire conservarlo per tot tempo dopo la disconnessione
+     */
+    public void leaveGame(){
+        connection.leaveGame(playerName, localModel.getGameId());
+    }
 
-
-
-
-    /*
-    @deprecated
-    ClientViewCommands interface override: methods used for client's requests,
-     ClientController checks if localModel allows them and then send to server,
-     identified by connection field (RMI/socket)*/
-    @Override
+    /*methods used for client's requests,
+    ClientController checks if localModel allows them and then send to server,
+    identified by connection field (RMI/socket)*/
     public void chooseTotem(Color color){
         if(localModel.isColorAvailable(color)) throw new IllegalArgumentException();
         connection.chooseTotem(color);
     }
 
-    @Override
     public void chooseOfferTile(int index) {
         if(localModel.isOccupied(index)) throw new OccupiedTileException();
         connection.chooseOfferTile(index);
     }
 
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
+        if(localModel.getCurrentPlayer().equals(playerName) && localModel.drawable(fromTopRow, fromBuildings, index)){
+            connection.drawCard(fromTopRow, fromBuildings, index);
+        } else {
+            throw new IllegalActionPhaseException();
+        }
+    }
 
     /*da definire: pensavo che il giocatore può mettere in pausa con un timer
     che scade in automatico. (volevo fare che se tutti sono d'accordo il game
     viene sospeso a tempo indefinito ma lasciamo stare)*/
-    @Override
     public void pauseGame(){
         //mostra schermata di pausa (dentro la view)
         //fa partire il timer
         //manda l'info al server per notificare gli altri player
+    }
+
+    public void endTurn(){
+        if(localModel.getCurrentPlayer().equals(playerName)) {
+            connection.endTurn(playerName);
+        } else {
+            throw new IllegalActionPhaseException();
+        }
     }
 
     /*ClientViewUpdate interface override: update methods called by RMI/socket Client
@@ -105,11 +116,14 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
     eventualmente aggiungere un attributo alla classe che dice quale
     interfaccia è stata scelta.
     */
+    /** Before making a call to the game controller methods, the client controller checks
+     * if the player's draw is legal by checking the client light model
+     */
     @Override
     public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
         if(fromTopRow){
             if(fromBuilding){
-                BuildingCard drawn = localModel.getTopRowBuildings().remove(index);
+                BuildingCard drawn = localModel.getTopBuildings().remove(index);
                 localModel.getPlayerTribe(playerName).addToBuildings(drawn);
                 /* non servono le due righe successive
                 ArrayList<BuildingCard> arr = localModel.getTopRowBuildings();
@@ -123,7 +137,7 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
             }
         }else{
             if(fromBuilding){
-                BuildingCard drawn = localModel.getBottomRowBuildings().remove(index);
+                BuildingCard drawn = localModel.getBottomBuildings().remove(index);
                 localModel.getPlayerTribe(playerName).addToBuildings(drawn);
                 /*non servono le due righe successive
                 ArrayList<BuildingCard> arr=localModel.getBottomRowBuildings();
@@ -147,7 +161,9 @@ public class ClientController implements ClientViewUpdate, ClientViewCommands {
             //da gestire TUI o GUI
             System.out.println("Name already taken");
         }
-
+    }
+    public void removePlayer(String name){
+        localModel.removePlayer(name);
     }
 
     @Override

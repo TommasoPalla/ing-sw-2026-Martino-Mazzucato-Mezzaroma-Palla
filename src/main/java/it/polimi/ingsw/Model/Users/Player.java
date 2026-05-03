@@ -9,7 +9,7 @@ import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 
 
 public class Player {
-    private final Game game;
+    private final Game game;    //forse non serve
     private final String name;
     private Color totemColor;
     private final Tribe tribe;
@@ -60,7 +60,7 @@ public class Player {
     //returns true if building is affordable to player or if the card is a character, returns false otherwise
     public boolean drawable(boolean fromTopRow, boolean fromBuilding, int index, OfferTrack offerTrack) {
         Card card;
-        DrawableCardVisitor visitor = new DrawableCardVisitor();
+        DrawableCardVisitor visitor = new DrawableCardVisitor(this);
         if(fromBuilding){
             card = fromTopRow ? offerTrack.getTopBuildingCard().get(index)
                     : offerTrack.getBottomBuildingCard().get(index);
@@ -70,7 +70,7 @@ public class Player {
                     : offerTrack.getBottomRow().get(index);
         }
         try {
-            card.accept(visitor, this);
+            card.accept(visitor);
         } catch (IllegalDrawException | InsufficientFoodException e){
             System.err.println("Can't draw this card: " + e.getMessage());
 
@@ -84,7 +84,7 @@ public class Player {
     /**drawCard method is called when a player tries to add one
      * of the cards on the OfferTrack to their tribe.
      * @param index position of the card in its specific array
-     * @param fromTopRow
+     * @param fromTopRow top or bottom row (it does not depend on buildings or characters)
      * @param fromBuildings true if the card to draw is in buildings arrays, false otherwise
      * @return the drawn card, if the card can be drawn, returns null otherwise
      */
