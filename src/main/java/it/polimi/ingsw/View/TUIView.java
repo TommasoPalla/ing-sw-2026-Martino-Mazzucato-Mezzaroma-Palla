@@ -8,13 +8,14 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.LightTribe;
+import it.polimi.ingsw.View.GUIView.ViewInterface;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TUIView {
+public class TUIView implements ViewInterface {
     final private ClientModel localModel;
     final private ClientController clientController;
     final private CommandParser commandParser;

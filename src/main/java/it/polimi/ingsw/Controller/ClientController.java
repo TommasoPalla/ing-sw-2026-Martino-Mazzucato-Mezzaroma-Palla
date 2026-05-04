@@ -10,6 +10,7 @@ import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
+import it.polimi.ingsw.View.GUIView.ViewInterface;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class ClientController implements ClientViewUpdate {
     private String playerName;
     private ServerConnection connection;
     private ClientModel localModel;
+    private ViewInterface view;
 
     public String getPlayerName(){  //servirà da qualche parte
         return playerName;
@@ -30,10 +32,14 @@ public class ClientController implements ClientViewUpdate {
     }
 
     /*no constructor defined, default constructor is used,
-    then setPlayerName, onGameStarted, bindConnection methods are invoked to initialize private fields
+    then setPlayerName, onGameStarted, bindConnection, bindView
+     methods are invoked to initialize private fields
     * */
     public void bindConnection(ServerConnection connection){
         this.connection = connection;
+    }
+    public void bindView(ViewInterface view){
+        this.view = view;
     }
 
     public void setPlayerName(String playerName) {
@@ -50,7 +56,7 @@ public class ClientController implements ClientViewUpdate {
     /*called when server responds with a successful 'startGame' request by first player
     or next players join the game via 'joinGame' method
     actually called by onGameStarted()*/
-    public void createLocalModel(String gameId, int num){
+    public void createLocalModel(int gameId, int num){
         this.localModel = new ClientModel(gameId, num);
     }
 
@@ -62,7 +68,7 @@ public class ClientController implements ClientViewUpdate {
         /*array<Game> games = */ connection.getActiveGames();
         //show in TUI o GUI
     }
-    public void joinGame(String playerName, String gameID){
+    public void joinGame(String playerName, int gameID){
         connection.joinGame(playerName, gameID);
     }
     /*decidere se cancellare il model dopo l'effettivo abbandono,
@@ -169,6 +175,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateChosenOfferTile(String playerName, Color color) {
         localModel.chosenTotemColor(playerName, color);
+
     }
 
     @Override

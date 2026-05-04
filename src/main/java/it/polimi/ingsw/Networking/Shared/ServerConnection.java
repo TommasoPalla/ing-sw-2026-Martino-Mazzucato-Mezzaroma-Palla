@@ -14,8 +14,8 @@ public interface ServerConnection {
     void disconnect();
     void setPlayerName(String playerName);
     void startGame(String playerName, int numPlayers);
-    void joinGame(String playerName, String gameID);
-    void leaveGame(String playerName, String gameID);
+    void joinGame(String playerName, int gameID);
+    void leaveGame(String playerName, int gameID);
     void getActiveGames();
     void chooseTotem(Color totemColor);
     void chooseOfferTile(int index) throws OccupiedTileException;

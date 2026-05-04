@@ -6,6 +6,8 @@ import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.View.CommandParser;
+import it.polimi.ingsw.View.GUIView.MainGUIView;
+import it.polimi.ingsw.View.GUIView.ViewInterface;
 import it.polimi.ingsw.View.TUIView;
 
 import java.util.Scanner;
@@ -53,12 +55,13 @@ public class ClientApp {
             UIType = scanner.nextLine();
         }while(!UIType.equalsIgnoreCase("TUI") && !UIType.equalsIgnoreCase("GUI"));
 
-        //View view;      //interfaccia implementata da GUI e TUI
+        ViewInterface view = null;      //interfaccia implementata da GUI e TUI
         switch(UIType){
-            case "TUI": new TUIView(clientController);
-            case "GUI":
+            case "TUI" -> view = new TUIView(clientController);
+            case "GUI"-> view = new MainGUIView();
                 // GUI start
         }
+        clientController.bindView(view);
         /*
          * Al player viene chiesto il nickname da usare durante la partita
          */

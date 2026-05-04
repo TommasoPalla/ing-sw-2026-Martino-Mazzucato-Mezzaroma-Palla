@@ -71,12 +71,12 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void joinGame(String playerName, String gameID){
+    public void joinGame(String playerName, int gameID){
 
     }
 
     @Override
-    public void leaveGame(String playerName, String gameID){
+    public void leaveGame(String playerName, int gameID){
 
     }
 

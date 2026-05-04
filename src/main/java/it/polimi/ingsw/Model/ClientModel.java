@@ -19,7 +19,7 @@ import java.util.Map;
  * are called by the Client controllers
  */
 public class ClientModel {
-    private final String gameId;
+    private final int gameId;
     private final int numPlayers;
     private Map<String, LightTribe> players;
     private GamePhase currentPhase;
@@ -36,9 +36,9 @@ public class ClientModel {
     private ArrayList<OfferTile> offerTiles;
     //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
 
-    public ClientModel(String gameId, int numPlayers){
-        this.gameId=gameId;
-        this.numPlayers=numPlayers;
+    public ClientModel(int gameId, int numPlayers){
+        this.gameId = gameId;
+        this.numPlayers = numPlayers;
         this.currentPhase = GamePhase.START_GAME;
         this.currentRound = 0;
         this.currentOfferTiles = new HashMap<>();
@@ -144,7 +144,7 @@ public class ClientModel {
 
 
     //getters
-    public String getGameId(){return gameId;}
+    public int getGameId(){return gameId;}
     public int getNumPlayers(){return numPlayers;}
     public LightTribe getPlayerTribe(String playerName){return players.get(playerName);}
     public boolean checkNameAvailable(String name){

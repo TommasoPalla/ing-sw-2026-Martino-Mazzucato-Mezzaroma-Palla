@@ -63,17 +63,16 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void joinGame(String playerName, String gameID){
+    public void joinGame(String playerName, int gameID){
         try{
-            //cast temporaneo, decidere cosa fare: in model è string, qui è int
-            serverStub.joinGame(clientStub, playerName, Integer.parseInt(gameID));
+            serverStub.joinGame(clientStub, playerName, gameID);
         } catch (RemoteException e){
             System.out.println("ERROR: remote error, could not join game " + gameID + "\n" + e.getMessage());
         }
     }
 
     @Override
-    public void leaveGame(String playerName, String gameID){
+    public void leaveGame(String playerName, int gameID){
 
     }
 
