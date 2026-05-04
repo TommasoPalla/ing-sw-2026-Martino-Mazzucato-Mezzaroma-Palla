@@ -8,7 +8,6 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.LightTribe;
-import it.polimi.ingsw.View.GUIView.ViewInterface;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -27,19 +26,23 @@ public class TUIView implements ViewInterface {
         this.localModel = clientController.getLocalModel();
         this.commandParser = new CommandParser(clientController);
         this.tuiState = TUIState.SETUP;
-        // Starts the thread of this TUI, using "runTUI()" as Thread.run() method
-        Thread TUIThread = new Thread(this::runTUI);
+        // Starts the thread of this TUI, using 'run()' as Thread.run() method
+        Thread TUIThread = new Thread(this::runView);
         TUIThread.start();
     }
 
 
-    public void runTUI() {
+    @Override
+    public void runView() {
         System.out.println("Benvenuto su Mesos sesos pesos quevos");
         System.out.println("Scegli il tuo nome:");
         Scanner scanner = new Scanner(System.in);
         String playerName = scanner.nextLine();
-        //check della validità del nome e che non sia già utilizzato
-        clientController.setPlayerName(playerName);
+        /*try {
+            clientController.setPlayerName(playerName);
+        } catch() {
+
+        }*/
         this.player = playerName;
         System.out.println("Scegli il colore del totem:");
         Scanner scanner1 = new Scanner(System.in);

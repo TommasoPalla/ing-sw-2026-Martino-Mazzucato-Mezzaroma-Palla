@@ -5,9 +5,8 @@ import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
 import it.polimi.ingsw.Controller.ClientController;
-import it.polimi.ingsw.View.CommandParser;
 import it.polimi.ingsw.View.GUIView.MainGUIView;
-import it.polimi.ingsw.View.GUIView.ViewInterface;
+import it.polimi.ingsw.View.ViewInterface;
 import it.polimi.ingsw.View.TUIView;
 
 import java.util.Scanner;
@@ -41,13 +40,6 @@ public class ClientApp {
         }
         connection.connect();
         clientController.bindConnection(connection);        //binding connessione-controller cosi' che parli con il server
-        /*
-         * Al player viene chiesto il nickname da usare durante la partita
-         */
-        //System.out.println("Scegli nickname:");
-        //String playerName = scanner.nextLine();
-        //clientController.setPlayerName(playerName);
-        //si fara' una cosa molto simile a quella sopra per istanziare TUI o GUI:
 
         String UIType;
         do{
@@ -55,13 +47,18 @@ public class ClientApp {
             UIType = scanner.nextLine();
         }while(!UIType.equalsIgnoreCase("TUI") && !UIType.equalsIgnoreCase("GUI"));
 
-        ViewInterface view = null;      //interfaccia implementata da GUI e TUI
+        ViewInterface view;      //interfaccia implementata da GUI e TUI
         switch(UIType){
             case "TUI" -> view = new TUIView(clientController);
             case "GUI"-> view = new MainGUIView();
-                // GUI start
+            default -> {
+                System.out.println("view not supported");
+                return;
+            }// GUI start
         }
         clientController.bindView(view);
+        view.runView();
+
         /*
          * Al player viene chiesto il nickname da usare durante la partita
          */

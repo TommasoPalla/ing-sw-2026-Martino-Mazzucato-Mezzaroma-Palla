@@ -1,4 +1,10 @@
 package it.polimi.ingsw.View.GUIView;
 
-public class MainGUIView implements ViewInterface{
+import it.polimi.ingsw.View.ViewInterface;
+
+public class MainGUIView implements ViewInterface {
+    @Override
+    public void runView(){
+
+    }
 }

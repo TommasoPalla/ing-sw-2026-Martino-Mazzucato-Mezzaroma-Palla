@@ -10,7 +10,7 @@ import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
-import it.polimi.ingsw.View.GUIView.ViewInterface;
+import it.polimi.ingsw.View.ViewInterface;
 
 import java.util.ArrayList;
 
@@ -29,6 +29,9 @@ public class ClientController implements ClientViewUpdate {
     }
     public ClientModel getLocalModel() {
         return localModel;
+    }
+    public ViewInterface getView(){
+        return view;
     }
 
     /*no constructor defined, default constructor is used,
