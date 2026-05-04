@@ -13,4 +13,5 @@ public interface ClientNotifier {
      */
     void notifyTotemColor(String playerName, Color totemColor);
     void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index);
+    void notifyNewPlayerConnected(String playerName);
 }

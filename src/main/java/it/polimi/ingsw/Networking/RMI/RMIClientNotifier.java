@@ -11,6 +11,15 @@ public class RMIClientNotifier implements ClientNotifier {
     RMIClientNotifier(VirtualRMIClient stub) {this.clientStub = stub;}
 
     @Override
+    public void notifyNewPlayerConnected(String playerName) {
+        try {
+            clientStub.playerJoinedGame(playerName);
+        } catch (RemoteException e){
+            System.out.println("ERROR: could not notify of new player joining\n" + e.getMessage());
+        }
+    }
+
+    @Override
     public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
         try {
             clientStub.drawnCard(playerName, fromTopRow, fromBuildings, index);

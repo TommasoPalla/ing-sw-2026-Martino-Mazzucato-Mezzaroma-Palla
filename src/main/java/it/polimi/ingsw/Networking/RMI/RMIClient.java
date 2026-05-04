@@ -29,7 +29,7 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void gameStarted(String gameID, int numPlayers) {
+    public void gameStarted(int gameID, int numPlayers) {
         controller.createLocalModel(gameID, numPlayers);
     }
     @Override
@@ -38,8 +38,14 @@ public class RMIClient implements VirtualRMIClient {
     }
     @Override
     public void chosenTile(String playerName, int index){}
+
     @Override
     public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index){}
+
+    @Override
+    public void playerJoinedGame(String playerName){
+
+    }
 
     //bozza di messaggio di update dal server
     public void updateMessage(int round){
