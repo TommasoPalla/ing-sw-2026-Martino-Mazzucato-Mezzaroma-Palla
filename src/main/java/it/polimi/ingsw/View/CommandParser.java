@@ -3,6 +3,7 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;
+import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
 import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.UnavailableColorException;
 
@@ -49,11 +50,11 @@ public record CommandParser(ClientController clientController) {
         String[] commandArgs = parseArguments(CommandType.CHOOSE_TOTEM_COLOR, argsString);
         try {
             clientController.chooseTotem(Color.valueOf(commandArgs[0]));
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalActionPhaseException e) {
+            throw new IllegalActionPhaseException();
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("ERROR: " + commandArgs[0] + " is not a valid color!");
-        }
-        catch(UnavailableColorException e) {
+        } catch(UnavailableColorException e) {
             throw new IllegalArgumentException("ERROR: this totem colore is already taken!");
         }
     }
@@ -69,6 +70,8 @@ public record CommandParser(ClientController clientController) {
         String[] commandArgs = parseArguments(CommandType.CREATE_GAME, argsString);
         try {
             clientController.createGame(Integer.parseInt(commandArgs[0]));
+        } catch (IllegalActionPhaseException e) {
+            throw new IllegalActionPhaseException();
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("ERROR: command argument must be a number!");
         } catch (IllegalArgumentException e) {
@@ -102,6 +105,9 @@ public record CommandParser(ClientController clientController) {
             clientController.drawCard(fromTopRow, fromBuilding,  index);
         } catch (IllegalDrawException e) {
             throw new IllegalArgumentException("ERROR: invalid index.");
+        }
+        catch (IllegalActionPhaseException e) {
+            throw new IllegalActionPhaseException();
         }
     }
 }

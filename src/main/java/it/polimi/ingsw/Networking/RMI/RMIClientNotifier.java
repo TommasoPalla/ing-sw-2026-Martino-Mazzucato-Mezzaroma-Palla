@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 
 public class RMIClientNotifier implements ClientNotifier {
     private final VirtualRMIClient clientStub;
-    RMIClientNotifier(VirtualRMIClient stub) {this.clientStub = stub;}
+    public RMIClientNotifier(VirtualRMIClient stub) {this.clientStub = stub;}
 
     @Override
     public void notifyNewPlayerConnected(String playerName) {

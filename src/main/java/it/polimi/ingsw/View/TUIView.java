@@ -9,6 +9,7 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.LightTribe;
+import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -92,8 +93,7 @@ public class TUIView implements ViewInterface {
             try {
                 CommandType commandType = CommandType.valueOf(matcher.group(1).toUpperCase());
                 commandParserSelector(commandType, matcher);
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalActionPhaseException | IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         }

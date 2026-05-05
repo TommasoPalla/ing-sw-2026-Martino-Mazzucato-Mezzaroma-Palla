@@ -53,7 +53,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                     case SocketHeaderNames.CREATE_GAME: {
                         String playerName = (String) incomingCommand.getParameters()[0];
                         int numPlayers = (int) incomingCommand.getParameters()[1];
-                        server.createGame(playerName, numPlayers);
+                        server.createGame(this, playerName, numPlayers);
                         break;
                     }
                     case SocketHeaderNames.CONNECT_TO_GAME:{

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
@@ -21,7 +22,15 @@ public class ClientController implements ClientViewUpdate {
     private ServerConnection connection;
     private ClientModel localModel;
     private ViewInterface view;
+    /**
+     * The attribute representing the state of the client, deciding which actions
+     * they can perform in that state
+     */
+    private ClientState clientState;
 
+    public ClientController() {
+        clientState = ClientState.SETUP;
+    }
     public String getPlayerName(){  //servirà da qualche parte
         return playerName;
     }
@@ -71,16 +80,24 @@ public class ClientController implements ClientViewUpdate {
      */
     public void createGame(int numPlayers){
         //con partite multiple non serve verificare che ci sia una partita già inizializzata
+        if (clientState != ClientState.SETUP) {
+            throw new IllegalActionPhaseException();
+        }
         if(numPlayers < 2 || numPlayers > 5){
             throw new IllegalArgumentException();
         }
         connection.createGame(playerName, numPlayers);
+        clientState = ClientState.IN_LOBBY;
+        //da notificare il player della creazione del game in modo che stampi le possibili azioni da fare mentre in lobby
     }
     public void showActiveGames(){
         /*array<Game> games = */ connection.getActiveGames();
         //show in TUI o GUI
     }
     public void joinGame(String playerName, int gameID){
+        if(clientState != ClientState.SETUP) {
+            throw new IllegalActionPhaseException();
+        }
         connection.joinGame(playerName, gameID);
     }
     /*decidere se cancellare il model dopo l'effettivo abbandono,
@@ -94,6 +111,9 @@ public class ClientController implements ClientViewUpdate {
     ClientController checks if localModel allows them and then send to server,
     identified by connection field (RMI/socket)*/
     public void chooseTotem(Color color){
+        if (clientState != ClientState.IN_LOBBY) {
+            throw new IllegalActionPhaseException();
+        }
         try {
             if (localModel.isColorAvailable(color)) throw new IllegalArgumentException();
             connection.chooseTotem(color);
@@ -108,6 +128,9 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
+        if(clientState != ClientState.DRAW_CARD) {
+            throw new IllegalActionPhaseException();
+        }
         if(localModel.getCurrentPlayer().equals(playerName) && localModel.drawable(fromTopRow, fromBuildings, index)){
             connection.drawCard(fromTopRow, fromBuildings, index);
         } else {

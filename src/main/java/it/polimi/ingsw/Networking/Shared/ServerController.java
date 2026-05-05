@@ -4,6 +4,8 @@ import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Users.UnavailableColorException;
+import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
+import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +42,7 @@ public class ServerController {
         try {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
-            GameController gameController = activeGames.get(gameID).gameController;
+            GameController gameController = activeGames.get(gameID).gameController();
             gameController.addPlayer(playerName);
         }
         catch (IllegalArgumentException e){
@@ -64,13 +66,14 @@ public class ServerController {
      * @param playerNum
      * @return
      */
-    public synchronized Game createNewGame(String firstPlayerName, int playerNum) {
+    public synchronized Game createNewGame(ClientNotifier notifier, String firstPlayerName, int playerNum) {
         int gameID = nextGameID;
         Game newGame = new Game(gameID, playerNum);
         PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
-        addPlayerToGame(newPlayer);
         GameController gameController = new GameController(newGame);
         activeGames.put(gameID, new GameRecord(newGame, gameController));
+        addPlayerToGame(newPlayer);
+        addNotifierToGame(newPlayer, notifier);
 
         nextGameID += 1;
         return newGame;

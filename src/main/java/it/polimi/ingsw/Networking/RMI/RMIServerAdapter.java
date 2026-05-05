@@ -60,7 +60,11 @@ public class RMIServerAdapter implements ServerConnection {
 
     @Override
     public void createGame(String playerName, int numPlayers){
-
+        try {
+            serverStub.createGame(client, playerName, numPlayers);
+        } catch (RemoteException e) {
+            System.out.println("Error during creating game " + e.getMessage());
+        }
     }
 
     @Override

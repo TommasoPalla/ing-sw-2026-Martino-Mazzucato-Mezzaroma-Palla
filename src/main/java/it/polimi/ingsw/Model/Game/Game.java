@@ -48,6 +48,7 @@ public class Game {
         this.playersNames = new ArrayList<>();
         this.currentRound = 0;
         this.buildingManager = new BuildingManager(players);
+        this.availableColors = new ArrayList<>();
         Collections.addAll(availableColors, Color.values());
     }
 

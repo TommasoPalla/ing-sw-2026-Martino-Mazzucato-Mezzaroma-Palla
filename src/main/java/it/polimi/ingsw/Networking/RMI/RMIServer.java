@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Model.Users.UnavailableColorException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
+import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
@@ -45,8 +46,10 @@ public class RMIServer implements VirtualRMIServer {
     }
 
     @Override
-    public void createGame(String playerName, int numPlayers) throws RemoteException {
-
+    public void createGame(VirtualRMIClient client, String playerName, int numPlayers) throws RemoteException {
+        ClientNotifier clientNotifier = new RMIClientNotifier(client);
+        //da fare il clientRecord.put() capendo come prendere il game id
+        serverController.createNewGame(clientNotifier, playerName, numPlayers);
     }
 
     @Override
