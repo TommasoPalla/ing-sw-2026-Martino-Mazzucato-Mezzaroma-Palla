@@ -3,6 +3,7 @@ package it.polimi.ingsw.Networking.RMI;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
+import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -19,5 +20,6 @@ public interface VirtualRMIServer extends Remote {
     void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException;
     void chooseTotemColor(VirtualRMIClient client, Color totemColor) throws  RemoteException;
     void joinGame(VirtualRMIClient client, String playerName, int gameID) throws  RemoteException;
-    void createGame(VirtualRMIClient client, String playerName, int numPlayers) throws RemoteException;
+    void createGame(String playerName, int numPlayers) throws RemoteException;
+    void chooseOfferTile(VirtualRMIClient client, PlayerRecord playerRecord, int index);
 }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.Networking.Shared;
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
+import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Model.Users.UnavailableColorException;
 import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
 import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
@@ -100,9 +101,14 @@ public class ServerController {
     }
 
     public void chooseOfferTile(PlayerRecord playerRecord, int index){
-        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
-        synchronized (currentController){
-            currentController.handleChooseOfferTile(playerRecord, index);
+        try {
+            GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
+            synchronized (currentController) {
+                currentController.handleChooseOfferTile(playerRecord, index);
+            }
+        }
+        catch(OccupiedTileException e){
+            throw new OccupiedTileException();
         }
     }
 }

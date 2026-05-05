@@ -123,8 +123,12 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void chooseOfferTile(int index) {
-        if(localModel.isOccupied(index)) throw new OccupiedTileException();
-        connection.chooseOfferTile(index);
+        try {
+            if (localModel.isOccupied(index)) throw new OccupiedTileException();
+            connection.chooseOfferTile(index);
+        }catch(OccupiedTileException e){
+            throw new OccupiedTileException();
+        }
     }
 
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){

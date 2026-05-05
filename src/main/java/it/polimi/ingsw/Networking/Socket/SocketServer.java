@@ -77,4 +77,13 @@ public class SocketServer implements VirtualSocketServer{
         serverController.addPlayerToGame(record);
         serverController.addNotifierToGame(record, handler);
     }
+
+    @Override
+    public void chooseOfferTile(PlayerRecord playerRecord, int index) {
+        try {
+            serverController.chooseOfferTile(playerRecord, index);
+        }catch(OccupiedTileException e){
+            throw new OccupiedTileException();
+        }
+    }
 }
