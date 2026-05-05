@@ -143,7 +143,9 @@ public class GameController {
         //????
     }
 
-    public synchronized void handleChooseOfferTile (Player player, int index, OfferTrack offerTrack) {
+    public synchronized void handleChooseOfferTile (PlayerRecord playerRecord, int index) {
+        Player player = gameInstance.getPlayerByName(playerRecord.playerName());
+        OfferTrack offerTrack = gameInstance.getOfferTrack();
         try {
             OfferTile chosen = player.chooseOfferTile(index, offerTrack);
             for(ClientNotifier client : connectedClients.values()) {

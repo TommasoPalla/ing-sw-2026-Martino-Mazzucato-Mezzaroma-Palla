@@ -1,11 +1,7 @@
 package it.polimi.ingsw.View;
 
-import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
-import it.polimi.ingsw.Model.GameBoard.OfferTile;
-import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
 
@@ -18,7 +14,7 @@ public interface ClientViewUpdate {
     public void updateBottomRow(ArrayList<Card> newBottomRow);
     public void updateCurrentPlayer(String playerName);
     public void updateCurrentRound(int round);
-    public void updateChosenOfferTile(String playerName, Color color);
+    public void updateChosenOfferTile(String playerName, int index);
     public void addPlayer(String playerName);
     public void updateCurrentEra(int era);
     public void updateShamansStars(String playerName, int stars);

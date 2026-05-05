@@ -79,6 +79,11 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                         server.drawCard(fromTopRow, fromBuildings, index, this);
                         break;
                     }
+                    case SocketHeaderNames.CHOOSE_OFFER_TILE:{
+                        int index = (int) incomingCommand.getParameters()[0];
+                        server.chooseOfferTile(index, this);
+                    }
+
                 }
 
 
@@ -89,7 +94,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     public PlayerRecord getPlayerRecord(){return playerRecord;}
 
-    //CALLBACKS
+    //CALLBACKS actions from clients
     @Override
     public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.DRAWN_CARD, playerName, fromTopRow, fromBuildings, index);
@@ -114,9 +119,10 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         outStream.println(gson.toJson(message));
     }
 
+    //CALLBACKS updates from server
     @Override
     public void notifyFoodToAdd(String playerName, int food) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.FOOD_TO_ADD, playerName, food);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_FOOD, playerName, food);
         outStream.println(gson.toJson(message));
     }
 

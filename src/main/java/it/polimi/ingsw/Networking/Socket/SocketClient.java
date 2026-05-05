@@ -32,7 +32,7 @@ public class SocketClient implements VirtualSocketClient {
 
     @Override
     public void chosenTile(String playerName, int index) {
-
+        controller.updateChosenOfferTile(playerName, index);
     }
 
     @Override

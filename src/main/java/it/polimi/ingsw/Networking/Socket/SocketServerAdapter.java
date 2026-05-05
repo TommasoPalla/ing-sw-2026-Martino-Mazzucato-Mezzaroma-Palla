@@ -32,6 +32,7 @@ public class SocketServerAdapter implements ServerConnection {
         this.client = new SocketClient(clientController);
     }
 
+    //Lobby methods
     @Override
     public void connect() {
         try{
@@ -69,12 +70,7 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void createGame(String playerName, int numPlayers){
-
-    }
-
-    @Override
-    public void joinGame(String playerName, int gameID){
+    public void getActiveGames(){
 
     }
 
@@ -84,13 +80,22 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void getActiveGames(){
-
+    public void createGame(String playerName, int numPlayers){
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CREATE_GAME, playerName, numPlayers);
+        outStream.println(gson.toJson(message));
     }
 
     @Override
-    public void chooseOfferTile(int index) throws OccupiedTileException {
+    public void joinGame(String playerName, int gameID){
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CONNECT_TO_GAME, playerName, gameID);
+        outStream.println(gson.toJson(message));
+    }
 
+    //Client direct actions
+    @Override
+    public void chooseOfferTile(int index) throws OccupiedTileException {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHOOSE_OFFER_TILE, index);
+        outStream.println(gson.toJson(message));
     }
 
     @Override
@@ -110,5 +115,6 @@ public class SocketServerAdapter implements ServerConnection {
 
     }
 
+    //Server updates coming from actions of other players, events, drawing from deck etc
 
 }

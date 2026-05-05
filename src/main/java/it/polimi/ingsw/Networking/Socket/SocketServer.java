@@ -47,8 +47,8 @@ public class SocketServer implements VirtualSocketServer{
     }
 
     @Override
-    public void chooseOfferTile() throws OccupiedTileException {
-
+    public void chooseOfferTile(int index, SocketClientHandler clientHandler) throws OccupiedTileException {
+        serverController.chooseOfferTile(clientHandler.getPlayerRecord(), index);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class RMIServerAdapter implements ServerConnection {
     @Override
     public void connect() {
         try {
-            System.setProperty("java.rmi.server.hostname", "127.0.0.1");    //forces the server to use 127.0.0.1 as localhost
+            System.setProperty("java.rmi.server.hostname", ServerConfigs.DEFAULT_RMI_IP_ADDR);    //forces the server to use 127.0.0.1 as localhost
             Registry registry = LocateRegistry.getRegistry(host, port);
             serverStub = (VirtualRMIServer) registry.lookup(ServerConfigs.DEFAULT_RMI_SERVER_NAME);
             clientStub = (VirtualRMIClient) UnicastRemoteObject.exportObject(client, 0);
