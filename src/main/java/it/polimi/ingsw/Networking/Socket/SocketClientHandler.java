@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
@@ -13,6 +14,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class is located server-side and accepts methods invocation requests
@@ -20,6 +24,8 @@ import java.net.Socket;
  */
 
 public class SocketClientHandler implements ClientNotifier, Runnable {
+
+    private final Map<SocketHeaderNames, Consumer<Object[]>> commandHandlers = new HashMap<>();
     private final Gson gson = new Gson();
     private final BufferedReader inStream;
     private final PrintWriter outStream;
@@ -30,6 +36,62 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         this.inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.outStream = new PrintWriter(socket.getOutputStream(), true);
         this.server = server;
+        initCommandHandler();
+    }
+
+    public PlayerRecord getPlayerRecord(){return playerRecord;}
+
+    /**
+     * Binding of possible method calls to lambda expressions that defines what those
+     * method calls are supposed to do.
+     * This uses a "command" design pattern coupled with a map from enums to lambda expressions
+     */
+    private void initCommandHandler(){
+        commandHandlers.put(SocketHeaderNames.CONNECT_TO_GAME, parameters -> {
+            String playerName = (String) parameters[0];
+            int gameID = (int) parameters[1];
+            this.playerRecord = new PlayerRecord(gameID, playerName);
+            try {
+                server.joinGame(this);
+            } catch (Exception e){
+                //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
+            }
+        });
+        commandHandlers.put(SocketHeaderNames.CREATE_GAME, parameters -> {
+            String playerName = (String) parameters[0];
+            int numPlayers = (int) parameters[1];
+            try {
+                server.createGame(this, playerName, numPlayers);
+            } catch (Exception e){
+                //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
+            }
+        });
+        commandHandlers.put(SocketHeaderNames.CHOOSE_TOTEM_COLOR, parameters -> {
+            Color totemColor = Color.valueOf((String) parameters[0]) ;
+            try {
+                server.chooseTotemColor(totemColor, this);
+            }catch(UnavailableColorException e){
+                throw new UnavailableColorException(totemColor);
+            }
+        });
+        commandHandlers.put(SocketHeaderNames.DRAW_CARD, parameters -> {
+            boolean fromTopRow = (boolean) parameters[0];
+            boolean fromBuildings = (boolean) parameters[1];
+            int index = (int) parameters[2];
+            try {
+                server.drawCard(fromTopRow, fromBuildings, index, this);
+            } catch (IllegalDrawException e){
+                throw new IllegalDrawException();
+            }
+        });
+        commandHandlers.put(SocketHeaderNames.CHOOSE_OFFER_TILE, parameters -> {
+            try {
+                int index = (int) parameters[0];
+                server.chooseOfferTile(index, this);
+            }catch(OccupiedTileException e){
+                throw new OccupiedTileException();
+            }
+        });
     }
 
     /**
@@ -43,61 +105,22 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         server.connect(this);
         try{
             String incomingMessage;
-            //while(client connesso){
-            //  logica di parsing dei messaggi inviati dal client al server
-            //  da qui poi si chiameranno i metodi di server parsando i messaggi
-            //}
             while((incomingMessage = inStream.readLine()) != null){
-                SocketMessageDTO incomingCommand = gson.fromJson(incomingMessage, SocketMessageDTO.class);
+                SocketMessageDTO socketDTO = gson.fromJson(incomingMessage, SocketMessageDTO.class);
+                SocketHeaderNames socketHeader = socketDTO.getCommandName();
 
-                switch (incomingCommand.getCommandName()){
-                    case SocketHeaderNames.CREATE_GAME: {
-                        String playerName = (String) incomingCommand.getParameters()[0];
-                        int numPlayers = (int) incomingCommand.getParameters()[1];
-                        server.createGame(this, playerName, numPlayers);
-                        break;
-                    }
-                    case SocketHeaderNames.CONNECT_TO_GAME:{
-                        String playerName = (String) incomingCommand.getParameters()[0];
-                        int gameID = (int) incomingCommand.getParameters()[1];
-                        this.playerRecord = new PlayerRecord(gameID, playerName);
-                        server.joinGame(this);
-                        break;
-                    }
-                    case SocketHeaderNames.CHOOSE_TOTEM_COLOR:{
-                        Color totemColor = Color.valueOf((String) incomingCommand.getParameters()[0]) ;
-                        try {
-                            server.chooseTotemColor(totemColor, this);
-                        }catch(UnavailableColorException e){
-                            throw new UnavailableColorException(totemColor);
-                        }
-                        break;
-                    }
-                    case SocketHeaderNames.DRAW_CARD:{
-                        boolean fromTopRow = (boolean) incomingCommand.getParameters()[0];
-                        boolean fromBuildings = (boolean) incomingCommand.getParameters()[1];
-                        int index = (int) incomingCommand.getParameters()[2];
-                        server.drawCard(fromTopRow, fromBuildings, index, this);
-                        break;
-                    }
-                    case SocketHeaderNames.CHOOSE_OFFER_TILE:{
-                        try {
-                            int index = (int) incomingCommand.getParameters()[0];
-                            server.chooseOfferTile(index, this);
-                        }catch(OccupiedTileException e){
-                            throw new OccupiedTileException();
-                        }
-                    }
-
+                Consumer<Object[]> handler = commandHandlers.get(socketHeader);
+                if(handler != null){
+                    handler.accept(socketDTO.getParameters());
+                } else {
+                    System.out.println("ERROR: " + socketHeader + " is not a valid command"); //chiaramente un placeholder, va messo qualcosa di meglio
                 }
-
-
             }
 
-        } catch (Exception e){}
-    }
-
-    public PlayerRecord getPlayerRecord(){return playerRecord;}
+        } catch (Exception e){
+            System.out.println("ERROR: " + e.getMessage());
+        }
+}
 
     //CALLBACKS actions from clients
     @Override
@@ -132,13 +155,15 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifyShamansStarsToAdd(String playerName, int food) {
-
+    public void notifyShamansStarsToAdd(String playerName, int stars) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_SHAMAN_STARS, stars);
+        outStream.println(gson.toJson(message));
     }
 
     @Override
-    public void notifyPrestigePointsToAdd(String playerName, int food) {
-
+    public void notifyPrestigePointsToAdd(String playerName, int points) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_PRESTIGE_POINTS, points);
+        outStream.println(gson.toJson(message));
     }
 
 }

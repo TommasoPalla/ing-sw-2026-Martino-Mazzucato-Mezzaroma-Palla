@@ -53,7 +53,10 @@ public class LightTribe {
     }
 
     public void addShamansStars(int stars) {shamansStars += stars;}
+
+    //fare che se si toglie cibo e si va sotto zero si perdono PP o farlo fare al server e notificare solo il client?
     public void addFood(int food) {foodReserve += food;}
+
     public void addPrestigePoints(int prestigePoints) {this.prestigePoints += prestigePoints;}
     public void addToPopulation(CharacterCard character){
         population

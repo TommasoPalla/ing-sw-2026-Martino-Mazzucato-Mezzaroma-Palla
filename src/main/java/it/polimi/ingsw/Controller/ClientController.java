@@ -245,6 +245,11 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
+    public void updateShamansStars(String playerName, int stars) {
+        localModel.updateShamansStars(playerName, stars);
+    }
+
+    @Override
     public void updatePrestigePoints(String playerName, int pp) {
         localModel.updatePrestigePoints(playerName, pp);
     }
@@ -277,11 +282,6 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentEra(int era) {
         localModel.updateEra(era);
-    }
-
-    @Override
-    public void updateShamansStars(String playerName, int stars) {
-        localModel.updateShamansStars(playerName, stars);
     }
 
     @Override

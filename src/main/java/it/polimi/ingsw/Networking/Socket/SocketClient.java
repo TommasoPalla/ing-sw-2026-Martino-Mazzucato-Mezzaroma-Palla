@@ -27,36 +27,36 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void chosenTotemColor(String playerName, Color totemColor) {
+    public void updateChosenTotemColor(String playerName, Color totemColor) {
     }
 
     @Override
-    public void chosenTile(String playerName, int index) {
+    public void updateChosenTile(String playerName, int index) {
         controller.updateChosenOfferTile(playerName, index);
     }
 
     @Override
-    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
+    public void updateDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
         controller.updateCardDrawn(fromTopRow, fromBuildings, index, playerName);
     }
 
     @Override
-    public void gameStarted(String gameID, int numPlayers) {
+    public void updateGameStarted(String gameID, int numPlayers) {
 
     }
 
     @Override
     public void updateFood(String playerName, int food) throws IOException {
-
+        controller.updateFoodReserve(playerName, food);
     }
 
     @Override
     public void updateShamansStars(String playerName, int stars) throws IOException {
-
+        controller.updateShamansStars(playerName, stars);
     }
 
     @Override
     public void updatePrestigePoints(String playerName, int points) throws IOException {
-
+        controller.updatePrestigePoints(playerName, points);
     }
 }

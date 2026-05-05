@@ -7,9 +7,11 @@ public enum SocketHeaderNames {
     CHOOSE_TOTEM_COLOR,
     DRAW_CARD,
     CHOOSE_OFFER_TILE,
+    START_GAME,
 
     //conseguenze che il server manda come aggiornamento ai player
-    //GAME_CREATED,
+    GAME_CREATED,
+    GAME_STARTED,
     CONNECTED_TO_GAME,
     CHOSEN_TOTEM_COLOR,
     DRAWN_CARD,
