@@ -159,6 +159,7 @@ public class ClientModel {
     public boolean isColorAvailable(Color color){
         return totemColors.containsValue(color);
     }
+    public Map<String,Color> getTotemColors(){return totemColors;}
     public int getOfferTiles(String playerName){return currentOfferTiles.get(playerName);}
     public TurnTile getTurnTile(){return turnTile;}
     public ArrayList<OfferTile> getOfferTilesNumber(){return offerTiles;}

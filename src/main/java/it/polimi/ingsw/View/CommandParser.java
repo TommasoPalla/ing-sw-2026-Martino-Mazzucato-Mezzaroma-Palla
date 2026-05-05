@@ -46,7 +46,7 @@ public record CommandParser(ClientController clientController) {
         if (argsString.trim().isEmpty()) {
             throw new IllegalArgumentException("ERROR: you have to choose a color!");
         }
-        String[] commandArgs = parseArguments(CommandType.CHOOSE_COLOR, argsString);
+        String[] commandArgs = parseArguments(CommandType.CHOOSE_TOTEM_COLOR, argsString);
         try {
             clientController.chooseTotem(Color.valueOf(commandArgs[0]));
         }
@@ -60,18 +60,20 @@ public record CommandParser(ClientController clientController) {
 
     /**
      * This method parses the command to create a new game.
-     * @param argsString the string with the arguments passed by the player.
+     * @param argsString one argument is expected: the number of players.
      */
     public void parseCreateGame(String argsString) {
         if (argsString.trim().isEmpty()) {
-            throw new IllegalArgumentException("ERROR: enter a game name to create a new game.");
+            throw new IllegalArgumentException("ERROR: you need to enter the number of players.");
         }
         String[] commandArgs = parseArguments(CommandType.CREATE_GAME, argsString);
-//        try {
-//            clientController.createGame(commandArgs[0]);
-//        } catch (GameAlreadyExistsException e) {
-//            throw new IllegalArgumentException("ERROR: game already exists!");
-//        }
+        try {
+            clientController.createGame(Integer.parseInt(commandArgs[0]));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ERROR: command argument must be a number!");
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("ERROR: invalid number of participants. Mesos requires from 2 to 5 players!");
+        }
     }
 
     /**
@@ -79,23 +81,25 @@ public record CommandParser(ClientController clientController) {
      * @param argsString the string with the arguments passed by the player.
      */
     public void parseDrawCard(String argsString) {
+        int index;
+        boolean fromTopRow;
+        boolean fromBuilding;
         if (argsString.trim().isEmpty()) {
             throw new IllegalArgumentException("ERROR: this command requires arguments.");
         }
         String[] commandArgs = parseArguments(CommandType.DRAW_CARD, argsString);
 
         try {
-            int index = Integer.parseInt(commandArgs[2]);
-            boolean fromTopRow = parseRowBoolean(commandArgs[0]);
-            boolean fromBuilding = parseCardBoolean(commandArgs[1]);
+            index = Integer.parseInt(commandArgs[2]);
+            fromTopRow = parseRowBoolean(commandArgs[0]);
+            fromBuilding = parseCardBoolean(commandArgs[1]);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("ERROR: the last argument is not a number!");
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e);
         }
-
         try {
-            //clientController.drawCard(commandArgs[0], commandArgs[1], commandArgs[2]);
+            clientController.drawCard(fromTopRow, fromBuilding,  index);
         } catch (IllegalDrawException e) {
             throw new IllegalArgumentException("ERROR: invalid index.");
         }

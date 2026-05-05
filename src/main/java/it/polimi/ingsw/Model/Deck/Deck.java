@@ -24,7 +24,7 @@ public class Deck {
     private final List<EventCard> allEventCards;
     private final List<BuildingCard> allBuildingCards;    //from JSON
 
-    //constructor called by game.startGame()
+    //constructor called by game.createGame()
     public Deck(Game gameInstance, int numPlayers, String jsonPath){
         this.game = gameInstance;
         switch (numPlayers){

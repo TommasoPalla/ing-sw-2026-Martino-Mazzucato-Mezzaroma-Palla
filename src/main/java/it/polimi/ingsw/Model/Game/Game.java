@@ -185,7 +185,7 @@ public class Game {
 
         this.startGame();
         while(this.currentRound <= 10){
-            //turno di player 1 da startGame()
+            //turno di player 1 da createGame()
             for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
 
                 //classe controller richiede l'indice input

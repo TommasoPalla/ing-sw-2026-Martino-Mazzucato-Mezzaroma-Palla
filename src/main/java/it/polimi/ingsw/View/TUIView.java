@@ -2,6 +2,7 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.CharacterRole;
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;
 import it.polimi.ingsw.Enums.TUIState;
 import it.polimi.ingsw.Model.Cards.Card;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.LightTribe;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,24 +38,24 @@ public class TUIView implements ViewInterface {
     public void runView() {
         System.out.println("Benvenuto su Mesos sesos pesos quevos");
         System.out.println("Scegli il tuo nome:");
-        Scanner scanner = new Scanner(System.in);
-        String playerName = scanner.nextLine();
-        /*try {
-            clientController.setPlayerName(playerName);
-        } catch() {
-
-        }*/
-        this.player = playerName;
-        System.out.println("Scegli il colore del totem:");
-        Scanner scanner1 = new Scanner(System.in);
-        //check scelta del totem
-        String color = scanner1.nextLine();
+        boolean nameVerified = false;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            String playerName = scanner.nextLine();
+            try {
+                //clientController.setPlayerName(playerName);
+                nameVerified = true;
+                this.player = playerName;
+            } catch(IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        } while (!nameVerified);
         printAvailableActions(tuiState);
         // ciclo di ascolto comandi
         Scanner commandScanner = new Scanner(System.in);
         while(!Thread.currentThread().isInterrupted()) {
             String command = commandScanner.nextLine();
-            // gestione instradamento command
+            parseCommand(command);
         }
     }
 
@@ -111,8 +113,10 @@ public class TUIView implements ViewInterface {
 
         switch (commandType) {
             case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
+            case CHOOSE_TOTEM_COLOR     -> commandParser.parseChooseTotemColor(argsString);
             case SHOW_OTHER_TRIBE       -> offerTrackTUIView(argsString);
             case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
+            default                     -> throw new IllegalArgumentException("Invalid command, please try again...");
         }
     }
 
@@ -198,12 +202,25 @@ public class TUIView implements ViewInterface {
      * @param tuiState The state of the TUI the player is currently visualising.
      */
     private void printAvailableActions(TUIState tuiState) {
-        System.out.println("Available Actions:\n");
+        System.out.println("These are the available Actions:\n");
         switch(tuiState) {
             case SETUP:
-                //
+                System.out.println("- create_game(numberOfPlayers)");
+                System.out.println("- join_game(gameID)");
+                break;
             case IN_LOBBY:
-                //
+                System.out.println("- choose_totem_color(color)");
+                System.out.println("- start_game()");
+                System.out.println();
+                System.out.println("Available totem colors: ");
+                EnumSet<Color> availableColors = EnumSet.allOf(Color.class);
+                for(Color color : localModel.getTotemColors().values()) {
+                    availableColors.remove(color);
+                }
+                for(Color color : availableColors) {
+                    System.out.println("- " + color);
+                }
+                break;
             case SHOW_OFFER_TRACK:
                 //
             case SHOW_PERSONAL_TRIBE:

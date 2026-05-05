@@ -63,8 +63,16 @@ public class ClientController implements ClientViewUpdate {
         this.localModel = new ClientModel(gameId, num);
     }
 
-    public void startGame(int numPlayers){
+    /**
+     * This method forwards the request through the network to the Server Controller, which will add the
+     * game to the list of active games.
+     * @param numPlayers the number of players chosen by the client who creates the game.
+     */
+    public void createGame(int numPlayers){
         //con partite multiple non serve verificare che ci sia una partita già inizializzata
+        if(numPlayers < 2 || numPlayers > 5){
+            throw new IllegalArgumentException();
+        }
         connection.createGame(playerName, numPlayers);
     }
     public void showActiveGames(){
@@ -94,7 +102,7 @@ public class ClientController implements ClientViewUpdate {
         connection.chooseOfferTile(index);
     }
 
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){ //throws IllegalDraw and InsufficientFood
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
         if(localModel.getCurrentPlayer().equals(playerName) && localModel.drawable(fromTopRow, fromBuildings, index)){
             connection.drawCard(fromTopRow, fromBuildings, index);
         } else {

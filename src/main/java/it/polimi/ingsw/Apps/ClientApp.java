@@ -57,7 +57,7 @@ public class ClientApp {
             }// GUI start
         }
         clientController.bindView(view);
-        view.runView();
+        //view.runView();
 
         /*
          * Al player viene chiesto il nickname da usare durante la partita
