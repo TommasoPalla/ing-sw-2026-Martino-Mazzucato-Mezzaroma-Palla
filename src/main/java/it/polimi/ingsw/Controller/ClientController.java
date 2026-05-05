@@ -8,6 +8,7 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
+import it.polimi.ingsw.Model.Users.UnavailableColorException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ViewInterface;
@@ -93,8 +94,12 @@ public class ClientController implements ClientViewUpdate {
     ClientController checks if localModel allows them and then send to server,
     identified by connection field (RMI/socket)*/
     public void chooseTotem(Color color){
-        if(localModel.isColorAvailable(color)) throw new IllegalArgumentException();
-        connection.chooseTotem(color);
+        try {
+            if (localModel.isColorAvailable(color)) throw new IllegalArgumentException();
+            connection.chooseTotem(color);
+        }catch (UnavailableColorException e){
+            throw new UnavailableColorException("colore già scelto");
+        }
     }
 
     public void chooseOfferTile(int index) {

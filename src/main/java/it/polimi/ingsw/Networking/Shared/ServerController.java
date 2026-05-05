@@ -3,6 +3,7 @@ package it.polimi.ingsw.Networking.Shared;
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
+import it.polimi.ingsw.Model.Users.UnavailableColorException;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -95,10 +96,15 @@ public class ServerController {
     public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
-            currentController.chooseTotemColor(playerRecord, totemColor);
+            try {
+                currentController.chooseTotemColor(playerRecord, totemColor);
+            }catch(UnavailableColorException e) {
+                throw new UnavailableColorException("colore già scelto");
+                }
+            }
         }
 
-    }
+
 
     public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();

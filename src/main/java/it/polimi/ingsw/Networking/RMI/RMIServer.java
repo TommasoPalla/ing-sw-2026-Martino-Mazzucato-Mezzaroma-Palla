@@ -3,6 +3,7 @@ package it.polimi.ingsw.Networking.RMI;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
+import it.polimi.ingsw.Model.Users.UnavailableColorException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
@@ -78,7 +79,11 @@ public class RMIServer implements VirtualRMIServer {
 
     @Override
     public void chooseTotemColor(VirtualRMIClient client, Color totemColor) throws RemoteException {
-        PlayerRecord callerRecord = clientRecords.get(client);
-        serverController.chooseTotemColor(callerRecord, totemColor);
+        try{
+            PlayerRecord callerRecord = clientRecords.get(client);
+            serverController.chooseTotemColor(callerRecord, totemColor);
+        }catch(UnavailableColorException e){
+            throw new UnavailableColorException("colore già scelto");
+        }
     }
 }

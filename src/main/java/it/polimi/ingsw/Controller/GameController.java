@@ -44,8 +44,13 @@ public class GameController {
      */
 
     //TODO: capire se metodi come questo devono fare il controllo loro oppure lo si fa in Game e si lancia l'eccezione da li'
-    public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
+    public synchronized void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
         Player player = gameInstance.getPlayerByName(playerRecord.playerName());
+        for(Player allplayer : gameInstance.getPlayers()){
+            if(allplayer.getTotemColor()==totemColor){
+                throw new UnavailableColorException("Color already taken: " + totemColor);
+            }
+        }
         try {
             player.setTotemColor(totemColor);
             gameInstance.chooseTotemColor(playerRecord.playerName(), totemColor);

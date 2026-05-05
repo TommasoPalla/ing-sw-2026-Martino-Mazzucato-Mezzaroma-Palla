@@ -2,6 +2,7 @@ package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.Model.Users.UnavailableColorException;
 
 import java.rmi.RemoteException;
 
@@ -35,7 +36,12 @@ public class RMIClient implements VirtualRMIClient {
 
     @Override
     public void chosenTotem(String playerName, Color totemColor){
-        controller.chooseTotem(totemColor);
+
+        try{
+            controller.chooseTotem(totemColor);
+        }catch(UnavailableColorException e){
+            throw new UnavailableColorException("colore basta");
+        }
     }
 
     @Override
