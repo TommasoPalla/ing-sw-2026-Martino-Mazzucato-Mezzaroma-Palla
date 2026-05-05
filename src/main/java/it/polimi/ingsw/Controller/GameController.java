@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.CustomException.*;
+import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
@@ -48,7 +50,7 @@ public class GameController {
         Player player = gameInstance.getPlayerByName(playerRecord.playerName());
         for(Player allplayer : gameInstance.getPlayers()){
             if(allplayer.getTotemColor()==totemColor){
-                throw new UnavailableColorException("Color already taken: " + totemColor);
+                throw new UnavailableColorException(totemColor);
             }
         }
         try {

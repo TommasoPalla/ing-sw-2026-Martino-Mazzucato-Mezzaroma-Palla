@@ -1,7 +1,8 @@
 package it.polimi.ingsw.Model.Users;
 
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.InsufficientFoodException;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.Cards.VisitorAdapter;
 import it.polimi.ingsw.Model.ClientModel;
@@ -11,27 +12,21 @@ import it.polimi.ingsw.Model.ClientModel;
  * a CharacterCard can always be drawn,
  * a BuildingCard can be drawn only if the player can afford it.
  */
+//throws exception if card isn't drawable, otherwise does nothing
 public class DrawableCardVisitor extends VisitorAdapter {
-    private boolean drawable;
     private final boolean isLightModel;
     private final ClientModel model;
     private final Player player;
 
     public DrawableCardVisitor(ClientModel lightModel){
-        drawable = false;
         isLightModel = true;
         model = lightModel;
         player = null;
     }
     public DrawableCardVisitor(Player player){
-        drawable = false;
         isLightModel = false;
         model = null;
         this.player = player;
-    }
-
-    public boolean isDrawable(){
-        return drawable;
     }
 
     @Override
@@ -48,21 +43,14 @@ public class DrawableCardVisitor extends VisitorAdapter {
             discountedCost -= player.getTribe().getBuilderDiscount();
             foodReserve = player.getTribe().getFoodReserve();
         }
-        if (foodReserve >= discountedCost) {
-            drawable = true;
-        } else {
-            drawable = false;
+        if (foodReserve < discountedCost) {
             throw new InsufficientFoodException();
         }
     }
-    @Override
-    public void visitCard(CharacterCard character){
-    drawable = true;
-    }
+    //visit Character does nothing
 
     @Override
     public void visitCard(EventCard event) {
-        drawable = false;
         throw new IllegalDrawException();
     }
 }

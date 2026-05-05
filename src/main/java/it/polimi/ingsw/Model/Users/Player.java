@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Model.Users;
 
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.InsufficientFoodException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.Model.Cards.*;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
@@ -78,7 +81,7 @@ public class Player {
             //che verosimilmente sarà del controller e sarà lui a mostrare l'errore
 
         }
-        return visitor.isDrawable();
+        return true;
     }
 
     /**drawCard method is called when a player tries to add one

@@ -8,8 +8,6 @@ import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.TurnTile;
 import it.polimi.ingsw.Model.Users.DrawableCardVisitor;
-import it.polimi.ingsw.Model.Users.IllegalDrawException;
-import it.polimi.ingsw.Model.Users.InsufficientFoodException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +37,7 @@ public class ClientModel {
     public ClientModel(int gameId, int numPlayers){
         this.gameId = gameId;
         this.numPlayers = numPlayers;
+        this.players = new HashMap<>();
         this.currentPhase = GamePhase.START_GAME;
         this.currentRound = 0;
         this.currentOfferTiles = new HashMap<>();
@@ -50,7 +49,13 @@ public class ClientModel {
         this.offerTiles = new ArrayList<>();
     }
 
-    public boolean drawable(boolean fromTopRow, boolean fromBuildings, int index) {
+    /*drawable è void in quanto la gestione del caso negativo (la carta non è pescabile)
+    avviene attraverso le exception, lanciate dal metodo accept(visitor)
+    solo se l'edificio non è alla portata del player o la carta è un evento.
+    se finsce il metodo implicitamente non ha lanciato eccezioni e il metodo
+    drawCard di clientController può procedere senza problemi.
+     */
+    public void drawable(boolean fromTopRow, boolean fromBuildings, int index) {
         Card card;
         DrawableCardVisitor visitor = new DrawableCardVisitor(this);
         if(fromBuildings){
@@ -61,8 +66,8 @@ public class ClientModel {
             card = fromTopRow ? getTopRow().get(index)
                     : getBottomRow().get(index);
         }
-            card.accept(visitor);   //throws IllegalDraw and InsufficientFood
-        return visitor.isDrawable();
+        card.accept(visitor);   //throws IllegalDraw and InsufficientFood
+        return;
     }
 
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }

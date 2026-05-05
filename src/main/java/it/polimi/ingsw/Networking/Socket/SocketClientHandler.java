@@ -2,8 +2,8 @@ package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
-import it.polimi.ingsw.Model.Users.UnavailableColorException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
@@ -69,7 +69,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                         try {
                             server.chooseTotemColor(totemColor, this);
                         }catch(UnavailableColorException e){
-                            throw new UnavailableColorException("colore unavailable");
+                            throw new UnavailableColorException(totemColor);
                         }
                         break;
                     }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
 
 /**
  * This interface contains all the actions that the client can do.

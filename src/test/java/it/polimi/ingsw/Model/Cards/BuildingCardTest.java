@@ -36,9 +36,9 @@ public class BuildingCardTest {
     }
     @Test
     public void otherMethods(){
-        Game game = new Game("abc", 4);
+        Game game = new Game(5, 4);
         allBuildingCards = loader.loadBuildings("json/cards.json");
-        Player player = new Player(game,"provola", Color.RED);
+        Player player = new Player(game,"sette");
         allBuildingCards.getFirst().assignOwner(player);
         assertEquals(player, allBuildingCards.getFirst().getOwner());
         assertTrue(allBuildingCards.get(3).isUsedIn(SustenanceEvent.class));

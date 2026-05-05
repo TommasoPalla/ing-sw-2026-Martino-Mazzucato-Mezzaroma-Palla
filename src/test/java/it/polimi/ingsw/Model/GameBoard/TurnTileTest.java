@@ -63,11 +63,11 @@ public class TurnTileTest {
         Game game;
         @BeforeEach
         public void setup(){
-            Game game = new Game("01", 4);
+            Game game = new Game(1, 4);
 
-            player1 = new Player(game, "1", Color.RED);
-            player2 = new Player(game,"2", Color.BLUE);
-            player3 = new Player(game,"3", Color.WHITE);
+            player1 = new Player(game, "1");
+            player2 = new Player(game,"2");
+            player3 = new Player(game,"3");
             turnOrder = new ArrayList<>();
             turnOrder.add(player3);
             turnOrder.add(player1);
@@ -77,7 +77,7 @@ public class TurnTileTest {
             player2.chooseOfferTile(1, offerTrack);
             player3.chooseOfferTile(3, offerTrack);
             turnTile = new TurnTile(turnOrder.size());
-            game = new Game("01",turnOrder.size());
+            game = new Game(5,turnOrder.size());
 
             //in this scenario player1 chose to go on tile 2 and then player2 chose to go on tile 1
             //meaning that the next turn player 2 will play before player 1

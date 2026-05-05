@@ -1,5 +1,11 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.InsufficientFoodException;
+import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
+import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
@@ -7,9 +13,6 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
-import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
-import it.polimi.ingsw.Model.Users.UnavailableColorException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ViewInterface;
@@ -118,7 +121,7 @@ public class ClientController implements ClientViewUpdate {
             if (localModel.isColorAvailable(color)) throw new IllegalArgumentException();
             connection.chooseTotem(color);
         }catch (UnavailableColorException e){
-            throw new UnavailableColorException("colore già scelto");
+            throw new UnavailableColorException(color);
         }
     }
 
@@ -131,12 +134,28 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
+    /*GESTIONE EXCEPTION ESEMPIO!
+    il drawable può lanciare InsufficientFood o IllegalDraw
+    che viene catchato qui perché lasciarlo arrivare alla view (che è un altro thread)
+    causerebbe la morte del thread che si occupa di questa classe.
+    Lancia una nuova eccezione già formattata in un formato user-friendly per la view
+    con messaggio personalizzato e 'cause', ovvero l'eccezione originale.
+    Questa informazione non viene persa e può essere usata per stampare informazioni aggiuntive
+    o per mantenere informazioni di log.
+    * */
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
         if(clientState != ClientState.DRAW_CARD) {
-            throw new IllegalActionPhaseException();
+            //throw new IllegalActionPhaseException();
+            //TODO:forse temrina il thread, controllo dopo
+
         }
-        if(localModel.getCurrentPlayer().equals(playerName) && localModel.drawable(fromTopRow, fromBuildings, index)){
-            connection.drawCard(fromTopRow, fromBuildings, index);
+        if(localModel.getCurrentPlayer().equals(playerName)){
+            try {
+                localModel.drawable(fromTopRow, fromBuildings, index);
+                connection.drawCard(fromTopRow, fromBuildings, index);
+            } catch (InsufficientFoodException | IllegalDrawException e){
+                throw new InvalidSelectionException("Can't draw this card: ", e);
+            }
         } else {
             throw new IllegalActionPhaseException();
         }

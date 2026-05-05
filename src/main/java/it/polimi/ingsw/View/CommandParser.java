@@ -1,11 +1,13 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException; //dovrebbe servire
+import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;
-import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
-import it.polimi.ingsw.Model.Users.IllegalDrawException;
-import it.polimi.ingsw.Model.Users.UnavailableColorException;
+
 
 /**
  * This record class is used as a command parser. It translates command from the view and
@@ -101,13 +103,10 @@ public record CommandParser(ClientController clientController) {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e);
         }
-        try {
-            clientController.drawCard(fromTopRow, fromBuilding,  index);
-        } catch (IllegalDrawException e) {
-            throw new IllegalArgumentException("ERROR: invalid index.");
-        }
-        catch (IllegalActionPhaseException e) {
+        //non vanno try e catch perché drawCard lancia eccezioni già "formattate" nel formato che piace alla view
+        clientController.drawCard(fromTopRow, fromBuilding,  index);
+        /*catch (IllegalActionPhaseException e) {
             throw new IllegalActionPhaseException();
-        }
+        }*/
     }
 }

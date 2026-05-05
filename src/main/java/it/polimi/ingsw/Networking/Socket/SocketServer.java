@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.IllegalDrawException;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
-import it.polimi.ingsw.Model.Users.UnavailableColorException;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
@@ -62,7 +62,7 @@ public class SocketServer implements VirtualSocketServer{
         try {
             serverController.chooseTotemColor(handler.getPlayerRecord(), totemColor);
         }catch(UnavailableColorException e){
-            throw new UnavailableColorException("colore unavailable");
+            throw new UnavailableColorException(totemColor);
         }
     }
 
@@ -78,12 +78,14 @@ public class SocketServer implements VirtualSocketServer{
         serverController.addNotifierToGame(record, handler);
     }
 
+
+    /*che cazzo è sta roba Lorenzo? è già implementato sopra
     @Override
     public void chooseOfferTile(PlayerRecord playerRecord, int index) {
         try {
-            serverController.chooseOfferTile(playerRecord, index);
+            //serverController.chooseOfferTile(playerRecord, index);
         }catch(OccupiedTileException e){
             throw new OccupiedTileException();
         }
-    }
+    }*/
 }

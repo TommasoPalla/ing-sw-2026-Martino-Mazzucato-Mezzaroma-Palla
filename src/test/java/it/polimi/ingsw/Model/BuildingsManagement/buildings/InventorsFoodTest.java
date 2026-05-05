@@ -20,12 +20,12 @@ public class InventorsFoodTest {
     public void inventorsFoodTest() {
         // GAME AND BUILDINGMANAGER INIT
         Game game = null;
-        Player player1 =  new Player(game,"giocatore1", Color.BLUE);
-        Player player2 =  new Player(game,"giocatore2", Color.RED);
+        Player player1 =  new Player(game,"giocatore1");
+        Player player2 =  new Player(game,"giocatore2");
         ArrayList<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
-        game = new Game("1234", players.size());
+        game = new Game(2, players.size());
         // INVENTORSFOOD TEST
         buildingManager = game.getBuildingManager();
         /*CharacterCard inv1 = new CharacterCard(1, "A", 3, CharacterRole.INVENTOR, null, InventorType.BOAT, null, null, null);

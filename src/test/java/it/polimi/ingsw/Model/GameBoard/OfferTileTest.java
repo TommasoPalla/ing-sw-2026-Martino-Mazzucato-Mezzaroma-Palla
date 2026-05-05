@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OfferTileTest {
     OfferTile tileA = new OfferTile('A');
     OfferTile tileG = new OfferTile('G');
-    Game game = new Game("adf", 4);
-    Player player = new Player(game,"AAA", Color.BLACK);
+    Game game = new Game(5, 4);
+    Player player = new Player(game,"AAA");
     @Test
     void initOfferTile(){
         //tile A test

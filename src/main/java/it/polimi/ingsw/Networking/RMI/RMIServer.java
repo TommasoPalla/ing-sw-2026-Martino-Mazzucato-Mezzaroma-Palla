@@ -1,9 +1,10 @@
 package it.polimi.ingsw.Networking.RMI;
 
+import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.IllegalDrawException;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
-import it.polimi.ingsw.Model.Users.UnavailableColorException;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
@@ -46,7 +47,8 @@ public class RMIServer implements VirtualRMIServer {
     }
 
     @Override
-    public void createGame(VirtualRMIClient client, String playerName, int numPlayers) throws RemoteException {
+    public void createGame(String playerName, int numPlayers) throws RemoteException {
+        /*tmeporaneo perché mi dà errori nella riga sotto*/ RMIClient client = new RMIClient(new ClientController());
         ClientNotifier clientNotifier = new RMIClientNotifier(client);
         //da fare il clientRecord.put() capendo come prendere il game id
         serverController.createNewGame(clientNotifier, playerName, numPlayers);
@@ -86,7 +88,7 @@ public class RMIServer implements VirtualRMIServer {
             PlayerRecord callerRecord = clientRecords.get(client);
             serverController.chooseTotemColor(callerRecord, totemColor);
         }catch(UnavailableColorException e){
-            throw new UnavailableColorException("colore già scelto");
+            throw new UnavailableColorException(totemColor);
         }
     }
 

@@ -3,6 +3,10 @@ package it.polimi.ingsw.Model.Game;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.LastPlayerOfTurnException;
+import it.polimi.ingsw.CustomException.LastRoundException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Deck.Deck;
@@ -75,7 +79,7 @@ public class Game {
     public Player getNextPlayer() {
         int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
         if  (currentPlayerIndex < turnOrder.size()-1) return turnOrder.get(currentPlayerIndex+1);
-        else throw new LastPlayerOfTurnException("Last player of turn has played");
+        else throw new LastPlayerOfTurnException();
     }
 
     //not sure about the logic here but also can't see anything horribly wrong

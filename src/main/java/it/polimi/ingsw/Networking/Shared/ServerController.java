@@ -3,8 +3,8 @@ package it.polimi.ingsw.Networking.Shared;
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
-import it.polimi.ingsw.Model.Users.UnavailableColorException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
 import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 
@@ -86,7 +86,7 @@ public class ServerController {
             try {
                 currentController.chooseTotemColor(playerRecord, totemColor);
             }catch(UnavailableColorException e) {
-                throw new UnavailableColorException("colore già scelto");
+                throw new UnavailableColorException(totemColor);
                 }
             }
         }

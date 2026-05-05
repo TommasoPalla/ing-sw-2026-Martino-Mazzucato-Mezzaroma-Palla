@@ -17,7 +17,7 @@ public class OfferTrackTest {
     OfferTrack track;
     @BeforeEach
     public void init(){
-        Game game = new Game("gamee", 3);
+        Game game = new Game(6, 3);
         track =  new OfferTrack(game, 4);
     }
     @Test

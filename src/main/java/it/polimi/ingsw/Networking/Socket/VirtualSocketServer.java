@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.IllegalDrawException;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 
 /**

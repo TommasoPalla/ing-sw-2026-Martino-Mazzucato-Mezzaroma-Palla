@@ -10,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PlayerTest {
-    Game game = new Game("01", 4);
-    Player player1 = new Player(game, "Giocatore1", Color.YELLOW);
-    Player player2 = new Player(game, "Giocatore2", Color.RED);
+    Game game = new Game(1, 4);
+    Player player1 = new Player(game, "Giocatore1");
+    Player player2 = new Player(game, "Giocatore2");
     OfferTrack  offerTrack = new OfferTrack(game, 2);
     @BeforeEach
     void setUp() {

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
+import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;
@@ -9,7 +11,6 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Model.LightTribe;
-import it.polimi.ingsw.Model.Users.IllegalActionPhaseException;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -93,7 +94,14 @@ public class TUIView implements ViewInterface {
             try {
                 CommandType commandType = CommandType.valueOf(matcher.group(1).toUpperCase());
                 commandParserSelector(commandType, matcher);
-            } catch (IllegalActionPhaseException | IllegalArgumentException e) {
+            }
+            //sequenza di catch da gestire
+            //per ora è gestito il caso di drawCard,
+            //stampa "cant draw this card" + "insufficient food / cant draw event"
+            catch(InvalidSelectionException e){
+                System.out.println(e.getMessage()+e.getCause().getMessage());
+            }
+            catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         }

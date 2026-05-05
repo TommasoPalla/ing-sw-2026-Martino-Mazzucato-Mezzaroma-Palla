@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Users.IllegalDrawException;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
-import it.polimi.ingsw.Model.Users.UnavailableColorException;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Controller.ClientController;
@@ -61,7 +61,7 @@ public class RMIServerAdapter implements ServerConnection {
     @Override
     public void createGame(String playerName, int numPlayers){
         try {
-            serverStub.createGame(client, playerName, numPlayers);
+            serverStub.createGame(playerName, numPlayers);
         } catch (RemoteException e) {
             System.out.println("Error during creating game " + e.getMessage());
         }
@@ -115,7 +115,7 @@ public class RMIServerAdapter implements ServerConnection {
         } catch (RemoteException e){
             System.out.println("ERROR: remote error, could not choose " + totemColor + "\n" + e.getMessage());
         } catch (UnavailableColorException e1){
-            throw new UnavailableColorException("colore " +totemColor +" scelto");
+            throw new UnavailableColorException(totemColor);
         }
 
     }

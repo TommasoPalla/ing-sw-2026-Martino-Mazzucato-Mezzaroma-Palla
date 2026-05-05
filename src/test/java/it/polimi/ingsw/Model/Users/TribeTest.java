@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TribeTest {
-    Game game = new Game("12", 4);
+    Game game = new Game(5, 4);
     Tribe tribe = new Tribe(game);
-    Player player = new Player(game, "aaa", Color.BLUE);
+    Player player = new Player(game, "aaa");
     @Test
     void initTribe(){
         assertEquals(player, tribe.getTribeOwner());
@@ -87,8 +87,8 @@ public class TribeTest {
     }
     @Test
     void buildingsPoints(){
-        Game game = new Game("34", 5);
-        Player player2 = new Player(game, "pluto", Color.RED);
+        Game game = new Game(4, 5);
+        Player player2 = new Player(game, "pluto");
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
         players.add(player2);

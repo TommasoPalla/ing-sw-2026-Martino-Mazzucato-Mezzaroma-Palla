@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
-import it.polimi.ingsw.Model.Users.IllegalDrawException;
-import it.polimi.ingsw.Model.Users.OccupiedTileException;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 
 import java.io.BufferedReader;
