@@ -104,8 +104,25 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifyGameChosenTile(String playerName, int index) {
+    public void notifyChosenTile(String playerName, int index) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHOSEN_OFFER_TILE, playerName, index);
         outStream.println(gson.toJson(message));
     }
+
+    @Override
+    public void notifyFoodToAdd(String playerName, int food) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.FOOD_TO_ADD, playerName, food);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyShamansStarsToAdd(String playerName, int food) {
+
+    }
+
+    @Override
+    public void notifyPrestigePointsToAdd(String playerName, int food) {
+
+    }
+
 }

@@ -44,4 +44,19 @@ public class SocketClient implements VirtualSocketClient {
     public void gameStarted(String gameID, int numPlayers) {
 
     }
+
+    @Override
+    public void updateFood(String playerName, int food) throws IOException {
+
+    }
+
+    @Override
+    public void updateShamansStars(String playerName, int stars) throws IOException {
+
+    }
+
+    @Override
+    public void updatePrestigePoints(String playerName, int points) throws IOException {
+
+    }
 }

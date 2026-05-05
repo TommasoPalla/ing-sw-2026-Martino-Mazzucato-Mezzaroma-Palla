@@ -11,8 +11,11 @@ public interface ClientNotifier {
     void chosenTile(String playerName, int index) throws  IOException;
     void gameStarted(String gameID, int numPlayers) throws  IOException;
      */
-    void notifyGameChosenTile(String playerName, int index);
     void notifyTotemColor(String playerName, Color totemColor);
     void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index);
     void notifyNewPlayerConnected(String playerName);
+    void notifyChosenTile(String playerName, int index);
+    void notifyFoodToAdd(String playerName, int food);
+    void notifyShamansStarsToAdd(String playerName, int food);
+    void notifyPrestigePointsToAdd(String playerName, int food);
 }

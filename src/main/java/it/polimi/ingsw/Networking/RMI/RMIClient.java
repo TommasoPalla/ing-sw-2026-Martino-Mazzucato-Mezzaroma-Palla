@@ -58,4 +58,18 @@ public class RMIClient implements VirtualRMIClient {
         controller.updateCurrentRound(round);
     }
 
+    @Override
+    public void updateFood(String playerName, int food) throws RemoteException {
+
+    }
+
+    @Override
+    public void updateShamansStars(String playerName, int stars) throws RemoteException {
+
+    }
+
+    @Override
+    public void updatePrestigePoints(String playerName, int points) throws RemoteException {
+
+    }
 }

@@ -38,11 +38,30 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyGameChosenTile(String playerName, int index) {
+    public void notifyChosenTile(String playerName, int index) {
         try {
             clientStub.chosenTile(playerName, index);
         } catch (RemoteException e) {
             System.out.println("ERROR: could not notify of Tile choice\n" + e.getMessage());
         }
+    }
+
+    @Override
+    public void notifyFoodToAdd(String playerName, int food) {
+        try {
+            clientStub.chosenTile(playerName, food);
+        } catch (RemoteException e) {
+            System.out.println("ERROR: could not notify of Tile choice\n" + e.getMessage());
+        }
+    }
+
+    @Override
+    public void notifyShamansStarsToAdd(String playerName, int food) {
+
+    }
+
+    @Override
+    public void notifyPrestigePointsToAdd(String playerName, int food) {
+
     }
 }

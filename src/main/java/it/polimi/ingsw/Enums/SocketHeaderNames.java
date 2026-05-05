@@ -12,5 +12,6 @@ public enum SocketHeaderNames {
     CHOSEN_TOTEM_COLOR,
     DRAWN_CARD,
     CHOSEN_OFFER_TILE,
+    FOOD_TO_ADD,
 
 }
