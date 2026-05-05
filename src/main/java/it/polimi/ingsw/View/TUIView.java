@@ -3,22 +3,22 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
 import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
-import it.polimi.ingsw.Enums.CharacterRole;
-import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Enums.CommandType;
-import it.polimi.ingsw.Enums.TUIState;
+import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.ClientModel;
+import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.LightTribe;
+import it.polimi.ingsw.View.Listeners.Listener;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TUIView implements ViewInterface {
+public class TUIView implements ViewInterface, Listener {
     final private ClientModel localModel;
     final private ClientController clientController;
     final private CommandParser commandParser;
@@ -52,7 +52,7 @@ public class TUIView implements ViewInterface {
                 System.out.println(e.getMessage());
             }
         } while (!nameVerified);
-        printAvailableActions(tuiState);
+        changeClientState(ClientState.SETUP);
         // ciclo di ascolto comandi
         Scanner commandScanner = new Scanner(System.in);
         while(!Thread.currentThread().isInterrupted()) {
@@ -69,7 +69,6 @@ public class TUIView implements ViewInterface {
             throw new IllegalArgumentException("This method doesnt require arguments.");
         }
         tuiState = TUIState.SHOW_OFFER_TRACK;
-        printAvailableActions(TUIState.SHOW_OFFER_TRACK);
         //printOfferTrack();
     }
 
@@ -205,15 +204,65 @@ public class TUIView implements ViewInterface {
 //        //da finire, e da modificare perché ho sbagliato, meglio rappresentazione verticale dell'offerTrack
 //    }
 
+    public void changeClientState(ClientState clientState) {
+        switch (clientState) {
+            case SETUP -> {
+                System.out.println("You are in the setup state.");
+                printAvailableActions(ClientState.SETUP);
+            }
+            case IN_LOBBY ->  {
+                System.out.println("Welcome to the lobby!");
+                printAvailableActions(ClientState.IN_LOBBY);
+            }
+            case PLACE_TOTEM ->  {
+                System.out.println("It's your turn to place the totem!");
+                printAvailableActions(ClientState.PLACE_TOTEM);
+            }
+            case DRAW_CARD ->   {
+                System.out.println("You can now draw a card.");
+                printAvailableActions(ClientState.DRAW_CARD);
+            }
+            case NOT_IN_TURN ->   {
+                System.out.println("Wait for your turn.");
+            }
+        }
+    }
+
+    @Override
+    public void notifyTurnChange(String player) {
+        if(this.player.equals(player)) {
+            System.out.println("It's your turn!");
+            printAvailableActions(ClientState.PLACE_TOTEM);
+        }
+        else  {
+            System.out.println("It's now " + player + "'s turn!");
+        }
+    }
+
+    @Override
+    public void notifyGameEvent() {
+
+    }
+
+    @Override
+    public void notifyTotemPlaced(String player, OfferTile offerTile) {
+
+    }
+
+    @Override
+    public void notifyCardDrawn(String player, Card card, boolean topRow) {
+
+    }
+
     /**
-     * Prints the available actions a player can make while in a certain state of the TUI.
-     * @param tuiState The state of the TUI the player is currently visualising.
+     * Prints the available actions a player can make while in a certain state.
+     * @param clientState The state of the TUI the player is currently visualising.
      */
-    private void printAvailableActions(TUIState tuiState) {
-        System.out.println("These are the available Actions:\n");
-        switch(tuiState) {
+    private void printAvailableActions(ClientState clientState) {
+        System.out.println("These are the available actions in the " +  clientState.toString().toLowerCase() + " state:");
+        switch(clientState) {
             case SETUP:
-                System.out.println("- create_game(numberOfPlayers)");
+                System.out.println("- create_game(number_of_players)");
                 System.out.println("- join_game(gameID)");
                 break;
             case IN_LOBBY:
@@ -229,21 +278,10 @@ public class TUIView implements ViewInterface {
                     System.out.println("- " + color);
                 }
                 break;
-            case SHOW_OFFER_TRACK:
+            case PLACE_TOTEM:
                 //
-            case SHOW_PERSONAL_TRIBE:
-                //
-            case SHOW_OTHER_TRIBE:
-                //
-            case SHOW_TOP_ROW:
-                //
-            case SHOW_BOTTOM_ROW:
-                //
-            case SHOW_TOP_BUILDINGS:
-                //
-            case SHOW_BOTTOM_BUILDINGS:
+            case DRAW_CARD:
                 //
         }
-
     }
 }
