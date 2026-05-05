@@ -3,6 +3,7 @@ package it.polimi.ingsw.Networking.Socket;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
+import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
 /**
  * this interface has all the methods that need to be called from the client
@@ -11,10 +12,18 @@ import it.polimi.ingsw.Model.Users.OccupiedTileException;
 
 public interface VirtualSocketServer {
     void connect(SocketClientHandler handler);
+
     void disconnect(SocketClientHandler handler);
+
     void chooseOfferTile(int index, SocketClientHandler clientHandler) throws OccupiedTileException;
+
     void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) throws IllegalDrawException;
+
     void chooseTotemColor(Color totemColor, SocketClientHandler clientHandler);
+
     void joinGame(SocketClientHandler clientHandler);
+
     void createGame(String playerName, int numPlayers);
+
+    void chooseOfferTile(PlayerRecord playerRecord, int index);
 }

@@ -84,7 +84,14 @@ public class RMIServerAdapter implements ServerConnection {
 
     @Override
     public void chooseOfferTile(int index) throws OccupiedTileException {
-
+        try {
+            serverStub.chooseOfferTile(clientStub, index);
+        }catch (RemoteException e){
+            System.out.println("ERROR: remote error, could not choose tile"  + e.getMessage());
+        }
+        catch (OccupiedTileException e){
+            throw new OccupiedTileException();
+        }
     }
 
     @Override

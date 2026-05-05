@@ -86,4 +86,14 @@ public class RMIServer implements VirtualRMIServer {
             throw new UnavailableColorException("colore già scelto");
         }
     }
+
+    @Override
+    public void chooseOfferTile(VirtualRMIClient client, PlayerRecord playerRecord, int index) {
+        try{
+            PlayerRecord callerRecord = clientRecords.get(client);
+            serverController.chooseOfferTile(playerRecord, index);
+        }catch(OccupiedTileException e){
+            throw new OccupiedTileException();
+        }
+    }
 }

@@ -154,7 +154,7 @@ public class GameController {
             }
         }
         catch (OccupiedTileException e) {
-            // qui bisogna notificare l'errore al player e richiedergli di riselezionare un'altra tile
+            throw new OccupiedTileException();
         }
     }
 

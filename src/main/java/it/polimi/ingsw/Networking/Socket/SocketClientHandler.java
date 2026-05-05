@@ -2,6 +2,7 @@ package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Model.Users.UnavailableColorException;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
@@ -80,8 +81,12 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                         break;
                     }
                     case SocketHeaderNames.CHOOSE_OFFER_TILE:{
-                        int index = (int) incomingCommand.getParameters()[0];
-                        server.chooseOfferTile(index, this);
+                        try {
+                            int index = (int) incomingCommand.getParameters()[0];
+                            server.chooseOfferTile(index, this);
+                        }catch(OccupiedTileException e){
+                            throw new OccupiedTileException();
+                        }
                     }
 
                 }
