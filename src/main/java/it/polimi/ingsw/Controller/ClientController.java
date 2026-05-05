@@ -94,7 +94,7 @@ public class ClientController implements ClientViewUpdate {
         connection.chooseOfferTile(index);
     }
 
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){ //throws IllegalDraw and InsufficientFood
         if(localModel.getCurrentPlayer().equals(playerName) && localModel.drawable(fromTopRow, fromBuildings, index)){
             connection.drawCard(fromTopRow, fromBuildings, index);
         } else {

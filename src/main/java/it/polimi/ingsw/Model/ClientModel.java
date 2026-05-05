@@ -61,12 +61,7 @@ public class ClientModel {
             card = fromTopRow ? getTopRow().get(index)
                     : getBottomRow().get(index);
         }
-        try {
-            card.accept(visitor);
-        } catch (IllegalDrawException | InsufficientFoodException e){
-            System.err.println("Can't draw this card: " + e.getMessage());
-            //va gestito con le view, da capire dopo
-        }
+            card.accept(visitor);   //throws IllegalDraw and InsufficientFood
         return visitor.isDrawable();
     }
 
