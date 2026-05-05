@@ -35,6 +35,14 @@ public class RMIClientNotifier implements ClientNotifier {
         } catch (RemoteException e) {
             System.out.println("ERROR: could not notify of Totem Color choice\n" + e.getMessage());
         }
+    }
 
+    @Override
+    public void notifyGameChosenTile(String playerName, int index) {
+        try {
+            clientStub.chosenTile(playerName, index);
+        } catch (RemoteException e) {
+            System.out.println("ERROR: could not notify of Tile choice\n" + e.getMessage());
+        }
     }
 }

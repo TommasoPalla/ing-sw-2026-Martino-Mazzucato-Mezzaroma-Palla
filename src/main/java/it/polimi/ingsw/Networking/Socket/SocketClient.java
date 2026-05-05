@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Networking.Socket;
 
+import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
 
 import java.io.IOException;
@@ -9,6 +10,10 @@ public class SocketClient implements VirtualSocketClient {
     final VirtualSocketServer server;   */
 
     //run(), runCli(), runGUI()
+    private final ClientController controller;
+    public SocketClient(ClientController controller){
+        this.controller = controller;
+    }
 
 
     @Override
@@ -23,7 +28,6 @@ public class SocketClient implements VirtualSocketClient {
 
     @Override
     public void chosenTotemColor(String playerName, Color totemColor) {
-
     }
 
     @Override
@@ -33,7 +37,7 @@ public class SocketClient implements VirtualSocketClient {
 
     @Override
     public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
-
+        controller.updateCardDrawn(fromTopRow, fromBuildings, index, playerName);
     }
 
     @Override

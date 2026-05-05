@@ -65,7 +65,7 @@ public class ClientController implements ClientViewUpdate {
 
     public void startGame(int numPlayers){
         //con partite multiple non serve verificare che ci sia una partita già inizializzata
-        connection.startGame(playerName, numPlayers);
+        connection.createGame(playerName, numPlayers);
     }
     public void showActiveGames(){
         /*array<Game> games = */ connection.getActiveGames();

@@ -1,11 +1,9 @@
 package it.polimi.ingsw.Networking.RMI;
 
-import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
-import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
@@ -43,6 +41,11 @@ public class RMIServer implements VirtualRMIServer {
     public void connect(VirtualRMIClient clientStub) {
         this.clients.add(clientStub);
         System.out.println(clientStub + "added to RMI server");
+    }
+
+    @Override
+    public void createGame(String playerName, int numPlayers) throws RemoteException {
+
     }
 
     @Override

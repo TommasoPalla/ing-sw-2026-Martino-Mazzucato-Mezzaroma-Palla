@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Networking.Shared.PlayerRecord;
+import it.polimi.ingsw.Enums.SocketHeaderNames;
 
 import java.io.BufferedReader;
 import com.google.gson.Gson;
@@ -16,6 +16,7 @@ public class SocketServerHandler implements Runnable{
         this.client = client;
     }
 
+    //TODO: don't call client.method() anymore, remove RMIClient and directly call ClientController from here
     @Override
     public void run() {
         String incomingMessage;
@@ -28,15 +29,15 @@ public class SocketServerHandler implements Runnable{
                 SocketMessageDTO incomingCommand = gson.fromJson(incomingMessage, SocketMessageDTO.class);
 
                 switch (incomingCommand.getCommandName()){
-                    case "ConnectedToGame":
+                    case SocketHeaderNames.CONNECTED_TO_GAME:
                         //client.connectedToGame() or something
-                    case "ChosenTotemColor":
+                    case SocketHeaderNames.CHOSEN_TOTEM_COLOR:
                     {
                         String playerName = (String) incomingCommand.getParameters()[0];
                         Color totemColor = Color.valueOf((String) incomingCommand.getParameters()[1]) ;
                         client.chosenTotemColor(playerName, totemColor);
                     }
-                    case "DrawnCard":
+                    case SocketHeaderNames.DRAWN_CARD:
                     {
                         String playerName = (String) incomingCommand.getParameters()[0];
                         boolean fromTopRow = (boolean) incomingCommand.getParameters()[1];
@@ -44,7 +45,9 @@ public class SocketServerHandler implements Runnable{
                         int index = (int) incomingCommand.getParameters()[3];
                         client.drawnCard(playerName, fromTopRow, fromBuildings, index);
                     }
-
+                    default:
+                        System.out.println("ERROR: invalid command: " + incomingMessage);
+                        //throw??
                 }
             }
         } catch (Exception e){}

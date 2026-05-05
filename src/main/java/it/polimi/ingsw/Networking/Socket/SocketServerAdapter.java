@@ -1,7 +1,9 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.SocketHeaderNames;
 import it.polimi.ingsw.Model.Users.IllegalDrawException;
 import it.polimi.ingsw.Model.Users.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
@@ -24,9 +26,10 @@ public class SocketServerAdapter implements ServerConnection {
     private final int port;
     private final String host;
 
-    public SocketServerAdapter(String host, int port){
+    public SocketServerAdapter(String host, int port, ClientController clientController){
         this.host = host;
         this.port = port;
+        this.client = new SocketClient(clientController);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class SocketServerAdapter implements ServerConnection {
             outStream = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            client = new SocketClient();
+            //client = new SocketClient();
             SocketServerHandler handler = new SocketServerHandler(inStream, client);
             listenerThread = new Thread(handler);
             listenerThread.setDaemon(true);
@@ -66,7 +69,7 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void startGame(String playerName, int numPlayers){
+    public void createGame(String playerName, int numPlayers){
 
     }
 
@@ -92,13 +95,13 @@ public class SocketServerAdapter implements ServerConnection {
 
     @Override
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException {
-        SocketMessageDTO message = new SocketMessageDTO("DrawCard", fromTopRow, fromBuildings, index);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.DRAW_CARD, fromTopRow, fromBuildings, index);
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void chooseTotem(Color totemColor) {
-        SocketMessageDTO message = new SocketMessageDTO("ChooseTotemColor", totemColor);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHOOSE_TOTEM_COLOR, totemColor);
         outStream.println(gson.toJson(message));
     }
 

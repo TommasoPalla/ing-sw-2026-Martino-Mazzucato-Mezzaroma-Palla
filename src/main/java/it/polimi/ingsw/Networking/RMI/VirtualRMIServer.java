@@ -19,4 +19,5 @@ public interface VirtualRMIServer extends Remote {
     void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException;
     void chooseTotemColor(VirtualRMIClient client, Color totemColor) throws  RemoteException;
     void joinGame(VirtualRMIClient client, String playerName, int gameID) throws  RemoteException;
+    void createGame(String playerName, int numPlayers) throws RemoteException;
 }

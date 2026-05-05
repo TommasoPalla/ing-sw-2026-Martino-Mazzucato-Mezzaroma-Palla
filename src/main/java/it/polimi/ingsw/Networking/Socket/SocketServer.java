@@ -61,6 +61,11 @@ public class SocketServer implements VirtualSocketServer{
     }
 
     @Override
+    public void createGame(String playerName, int numPlayers) {
+        serverController.createNewGame(playerName, numPlayers);
+    }
+
+    @Override
     public void joinGame(SocketClientHandler handler){
         PlayerRecord record = handler.getPlayerRecord();
         serverController.addPlayerToGame(record);

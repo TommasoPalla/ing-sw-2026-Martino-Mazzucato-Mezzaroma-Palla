@@ -58,7 +58,7 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void startGame(String playerName, int numPlayers){
+    public void createGame(String playerName, int numPlayers){
 
     }
 

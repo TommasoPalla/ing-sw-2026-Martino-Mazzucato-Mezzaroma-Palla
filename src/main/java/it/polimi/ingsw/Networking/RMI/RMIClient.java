@@ -32,19 +32,25 @@ public class RMIClient implements VirtualRMIClient {
     public void gameStarted(int gameID, int numPlayers) {
         controller.createLocalModel(gameID, numPlayers);
     }
+
     @Override
     public void chosenTotem(String playerName, Color totemColor){
         controller.chooseTotem(totemColor);
     }
-    @Override
-    public void chosenTile(String playerName, int index){}
 
     @Override
-    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index){}
+    public void chosenTile(String playerName, int index){
+
+    }
+
+    @Override
+    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index){
+        controller.updateCardDrawn(fromTopRow, fromBuildings, index, playerName);
+    }
 
     @Override
     public void playerJoinedGame(String playerName){
-
+        controller.addPlayer(playerName);
     }
 
     //bozza di messaggio di update dal server

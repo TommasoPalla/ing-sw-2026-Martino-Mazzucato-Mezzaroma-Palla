@@ -13,7 +13,7 @@ public interface ServerConnection {
     void connect();
     void disconnect();
     void setPlayerName(String playerName);
-    void startGame(String playerName, int numPlayers);
+    void createGame(String playerName, int numPlayers);
     void joinGame(String playerName, int gameID);
     void leaveGame(String playerName, int gameID);
     void getActiveGames();

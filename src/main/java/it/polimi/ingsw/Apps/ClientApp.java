@@ -30,7 +30,7 @@ public class ClientApp {
         }while(!protocol.equalsIgnoreCase("SOCKET") && !protocol.equalsIgnoreCase("RMI"));
         switch (protocol.toUpperCase()) {
             case "SOCKET" ->
-                    connection = new SocketServerAdapter(ServerConfigs.DEFAULT_SOCKET_SERVER_IP_ADDR, ServerConfigs.DEFAULT_SOCKET_SERVER_PORT);
+                    connection = new SocketServerAdapter(ServerConfigs.DEFAULT_SOCKET_SERVER_IP_ADDR, ServerConfigs.DEFAULT_SOCKET_SERVER_PORT, clientController);
             case "RMI" ->
                     connection = new RMIServerAdapter(ServerConfigs.DEFAULT_RMI_IP_ADDR, ServerConfigs.DEFAULT_RMI_SERVER_PORT, clientController);
             default -> {
@@ -48,7 +48,7 @@ public class ClientApp {
         }while(!UIType.equalsIgnoreCase("TUI") && !UIType.equalsIgnoreCase("GUI"));
 
         ViewInterface view;      //interfaccia implementata da GUI e TUI
-        switch(UIType){
+        switch(UIType.toUpperCase()){
             case "TUI" -> view = new TUIView(clientController);
             case "GUI"-> view = new MainGUIView();
             default -> {

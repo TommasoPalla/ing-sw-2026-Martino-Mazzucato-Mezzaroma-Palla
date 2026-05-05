@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
+import it.polimi.ingsw.Enums.SocketHeaderNames;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,22 +49,31 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                 SocketMessageDTO incomingCommand = gson.fromJson(incomingMessage, SocketMessageDTO.class);
 
                 switch (incomingCommand.getCommandName()){
-                    case "ConnectToGame":
+                    case SocketHeaderNames.CREATE_GAME: {
+                        String playerName = (String) incomingCommand.getParameters()[0];
+                        int numPlayers = (int) incomingCommand.getParameters()[1];
+                        server.createGame(playerName, numPlayers);
+                        break;
+                    }
+                    case SocketHeaderNames.CONNECT_TO_GAME:{
                         String playerName = (String) incomingCommand.getParameters()[0];
                         int gameID = (int) incomingCommand.getParameters()[1];
                         this.playerRecord = new PlayerRecord(gameID, playerName);
                         server.joinGame(this);
                         break;
-                    case "ChooseTotemColor":
+                    }
+                    case SocketHeaderNames.CHOOSE_TOTEM_COLOR:{
                         Color totemColor = Color.valueOf((String) incomingCommand.getParameters()[0]) ;
                         server.chooseTotemColor(totemColor, this);
                         break;
-                    case "DrawCard":
+                    }
+                    case SocketHeaderNames.DRAW_CARD:{
                         boolean fromTopRow = (boolean) incomingCommand.getParameters()[0];
                         boolean fromBuildings = (boolean) incomingCommand.getParameters()[1];
                         int index = (int) incomingCommand.getParameters()[2];
                         server.drawCard(fromTopRow, fromBuildings, index, this);
                         break;
+                    }
                 }
 
 
@@ -77,19 +87,25 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     //CALLBACKS
     @Override
     public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
-        SocketMessageDTO message = new SocketMessageDTO("DrawnCard", playerName, fromTopRow, fromBuildings, index);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.DRAWN_CARD, playerName, fromTopRow, fromBuildings, index);
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void notifyTotemColor(String playerName, Color totemColor) {
-        SocketMessageDTO message = new SocketMessageDTO("ChosenTotemColor", playerName, totemColor.toString());
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHOSEN_TOTEM_COLOR, playerName, totemColor.toString());
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void notifyNewPlayerConnected(String playerName){
-        SocketMessageDTO message = new SocketMessageDTO("ConnectedToGame", playerName);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CONNECTED_TO_GAME, playerName);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyGameChosenTile(String playerName, int index) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHOSEN_OFFER_TILE, playerName, index);
         outStream.println(gson.toJson(message));
     }
 }

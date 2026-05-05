@@ -4,7 +4,6 @@ import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -64,7 +63,7 @@ public class ServerController {
      * @param playerNum
      * @return
      */
-    public synchronized Game crateNewGame(String firstPlayerName, int playerNum) {
+    public synchronized Game createNewGame(String firstPlayerName, int playerNum) {
         int gameID = nextGameID;
         Game newGame = new Game(gameID, playerNum);
         PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
