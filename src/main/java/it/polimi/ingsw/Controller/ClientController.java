@@ -184,9 +184,8 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void updateChosenOfferTile(String playerName, Color color) {
-        localModel.chosenTotemColor(playerName, color);
-
+    public void updateChosenOfferTile(String playerName, int index) {
+        localModel.chosenOfferTile(playerName, index);
     }
 
     @Override

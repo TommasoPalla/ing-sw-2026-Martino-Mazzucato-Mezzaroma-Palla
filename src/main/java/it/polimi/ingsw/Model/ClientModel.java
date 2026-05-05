@@ -31,7 +31,7 @@ public class ClientModel {
     private ArrayList<BuildingCard> topBuildings;
     private ArrayList<BuildingCard> bottomBuildings;
     private Map<String, Color> totemColors;
-    private Map<String, Integer> currentOfferTiles;
+    private Map<String, Integer> currentOfferTiles; //??????
     private TurnTile turnTile;
     private ArrayList<OfferTile> offerTiles;
     //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
@@ -122,6 +122,10 @@ public class ClientModel {
     }
     public void updateCharacterDrawn(CharacterCard character, String playerName) {
         players.get(playerName).addToPopulation(character);
+    }
+    public void chosenOfferTile(String playerName, int index){
+        //TODO: fare il metodo getPlayerByName
+        //offerTiles.get(index).occupy(getPlayerByName(playerName));
     }
     public void updateBuildingDrawn(BuildingCard building, String playerName){
         //players.get(playerName).addToBuildings(building);

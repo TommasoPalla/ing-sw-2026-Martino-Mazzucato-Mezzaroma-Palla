@@ -75,23 +75,6 @@ public class ServerController {
         return newGame;
     }
 
-
-    // le chiamate alle funzioni sono sempre dei blocchi con questa forma:
-    /*
-    public void f(x){
-        synchronized(model){
-            model.f(x);
-        }
-    }
-
-    ad esempio
-    public void chooseOfferTile(){
-        synchronized(model){
-            model.chooseOfferTile();
-        }
-    }
-     */
-
     public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
@@ -104,6 +87,13 @@ public class ServerController {
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
             currentController.handleDraw(playerRecord, fromTopRow, fromBuildings, index);
+        }
+    }
+
+    public void chooseOfferTile(PlayerRecord playerRecord, int index){
+        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
+        synchronized (currentController){
+            currentController.handleChooseOfferTile(playerRecord, index);
         }
     }
 }
