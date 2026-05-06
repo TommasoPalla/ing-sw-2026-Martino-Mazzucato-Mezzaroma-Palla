@@ -11,7 +11,6 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Deck.Deck;
 import it.polimi.ingsw.Model.Cards.EventCard;
-import it.polimi.ingsw.Model.GameBoard.TurnTile;
 import it.polimi.ingsw.Model.Users.*;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Enums.GamePhase;
@@ -22,8 +21,7 @@ import it.polimi.ingsw.Model.EventManagement.EventManager;
  */
 public class Game {
     private final int gameID;
-    private ArrayList<Player> players;
-    private ArrayList<String> playersNames;
+    private final ArrayList<Player> players;
     final private int numPlayers;
     private Player currentPlayer;
     private ArrayList<Player> turnOrder;
@@ -34,9 +32,7 @@ public class Game {
     private final BuildingManager buildingManager;
     private EventManager eventManager = new EventManager();
     private static Deck deck;      //forse static non è la soluzione ma ad ora non so che altro fare
-    private TurnTile turnTile;
-    private ArrayList<Color> availableColors;
-    private Map<Color, String> colorNameMap = new HashMap<>();
+    private Map<String, Color> totemColors = new HashMap<>();
 
   /*
   * Game constructor, which with the game is initialized. It initializes the players from their name and
@@ -47,21 +43,26 @@ public class Game {
     public Game(int gameID, int numPlayers) {
         this.gameID = gameID;
         this.numPlayers = numPlayers;
-        this.turnTile = new TurnTile(numPlayers);
         this.players = new ArrayList<>();
-        this.playersNames = new ArrayList<>();
         this.currentRound = 0;
         this.buildingManager = new BuildingManager(players);
-        this.availableColors = new ArrayList<>();
-        Collections.addAll(availableColors, Color.values());
     }
 
     //getters
     // non ho assolutamente idea se sia il modo migliore per fare questa cosa
+    public int getGameID(){
+        return gameID;
+    }
     public Deck getDeck() {return deck;}
     public GamePhase getGamePhase(){return currentPhase;}
     public Player getCurrentPlayer(){return currentPlayer;}
-    public ArrayList<String> getPlayersNames(){return playersNames;}
+    public ArrayList<String> getPlayersNames(){
+        ArrayList<String> names = new ArrayList<>();
+        for (Player p: players){
+            names.add(p.getName());
+        }
+        return names;
+    }
     public ArrayList<Player> getPlayers(){ return players; }
     public int getNumPlayer(){return numPlayers;}
     public OfferTrack getOfferTrack(){return offerTrack;}
@@ -69,7 +70,13 @@ public class Game {
     public EventManager getEventManager(){return eventManager;}
     public ArrayList<Player> getTurnOrder(){return turnOrder;}
     public int getEra(){return era;}
-    public ArrayList<Color> getAvailableColors(){return availableColors;}
+    public ArrayList<Color> getAvailableColors(){
+        ArrayList<Color> colors = new ArrayList<>(Arrays.asList(Color.values()));
+        for(Color col: totemColors.values()){
+            colors.remove(col);
+        }
+        return colors;
+    }
 
     public Player getPlayerByName(String playerName){
         return players.stream().filter(p -> p.getName().equals(playerName))
@@ -86,19 +93,17 @@ public class Game {
     //maybe the control logic should con in GameController and here the values
     //are only set to what they should be and nothing more
     public void chooseTotemColor(String playerName, Color totemColor){
+        ArrayList<Color> availableColors = getAvailableColors();
         if(!availableColors.contains(totemColor)){
             System.out.println("colore non disponibile");   //throw exception
             return;
         }
-        availableColors.remove(totemColor);
-        colorNameMap.put(totemColor, playerName);
-        return;
+        totemColors.put(playerName, totemColor);
     }
 
     public void addPlayer(String playerName) {
         Player newPlayer = new Player(this, playerName);
         players.add(newPlayer);
-        playersNames.add(playerName);
         //if(players.size() == numPlayers) currentPhase = READY_TO_START; Se il numero di giocatori necessario
         // è stato raggiunto, cambia la fase da IN_LOBBY a READY_TO_START
     }
@@ -107,15 +112,13 @@ public class Game {
         if(players.size() < numPlayers){
             throw new IllegalActionPhaseException();
         }
-        turnOrder = new ArrayList<>(players);
-        Collections.shuffle(turnOrder);
         currentRound = 1;
         era = 1;
-        currentPlayer = turnOrder.getFirst();
 
         offerTrack = new OfferTrack(this, numPlayers);
+        turnOrder = offerTrack.getTurnTile().initTurnOrder(players);
+        currentPlayer = turnOrder.getFirst();
         eventManager = new EventManager();
-        turnTile = new TurnTile(numPlayers);
         deck = new Deck(this, numPlayers, "json/cards.json");
         //inizializzo track
         offerTrack.initializeBottomRow();
@@ -209,8 +212,9 @@ public class Game {
             this.updateCurrentPhase();//fase draw
             //aggiornare turnorder qui
             //return turnTile
-            turnOrder = turnTile.getTurnOrder(turnOrder);
+            turnOrder = offerTrack.getTurnTile().getTurnOrder(turnOrder);
 
+            //forse dentro questo for il discorso currentPlayer e n-esima iterazione del ciclo si può gestire meglio
             for(Player player : turnOrder){//tutti scelgono le loro carte in ordine
 
                 //classe controller richiede gli indici input
@@ -226,7 +230,7 @@ public class Game {
                     //da verificare che cardsLeft funzioni bene
                     int cardsLeft = (fromTopRow) ? topDrawable : bottomDrawable;
                     if(cardsLeft > 0){
-                        while(currentPlayer.drawable(fromTopRow, isBuilding, index, offerTrack) == false){
+                        while(!currentPlayer.drawable(fromTopRow, isBuilding, index, offerTrack)){
                             //chiede nuovi input
                         }
                         currentPlayer.drawCard(fromTopRow, isBuilding, index, offerTrack);
@@ -255,7 +259,7 @@ public class Game {
                 }
                 //fase intermittente tra return to tile on draw
                 currentPhase = GamePhase.RETURN_TO_TILE;
-                turnTile.returnToStartingTile(turnOrder, currentPlayer, buildingManager);
+                offerTrack.getTurnTile().returnToStartingTile(turnOrder, currentPlayer, buildingManager);
                 currentPhase = GamePhase.ON_DRAW;
 
                 currentPlayer=getNextPlayer();
@@ -300,7 +304,7 @@ public class Game {
         ranking=players.stream().sorted(Comparator.comparingInt(
                 (Player p) -> p.getTribe().getPrestigePoints()).reversed())
                         .collect(Collectors.toCollection(ArrayList::new));
+        //showRanking nella view o qualcosa del genere
     }
 
 }
-

@@ -5,6 +5,7 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ public class TurnTile {
     private ArrayList<Player> turnOrder;
 
     public TurnTile(int numPlayers){
+        turnOrder = new ArrayList<>();
         switch (numPlayers){
             case 2:
                 tileModifier = new int[]{1, -1};
@@ -27,6 +29,12 @@ public class TurnTile {
                 tileModifier = new int[]{3, 1, 0, 0, -1};
 
         }
+    }
+
+    public ArrayList<Player> initTurnOrder(ArrayList<Player> players){
+        ArrayList<Player> turnOrder = new ArrayList<>(players);
+        Collections.shuffle(turnOrder);
+        return turnOrder;
     }
 
     public int[] getTileModifier() {return tileModifier;}
