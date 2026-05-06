@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Model.GameBoard;
 
-import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -90,7 +89,7 @@ public class TurnTileTest {
 
         @Test
         public void turnOrderTest(){
-            ArrayList<Player> newTurnOrder = turnTile.getTurnOrder(turnOrder);
+            ArrayList<Player> newTurnOrder = turnTile.updateTurnOrder();
             ArrayList<Player> correctTurnOrder = new ArrayList<>();
             correctTurnOrder.add(player2);
             correctTurnOrder.add(player1);
@@ -103,7 +102,7 @@ public class TurnTileTest {
         @Test
         public void returnToStartTest(){
             for(Player player : turnOrder){
-                turnTile.returnToStartingTile(turnOrder, player, game.getBuildingManager());
+                turnTile.returnToStartingTile(player, game.getBuildingManager());
             }
             assertEquals(2, player3.getTribe().getFoodReserve());       //player3 was the first => he got 2 food
             assertEquals(0, player1.getTribe().getFoodReserve());       //player2 the second => he got 0 food

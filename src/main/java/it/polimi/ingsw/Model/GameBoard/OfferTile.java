@@ -5,7 +5,7 @@ public class OfferTile {
     private int cardsFromAbove;
     private int cardsFromBelow;
     private int foodBonus;
-    private char offerTileID;
+    private final char offerTileID;
 
     private boolean occupied;
     private Player currentOccupant;

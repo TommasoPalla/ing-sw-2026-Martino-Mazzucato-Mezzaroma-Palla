@@ -7,6 +7,7 @@ import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.LastPlayerOfTurnException;
 import it.polimi.ingsw.CustomException.LastRoundException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Deck.Deck;
@@ -16,14 +17,15 @@ import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.EventManagement.EventManager;
 
-/*
-* esempio Era e = Game.getInstance().getEra();
- */
 public class Game {
     private final int gameID;
     private final ArrayList<Player> players;
     final private int numPlayers;
     private Player currentPlayer;
+
+    /*è ridondante rispetto allo stesso attributo di TurnTile
+    ma dato che viene usato molto si potrebbe lasciare
+     */
     private ArrayList<Player> turnOrder;
     private int era;
     private int currentRound;
@@ -31,15 +33,10 @@ public class Game {
     private OfferTrack offerTrack;
     private final BuildingManager buildingManager;
     private EventManager eventManager = new EventManager();
-    private static Deck deck;      //forse static non è la soluzione ma ad ora non so che altro fare
-    private Map<String, Color> totemColors = new HashMap<>();
+    private Deck deck;
+    private final Map<String, Color> totemColors = new HashMap<>();
 
-  /*
-  * Game constructor, which with the game is initialized. It initializes the players from their name and
-  * the totem color they chose.
-   */
-    // Ciò dovrebbe rendere più pulita l'inizializzazione, facendo seguire necessariamente l'inizializzazione
-    // dei Player a quella del game e non viceversa
+
     public Game(int gameID, int numPlayers) {
         this.gameID = gameID;
         this.numPlayers = numPlayers;
@@ -49,7 +46,6 @@ public class Game {
     }
 
     //getters
-    // non ho assolutamente idea se sia il modo migliore per fare questa cosa
     public int getGameID(){
         return gameID;
     }
@@ -70,10 +66,10 @@ public class Game {
     public EventManager getEventManager(){return eventManager;}
     public ArrayList<Player> getTurnOrder(){return turnOrder;}
     public int getEra(){return era;}
-    public ArrayList<Color> getAvailableColors(){
-        ArrayList<Color> colors = new ArrayList<>(Arrays.asList(Color.values()));
-        for(Color col: totemColors.values()){
-            colors.remove(col);
+    public Set<Color> getAvailableColors(){
+        Set<Color> colors = EnumSet.allOf(Color.class);
+        for(Color color: totemColors.values()){
+            colors.remove(color);
         }
         return colors;
     }
@@ -93,10 +89,8 @@ public class Game {
     //maybe the control logic should con in GameController and here the values
     //are only set to what they should be and nothing more
     public void chooseTotemColor(String playerName, Color totemColor){
-        ArrayList<Color> availableColors = getAvailableColors();
-        if(!availableColors.contains(totemColor)){
-            System.out.println("colore non disponibile");   //throw exception
-            return;
+        if(!getAvailableColors().contains(totemColor)){
+            throw new UnavailableColorException(totemColor);
         }
         totemColors.put(playerName, totemColor);
     }
@@ -212,7 +206,7 @@ public class Game {
             this.updateCurrentPhase();//fase draw
             //aggiornare turnorder qui
             //return turnTile
-            turnOrder = offerTrack.getTurnTile().getTurnOrder(turnOrder);
+            turnOrder = offerTrack.getTurnTile().updateTurnOrder();
 
             //forse dentro questo for il discorso currentPlayer e n-esima iterazione del ciclo si può gestire meglio
             for(Player player : turnOrder){//tutti scelgono le loro carte in ordine
@@ -259,10 +253,10 @@ public class Game {
                 }
                 //fase intermittente tra return to tile on draw
                 currentPhase = GamePhase.RETURN_TO_TILE;
-                offerTrack.getTurnTile().returnToStartingTile(turnOrder, currentPlayer, buildingManager);
+                offerTrack.getTurnTile().returnToStartingTile(currentPlayer, buildingManager);
                 currentPhase = GamePhase.ON_DRAW;
 
-                currentPlayer=getNextPlayer();
+                currentPlayer = getNextPlayer();
             }
 
             this.updateCurrentPhase();//fase eventi

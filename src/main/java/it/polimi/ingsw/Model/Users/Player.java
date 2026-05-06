@@ -63,6 +63,11 @@ public class Player {
         }
     }
 
+    public void freeOfferTile(){
+        currentOfferTile.free();
+        currentOfferTile = null;
+    }
+
     //returns true if building is affordable to player or if the card is a character, returns false otherwise
     public boolean drawable(boolean fromTopRow, boolean fromBuilding, int index, OfferTrack offerTrack) {
         Card card;

@@ -255,7 +255,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void updateCurrentOfferTile(String playerName, int index) {
+    public void updateCurrentOfferTile(String playerName, Character index) {
         localModel.updateOfferTile(playerName, index);
     }
 

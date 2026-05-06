@@ -19,7 +19,7 @@ import java.util.Map;
 public class ClientModel {
     private final int gameId;
     private final int numPlayers;
-    private Map<String, LightTribe> players;
+    private final Map<String, LightTribe> players;
     private GamePhase currentPhase;
     private int currentRound;
     private String currentPlayer;
@@ -28,8 +28,8 @@ public class ClientModel {
     private ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildings;
     private ArrayList<BuildingCard> bottomBuildings;
-    private Map<String, Color> totemColors;
-    private Map<String, Integer> currentOfferTiles; //??????
+    private final Map<String, Color> totemColors;
+    private final Map<String, Character> currentOfferTiles;
     private TurnTile turnTile;
     private ArrayList<OfferTile> offerTiles;
     //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
@@ -45,6 +45,7 @@ public class ClientModel {
         this.bottomRow = new ArrayList<>();
         this.topBuildings = new ArrayList<>();
         this.bottomBuildings = new ArrayList<>();
+        this.totemColors = new HashMap<>();
         this.turnTile = new TurnTile(numPlayers);
         this.offerTiles = new ArrayList<>();
     }
@@ -67,7 +68,6 @@ public class ClientModel {
                     : getBottomRow().get(index);
         }
         card.accept(visitor);   //throws IllegalDraw and InsufficientFood
-        return;
     }
 
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
@@ -81,8 +81,9 @@ public class ClientModel {
     }
     public void addPlayer(String playerName){
         if(players.size()<=numPlayers){
-            LightTribe lightTribe= new LightTribe(playerName);
+            LightTribe lightTribe = new LightTribe(playerName);
             players.put(playerName, lightTribe);
+            currentOfferTiles.put(playerName, null);
         }
     }
     public void removePlayer(String name){
@@ -100,8 +101,8 @@ public class ClientModel {
         players.get(playerName).addShamansStars(stars);
     }
 
-    //aggiungere metodo clearOfferTile()
-    public void updateOfferTile(String playerName, int index) {
+    //aggiungere metodo clearOfferTile(), in player c'è freeOfferTile e in OfferTile c'è free, decidere cosa fare
+    public void updateOfferTile(String playerName, Character index) {
         currentOfferTiles.put(playerName, index);
     }
     public void updateTurnTile(TurnTile remoteTurnTile){
