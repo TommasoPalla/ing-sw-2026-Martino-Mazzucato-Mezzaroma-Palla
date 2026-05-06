@@ -78,13 +78,5 @@ public abstract class BuildingCard extends Card {
     }
 
     @Override
-    public void accept(Visitor visitor, Player player){
-        visitor.visitCard(this, player);
-    }
-    @Override
-    public void accept(Visitor visitor, OfferTrack offerTrack){
-        visitor.visitCard(this, offerTrack);
-    }
-    @Override
     public void accept(Visitor visitor){visitor.visitCard(this);}
 }

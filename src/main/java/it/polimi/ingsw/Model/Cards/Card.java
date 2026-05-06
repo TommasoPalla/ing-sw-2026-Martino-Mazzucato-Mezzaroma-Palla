@@ -19,7 +19,5 @@ public abstract class Card {
     public int getEra(){
         return this.era;
     }
-    public abstract void accept(Visitor visitor, Player player);
-    public abstract void accept(Visitor visitor, OfferTrack offerTrack);
     public abstract void accept(Visitor visitor);
 }

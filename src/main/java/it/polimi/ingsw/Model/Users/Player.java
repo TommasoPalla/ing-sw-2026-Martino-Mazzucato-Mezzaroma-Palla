@@ -12,7 +12,7 @@ import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 
 
 public class Player {
-    private final Game game;    //forse non serve
+    private final Game game;
     private final String name;
     private Color totemColor;
     private final Tribe tribe;
@@ -29,6 +29,9 @@ public class Player {
     public void setTotemColor(Color totemColor){this.totemColor = totemColor;}
 
     //getters
+    public Game getGame(){
+        return game;
+    }
     public String getName() {
         return name;
     }
@@ -105,7 +108,7 @@ public class Player {
                 getTribe().modifyFood(-discountedCost);
 
                 getTribe().addBuildingToTribe(drawnBuilding);
-                return (Card) drawnBuilding;
+                return drawnBuilding;
             }
             else {
                 CharacterCard drawnCharacter;
@@ -116,7 +119,7 @@ public class Player {
                     drawnCharacter = (CharacterCard) offerTrack.getBottomRow().remove(index);
                 }
                 getTribe().addCharacterToTribe(drawnCharacter);
-                return (Card) drawnCharacter;
+                return drawnCharacter;
             }
         }
         return null;

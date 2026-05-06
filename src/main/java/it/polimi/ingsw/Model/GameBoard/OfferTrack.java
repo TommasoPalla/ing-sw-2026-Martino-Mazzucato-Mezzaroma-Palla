@@ -17,12 +17,7 @@ public class OfferTrack{
     public ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildingCard;
     private ArrayList<BuildingCard> bottomBuildingCard;
-    private /* forse final*/ TurnTile turnTile;
-
-    /**@deprecated
-     */
-    private int currentPlayerTileIdx;
-
+    private final TurnTile turnTile;
     private final int playerNumber;
     int[] availableBuildingsPerEra;
 
@@ -33,7 +28,6 @@ public class OfferTrack{
         this.bottomRow = new ArrayList<>();
         this.topBuildingCard = new ArrayList<>();
         this.bottomBuildingCard = new ArrayList<>();
-        this.currentPlayerTileIdx = -1;
         this.playerNumber = playerNumber;
         this.turnTile = new TurnTile(playerNumber);
 
@@ -71,11 +65,6 @@ public class OfferTrack{
     public ArrayList<Card> getBottomRow() {return bottomRow;}
     public ArrayList<BuildingCard> getTopBuildingCard() {return topBuildingCard;}
     public ArrayList<BuildingCard> getBottomBuildingCard() {return bottomBuildingCard;}
-
-    /**@deprecated
-     */
-    public int getCurrentPlayerTileIdx() {return currentPlayerTileIdx;}
-
     public TurnTile getTurnTile() {return turnTile;}
 
     /**
@@ -88,12 +77,12 @@ public class OfferTrack{
 
         VisitorAdapter visitor = new VisitorAdapter() {
             @Override
-            public void visitCard(EventCard event, OfferTrack offerTrack) {
+            public void visitCard(EventCard event) {
                 bottomEventCards.add(event);
             }
         };
         for(Card card : bottomRow){
-            card.accept(visitor, this);
+            card.accept(visitor);
         }
         return bottomEventCards;
     }
@@ -102,24 +91,18 @@ public class OfferTrack{
         ArrayList<EventCard> topEventCards = new ArrayList<>();
         VisitorAdapter visitor = new VisitorAdapter() {
             @Override
-            public void visitCard(EventCard event, OfferTrack offerTrack) {
+            public void visitCard(EventCard event) {
                 topEventCards.add(event);
             }
         };
         for(Card card : topRow){
-            card.accept(visitor, this);
+            card.accept(visitor);
         }
         return topEventCards;
     }
 
 
     //actual functions
-
-    /**@deprecated
-     */
-    public void updatePlayerTile(int idx){
-        this.currentPlayerTileIdx = idx;
-    }
 
     //da testare con il visitor
     /**initializeBottomRow method is called only at the beginning of a new game,
@@ -128,12 +111,12 @@ public class OfferTrack{
      * as prescribed by the  game's rules and implemented with visitor pattern.
      */
     public void initializeBottomRow(){
-        RowInitializerVisitor visitor = new RowInitializerVisitor();
+        RowInitializerVisitor visitor = new RowInitializerVisitor(this);
         /*bottomRow is empty at the first iteration, because initialized
          by class constructor right before.*/
         while(bottomRow.size() < playerNumber + 1){
             Card drawnCard = game.getDeck().drawCard();
-            drawnCard.accept(visitor, this);
+            drawnCard.accept(visitor);
         }
     }
 

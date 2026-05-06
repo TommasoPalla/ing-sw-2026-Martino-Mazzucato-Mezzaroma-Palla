@@ -13,20 +13,6 @@ import it.polimi.ingsw.Model.Users.Player;
  */
 public abstract class VisitorAdapter implements Visitor{
     @Override
-    public void visitCard(BuildingCard building, Player player){}
-    @Override
-    public void visitCard(CharacterCard character, Player player){}
-    @Override
-    public void visitCard(EventCard event, Player player){}
-
-    @Override
-    public void visitCard(BuildingCard building, OfferTrack offerTrack){}
-    @Override
-    public void visitCard(CharacterCard character, OfferTrack offerTrack){}
-    @Override
-    public void visitCard(EventCard event, OfferTrack offerTrack){}
-
-    @Override
     public void visitCard(BuildingCard building){}
     @Override
     public void visitCard(CharacterCard character){}
