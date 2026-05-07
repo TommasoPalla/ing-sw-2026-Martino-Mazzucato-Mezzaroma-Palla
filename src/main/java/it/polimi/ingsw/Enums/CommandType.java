@@ -8,11 +8,13 @@ public enum CommandType {
     JOIN_GAME("join_game", 1),
     CHOOSE_TOTEM_COLOR("choose_color", 1),
     SHOW_MY_TRIBE("show_my_tribe", 0),
+    SHOW_OFFER_TRACK("show_offer_track", 0),
     SHOW_OTHER_TRIBE("show_other_tribe", 1),
     SHOW_TOP_ROW("show_top_row", 0),
     SHOW_BOTTOM_ROW("show_bottom_row", 0),
     PLACE_TOTEM("place_totem", 1),
-    DRAW_CARD("draw_card", 3);
+    DRAW_CARD("draw_card", 3),
+    HELP("help", 0);
 
     /*
     * Name of the command.

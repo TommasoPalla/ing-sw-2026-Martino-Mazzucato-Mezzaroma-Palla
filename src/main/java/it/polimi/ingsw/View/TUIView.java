@@ -29,6 +29,9 @@ public class TUIView implements ViewInterface, Listener {
         this.clientController = clientController;
         this.localModel = clientController.getLocalModel();
         this.commandParser = new CommandParser(clientController);
+        /*
+         * This attribute defines which state of the TUI the player is currently visualizing.
+         */
         this.tuiState = TUIState.SETUP;
         // Starts the thread of this TUI, using 'run()' as Thread.run() method
         Thread TUIThread = new Thread(this::runView);
@@ -64,13 +67,13 @@ public class TUIView implements ViewInterface, Listener {
     /**
      * TUI view of the offerTrack
      */
-    private void offerTrackTUIView(String args) {
-        if (!args.trim().isEmpty()) {
-            throw new IllegalArgumentException("This method doesnt require arguments.");
-        }
-        tuiState = TUIState.SHOW_OFFER_TRACK;
-        //printOfferTrack();
-    }
+//    private void offerTrackTUIView(String args) {
+//        if (!args.trim().isEmpty()) {
+//            throw new IllegalArgumentException("This method doesnt require arguments.");
+//        }
+//        tuiState = TUIState.SHOW_OFFER_TRACK;
+//        //printOfferTrack();
+//    }
 
     //  WORK IN PROGRESS
     private String[] cardTUIView(Card card) {
@@ -122,16 +125,22 @@ public class TUIView implements ViewInterface, Listener {
             case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
             case JOIN_GAME              -> printAvailableGames();
             case CHOOSE_TOTEM_COLOR     -> commandParser.parseChooseTotemColor(argsString);
-            case SHOW_OTHER_TRIBE       -> offerTrackTUIView(argsString);
+            case SHOW_OFFER_TRACK       -> printOfferTrack();
+            case SHOW_TOP_ROW           -> printTopRow();
+            case SHOW_BOTTOM_ROW        -> printBottomRow();
+            case SHOW_MY_TRIBE          -> printTribe(player);
+            //case SHOW_OTHER_TRIBE       -> parsePrintTribe();
             case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
-            default                     -> throw new IllegalArgumentException("Invalid command, please try again...");
+            //case PLACE_TOTEM            ->
+            case HELP                   -> printAvailableActions(clientController.getClientState());
+            default                     -> throw new IllegalArgumentException("ERROR: Invalid command, please try again or enter \"help()\" to know the available commands.");
         }
     }
 
     /**
      * Prints to terminal the tribe of the player
      */
-    private void printPersonalTribe() {
+    private void printTribe(String playerName) {
         System.out.println("This is your tribe:\n");
         LightTribe localTribe = localModel.getPlayerTribe(player);
         if(localTribe != null) {
@@ -140,8 +149,8 @@ public class TUIView implements ViewInterface, Listener {
             for(CharacterRole role : CharacterRole.values()) {
                 if(localTribe.getPopulation().get(role).isEmpty()) continue;
                 System.out.print(role + ": ");
-                //printRoleCardsInPopulation(clientController.getLocalModel().getPlayerTribe(), role );
-                System.out.println("\n");
+                printRoleCardsInPopulation(clientController.getLocalModel().getPlayerTribe(playerName), role );
+                System.out.println();
             }
         }
     }
@@ -153,10 +162,20 @@ public class TUIView implements ViewInterface, Listener {
      */
     private void printRoleCardsInPopulation(LightTribe playerTribe, CharacterRole role) {
         ArrayList<CharacterCard> cards = playerTribe.getPopulation().get(role);
+        ArrayList<Object> cardStats;
+        int i = 0;
+        System.out.print(role.toString() + ": ");
         for(CharacterCard card : cards) {
+            cardStats = card.getUsefulStats();
+            System.out.print(card.getCardID());
+            while ( i <= cardStats.size()) {
+                System.out.println(cardStats.get(i).toString() + ": " + cardStats.get(i+1).toString());
+                i = i + 2;
+            }
             // bisogna trovare un modo per stampare le carte anche in base al loro ruolo, possibilmente senza switch
             System.out.println();
         }
+        System.out.println();
     }
 
     /**
@@ -181,29 +200,40 @@ public class TUIView implements ViewInterface, Listener {
         // TopRowTUIView();
     }
 
-//    private void printOfferTrack() {
-//        StringBuilder topBorder = new StringBuilder();
-//        StringBuilder actionRow = new StringBuilder();
-//        StringBuilder playerRow = new StringBuilder();
-//        StringBuilder bottomBorder = new StringBuilder();
-//
-//        for (OfferTileDTO tile : track) {
-//            String playerName = playerPlacements.getOrDefault(tile.letter, "---");
-//
-//            // Costruiamo i blocchi aggiungendo uno spazio finale per separare le tessere
-//            topBorder.append("+-----------------+ ");
-//
-//            // Limitiamo o adattiamo dinamicamente l'azione nello spazio
-//            actionRow.append(String.format("| %-15s | ", tile.action));
-//
-//            // Tronchiamo il nome se supera i 15 caratteri, altrimenti sballa l'allineamento
-//            if (playerName.length() > 15) {
-//                playerName = playerName.substring(0, 12) + "...";
-//            }
-//            playerRow.append(String.format("| %-15s | ", playerName));
-//
-//            bottomBorder.append("+-----------------+ ");
-//    }
+    private void printOfferTrack() {
+        StringBuilder topBorder = new StringBuilder();
+        StringBuilder actionRow = new StringBuilder();
+        StringBuilder playerRow = new StringBuilder();
+        StringBuilder bottomBorder = new StringBuilder();
+
+        tuiState = TUIState.SHOW_OFFER_TRACK;
+        System.out.print("This is the current offer track");
+        for (OfferTile tile : localModel.getOfferTiles()) {
+            topBorder.append("+-----------------+ ");
+
+            if (tile.getFoodBonus() != 0) actionRow.append(String.format("| %-15s | ", tile.getFoodBonus()));
+            else if (tile.getCardsFromAbove() != 0 && tile.getCardsFromBelow() != 0) {
+                actionRow.append(String.format("| %-15s | ", "^ " + tile.getCardsFromAbove() + " v " + tile.getCardsFromBelow()));
+            } else if (tile.getCardsFromAbove() != 0) {
+                actionRow.append(String.format("| %-15s | ", "^ " + tile.getCardsFromAbove()));
+            } else actionRow.append(String.format("| %-15s | ", "v " + tile.getCardsFromBelow()));
+
+            String playerOccupant = tile.getCurrentOccupant();
+            if (playerOccupant != null) {
+                if (playerOccupant.length() > 15) {
+                    playerOccupant = playerOccupant.substring(0, 12) + "...";
+                    playerRow.append(String.format("| %-15s | ", playerOccupant));
+                }
+            }
+            else playerRow.append(String.format("| %-15s | ", "---"));
+
+            bottomBorder.append("+-----------------+ ");
+        }
+        System.out.println(topBorder);
+        System.out.println(actionRow);
+        System.out.println(playerRow);
+        System.out.println(bottomBorder);
+    }
 
     public void changeClientState(ClientState clientState) {
         switch (clientState) {
@@ -225,6 +255,7 @@ public class TUIView implements ViewInterface, Listener {
             }
             case NOT_IN_TURN ->   {
                 System.out.println("Wait for your turn.");
+                printGeneralCommands();
             }
         }
     }
@@ -247,12 +278,17 @@ public class TUIView implements ViewInterface, Listener {
 
     @Override
     public void notifyTotemPlaced(String player, OfferTile offerTile) {
-
+        System.out.println();
+        System.out.println(player + " has placed his totem!");
+        if(tuiState == TUIState.SHOW_OFFER_TRACK) printOfferTrack();
     }
 
     @Override
     public void notifyCardDrawn(String player, Card card, boolean topRow) {
-
+        System.out.println();
+        System.out.println(player + " has drawn " + card.getCardID() + "!");
+        if(tuiState == TUIState.SHOW_TOP_ROW && topRow) printTopRow();
+        else if(tuiState == TUIState.SHOW_BOTTOM_ROW && !topRow) printBottomRow();
     }
 
     /**
@@ -334,9 +370,25 @@ public class TUIView implements ViewInterface, Listener {
                 }
                 break;
             case PLACE_TOTEM:
-                System.out.println("- place_totem(offer_track_index");
+                System.out.println("- place_totem(offer_track_index)");
+                printGeneralCommands();
             case DRAW_CARD:
-                //
+                System.out.println("- draw_card(top/bottom, char/building, offer_track_index): To draw a card from top or bottom row. You have also to specify if the card\nis a character card or a building and the index of the row.");
+                printGeneralCommands();
         }
+    }
+    /**
+    * This method prints to terminal the commands who can be performed at every game phase during the entire
+     * course of the game.
+     */
+    private void printGeneralCommands() {
+        System.out.println();
+        System.out.println("These are the general commands you can run at any time:");
+        System.out.println("- show_offer_track(): to visualize the current state of the offer track.");
+        System.out.println("- show_top_row(): to visualize the current state of the top row.");
+        System.out.println("- show_bottom_row(): to visualize the current state of the bottom row.");
+        System.out.println("- show_card_info(cardID): to see all the information about the card.");
+        System.out.println("- show_my_tribe(): to visualize your own tribe.");
+        System.out.println(" -show_other_tribe(player_name): to visualize the tribe of another player.");
     }
 }

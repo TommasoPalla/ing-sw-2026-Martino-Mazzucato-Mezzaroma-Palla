@@ -47,6 +47,9 @@ public class ClientController implements ClientViewUpdate {
     public ViewInterface getView(){
         return view;
     }
+    public ClientState getClientState(){
+        return clientState;
+    }
 
     /*no constructor defined, default constructor is used,
     then setPlayerName, onGameStarted, bindConnection, bindView
