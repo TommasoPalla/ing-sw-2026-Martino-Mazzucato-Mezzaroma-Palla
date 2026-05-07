@@ -93,7 +93,7 @@ public class RMIServer implements VirtualRMIServer {
     }
 
     @Override
-    public void chooseOfferTile(VirtualRMIClient client, PlayerRecord playerRecord, int index) {
+    public void chooseOfferTile(VirtualRMIClient client, PlayerRecord playerRecord, int index) throws RemoteException {
         try{
             PlayerRecord callerRecord = clientRecords.get(client);
             serverController.chooseOfferTile(playerRecord, index);

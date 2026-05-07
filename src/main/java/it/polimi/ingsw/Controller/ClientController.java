@@ -178,48 +178,7 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
-    /*ClientViewUpdate interface override: update methods called by RMI/socket Client
-    when an update is sent by the server.
-    Valutare se aggiungere per ogni metodo lo show() di TUI o GUI (secondo me si),
-    eventualmente aggiungere un attributo alla classe che dice quale
-    interfaccia è stata scelta.
-    */
-    /** Before making a call to the game controller methods, the client controller checks
-     * if the player's draw is legal by checking the client light model
-     */
-    @Override
-    public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
-        if(fromTopRow){
-            if(fromBuilding){
-                BuildingCard drawn = localModel.getTopBuildings().remove(index);
-                localModel.getPlayerTribe(playerName).addToBuildings(drawn);
-                /* non servono le due righe successive
-                ArrayList<BuildingCard> arr = localModel.getTopRowBuildings();
-                localModel.updateTopRowBuildings(arr);*/
-            }else{
-                CharacterCard drawn = (CharacterCard) localModel.getTopRow().remove(index);
-                localModel.getPlayerTribe(playerName).addToPopulation(drawn);
-                /*non servono le due righe successive
-                ArrayList<Card> arr = localModel.getTopRow();
-                localModel.updateTopRow(arr);*/
-            }
-        }else{
-            if(fromBuilding){
-                BuildingCard drawn = localModel.getBottomBuildings().remove(index);
-                localModel.getPlayerTribe(playerName).addToBuildings(drawn);
-                /*non servono le due righe successive
-                ArrayList<BuildingCard> arr=localModel.getBottomRowBuildings();
-                localModel.updateBottomRowBuildings(arr);*/
-            }else{
-                CharacterCard drawn = (CharacterCard) localModel.getBottomRow().remove(index);
-                localModel.getPlayerTribe(playerName).addToPopulation(drawn);
-                /*
-                ArrayList<Card> arr=localModel.getBottomRow();
-                localModel.updateBottomRow(arr);*/
-            }
-        }
-    }
-
+    //TODO: siamo sicuri che vada fatto cosi?
     @Override
     public void addPlayer(String id) {
         if(!localModel.checkNameAvailable(id)){
@@ -230,13 +189,54 @@ public class ClientController implements ClientViewUpdate {
             System.out.println("Name already taken");
         }
     }
-    public void removePlayer(String name){
-        localModel.removePlayer(name);
+
+    /*ClientViewUpdate interface override: update methods called by RMI/socket Client
+    when an update is sent by the server.
+    Valutare se aggiungere per ogni metodo lo show() di TUI o GUI (secondo me si),
+    eventualmente aggiungere un attributo alla classe che dice quale
+    interfaccia è stata scelta.
+     */
+
+    //-----------------CALLBACKS----------------------
+
+    /** Before making a call to the game controller methods, the client controller checks
+     * if the player's draw is legal by checking the client light model
+     */
+
+    @Override
+    public void updateCurrentRound(int round) {
+        localModel.updateCurrentRound(round);
     }
 
     @Override
-    public void updateChosenOfferTile(String playerName, int index) {
-        localModel.chosenOfferTile(playerName, index);
+    public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
+        if(fromTopRow){
+            if(fromBuilding){
+                BuildingCard drawn = localModel.getTopBuildings().remove(index);
+                localModel.getPlayerTribe(playerName).addToBuildings(drawn);
+            }else{
+                CharacterCard drawn = (CharacterCard) localModel.getTopRow().remove(index);
+                localModel.getPlayerTribe(playerName).addToPopulation(drawn);
+            }
+        }else{
+            if(fromBuilding){
+                BuildingCard drawn = localModel.getBottomBuildings().remove(index);
+                localModel.getPlayerTribe(playerName).addToBuildings(drawn);
+            }else{
+                CharacterCard drawn = (CharacterCard) localModel.getBottomRow().remove(index);
+                localModel.getPlayerTribe(playerName).addToPopulation(drawn);
+            }
+        }
+    }
+
+    @Override
+    public void updateCurrentOfferTile(String playerName, Character index) {
+        localModel.updateOfferTile(playerName, index);
+    }
+
+
+    public void removePlayer(String name){
+        localModel.removePlayer(name);
     }
 
     @Override
@@ -255,13 +255,13 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void updateCurrentOfferTile(String playerName, Character index) {
-        localModel.updateOfferTile(playerName, index);
+    public void updateTopRow(ArrayList<Card> newTopRow) {
+        localModel.updateTopRow(newTopRow);
     }
 
     @Override
-    public void updateTopRow(ArrayList<Card> newTopRow) {
-        localModel.updateTopRow(newTopRow);
+    public void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
+        localModel.updateTopRowBuildings(newTopBuildings);
     }
 
     @Override
@@ -270,13 +270,18 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
+    public void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
+        localModel.updateBottomRowBuildings(newBottomBuildings);
+    }
+
+    @Override
     public void updateCurrentPlayer(String playerName) {
         localModel.setNextPlayer(playerName);
     }
 
     @Override
-    public void updateCurrentRound(int round) {
-        localModel.updateCurrentRound(round);
+    public void updateGamePhase(GamePhase phase) {
+        localModel.updateGamePhase(phase);
     }
 
     @Override
@@ -284,8 +289,4 @@ public class ClientController implements ClientViewUpdate {
         localModel.updateEra(era);
     }
 
-    @Override
-    public void updateGamePhase(GamePhase phase) {
-        localModel.updateGamePhase(phase);
-    }
 }

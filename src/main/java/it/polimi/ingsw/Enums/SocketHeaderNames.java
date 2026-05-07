@@ -12,7 +12,7 @@ public enum SocketHeaderNames {
     //conseguenze che il server manda come aggiornamento ai player
     GAME_CREATED,
     GAME_STARTED,
-    CONNECTED_TO_GAME,
+    PLAYER_CONNECTED_TO_GAME,
     CHOSEN_TOTEM_COLOR,
     DRAWN_CARD,
     CHOSEN_OFFER_TILE,

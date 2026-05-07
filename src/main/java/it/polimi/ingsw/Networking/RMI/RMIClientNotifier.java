@@ -1,10 +1,13 @@
 package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class RMIClientNotifier implements ClientNotifier {
     private final VirtualRMIClient clientStub;
@@ -15,16 +18,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.playerJoinedGame(playerName);
         } catch (RemoteException e){
-            System.out.println("ERROR: could not notify of new player joining\n" + e.getMessage());
-        }
-    }
-
-    @Override
-    public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
-        try {
-            clientStub.drawnCard(playerName, fromTopRow, fromBuildings, index);
-        } catch (RemoteException e){
-            System.out.println("ERROR: could not notify of card drawn choice\n" + e.getMessage());
+            //throw new StubException("could not notify");
         }
     }
 
@@ -33,16 +27,26 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.chosenTotem(playerName, totemColor);
         } catch (RemoteException e) {
-            System.out.println("ERROR: could not notify of Totem Color choice\n" + e.getMessage());
+            //throw new StubException("could not notify");
         }
     }
+
+    @Override
+    public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
+        try {
+            clientStub.drawnCard(playerName, fromTopRow, fromBuildings, index);
+        } catch (RemoteException e){
+            //throw new StubException("could not notify");
+        }
+    }
+
 
     @Override
     public void notifyChosenTile(String playerName, int index) {
         try {
             clientStub.chosenTile(playerName, index);
         } catch (RemoteException e) {
-            System.out.println("ERROR: could not notify of Tile choice\n" + e.getMessage());
+            //throw new StubException("could not notify");
         }
     }
 
@@ -51,17 +55,61 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.chosenTile(playerName, food);
         } catch (RemoteException e) {
-            System.out.println("ERROR: could not notify of Tile choice\n" + e.getMessage());
+            //throw new StubException("could not notify");
         }
     }
 
     @Override
     public void notifyShamansStarsToAdd(String playerName, int food) {
-
+        try {
+            clientStub.updateShamansStars(playerName, food);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
     }
 
     @Override
-    public void notifyPrestigePointsToAdd(String playerName, int food) {
+    public void notifyPrestigePointsToAdd(String playerName, int points) {
+        try {
+            clientStub.updatePrestigePoints(playerName, points);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
+    }
 
+    @Override
+    public void notifyTopRow(ArrayList<Card> newTopRow) {
+        try {
+            clientStub.updateTopRow(newTopRow);
+        } catch (Exception e) {
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
+        try {
+            clientStub.updateTopBuildings(newTopBuildings);
+        } catch (Exception e) {
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyBottomRow(ArrayList<Card> newBottomRow) {
+        try {
+            clientStub.updateBottomRow(newBottomRow);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
+        try {
+            clientStub.updateBottomBuildings(newBottomBuildings);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
     }
 }

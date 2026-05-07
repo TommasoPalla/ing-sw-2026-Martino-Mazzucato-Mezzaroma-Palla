@@ -21,5 +21,5 @@ public interface VirtualRMIServer extends Remote {
     void chooseTotemColor(VirtualRMIClient client, Color totemColor) throws  RemoteException;
     void joinGame(VirtualRMIClient client, String playerName, int gameID) throws  RemoteException;
     void createGame(String playerName, int numPlayers) throws RemoteException;
-    void chooseOfferTile(VirtualRMIClient client, PlayerRecord playerRecord, int index);
+    void chooseOfferTile(VirtualRMIClient client, PlayerRecord playerRecord, int index) throws RemoteException;
 }

@@ -1,22 +1,30 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 
 import java.util.ArrayList;
 
 public interface ClientViewUpdate {
-    public void updateFoodReserve(String playerName, int food);
-    public void updatePrestigePoints(String playerName, int pp);
-    public void updateCurrentOfferTile(String playerName, Character offerTileIndex);
-    public void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
-    public void updateTopRow(ArrayList<Card> newTopRow);
-    public void updateBottomRow(ArrayList<Card> newBottomRow);
-    public void updateCurrentPlayer(String playerName);
-    public void updateCurrentRound(int round);
-    public void updateChosenOfferTile(String playerName, int index);
-    public void addPlayer(String playerName);
-    public void updateCurrentEra(int era);
-    public void updateShamansStars(String playerName, int stars);
-    public void updateGamePhase(GamePhase phase);
+    void updateCurrentRound(int round);
+    void addPlayer(String playerName);
+
+    //void updateGameCreated();
+    //void updateGameStarted();
+    void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
+    //void updateTotemColor(String playerName, Color totemColor);
+    void updateCurrentOfferTile(String playerName, Character offerTileIndex);
+
+    void updateFoodReserve(String playerName, int food);
+    void updateShamansStars(String playerName, int stars);
+    void updatePrestigePoints(String playerName, int pp);
+    void updateTopRow(ArrayList<Card> newTopRow);
+    void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings);
+    void updateBottomRow(ArrayList<Card> newBottomRow);
+    void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings);
+    void updateCurrentPlayer(String playerName);
+    void updateGamePhase(GamePhase phase);
+    void updateCurrentEra(int era);
 }

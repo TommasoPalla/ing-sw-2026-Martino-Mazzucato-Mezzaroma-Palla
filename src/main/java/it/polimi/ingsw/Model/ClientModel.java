@@ -129,10 +129,6 @@ public class ClientModel {
     public void updateCharacterDrawn(CharacterCard character, String playerName) {
         players.get(playerName).addToPopulation(character);
     }
-    public void chosenOfferTile(String playerName, int index){
-        //TODO: fare il metodo getPlayerByName
-        //offerTiles.get(index).occupy(getPlayerByName(playerName));
-    }
     public void updateBuildingDrawn(BuildingCard building, String playerName){
         //players.get(playerName).addToBuildings(building);
     }

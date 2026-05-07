@@ -1,12 +1,11 @@
 package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Controller.GameController;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
-import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
-import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +23,7 @@ public class ServerController {
     private final Map<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
     private static int nextGameID = 0;
 
+    // logic handling connected players
     public void removePlayerFromGame(PlayerRecord playerRecord){
         try {
             String playerName = playerRecord.playerName();
@@ -80,6 +80,7 @@ public class ServerController {
         return newGame;
     }
 
+    // logic of methods that modify the model state
     public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
@@ -91,18 +92,20 @@ public class ServerController {
             }
         }
 
-
-
     public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
-        synchronized (currentController){
-            currentController.handleDraw(playerRecord, fromTopRow, fromBuildings, index);
+        try{
+            synchronized (currentController){
+                currentController.handleDraw(playerRecord, fromTopRow, fromBuildings, index);
+            }
+        } catch (IllegalDrawException e){
+            throw new IllegalDrawException();
         }
     }
 
     public void chooseOfferTile(PlayerRecord playerRecord, int index){
+        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         try {
-            GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
             synchronized (currentController) {
                 currentController.handleChooseOfferTile(playerRecord, index);
             }

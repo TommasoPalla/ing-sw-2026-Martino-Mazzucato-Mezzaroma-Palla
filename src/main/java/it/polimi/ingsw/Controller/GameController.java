@@ -45,24 +45,16 @@ public class GameController {
      * This method calls the respective method in Game to add a player while in Lobby State
      */
 
-    //TODO: capire se metodi come questo devono fare il controllo loro oppure lo si fa in Game e si lancia l'eccezione da li'
     public synchronized void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
+        if(!gameInstance.getAvailableColors().contains(totemColor)){
+            throw new UnavailableColorException(totemColor);
+        }
         Player player = gameInstance.getPlayerByName(playerRecord.playerName());
-        for(Player allplayer : gameInstance.getPlayers()){
-            if(allplayer.getTotemColor()==totemColor){
-                throw new UnavailableColorException(totemColor);
-            }
+        player.setTotemColor(totemColor);
+        gameInstance.chooseTotemColor(playerRecord.playerName(), totemColor);
+        for(ClientNotifier notifier : connectedClients.values()) {
+            notifier.notifyTotemColor(playerRecord.playerName(), totemColor);
         }
-        try {
-            player.setTotemColor(totemColor);
-            gameInstance.chooseTotemColor(playerRecord.playerName(), totemColor);
-            for(ClientNotifier notifier : connectedClients.values()){
-                notifier.notifyTotemColor(playerRecord.playerName(), totemColor);
-            }
-        } catch (UnavailableColorException e){
-            System.out.println("Unavailable color\n" + e.getMessage());
-        }
-
     }
 
     /**
@@ -72,6 +64,9 @@ public class GameController {
     public void addPlayer(String playerName) {
         if(gameInstance.getPlayersNames().contains(playerName)) throw new IllegalArgumentException("Player already exists");
         gameInstance.addPlayer(playerName);
+        for(ClientNotifier notifier : connectedClients.values()){
+            notifier.notifyNewPlayerConnected(playerName);
+        }
     }
 
     /**
@@ -98,7 +93,7 @@ public class GameController {
     public synchronized Player setNextPlayer() {
         try {
             Player nextPlayer =  gameInstance.setNextPlayer();
-            for (ClientNotifier client : connectedClients.values()) {
+            for (ClientNotifier notifier : connectedClients.values()) {
                 //client.updateCurrentPlayer(nextPlayer.getName()); @Deprecated
                 //client.notifyCurrentPlayer(...)   TODO: funzione da fare in ClientNotifier
             }

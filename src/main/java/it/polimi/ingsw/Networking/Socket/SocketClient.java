@@ -2,6 +2,7 @@ package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 
 import java.io.IOException;
 
@@ -32,7 +33,9 @@ public class SocketClient implements VirtualSocketClient {
 
     @Override
     public void updateChosenTile(String playerName, int index) {
-        controller.updateChosenOfferTile(playerName, index);
+        //TODO: NON FUNZIONA 100%. La tile 'A' c'e' solo se si gioca in due sto indice e' sballato altrimenti, fixare i metodi a monte
+        Character charIndex = (char) ('A' + index);
+        controller.updateCurrentOfferTile(playerName, charIndex);
     }
 
     @Override

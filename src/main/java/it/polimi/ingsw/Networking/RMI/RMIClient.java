@@ -4,8 +4,11 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Controller.ClientController;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Card;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class RMIClient implements VirtualRMIClient {
 
@@ -30,9 +33,15 @@ public class RMIClient implements VirtualRMIClient {
         System.out.println(errorMessage);
     }
 
+    //CALLBACKS from players' actions
     @Override
     public void gameStarted(int gameID, int numPlayers) {
         controller.createLocalModel(gameID, numPlayers);
+    }
+
+    @Override
+    public void playerJoinedGame(String playerName) throws RemoteException {
+        controller.addPlayer(playerName);
     }
 
     @Override
@@ -45,6 +54,11 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
+    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index){
+        controller.updateCardDrawn(fromTopRow, fromBuildings, index, playerName);
+    }
+
+    @Override
     public void chosenTile(String playerName, int index){
         try{
             controller.chooseOfferTile(index);
@@ -54,32 +68,37 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index){
-        controller.updateCardDrawn(fromTopRow, fromBuildings, index, playerName);
-    }
-
-    @Override
-    public void playerJoinedGame(String playerName){
-        controller.addPlayer(playerName);
-    }
-
-    //bozza di messaggio di update dal server
-    public void updateMessage(int round){
-        controller.updateCurrentRound(round);
-    }
-
-    @Override
     public void updateFood(String playerName, int food) throws RemoteException {
-
+        controller.updateFoodReserve(playerName, food);
     }
 
     @Override
     public void updateShamansStars(String playerName, int stars) throws RemoteException {
-
+        controller.updateShamansStars(playerName, stars);
     }
 
     @Override
     public void updatePrestigePoints(String playerName, int points) throws RemoteException {
+        controller.updatePrestigePoints(playerName, points);
+    }
 
+    @Override
+    public void updateTopRow(ArrayList<Card> newTopRow) throws RemoteException {
+        controller.updateTopRow(newTopRow);
+    }
+
+    @Override
+    public void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) throws RemoteException {
+        controller.updateTopBuildings(newTopBuildings);
+    }
+
+    @Override
+    public void updateBottomRow(ArrayList<Card> newBottomRow) throws RemoteException {
+        controller.updateBottomRow(newBottomRow);
+    }
+
+    @Override
+    public void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) throws RemoteException {
+        controller.updateBottomBuildings(newBottomBuildings);
     }
 }

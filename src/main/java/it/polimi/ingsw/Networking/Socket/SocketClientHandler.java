@@ -5,6 +5,8 @@ import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -124,8 +127,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     //CALLBACKS actions from clients
     @Override
-    public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.DRAWN_CARD, playerName, fromTopRow, fromBuildings, index);
+    public void notifyNewPlayerConnected(String playerName){
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.PLAYER_CONNECTED_TO_GAME, playerName);
         outStream.println(gson.toJson(message));
     }
 
@@ -136,8 +139,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifyNewPlayerConnected(String playerName){
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CONNECTED_TO_GAME, playerName);
+    public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.DRAWN_CARD, playerName, fromTopRow, fromBuildings, index);
         outStream.println(gson.toJson(message));
     }
 
@@ -166,4 +169,27 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         outStream.println(gson.toJson(message));
     }
 
+    @Override
+    public void notifyTopRow(ArrayList<Card> newTopRow) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_TOP_ROW, newTopRow);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_TOP_BUILDINGS, newTopBuildings);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyBottomRow(ArrayList<Card> newBottomRow) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_ROW, newBottomRow);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, newBottomBuildings);
+        outStream.println(gson.toJson(message));
+    }
 }

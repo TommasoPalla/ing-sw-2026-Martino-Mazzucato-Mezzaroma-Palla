@@ -1,10 +1,9 @@
 package it.polimi.ingsw.Model.Cards;
 
-import it.polimi.ingsw.Model.GameBoard.OfferTrack;
-import it.polimi.ingsw.Model.Users.Player;
+import java.io.Serializable;
 
 
-public abstract class Card {
+public abstract class Card implements Serializable {
     private final int era;
     private final String cardID;
 

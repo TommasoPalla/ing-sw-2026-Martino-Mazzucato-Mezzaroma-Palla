@@ -89,9 +89,6 @@ public class Game {
     //maybe the control logic should con in GameController and here the values
     //are only set to what they should be and nothing more
     public void chooseTotemColor(String playerName, Color totemColor){
-        if(!getAvailableColors().contains(totemColor)){
-            throw new UnavailableColorException(totemColor);
-        }
         totemColors.put(playerName, totemColor);
     }
 

@@ -56,7 +56,7 @@ public class SocketServerHandler implements Runnable{
                 client.updateChosenTile(playerName, index);
             } catch (IOException e) {}
         });
-        //...
+        //TODO: FINIRE DI AGGIUNGERE TUTTI GLI ALTRI VALORI DELL'ENUM
 
         //aggiornamenti dati da modifiche fatte dalla logica di gioco / dal server
         commandHandlers.put(SocketHeaderNames.ADDED_FOOD, parameters -> {
