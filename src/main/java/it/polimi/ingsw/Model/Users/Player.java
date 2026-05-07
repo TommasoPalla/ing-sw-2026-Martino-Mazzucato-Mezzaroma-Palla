@@ -57,7 +57,7 @@ public class Player {
         if (chosen.isOccupied()) {
             throw new OccupiedTileException();
         } else {
-            chosen.occupy(this);
+            chosen.occupy(this.name);
             currentOfferTile = chosen;
             return chosen;
         }

@@ -24,10 +24,10 @@ public class PlayerTest {
         player2.chooseOfferTile(2, offerTrack);
         offerTrack.getOfferTiles().get(2).free();
         assertTrue(offerTrack.getOfferTiles().get(1).isOccupied()); // funziona, la tile occupata da
-        assertEquals(player1.getName(), offerTrack.getOfferTiles().get(1).getCurrentOccupant().getName()); // funziona, la tile ha salvato come occupant il player
+        assertEquals(player1.getName(), offerTrack.getOfferTiles().get(1).getCurrentOccupant()); // funziona, la tile ha salvato come occupant il player
         player1.getCurrentOfferTile().free();
         player2.chooseOfferTile(1, offerTrack);
         assertEquals(player1.getCurrentOfferTile(), offerTrack.getOfferTiles().get(1)); // funziona, il player salva la tile come sua currentTile;
-        assertEquals(player2.getName(), offerTrack.getOfferTiles().get(1).getCurrentOccupant().getName()); // funziona anche la free, si libera la turn tile 1 e viene occupata dal player
+        assertEquals(player2.getName(), offerTrack.getOfferTiles().get(1).getCurrentOccupant()); // funziona anche la free, si libera la turn tile 1 e viene occupata dal player
     }
 }

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Model;
+package it.polimi.ingsw.Controller.ClientController;
 
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.InventorType;

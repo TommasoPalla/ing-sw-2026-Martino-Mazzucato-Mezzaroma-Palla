@@ -1,5 +1,4 @@
 package it.polimi.ingsw.Model.GameBoard;
-import it.polimi.ingsw.Model.Users.Player;
 
 public class OfferTile {
     private int cardsFromAbove;
@@ -8,7 +7,7 @@ public class OfferTile {
     private final char offerTileID;
 
     private boolean occupied;
-    private Player currentOccupant;
+    private String currentOccupant; //player name
 
     public OfferTile(char offerTileID){
         this.occupied = false;
@@ -59,11 +58,11 @@ public class OfferTile {
     public boolean isOccupied(){return occupied;}
     public int getFoodBonus(){return foodBonus;}
     public char getTileCode(){return offerTileID;}
-    public Player getCurrentOccupant(){return currentOccupant;}
+    public String getCurrentOccupant(){return currentOccupant;}
 
     //actual functions
-    public void occupy(Player player){
-        currentOccupant = player;
+    public void occupy(String playerName){
+        currentOccupant = playerName;
         occupied = true;
     }
     public void free(){

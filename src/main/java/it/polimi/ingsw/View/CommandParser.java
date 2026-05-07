@@ -1,9 +1,7 @@
 package it.polimi.ingsw.View;
 
-import it.polimi.ingsw.Controller.ClientController;
-import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException; //dovrebbe servire
+import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
-import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;

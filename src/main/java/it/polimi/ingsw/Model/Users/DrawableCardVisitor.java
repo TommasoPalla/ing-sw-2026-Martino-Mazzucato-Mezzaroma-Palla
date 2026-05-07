@@ -5,7 +5,7 @@ import it.polimi.ingsw.CustomException.InsufficientFoodException;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.Cards.VisitorAdapter;
-import it.polimi.ingsw.Model.ClientModel;
+import it.polimi.ingsw.Controller.ClientController.ClientModel;
 
 /**Implementation of Visitor Pattern to verify whether a card can be drawn by a player,
  * an EventCard cannot be drawn,

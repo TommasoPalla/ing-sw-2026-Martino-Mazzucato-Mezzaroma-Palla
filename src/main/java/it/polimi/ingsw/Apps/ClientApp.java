@@ -4,7 +4,7 @@ import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
-import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.View.GUIView.MainGUIView;
 import it.polimi.ingsw.View.ViewInterface;
 import it.polimi.ingsw.View.TUIView;
