@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Networking.RMI;
 
-import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
@@ -9,6 +9,7 @@ import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -69,6 +70,11 @@ public class RMIServer implements VirtualRMIServer {
         serverController.removePlayerFromGame(clientRecords.get(clientStub));
         serverController.removeNotifierFromGame(clientRecords.get(clientStub));
         System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
+    }
+
+    @Override
+    public Map<Integer, GamePlayers> getActiveGames(VirtualRMIClient client) {
+        return serverController.getActiveGames();
     }
 
     @Override

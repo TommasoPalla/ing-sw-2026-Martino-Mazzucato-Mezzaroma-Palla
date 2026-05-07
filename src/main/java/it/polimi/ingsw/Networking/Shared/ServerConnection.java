@@ -2,6 +2,9 @@ package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.View.GamePlayers;
+
+import java.util.Map;
 
 /**
  * This interface contains all the actions that the client can do.
@@ -16,7 +19,7 @@ public interface ServerConnection {
     void createGame(String playerName, int numPlayers);
     void joinGame(String playerName, int gameID);
     void leaveGame(String playerName, int gameID);
-    void getActiveGames();
+    Map<Integer, GamePlayers> getActiveGames();
     void chooseTotem(Color totemColor);
     void chooseOfferTile(int index) throws OccupiedTileException;
     void drawCard(boolean fromTopRow, boolean fromBuildings, int index);

@@ -1,18 +1,21 @@
 package it.polimi.ingsw.Networking.RMI;
 
+import it.polimi.ingsw.CustomException.StubException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
-import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.Controller.ClientController.ClientController;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Map;
 
 public class RMIServerAdapter implements ServerConnection {
     private VirtualRMIClient clientStub;
@@ -82,8 +85,12 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void getActiveGames(){
-
+    public Map<Integer, GamePlayers> getActiveGames(){
+        try {
+            return serverStub.getActiveGames(clientStub);
+        } catch(RemoteException e){
+            throw new StubException("could not retreat active games.");
+        }
     }
 
     @Override

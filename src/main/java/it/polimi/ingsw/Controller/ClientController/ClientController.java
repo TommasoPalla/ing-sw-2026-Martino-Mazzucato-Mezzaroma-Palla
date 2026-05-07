@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Controller;
+package it.polimi.ingsw.Controller.ClientController;
 
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.InsufficientFoodException;
@@ -12,12 +12,13 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
-import it.polimi.ingsw.Model.ClientModel;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ViewInterface;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 public class ClientController implements ClientViewUpdate {
@@ -93,10 +94,14 @@ public class ClientController implements ClientViewUpdate {
         clientState = ClientState.IN_LOBBY;
         //da notificare il player della creazione del game in modo che stampi le possibili azioni da fare mentre in lobby
     }
-    public void showActiveGames(){
-        /*array<Game> games = */ connection.getActiveGames();
-        //show in TUI o GUI
+
+    public Map<Integer, GamePlayers> getActiveGames(){
+        if(clientState != ClientState.SETUP){
+            throw new IllegalActionPhaseException();
+        }
+        return connection.getActiveGames();
     }
+
     public void joinGame(String playerName, int gameID){
         if(clientState != ClientState.SETUP) {
             throw new IllegalActionPhaseException();

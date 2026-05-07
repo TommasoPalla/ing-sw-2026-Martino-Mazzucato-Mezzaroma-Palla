@@ -4,11 +4,7 @@ import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Visitor;
-import it.polimi.ingsw.Model.ClientModel;
-import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
-
-import java.util.ArrayList;
 
 public abstract class CharacterCard extends Card {
     private final int numPlayersFlag;//3 stands for 3+, 4 for 4+. How many players are required to use the card

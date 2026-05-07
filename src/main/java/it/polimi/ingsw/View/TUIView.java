@@ -1,19 +1,17 @@
 package it.polimi.ingsw.View;
 
-import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
-import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
-import it.polimi.ingsw.Model.ClientModel;
+import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
-import it.polimi.ingsw.Model.LightTribe;
+import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.View.Listeners.Listener;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,7 +110,7 @@ public class TUIView implements ViewInterface, Listener {
     /**
      * Selects the correct method based on the command type and sends it to the command parser.
      * @param commandType the type of command chose by the player
-     * @param matcher the matcher containing the information about the input string, like the
+     * @param matcher the matcher containing the information about the input string, such as the
      *                arguments of the command.
      */
     private void commandParserSelector(CommandType commandType, Matcher matcher ) {

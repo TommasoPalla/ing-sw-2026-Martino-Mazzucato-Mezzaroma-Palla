@@ -6,7 +6,11 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
+import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
+import it.polimi.ingsw.View.GamePlayers;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -78,6 +82,17 @@ public class ServerController {
 
         nextGameID += 1;
         return newGame;
+    }
+
+    public Map<Integer, GamePlayers> getActiveGames(){
+        Map<Integer, GamePlayers> gamesData = new HashMap<>();
+        for (int ID: activeGames.keySet()){
+            //andrebbe sincronizzato
+            GamePlayers playersInfo = new GamePlayers(activeGames.get(ID).game().getNumPlayer(),
+                    activeGames.get(ID).game().getPlayersNames());
+            gamesData.put(ID, playersInfo);
+        }
+        return gamesData;
     }
 
     // logic of methods that modify the model state

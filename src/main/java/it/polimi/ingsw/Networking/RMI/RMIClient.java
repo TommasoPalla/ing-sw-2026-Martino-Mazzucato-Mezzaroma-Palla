@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
