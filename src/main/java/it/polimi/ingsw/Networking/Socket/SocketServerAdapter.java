@@ -1,18 +1,21 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
-import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.rmi.RemoteException;
+import java.util.Map;
 
 public class SocketServerAdapter implements ServerConnection {
 
@@ -26,7 +29,7 @@ public class SocketServerAdapter implements ServerConnection {
     private final int port;
     private final String host;
 
-    public SocketServerAdapter(String host, int port, ClientController clientController){
+    public SocketServerAdapter(String host, int port, ClientController clientController) {
         this.host = host;
         this.port = port;
         this.client = new SocketClient(clientController);
@@ -70,8 +73,8 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void getActiveGames(){
-
+    public Map<Integer, GamePlayers> getActiveGames() {
+        return null;
     }
 
     @Override

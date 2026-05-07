@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Networking.Socket;
 
-import it.polimi.ingsw.Controller.ClientController;
+import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 

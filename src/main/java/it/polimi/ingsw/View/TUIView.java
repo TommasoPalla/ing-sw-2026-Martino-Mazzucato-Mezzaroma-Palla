@@ -2,14 +2,16 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
+
 import it.polimi.ingsw.Enums.*;
+import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
-import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.View.Listeners.Listener;
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Scanner;
@@ -110,7 +112,7 @@ public class TUIView implements ViewInterface, Listener {
     /**
      * Selects the correct method based on the command type and sends it to the command parser.
      * @param commandType the type of command chose by the player
-     * @param matcher the matcher containing the information about the input string, such as the
+     * @param matcher the matcher containing the information about the input string, like the
      *                arguments of the command.
      */
     private void commandParserSelector(CommandType commandType, Matcher matcher ) {
@@ -118,6 +120,7 @@ public class TUIView implements ViewInterface, Listener {
 
         switch (commandType) {
             case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
+            case JOIN_GAME              -> printAvailableGames();
             case CHOOSE_TOTEM_COLOR     -> commandParser.parseChooseTotemColor(argsString);
             case SHOW_OTHER_TRIBE       -> offerTrackTUIView(argsString);
             case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
@@ -179,27 +182,27 @@ public class TUIView implements ViewInterface, Listener {
     }
 
 //    private void printOfferTrack() {
-//        for (OfferTile offerTile : localModel.getOfferTiles()) {
-//            System.out.println("______ ");
-//        }
-//        System.out.println("\n");
-//        System.out.println("|\n ");
-//        for (OfferTile offerTile : localModel.getOfferTiles()) {
-//                System.out.println("Food: " + offerTile.getFoodBonus() + ", ");
-//                System.out.println("^ " + offerTile.getCardsFromAbove() + ", ");
-//                System.out.println("v " + offerTile.getCardsFromBelow());
-//                System.out.println(" | ");
-//        }
-//        System.out.println("\n| ");
-//        for (OfferTile offerTile : localModel.getOfferTiles()) {
-//            if(offerTile.isOccupied()) {
-//                System.out.println(offerTile.getCurrentOccupant().getName());
+//        StringBuilder topBorder = new StringBuilder();
+//        StringBuilder actionRow = new StringBuilder();
+//        StringBuilder playerRow = new StringBuilder();
+//        StringBuilder bottomBorder = new StringBuilder();
+//
+//        for (OfferTileDTO tile : track) {
+//            String playerName = playerPlacements.getOrDefault(tile.letter, "---");
+//
+//            // Costruiamo i blocchi aggiungendo uno spazio finale per separare le tessere
+//            topBorder.append("+-----------------+ ");
+//
+//            // Limitiamo o adattiamo dinamicamente l'azione nello spazio
+//            actionRow.append(String.format("| %-15s | ", tile.action));
+//
+//            // Tronchiamo il nome se supera i 15 caratteri, altrimenti sballa l'allineamento
+//            if (playerName.length() > 15) {
+//                playerName = playerName.substring(0, 12) + "...";
 //            }
-//            else  {
-//                System.out.println("---");
-//            }
-//        }
-//        //da finire, e da modificare perché ho sbagliato, meglio rappresentazione verticale dell'offerTrack
+//            playerRow.append(String.format("| %-15s | ", playerName));
+//
+//            bottomBorder.append("+-----------------+ ");
 //    }
 
     public void changeClientState(ClientState clientState) {
@@ -253,19 +256,73 @@ public class TUIView implements ViewInterface, Listener {
     }
 
     /**
+     * Prints to terminal the list of available games a client can join after he sent the "join_game()" command
+     * and takes in input the gameID of the game the client wants to join.
+     */
+    private void printAvailableGames() {
+        boolean gameJoined = false;
+        Map<Integer, GamePlayers> availableGames = clientController.getActiveGames();
+        System.out.println();
+        if (availableGames.isEmpty()) {
+            System.out.println("There are no available games. You'll be sent back to the setup state");
+            printAvailableActions(ClientState.SETUP);
+            return;
+        }
+        System.out.println("These are the available games:");
+        for(Map.Entry<Integer, GamePlayers> entry : availableGames.entrySet()) {
+            System.out.println("- gameID: " + entry.getKey() + " || Number of players: " + entry.getValue().playersNum());
+            System.out.print("  Players in lobby: ");
+            for(String player : entry.getValue().playerNames()) {
+                System.out.print(player + ", ");
+            }
+            System.out.println(";");
+        }
+        System.out.println();
+        System.out.println("Enter a gameID to join the respective game.");
+        System.out.println("Enter \"exit\" to go back to the setup state:");
+        do {
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
+            try {
+                int gameID = Integer.parseInt(input);
+                if(!availableGames.containsKey(gameID)) {
+                    System.out.println("ERROR: This gameID is not in the available games. Please enter a valid gameID.");
+                }
+                else {
+                    gameJoined = true;
+                    // prova a joinare il game
+                    try {
+                        clientController.joinGame(player, gameID);
+                    }
+                    catch (InvalidSelectionException e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            } catch(NumberFormatException e) {
+                if(input.equalsIgnoreCase("exit")) {
+                    printAvailableActions(ClientState.SETUP);
+                    break;
+                }
+                else System.out.println("Invalid input. Please enter a valid gameID or enter \"exit\" to go back to the setup state.");
+            }
+        } while (!gameJoined);
+    }
+
+    /**
      * Prints the available actions a player can make while in a certain state.
      * @param clientState The state of the TUI the player is currently visualising.
      */
     private void printAvailableActions(ClientState clientState) {
+        System.out.println();
         System.out.println("These are the available actions in the " +  clientState.toString().toLowerCase() + " state:");
         switch(clientState) {
             case SETUP:
-                System.out.println("- create_game(number_of_players)");
-                System.out.println("- join_game(gameID)");
+                System.out.println("- create_game(number_of_players): To create a new game with a specific number of players.");
+                System.out.println("- join_game(): To join an existing game.");
                 break;
             case IN_LOBBY:
-                System.out.println("- choose_totem_color(color)");
-                System.out.println("- start_game()");
+                System.out.println("- choose_totem_color(color): To choose an available totem color from the list.");
+                System.out.println("- start_game(): To start the game. It only works if you're the host.");
                 System.out.println();
                 System.out.println("Available totem colors: ");
                 EnumSet<Color> availableColors = EnumSet.allOf(Color.class);
@@ -277,7 +334,7 @@ public class TUIView implements ViewInterface, Listener {
                 }
                 break;
             case PLACE_TOTEM:
-                //
+                System.out.println("- place_totem(offer_track_index");
             case DRAW_CARD:
                 //
         }
