@@ -3,7 +3,6 @@ package it.polimi.ingsw.View.Listeners;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ListenerManager {
     private final ArrayList<Listener> listeners;

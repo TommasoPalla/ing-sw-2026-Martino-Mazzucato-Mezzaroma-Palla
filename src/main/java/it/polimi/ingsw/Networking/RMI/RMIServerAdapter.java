@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.CustomException.StubException;
+import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
+import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
+import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
@@ -64,7 +67,7 @@ public class RMIServerAdapter implements ServerConnection {
     @Override
     public void createGame(String playerName, int numPlayers){
         try {
-            serverStub.createGame(playerName, numPlayers);
+            serverStub.createGame(clientStub, playerName, numPlayers);
         } catch (RemoteException e) {
             System.out.println("Error during creating game " + e.getMessage());
         }
@@ -76,12 +79,33 @@ public class RMIServerAdapter implements ServerConnection {
             serverStub.joinGame(clientStub, playerName, gameID);
         } catch (RemoteException e){
             System.out.println("ERROR: remote error, could not join game " + gameID + "\n" + e.getMessage());
+        } catch (NotJoinableGameException e) {
+            throw new NotJoinableGameException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void startGame(String playerName, int gameID) {
+        try{
+            serverStub.startGame(playerName, gameID);
+        } catch (RemoteException e){
+            System.out.println("ERROR: remote error, could not start the game" + gameID + "\n" + e.getMessage());
+        }
+        catch (NotTheHostException e){
+            throw new NotTheHostException(e.getMessage());
+        }
+        catch (NotEnoughPlayersException e){
+            throw new NotEnoughPlayersException(e.getMessage());
         }
     }
 
     @Override
     public void leaveGame(String playerName, int gameID){
-
+        try {
+            serverStub.leaveGame(playerName, gameID);
+        } catch(RemoteException e){
+            throw new StubException("could not leave game.");
+        }
     }
 
     @Override

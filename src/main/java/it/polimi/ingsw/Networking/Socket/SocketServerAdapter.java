@@ -82,6 +82,11 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
+    public void startGame(String playerName, int gameID) {
+
+    }
+
+    @Override
     public void createGame(String playerName, int numPlayers){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CREATE_GAME, playerName, numPlayers);
         outStream.println(gson.toJson(message));

@@ -18,6 +18,7 @@ public interface ServerConnection {
     void setPlayerName(String playerName);
     void createGame(String playerName, int numPlayers);
     void joinGame(String playerName, int gameID);
+    void startGame(String playerName, int gameID);
     void leaveGame(String playerName, int gameID);
     Map<Integer, GamePlayers> getActiveGames();
     void chooseTotem(Color totemColor);

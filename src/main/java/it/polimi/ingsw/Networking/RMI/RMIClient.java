@@ -38,11 +38,12 @@ public class RMIClient implements VirtualRMIClient {
     @Override
     public void updateGameCreated(int gameID, int numPlayers){
         controller.updateGameCreated(gameID, numPlayers);
+        controller.createLocalModel(gameID, numPlayers);
     }
 
     @Override
-    public void gameStarted(int gameID, int numPlayers) {
-        controller.createLocalModel(gameID, numPlayers);
+    public void updateGameStarted(int gameID, int numPlayers) {
+        //controller.updateGameStarted(gameID);
     }
 
     @Override

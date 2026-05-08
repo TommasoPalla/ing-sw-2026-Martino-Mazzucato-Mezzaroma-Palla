@@ -34,6 +34,7 @@ public class SocketClient implements VirtualSocketClient {
     @Override
     public void updateGameCreated(int gameID, int numPlayers){
         controller.updateGameCreated(gameID, numPlayers);
+        controller.createLocalModel(gameID, numPlayers);
     }
 
     @Override

@@ -6,6 +6,9 @@ package it.polimi.ingsw.Enums;
 public enum CommandType {
     CREATE_GAME("create_game", 1),
     JOIN_GAME("join_game", 1),
+    START_GAME("start_game", 0),
+    LEAVE_GAME("leave_game", 0),
+    MODIFY_NAME("modify_name", 1),
     CHOOSE_TOTEM_COLOR("choose_color", 1),
     SHOW_MY_TRIBE("show_my_tribe", 0),
     SHOW_OFFER_TRACK("show_offer_track", 0),

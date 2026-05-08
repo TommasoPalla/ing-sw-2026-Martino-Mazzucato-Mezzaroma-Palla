@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
+import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
+import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
+import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
@@ -48,9 +51,8 @@ public class RMIServer implements VirtualRMIServer {
     }
 
     @Override
-    public void createGame(String playerName, int numPlayers) throws RemoteException {
+    public void createGame(VirtualRMIClient client, String playerName, int numPlayers) throws RemoteException {
         //TODO: se e' temporaneo va sistemato
-        /*tmeporaneo perché mi dà errori nella riga sotto*/ RMIClient client = new RMIClient(new ClientController());
         ClientNotifier clientNotifier = new RMIClientNotifier(client);
         //da fare il clientRecord.put() capendo come prendere il game id
         serverController.createNewGame(clientNotifier, playerName, numPlayers);
@@ -58,11 +60,32 @@ public class RMIServer implements VirtualRMIServer {
 
     @Override
     public void joinGame(VirtualRMIClient client, String playerName, int gameID) throws RemoteException {
+        try {
+            PlayerRecord playerRecord = new PlayerRecord(gameID, playerName);
+            clientRecords.put(client, playerRecord);
+            ClientNotifier clientNotifier = new RMIClientNotifier(client);
+            serverController.joinGame(clientNotifier, playerRecord);
+            //System.out.println(playerRecord + "added to game");
+        } catch (NotJoinableGameException e) {
+            throw new NotJoinableGameException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void leaveGame(String playerName, int gameID) throws RemoteException {
         PlayerRecord playerRecord = new PlayerRecord(gameID, playerName);
-        clientRecords.put(client, playerRecord);
-        serverController.addPlayerToGame(playerRecord);
-        serverController.addNotifierToGame(playerRecord, new RMIClientNotifier(client));
-        System.out.println(playerRecord + "added to game");
+        serverController.leaveGame(playerRecord);
+    }
+
+    @Override
+    public void startGame(String playerName, int gameID) throws NotTheHostException, NotEnoughPlayersException, RemoteException {
+        try {
+            serverController.startGame(playerName, gameID);
+        } catch (NotTheHostException e) {
+            throw new NotTheHostException(e.getMessage());
+        } catch (NotEnoughPlayersException e) {
+            throw new NotEnoughPlayersException(e.getMessage());
+        }
     }
 
     @Override

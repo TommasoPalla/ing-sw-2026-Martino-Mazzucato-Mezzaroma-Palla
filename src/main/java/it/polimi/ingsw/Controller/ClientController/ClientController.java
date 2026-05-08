@@ -2,8 +2,7 @@ package it.polimi.ingsw.Controller.ClientController;
 
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.InsufficientFoodException;
-import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
-import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.UIException.*;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.ClientState;
@@ -70,16 +69,16 @@ public class ClientController implements ClientViewUpdate {
     public void createLocalModel(int gameId, int num){
         this.localModel = new ClientModel(gameId, num);
     }
+    public void setClientState(ClientState clientState){
+        this.clientState = clientState;
+    }
 
     public void setPlayerName(String playerName) {
-        if(localModel.checkNameAvailable(playerName)){
-            //da gestire bene con TUI e GUI
-            System.out.println("Name not valid");
-        } else {
-            connection.setPlayerName(playerName);
-            this.playerName = playerName;
-            localModel.addPlayer(playerName);
+        if (clientState != ClientState.SETUP) {
+            throw new IllegalClientStateActionException("ERROR: You can no longer change your name!");
         }
+        this.playerName = playerName;
+        connection.setPlayerName(playerName);
     }
 
     @Override
@@ -88,10 +87,15 @@ public class ClientController implements ClientViewUpdate {
     }
 
     //TODO: siamo sicuri che vada fatto cosi?
+
+    /**
+     * When a new player enters the lobby, the client controller updates his local model's list of players.
+     * @param player the player who entered the lobby.
+     */
     @Override
-    public void updatePlayerConnected(String id) {
-        if(!localModel.checkNameAvailable(id)){
-            localModel.addPlayer(id);
+    public void updatePlayerConnected(String player) {
+        if(!localModel.checkNameAvailable(player)){
+            localModel.addPlayer(player);
         }
         else {
             //da gestire TUI o GUI
@@ -112,7 +116,7 @@ public class ClientController implements ClientViewUpdate {
     public void createGame(int numPlayers){
         //con partite multiple non serve verificare che ci sia una partita già inizializzata
         if (clientState != ClientState.SETUP) {
-            throw new IllegalActionPhaseException();
+            throw new IllegalClientStateActionException("ERROR: You cannot do that right now!");
         }
         if(numPlayers < 2 || numPlayers > 5){
             throw new IllegalArgumentException();
@@ -123,16 +127,43 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void joinGame(String playerName, int gameID){
-        if(clientState != ClientState.SETUP) {
-            throw new IllegalActionPhaseException();
+        try {
+            connection.joinGame(playerName, gameID);
+        } catch (NotJoinableGameException e) {
+            throw new NotJoinableGameException(e.getMessage());
         }
-        connection.joinGame(playerName, gameID);
     }
     /*decidere se cancellare il model dopo l'effettivo abbandono,
      per la resilienza potrebbe servire conservarlo per tot tempo dopo la disconnessione
      */
     public void leaveGame(){
+        if(clientState == ClientState.SETUP){
+            throw new IllegalClientStateActionException("ERROR: You can't leave a game if you're not in one!");
+        }
+        if(clientState != ClientState.IN_LOBBY){
+            throw new IllegalClientStateActionException("ERROR: You can't leave the game now!");
+        }
         connection.leaveGame(playerName, localModel.getGameId());
+    }
+
+    /**
+     * This method asks the server to start an existing game. It must be run by the host player.
+     * @param player the player host.
+     * @throws NotTheHostException Throw an exception if the player is not the host.
+     * @throws NotEnoughPlayersException Throws an exception if tried to start the game with
+     * an insufficient number of players.
+     */
+    public void startGame(String player) throws NotTheHostException, NotEnoughPlayersException{
+        if(clientState != ClientState.IN_LOBBY){
+            throw new IllegalClientStateActionException("ERROR: You cannot start a game if you're not in one!");
+        }
+        try {
+            connection.startGame(player, localModel.getGameId());
+        } catch (NotTheHostException e) {
+            throw new NotTheHostException(e.getMessage());
+        } catch (NotEnoughPlayersException e) {
+            throw new NotEnoughPlayersException(e.getMessage());
+        }
     }
 
     /*methods used for client's requests,
@@ -140,7 +171,7 @@ public class ClientController implements ClientViewUpdate {
     identified by connection field (RMI/socket)*/
     public void chooseTotem(Color color){
         if (clientState != ClientState.IN_LOBBY) {
-            throw new IllegalActionPhaseException();
+            throw new IllegalClientStateActionException("ERROR: You cannot choose a totem right now.");
         }
         try {
             if (localModel.isColorAvailable(color)) throw new IllegalArgumentException();
@@ -151,6 +182,15 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void chooseOfferTile(int index) {
+        if (clientState == ClientState.DRAW_CARD) {
+            throw new IllegalActionPhaseException();
+        }
+        if (clientState == ClientState.NOT_IN_TURN) {
+            throw new IllegalClientStateActionException("ERROR: Wait for your turn!");
+        }
+        if (clientState != ClientState.PLACE_TOTEM) {
+            throw new IllegalClientStateActionException("Invalid command, please try again...");
+        }
         try {
             if (localModel.isOccupied(index)) throw new OccupiedTileException();
             connection.chooseOfferTile(index);

@@ -2,12 +2,13 @@ package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
+import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
+import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
-import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
-import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class ServerController {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController;
-            gameController.removeClient(playerName);
+            gameController.removePlayer(playerName); // old: gameController.removeClient(playerName), ma già fatto in removeNotifierFromGame()
         } catch (IllegalArgumentException e){
             System.out.println("ERROR: could not remove player from game\n" + e.getMessage());
         }
@@ -50,8 +51,8 @@ public class ServerController {
             GameController gameController = activeGames.get(gameID).gameController();
             gameController.addPlayer(playerName);
         }
-        catch (IllegalArgumentException e){
-            System.out.println("ERROR: could not add player to game\n" + e.getMessage());
+        catch (NotJoinableGameException e){
+            throw new NotJoinableGameException(e.getMessage());
         }
     }
 
@@ -74,9 +75,10 @@ public class ServerController {
     public synchronized Game createNewGame(ClientNotifier notifier, String firstPlayerName, int playerNum) {
         int gameID = nextGameID;
         Game newGame = new Game(gameID, playerNum);
-        PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
         GameController gameController = new GameController(newGame);
         activeGames.put(gameID, new GameRecord(newGame, gameController));
+
+        PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
         addPlayerToGame(newPlayer);
         //gameController.addPlayer(firstPlayerName); TODO: capire se e' da fare anche questo
         addNotifierToGame(newPlayer, notifier);
@@ -87,6 +89,32 @@ public class ServerController {
         return newGame;
     }
 
+    public void joinGame(ClientNotifier notifier, PlayerRecord newPlayer) {
+        try {
+            addPlayerToGame(newPlayer);
+            addNotifierToGame(newPlayer, notifier);
+            //notifier.notifyPlayerJoined(newPlayer);
+        } catch (NotJoinableGameException e) {
+            throw new NotJoinableGameException(e.getMessage());
+        }
+    }
+
+    public void leaveGame(PlayerRecord leftingPlayer) {
+        removeNotifierFromGame(leftingPlayer);
+        removePlayerFromGame(leftingPlayer);
+    }
+
+    public void startGame(String requestingPlayer, int gameID) {
+        try {
+            activeGames.get(gameID).gameController().startGame(requestingPlayer);
+        }
+        catch (NotTheHostException e){
+            throw new NotTheHostException(e.getMessage());
+        }
+        catch (NotEnoughPlayersException e){
+            throw new NotEnoughPlayersException(e.getMessage());
+        }
+    }
     public Map<Integer, GamePlayers> getActiveGames(){
         Map<Integer, GamePlayers> gamesData = new HashMap<>();
         for (int ID: activeGames.keySet()){

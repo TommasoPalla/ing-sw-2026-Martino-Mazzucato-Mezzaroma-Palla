@@ -99,10 +99,11 @@ public class Game {
         // è stato raggiunto, cambia la fase da IN_LOBBY a READY_TO_START
     }
 
+    public void removePlayer(String playerName) {
+        players.remove(getPlayerByName(playerName));
+    }
+
     public void startGame(){
-        if(players.size() < numPlayers){
-            throw new IllegalActionPhaseException();
-        }
         currentRound = 1;
         era = 1;
 

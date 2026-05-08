@@ -1,8 +1,11 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
+import it.polimi.ingsw.CustomException.UIException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
 
+import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
+import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.Model.Cards.Card;
@@ -48,8 +51,8 @@ public class TUIView implements ViewInterface, Listener {
             Scanner scanner = new Scanner(System.in);
             String playerName = scanner.nextLine();
             try {
-                //clientController.setPlayerName(playerName);
                 nameVerified = true;
+                clientController.setPlayerName(playerName);
                 this.player = playerName;
             } catch(IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -103,7 +106,7 @@ public class TUIView implements ViewInterface, Listener {
             catch(InvalidSelectionException e){
                 System.out.println(e.getMessage()+e.getCause().getMessage());
             }
-            catch (IllegalArgumentException e) {
+            catch (IllegalArgumentException | NotEnoughPlayersException | IllegalClientStateActionException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -118,12 +121,18 @@ public class TUIView implements ViewInterface, Listener {
      * @param matcher the matcher containing the information about the input string, like the
      *                arguments of the command.
      */
-    private void commandParserSelector(CommandType commandType, Matcher matcher ) {
+    private void commandParserSelector(CommandType commandType, Matcher matcher ) throws InvalidSelectionException, IllegalArgumentException {
         String argsString = matcher.group(2);
 
         switch (commandType) {
             case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
             case JOIN_GAME              -> printAvailableGames();
+            case LEAVE_GAME             -> { clientController.leaveGame();
+                                             System.out.println("You have left the game successfully.");
+                                             changeClientState(ClientState.SETUP);
+                                           }
+            case START_GAME             -> clientController.startGame(player);
+            case MODIFY_NAME            -> commandParser.parseModifyName(argsString);
             case CHOOSE_TOTEM_COLOR     -> commandParser.parseChooseTotemColor(argsString);
             case SHOW_OFFER_TRACK       -> printOfferTrack();
             case SHOW_TOP_ROW           -> printTopRow();
@@ -186,7 +195,6 @@ public class TUIView implements ViewInterface, Listener {
             System.out.println("La fila superiore è vuota");
             return;
         }
-        // TopRowTUIView();
     }
 
     /**
@@ -197,7 +205,6 @@ public class TUIView implements ViewInterface, Listener {
             System.out.println("La fila inferiore è vuota");
             return;
         }
-        // TopRowTUIView();
     }
 
     private void printOfferTrack() {
@@ -236,13 +243,18 @@ public class TUIView implements ViewInterface, Listener {
     }
 
     public void changeClientState(ClientState clientState) {
+        System.out.println();
+        // non sono sicuro che il clientState vada cambiato nella TUI
+        clientController.setClientState(clientState);
         switch (clientState) {
             case SETUP -> {
                 System.out.println("You are in the setup state.");
+                tuiState = TUIState.SETUP;
                 printAvailableActions(ClientState.SETUP);
             }
             case IN_LOBBY ->  {
                 System.out.println("Welcome to the lobby!");
+                tuiState = TUIState.IN_LOBBY;
                 printAvailableActions(ClientState.IN_LOBBY);
             }
             case PLACE_TOTEM ->  {
@@ -266,9 +278,43 @@ public class TUIView implements ViewInterface, Listener {
             System.out.println("It's your turn!");
             printAvailableActions(ClientState.PLACE_TOTEM);
         }
-        else  {
+        else {
             System.out.println("It's now " + player + "'s turn!");
         }
+    }
+
+    @Override
+    public void notifyGameCreated(int gameID) {
+        System.out.println("The game was successfully created with ID: " +  gameID + "!");
+        System.out.println("You are the host of this game.");
+        changeClientState(ClientState.IN_LOBBY);
+    }
+
+    @Override
+    public void notifyGameJoined(int gameID) {
+        System.out.println("You have successfully joined the game with ID: " +  gameID + "!");
+        changeClientState(ClientState.IN_LOBBY);
+    }
+
+    @Override
+    public void notifyPlayerJoined(int gameID, String playerName) {
+        if(tuiState == TUIState.IN_LOBBY && gameID == localModel.getGameId()) {
+            System.out.println("Player " + playerName + " joined the lobby!");
+        }
+        else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+    }
+
+    @Override
+    public void notifyPlayerLeft(int gameID, String playerName) {
+        if(tuiState == TUIState.IN_LOBBY && gameID == localModel.getGameId()) {
+            System.out.println("Player " + playerName + " left the lobby!");
+        }
+        else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+    }
+
+    @Override
+    public void notifyGameStarted() {
+        System.out.println("The game has started! GLHF!");
     }
 
     @Override
@@ -276,17 +322,27 @@ public class TUIView implements ViewInterface, Listener {
 
     }
 
+    /**
+     * The player is notified when a player has placed his totem. If the player was visualizing the offer track
+     * before this notification, the offer track view is reloaded.
+     * @param player the name of the player who placed the totem
+     * @param offerTile the offer tile on which the totem was placed.
+     */
     @Override
     public void notifyTotemPlaced(String player, OfferTile offerTile) {
-        System.out.println();
-        System.out.println(player + " has placed his totem!");
+        if(this.player.equals(player)) {
+            System.out.println();
+            System.out.println(player + " has placed his totem on offer tile " + offerTile.getTileCode());
+        }
         if(tuiState == TUIState.SHOW_OFFER_TRACK) printOfferTrack();
     }
 
     @Override
     public void notifyCardDrawn(String player, Card card, boolean topRow) {
-        System.out.println();
-        System.out.println(player + " has drawn " + card.getCardID() + "!");
+        if(this.player.equals(player)) {
+            System.out.println();
+            System.out.println(player + " has drawn " + card.getCardID() + "!");
+        }
         if(tuiState == TUIState.SHOW_TOP_ROW && topRow) printTopRow();
         else if(tuiState == TUIState.SHOW_BOTTOM_ROW && !topRow) printBottomRow();
     }
@@ -297,6 +353,7 @@ public class TUIView implements ViewInterface, Listener {
      */
     private void printAvailableGames() {
         boolean gameJoined = false;
+        tuiState = TUIState.JOIN_GAME;
         Map<Integer, GamePlayers> availableGames = clientController.getActiveGames();
         System.out.println();
         if (availableGames.isEmpty()) {
@@ -329,13 +386,16 @@ public class TUIView implements ViewInterface, Listener {
                     // prova a joinare il game
                     try {
                         clientController.joinGame(player, gameID);
+                        changeClientState(ClientState.IN_LOBBY);
                     }
-                    catch (InvalidSelectionException e) {
+                    catch (NotJoinableGameException e) {
                         System.out.println(e.getMessage());
+                        printAvailableGames();
                     }
                 }
             } catch(NumberFormatException e) {
                 if(input.equalsIgnoreCase("exit")) {
+                    tuiState = TUIState.SETUP;
                     printAvailableActions(ClientState.SETUP);
                     break;
                 }
@@ -355,19 +415,21 @@ public class TUIView implements ViewInterface, Listener {
             case SETUP:
                 System.out.println("- create_game(number_of_players): To create a new game with a specific number of players.");
                 System.out.println("- join_game(): To join an existing game.");
+                System.out.println("- modify_name(new_name): To modify your name.");
                 break;
             case IN_LOBBY:
                 System.out.println("- choose_totem_color(color): To choose an available totem color from the list.");
                 System.out.println("- start_game(): To start the game. It only works if you're the host.");
+                System.out.println("- leave_game(): To end the game.");
                 System.out.println();
                 System.out.println("Available totem colors: ");
                 EnumSet<Color> availableColors = EnumSet.allOf(Color.class);
-                for(Color color : localModel.getTotemColors().values()) {
-                    availableColors.remove(color);
-                }
-                for(Color color : availableColors) {
-                    System.out.println("- " + color);
-                }
+//                for(Color color : localModel.getTotemColors().values()) {
+//                    availableColors.remove(color);
+//                }
+//                for(Color color : availableColors) {
+//                    System.out.println("- " + color);
+//                }
                 break;
             case PLACE_TOTEM:
                 System.out.println("- place_totem(offer_track_index)");

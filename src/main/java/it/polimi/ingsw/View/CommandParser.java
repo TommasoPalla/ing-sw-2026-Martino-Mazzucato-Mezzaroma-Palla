@@ -2,6 +2,7 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.UIException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;
@@ -65,7 +66,7 @@ public record CommandParser(ClientController clientController) {
      */
     public void parseCreateGame(String argsString) {
         if (argsString.trim().isEmpty()) {
-            throw new IllegalArgumentException("ERROR: you need to enter the number of players.");
+            throw new IllegalArgumentException("ERROR: you need to enter the number of players!");
         }
         String[] commandArgs = parseArguments(CommandType.CREATE_GAME, argsString);
         try {
@@ -76,6 +77,22 @@ public record CommandParser(ClientController clientController) {
             throw new IllegalArgumentException("ERROR: command argument must be a number!");
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("ERROR: invalid number of participants. Mesos requires from 2 to 5 players!");
+        }
+    }
+
+    /**
+     * This method parses the command to change the player name.
+     * @param argsString one argument is expected: the new name of the player.
+     */
+    public void parseModifyName(String argsString) {
+        if (argsString.trim().isEmpty()) {
+            throw new IllegalArgumentException("ERROR: you need to enter the new name you want to use!");
+        }
+        String[] commandArgs = parseArguments(CommandType.CREATE_GAME, argsString);
+        try {
+            clientController.setPlayerName(commandArgs[0]);
+        } catch (IllegalClientStateActionException e) {
+            throw new IllegalActionPhaseException();
         }
     }
 

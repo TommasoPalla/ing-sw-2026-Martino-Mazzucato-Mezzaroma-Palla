@@ -2,6 +2,9 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
+import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
+import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
@@ -24,6 +27,7 @@ import java.util.Map;
 public class GameController {
     private final Game gameInstance;
     private final Map<String, ClientNotifier> connectedClients;
+    private String hostPlayer;
 
     /**
      * GameController's constructor is called in the GameManager when a new game is added
@@ -62,13 +66,31 @@ public class GameController {
      * @param playerName
      */
     public void addPlayer(String playerName) {
-        if(gameInstance.getPlayersNames().contains(playerName)) throw new IllegalArgumentException("Player already exists");
+        if(gameInstance.getPlayersNames().contains(playerName)) {
+            throw new NotJoinableGameException("ERROR: You can't join this game, because this name is already used by a player who is in this game.");
+        }
+        else if (connectedClients.size() == getGameModel().getNumPlayer()) {
+            throw new NotJoinableGameException("ERROR: This lobby is already full, join another game or wait for someone to disconnect");
+        }
         gameInstance.addPlayer(playerName);
+        if(hostPlayer == null) hostPlayer = playerName;
         for(ClientNotifier notifier : connectedClients.values()){
             notifier.notifyNewPlayerConnected(playerName);
         }
     }
 
+    /**
+     * This method removes a player from the Game's players' list after he decided to leave the lobby
+     * @param playerName
+     */
+    public void removePlayer(String playerName) {
+        if(gameInstance.getPlayersNames().contains(playerName)) {
+            gameInstance.removePlayer(playerName);
+        }
+        for(ClientNotifier notifier : connectedClients.values()){
+            //notifier.notifyPlayerLeft(playerName);
+        }
+    }
     /**
      * Adds a ClientNotifier to connectedClients. This is used to broadcast an update
      * to everyone, regardless of what networking protocol they are using
@@ -105,15 +127,15 @@ public class GameController {
     }
 
     // chiamata da parte client quando il player vuole startare il game.
-    // catcha l'eccezione se cerca di far partire il game senza che tutti i giocatori siano entrati
+    // throwa l'eccezione se cerca di far partire il game senza che tutti i giocatori siano entrati
     // (fase del game = INLOBBY)
-    public void startGame() {
-        try {
-            gameInstance.startGame();
+    public void startGame(String requestingPlayer) {
+        if(!requestingPlayer.equals(hostPlayer)) {
+            throw new NotTheHostException("ERROR: you can't start the game if you're not the host");
+        } else if (connectedClients.size() != gameInstance.getNumPlayer()) {
+            throw new NotEnoughPlayersException("ERROR: Not enough players to start the game.");
         }
-        catch (IllegalActionPhaseException e) {
-
-        }
+        else gameInstance.startGame();
     }
 
     /**
