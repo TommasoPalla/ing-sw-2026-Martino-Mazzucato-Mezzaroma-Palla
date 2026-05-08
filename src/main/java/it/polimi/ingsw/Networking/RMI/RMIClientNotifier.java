@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
@@ -12,6 +13,16 @@ import java.util.ArrayList;
 public class RMIClientNotifier implements ClientNotifier {
     private final VirtualRMIClient clientStub;
     public RMIClientNotifier(VirtualRMIClient stub) {this.clientStub = stub;}
+
+    @Override
+    public void notifyGameCreated(int gameID, int playerNum) {
+        try {
+            clientStub.updateGameCreated(gameID, playerNum);
+        } catch (RemoteException e){
+            //TODO: da sistemare tutte queste eccezioni
+            //throw new StubException("could not notify");
+        }
+    }
 
     @Override
     public void notifyNewPlayerConnected(String playerName) {
@@ -111,5 +122,20 @@ public class RMIClientNotifier implements ClientNotifier {
         } catch (RemoteException e) {
             //throw new StubException("could not notify");
         }
+    }
+
+    @Override
+    public void notifyNextPlayer(String playerName) {
+
+    }
+
+    @Override
+    public void notifyGamePhase(GamePhase newPhase) {
+
+    }
+
+    @Override
+    public void notifyEra(int era) {
+
     }
 }

@@ -1,17 +1,17 @@
 package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public interface ClientNotifier {
     //void showUpdate() throws IOException;
     //void reportError(String errorMessage) throws IOException;
 
-    //void notifyGameCreated();
+    void notifyGameCreated(int gamID, int playerNum);
     //void notifyGameStarted();
     void notifyNewPlayerConnected(String playerName);
     void notifyTotemColor(String playerName, Color totemColor);
@@ -25,7 +25,7 @@ public interface ClientNotifier {
     void notifyTopBuildings(ArrayList<BuildingCard> newTopBuildings);
     void notifyBottomRow(ArrayList<Card> newBottomRow);
     void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings);
-    //void notifyNextPlayer(String playerName);
-    //void notifyGamePhase(GamePhase newPhase);
-    //void notifyEra(int era);
+    void notifyNextPlayer(String playerName);
+    void notifyGamePhase(GamePhase newPhase);
+    void notifyEra(int era);
 }

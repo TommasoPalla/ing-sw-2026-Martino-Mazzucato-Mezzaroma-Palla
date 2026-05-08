@@ -10,8 +10,8 @@ class TUIViewTest {
         TUIView view = new TUIView(controller);
         controller.createLocalModel(1, 4);
         controller.setPlayerName("ciao");
-        controller.addPlayer("ciao");
-        controller.addPlayer("pippo");
+        controller.updatePlayerConnected("ciao");
+        controller.updatePlayerConnected("pippo");
         controller.updateCurrentPlayer("ciao");
         //parseCOmmand is private view.parseCommand("draw_card(top, building, 1)");
     }

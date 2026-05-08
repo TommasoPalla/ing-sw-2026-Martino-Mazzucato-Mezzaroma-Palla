@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public interface ClientViewUpdate {
     void updateCurrentRound(int round);
-    void addPlayer(String playerName);
 
-    //void updateGameCreated();
+    void updateGameCreated(int gameID, int numPlayers);
     //void updateGameStarted();
+    void updatePlayerConnected(String playerName);
     void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
-    //void updateTotemColor(String playerName, Color totemColor);
+    void updateTotemColor(String playerName, Color totemColor);
     void updateCurrentOfferTile(String playerName, Character offerTileIndex);
 
     void updateFoodReserve(String playerName, int food);

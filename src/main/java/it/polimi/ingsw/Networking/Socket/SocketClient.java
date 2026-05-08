@@ -2,9 +2,12 @@ package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Card;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class SocketClient implements VirtualSocketClient {
     /*final BufferedReader input;  potrebbe essere necessario un reader diverso: da definire
@@ -27,8 +30,25 @@ public class SocketClient implements VirtualSocketClient {
         System.out.println("[ERROR]: " + errorMessage);
     }
 
+    //----------------CALLBACKS FROM PLAYERS' ACTIONS-------------------------
+    @Override
+    public void updateGameCreated(int gameID, int numPlayers){
+        controller.updateGameCreated(gameID, numPlayers);
+    }
+
+    @Override
+    public void updateGameStarted(int gameID, int numPlayers) {
+
+    }
+
+    @Override
+    public void updatePlayerConnected(String playerName) {
+        controller.updatePlayerConnected(playerName);
+    }
+
     @Override
     public void updateChosenTotemColor(String playerName, Color totemColor) {
+        controller.updateTotemColor(playerName, totemColor);
     }
 
     @Override
@@ -43,11 +63,7 @@ public class SocketClient implements VirtualSocketClient {
         controller.updateCardDrawn(fromTopRow, fromBuildings, index, playerName);
     }
 
-    @Override
-    public void updateGameStarted(String gameID, int numPlayers) {
-
-    }
-
+    //----------------CALLBACKS FROM GAME STATE (SERVER) UPDATES-------------------------
     @Override
     public void updateFood(String playerName, int food) throws IOException {
         controller.updateFoodReserve(playerName, food);
@@ -61,5 +77,40 @@ public class SocketClient implements VirtualSocketClient {
     @Override
     public void updatePrestigePoints(String playerName, int points) throws IOException {
         controller.updatePrestigePoints(playerName, points);
+    }
+
+    @Override
+    public void updateTopRow(ArrayList<Card> newTopRow) {
+        controller.updateTopRow(newTopRow);
+    }
+
+    @Override
+    public void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
+        controller.updateTopBuildings(newTopBuildings);
+    }
+
+    @Override
+    public void updateBottomRow(ArrayList<Card> newBottomRow) {
+        controller.updateBottomRow(newBottomRow);
+    }
+
+    @Override
+    public void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
+        controller.updateBottomBuildings(newBottomBuildings);
+    }
+
+    @Override
+    public void updateNextPlayer(String playerName) {
+        controller.updateCurrentPlayer(playerName);
+    }
+
+    @Override
+    public void updateGamePhase(GamePhase phase) {
+        controller.updateGamePhase(phase);
+    }
+
+    @Override
+    public void updateEra(int era) {
+        controller.updateCurrentEra(era);
     }
 }

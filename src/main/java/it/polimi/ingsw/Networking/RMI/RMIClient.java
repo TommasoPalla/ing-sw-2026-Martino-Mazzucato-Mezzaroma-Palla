@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 
@@ -35,13 +36,18 @@ public class RMIClient implements VirtualRMIClient {
 
     //CALLBACKS from players' actions
     @Override
+    public void updateGameCreated(int gameID, int numPlayers){
+        controller.updateGameCreated(gameID, numPlayers);
+    }
+
+    @Override
     public void gameStarted(int gameID, int numPlayers) {
         controller.createLocalModel(gameID, numPlayers);
     }
 
     @Override
     public void playerJoinedGame(String playerName) throws RemoteException {
-        controller.addPlayer(playerName);
+        controller.updatePlayerConnected(playerName);
     }
 
     @Override
@@ -66,6 +72,8 @@ public class RMIClient implements VirtualRMIClient {
             throw new OccupiedTileException();
         }
     }
+
+    //Callbacks from game state (server) updates
 
     @Override
     public void updateFood(String playerName, int food) throws RemoteException {
@@ -100,5 +108,20 @@ public class RMIClient implements VirtualRMIClient {
     @Override
     public void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) throws RemoteException {
         controller.updateBottomBuildings(newBottomBuildings);
+    }
+
+    @Override
+    public void updateNextPlayer(String playerName) throws RemoteException {
+        controller.updateCurrentPlayer(playerName);
+    }
+
+    @Override
+    public void updateGamePhase(GamePhase phase) throws RemoteException {
+        controller.updateGamePhase(phase);
+    }
+
+    @Override
+    public void updateEra(int era) throws RemoteException {
+        controller.updateCurrentEra(era);
     }
 }

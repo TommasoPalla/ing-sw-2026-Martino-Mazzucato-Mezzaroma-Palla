@@ -27,5 +27,4 @@ public enum SocketHeaderNames {
     NEXT_PLAYER,
     CHANGED_GAME_PHASE,
     CHANGED_ERA
-
 }

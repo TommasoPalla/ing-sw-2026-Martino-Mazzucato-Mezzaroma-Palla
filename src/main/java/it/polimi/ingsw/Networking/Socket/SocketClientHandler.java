@@ -5,6 +5,7 @@ import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
@@ -50,21 +51,21 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
      * This uses a "command" design pattern coupled with a map from enums to lambda expressions
      */
     private void initCommandHandler(){
+        commandHandlers.put(SocketHeaderNames.CREATE_GAME, parameters -> {
+            String playerName = (String) parameters[0];
+            int numPlayers = (int) parameters[1];
+            try {
+                server.createGame(this, playerName, numPlayers);
+            } catch (Exception e){
+                //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
+            }
+        });
         commandHandlers.put(SocketHeaderNames.CONNECT_TO_GAME, parameters -> {
             String playerName = (String) parameters[0];
             int gameID = (int) parameters[1];
             this.playerRecord = new PlayerRecord(gameID, playerName);
             try {
                 server.joinGame(this);
-            } catch (Exception e){
-                //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
-            }
-        });
-        commandHandlers.put(SocketHeaderNames.CREATE_GAME, parameters -> {
-            String playerName = (String) parameters[0];
-            int numPlayers = (int) parameters[1];
-            try {
-                server.createGame(this, playerName, numPlayers);
             } catch (Exception e){
                 //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
             }
@@ -126,6 +127,12 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 }
 
     //CALLBACKS actions from clients
+    @Override
+    public void notifyGameCreated(int gameID, int playerNum){
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_CREATED, gameID, playerNum);
+        outStream.println(gson.toJson(message));
+    }
+
     @Override
     public void notifyNewPlayerConnected(String playerName){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.PLAYER_CONNECTED_TO_GAME, playerName);
@@ -190,6 +197,24 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     @Override
     public void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, newBottomBuildings);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyNextPlayer(String playerName) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.NEXT_PLAYER, playerName);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyGamePhase(GamePhase newPhase) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHANGED_GAME_PHASE, newPhase.toString());
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyEra(int era) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHANGED_ERA, era);
         outStream.println(gson.toJson(message));
     }
 }

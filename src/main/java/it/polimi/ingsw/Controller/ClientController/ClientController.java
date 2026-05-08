@@ -50,6 +50,12 @@ public class ClientController implements ClientViewUpdate {
     public ClientState getClientState(){
         return clientState;
     }
+    public Map<Integer, GamePlayers> getActiveGames(){
+        if(clientState != ClientState.SETUP){
+            throw new IllegalActionPhaseException();
+        }
+        return connection.getActiveGames();
+    }
 
     /*no constructor defined, default constructor is used,
     then setPlayerName, onGameStarted, bindConnection, bindView
@@ -60,6 +66,9 @@ public class ClientController implements ClientViewUpdate {
     }
     public void bindView(ViewInterface view){
         this.view = view;
+    }
+    public void createLocalModel(int gameId, int num){
+        this.localModel = new ClientModel(gameId, num);
     }
 
     public void setPlayerName(String playerName) {
@@ -73,13 +82,28 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
+    @Override
+    public void updateCurrentRound(int round) {
+        localModel.updateCurrentRound(round);
+    }
+
+    //TODO: siamo sicuri che vada fatto cosi?
+    @Override
+    public void updatePlayerConnected(String id) {
+        if(!localModel.checkNameAvailable(id)){
+            localModel.addPlayer(id);
+        }
+        else {
+            //da gestire TUI o GUI
+            System.out.println("Name already taken");
+        }
+    }
+
+    //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-----------------------------
+
     /*called when server responds with a successful 'startGame' request by first player
     or next players join the game via 'joinGame' method
     actually called by onGameStarted()*/
-    public void createLocalModel(int gameId, int num){
-        this.localModel = new ClientModel(gameId, num);
-    }
-
     /**
      * This method forwards the request through the network to the Server Controller, which will add the
      * game to the list of active games.
@@ -96,13 +120,6 @@ public class ClientController implements ClientViewUpdate {
         connection.createGame(playerName, numPlayers);
         clientState = ClientState.IN_LOBBY;
         //da notificare il player della creazione del game in modo che stampi le possibili azioni da fare mentre in lobby
-    }
-
-    public Map<Integer, GamePlayers> getActiveGames(){
-        if(clientState != ClientState.SETUP){
-            throw new IllegalActionPhaseException();
-        }
-        return connection.getActiveGames();
     }
 
     public void joinGame(String playerName, int gameID){
@@ -186,18 +203,6 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
-    //TODO: siamo sicuri che vada fatto cosi?
-    @Override
-    public void addPlayer(String id) {
-        if(!localModel.checkNameAvailable(id)){
-            localModel.addPlayer(id);
-        }
-        else {
-            //da gestire TUI o GUI
-            System.out.println("Name already taken");
-        }
-    }
-
     /*ClientViewUpdate interface override: update methods called by RMI/socket Client
     when an update is sent by the server.
     Valutare se aggiungere per ogni metodo lo show() di TUI o GUI (secondo me si),
@@ -205,15 +210,15 @@ public class ClientController implements ClientViewUpdate {
     interfaccia è stata scelta.
      */
 
-    //-----------------CALLBACKS----------------------
+    //-----------------CALLBACKS FROM SERVER UPDATES----------------------
 
     /** Before making a call to the game controller methods, the client controller checks
      * if the player's draw is legal by checking the client light model
      */
-
     @Override
-    public void updateCurrentRound(int round) {
-        localModel.updateCurrentRound(round);
+    public void updateGameCreated(int gameID, int numPlayers){
+        //TODO: !!!! capire cosa ci va qui, questo e' il metodo che viene chiamato dal server per dire
+        // "oh fra guarda che ho creato il game che mi hai chiesto di creare" !!!!
     }
 
     @Override
@@ -238,10 +243,14 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
+    public void updateTotemColor(String playerName, Color totemColor) {
+        localModel.chosenTotemColor(playerName, totemColor);
+    }
+
+    @Override
     public void updateCurrentOfferTile(String playerName, Character index) {
         localModel.updateOfferTile(playerName, index);
     }
-
 
     public void removePlayer(String name){
         localModel.removePlayer(name);

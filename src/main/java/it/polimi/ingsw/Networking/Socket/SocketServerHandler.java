@@ -1,15 +1,21 @@
 package it.polimi.ingsw.Networking.Socket;
 
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Card;
 
 public class SocketServerHandler implements Runnable{
 
@@ -30,15 +36,28 @@ public class SocketServerHandler implements Runnable{
      * This uses a "command" design pattern coupled with a map from enums to lambda expressions
      */
     private void initCommandHandler(){
-        //aggiornamenti dati da azioni dei player
+        //----------------CALLBACKS FROM PLAYERS' ACTIONS-------------------------
+        commandHandlers.put(SocketHeaderNames.GAME_CREATED, parameters -> {
+           int gameID = (int) parameters[0];
+           int playerNum = (int) parameters[1];
+           try{
+               client.updateGameCreated(gameID, playerNum);     //TODO:capire cosa ci va qui, correlato al TODO in ServerController
+           } catch (Exception e){
+               //TODO: non so di preciso cosa ci sia da fare qui quindi lascio cosi', stessa cosa anche per tutti gli altri
+           }
+        });
+        commandHandlers.put(SocketHeaderNames.PLAYER_CONNECTED_TO_GAME, parameters -> {
+            String playerName = (String) parameters[0];
+            try{
+                client.updatePlayerConnected(playerName);
+            } catch (Exception e){}
+        });
         commandHandlers.put(SocketHeaderNames.CHOSEN_TOTEM_COLOR, parameters -> {
             String playerName = (String) parameters[0];
             Color totemColor = Color.valueOf((String) parameters[1]) ;
             try{
                 client.updateChosenTotemColor(playerName, totemColor);
-            } catch (IOException e){
-                //TODO: non so di preciso cosa ci sia da fare qui quindi lascio cosi', stessa cosa anche per tutti gli altri
-            }
+            } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.DRAWN_CARD, parameters -> {
             String playerName = (String) parameters[0];
@@ -56,9 +75,8 @@ public class SocketServerHandler implements Runnable{
                 client.updateChosenTile(playerName, index);
             } catch (IOException e) {}
         });
-        //TODO: FINIRE DI AGGIUNGERE TUTTI GLI ALTRI VALORI DELL'ENUM
 
-        //aggiornamenti dati da modifiche fatte dalla logica di gioco / dal server
+        //----------------CALLBACKS FROM GAME STATE (SERVER) UPDATES-------------------------
         commandHandlers.put(SocketHeaderNames.ADDED_FOOD, parameters -> {
             String playerName = (String) parameters[0];
             int food = (int) parameters[1];
@@ -80,10 +98,40 @@ public class SocketServerHandler implements Runnable{
                 client.updateShamansStars(playerName, prestigePoints);
             } catch (IOException e) {}
         });
-        //TODO: da fare tutti gli altri put() per far si che tutti i valori dell'enum siano chiavi della mappa e mettere relative lambda expr.
+        commandHandlers.put(SocketHeaderNames.UPDATED_TOP_ROW, parameters -> {
+            Type type = new TypeToken<ArrayList<Card>>(){}.getType();
+            ArrayList<Card> newTopRow = gson.fromJson(gson.toJson(parameters[0]), type);
+            client.updateTopRow(newTopRow);
+        });
+        commandHandlers.put(SocketHeaderNames.UPDATED_TOP_BUILDINGS, parameters -> {
+            Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+            ArrayList<BuildingCard> newTopBuildings = gson.fromJson(gson.toJson(parameters[0]), type);
+            client.updateTopBuildings(newTopBuildings);
+        });
+        commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_ROW, parameters -> {
+            Type type = new TypeToken<ArrayList<Card>>(){}.getType();
+            ArrayList<Card> newBottomRow = gson.fromJson(gson.toJson(parameters[0]), type);
+            client.updateBottomRow(newBottomRow);
+        });
+        commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, parameters -> {
+            Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+            ArrayList<BuildingCard> newBottomBuildings = gson.fromJson(gson.toJson(parameters[0]), type);
+            client.updateTopBuildings(newBottomBuildings);
+        });
+        commandHandlers.put(SocketHeaderNames.NEXT_PLAYER, parameters -> {
+           String playerName = (String) parameters[0];
+           client.updateNextPlayer(playerName);
+        });
+        commandHandlers.put(SocketHeaderNames.CHANGED_GAME_PHASE, parameters -> {
+            GamePhase phase = GamePhase.valueOf((String) parameters[0]);
+            client.updateGamePhase(phase);
+        });
+        commandHandlers.put(SocketHeaderNames.CHANGED_ERA, parameters -> {
+           int newEra = (int) parameters[0];
+           client.updateEra(newEra);
+        });
     }
 
-    //TODO: don't call client.method() anymore, remove RMIClient and directly call ClientController from here, maybe??
     @Override
     public void run() {
         String incomingMessage;

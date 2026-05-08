@@ -24,7 +24,7 @@ public class SocketServerAdapter implements ServerConnection {
     private Socket socket;
     private PrintWriter outStream;
     private Thread listenerThread;
-    private SocketClient client;
+    private final SocketClient client;
 
     private final int port;
     private final String host;
@@ -43,7 +43,6 @@ public class SocketServerAdapter implements ServerConnection {
             outStream = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            //client = new SocketClient();
             SocketServerHandler handler = new SocketServerHandler(inStream, client);
             listenerThread = new Thread(handler);
             listenerThread.setDaemon(true);

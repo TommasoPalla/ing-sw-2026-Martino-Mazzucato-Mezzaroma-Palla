@@ -78,7 +78,10 @@ public class ServerController {
         GameController gameController = new GameController(newGame);
         activeGames.put(gameID, new GameRecord(newGame, gameController));
         addPlayerToGame(newPlayer);
+        //gameController.addPlayer(firstPlayerName); TODO: capire se e' da fare anche questo
         addNotifierToGame(newPlayer, notifier);
+
+        notifier.notifyGameCreated(gameID, playerNum);
 
         nextGameID += 1;
         return newGame;
