@@ -14,8 +14,10 @@ import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 import it.polimi.ingsw.Networking.Socket.SocketClient;
 import it.polimi.ingsw.Networking.Socket.SocketClientHandler;
 import it.polimi.ingsw.Networking.Socket.VirtualSocketClient;
+import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.View.GamePlayers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +85,7 @@ public class ServerController {
      * @param playerNum
      * @return
      */
-    public synchronized Game createNewGame(ClientNotifier notifier, String firstPlayerName, int playerNum) {
+    public synchronized int createNewGame(ClientNotifier notifier, String firstPlayerName, int playerNum) {
         int gameID = nextGameID;
         Game newGame = new Game(gameID, playerNum);
         GameController gameController = new GameController(newGame);
@@ -97,14 +99,14 @@ public class ServerController {
         notifier.notifyGameCreated(gameID, playerNum);
 
         nextGameID += 1;
-        return newGame;
+        return nextGameID-1;
     }
 
     public void joinGame(ClientNotifier notifier, PlayerRecord newPlayer) {
         try {
             addPlayerToGame(newPlayer);
             addNotifierToGame(newPlayer, notifier);
-            //notifier.notifyPlayerJoined(newPlayer);
+            //notifier.notifySuccessfullyJoinedGame(newPlayer.gameID(), playerNum, players);
         } catch (NotJoinableGameException e) {
             throw new NotJoinableGameException(e.getMessage());
         }
@@ -151,6 +153,7 @@ public class ServerController {
 
     // logic of methods that modify the model state
     public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
+        System.out.println("Debug Server: Ricevuta richiesta da " + playerRecord.playerName() + " per GameID: " + playerRecord.gameID());
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
             try {
@@ -183,7 +186,6 @@ public class ServerController {
             throw new OccupiedTileException();
         }
     }
-
     public void updateRMIClients(List<VirtualRMIClient> clients){
         RMIClients = clients;
     }

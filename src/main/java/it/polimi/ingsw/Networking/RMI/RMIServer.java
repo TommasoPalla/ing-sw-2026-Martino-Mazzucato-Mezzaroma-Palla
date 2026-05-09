@@ -53,10 +53,11 @@ public class RMIServer implements VirtualRMIServer {
 
     @Override
     public void createGame(VirtualRMIClient client, String playerName, int numPlayers) throws RemoteException {
-        //TODO: se e' temporaneo va sistemato
         ClientNotifier clientNotifier = new RMIClientNotifier(client);
         //da fare il clientRecord.put() capendo come prendere il game id
-        serverController.createNewGame(clientNotifier, playerName, numPlayers);
+        int gameID = serverController.createNewGame(clientNotifier, playerName, numPlayers); //QUI viene creato il game e assegnatogli il gameID
+        PlayerRecord playerRecord = new PlayerRecord(gameID, playerName);
+        clientRecords.put(client, playerRecord);
     }
 
     @Override
