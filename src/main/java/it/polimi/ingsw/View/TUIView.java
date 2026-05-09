@@ -1,6 +1,7 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
+import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.UIException.*;
 
 import it.polimi.ingsw.Enums.*;
@@ -69,7 +70,7 @@ public class TUIView implements ViewInterface, Listener {
      */
 //    private void offerTrackTUIView(String args) {
 //        if (!args.trim().isEmpty()) {
-//            throw new IllegalArgumentException("This method doesnt require arguments.");
+//            throw new IllegalArgumentException("This method doesn't require arguments.");
 //        }
 //        tuiState = TUIState.SHOW_OFFER_TRACK;
 //        //printOfferTrack();
@@ -93,18 +94,23 @@ public class TUIView implements ViewInterface, Listener {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(command);
         if(matcher.matches()){
+            CommandType commandType = null;     //!!!STAVOLTA VA FATTO PER FORZA!!!
             try {
-                CommandType commandType = CommandType.valueOf(matcher.group(1).toUpperCase());
+                commandType = CommandType.valueOf(matcher.group(1).toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid command, please try again...");
+                return;
+            }
+            try {
                 commandParserSelector(commandType, matcher);
             }
             //sequenza di catch da gestire
             //per ora è gestito il caso di drawCard,
             //stampa "cant draw this card" + "insufficient food / cant draw event"
-            catch(InvalidSelectionException e){
-                System.out.println(e.getMessage()+e.getCause().getMessage());
-            }
-            catch (IllegalArgumentException | NotEnoughPlayersException | NotTheHostException | IllegalClientStateActionException e) {
-                System.out.println(e.getMessage());
+            catch(InvalidSelectionException | IllegalArgumentException | NotEnoughPlayersException |
+                  NotTheHostException | IllegalClientStateActionException e){
+                String causeMsg = (e.getCause() != null) ? e.getCause().getMessage() : "";
+                System.out.println(e.getMessage() + causeMsg);
             }
         }
         else{
