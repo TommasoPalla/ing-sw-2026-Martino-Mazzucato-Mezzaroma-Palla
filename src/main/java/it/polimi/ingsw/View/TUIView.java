@@ -1,11 +1,8 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
-import it.polimi.ingsw.CustomException.UIException.IllegalClientStateActionException;
-import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
+import it.polimi.ingsw.CustomException.UIException.*;
 
-import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
-import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.Model.Cards.Card;
@@ -106,7 +103,7 @@ public class TUIView implements ViewInterface, Listener {
             catch(InvalidSelectionException e){
                 System.out.println(e.getMessage()+e.getCause().getMessage());
             }
-            catch (IllegalArgumentException | NotEnoughPlayersException | IllegalClientStateActionException e) {
+            catch (IllegalArgumentException | NotEnoughPlayersException | NotTheHostException | IllegalClientStateActionException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -132,7 +129,9 @@ public class TUIView implements ViewInterface, Listener {
                                              changeClientState(ClientState.SETUP);
                                            }
             case START_GAME             -> clientController.startGame(player);
-            case MODIFY_NAME            -> commandParser.parseModifyName(argsString);
+            case MODIFY_NAME            -> commandParser.parseModifyName(argsString); // ATT! l'attributo player della TUI viene modificato quando ricevuta la notify, che
+                                                                                      // per ora non è mai chiamata, quindi se il player cambia nome e poi joina un game
+                                                                                      // e il nome è già presente riesce comunque a entrare nella lobby
             case CHOOSE_TOTEM_COLOR     -> commandParser.parseChooseTotemColor(argsString);
             case SHOW_OFFER_TRACK       -> printOfferTrack();
             case SHOW_TOP_ROW           -> printTopRow();
@@ -281,6 +280,12 @@ public class TUIView implements ViewInterface, Listener {
         else {
             System.out.println("It's now " + player + "'s turn!");
         }
+    }
+
+    @Override
+    public void notifyNameModified(String newName) {
+        this.player = newName;
+        System.out.println("You successfully modified your name to " + newName + "!");
     }
 
     @Override

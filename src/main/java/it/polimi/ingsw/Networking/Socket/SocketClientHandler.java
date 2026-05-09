@@ -140,6 +140,16 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
+    public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players) {
+
+    }
+
+    @Override
+    public void notifyPlayerLeftGame(String playerName) {
+
+    }
+
+    @Override
     public void notifyTotemColor(String playerName, Color totemColor) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHOSEN_TOTEM_COLOR, playerName, totemColor.toString());
         outStream.println(gson.toJson(message));

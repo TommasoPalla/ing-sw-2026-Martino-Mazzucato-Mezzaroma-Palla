@@ -52,6 +52,16 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
+    public void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) throws RemoteException {
+        controller.updateSuccessfullyJoinedGame(gameID, numPlayers, players);
+    }
+
+    @Override
+    public void playerLeftGame(String playerName) throws RemoteException {
+        controller.updatePlayerLeftGame(playerName);
+    }
+
+    @Override
     public void chosenTotem(String playerName, Color totemColor){
         try{
             controller.chooseTotem(totemColor);

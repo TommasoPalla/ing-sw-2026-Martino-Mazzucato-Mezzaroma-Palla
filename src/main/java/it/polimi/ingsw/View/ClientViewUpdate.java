@@ -13,6 +13,9 @@ public interface ClientViewUpdate {
     void updateGameCreated(int gameID, int numPlayers);
     //void updateGameStarted();
     void updatePlayerConnected(String playerName);
+    void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players);
+    void updatePlayerLeftGame(String playerName);
+    //void updatePlayerDisconnected(String playerName);
     void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
     void updateTotemColor(String playerName, Color totemColor);
     void updateCurrentOfferTile(String playerName, Character offerTileIndex);

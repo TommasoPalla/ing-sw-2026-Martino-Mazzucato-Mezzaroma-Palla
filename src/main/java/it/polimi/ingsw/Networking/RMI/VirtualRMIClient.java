@@ -16,6 +16,8 @@ public interface VirtualRMIClient extends Remote {
     void updateGameCreated(int gameID, int numPlayers) throws RemoteException;
     void updateGameStarted(int gameID, int numPlayers) throws RemoteException;
     void playerJoinedGame(String playerName) throws RemoteException;
+    void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) throws RemoteException;
+    void playerLeftGame(String playerName) throws RemoteException;
     void chosenTotem(String playerName, Color totemColor) throws RemoteException;
     void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws RemoteException;
     void chosenTile(String playerName, int index) throws RemoteException;

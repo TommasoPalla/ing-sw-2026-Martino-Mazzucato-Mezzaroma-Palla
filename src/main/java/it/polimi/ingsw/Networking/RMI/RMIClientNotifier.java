@@ -34,6 +34,24 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
+    public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players) {
+        try {
+            clientStub.successfullyJoinedGame(gameID, playerNum, players);
+        } catch (RemoteException e){
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyPlayerLeftGame(String playerName) {
+        try {
+            clientStub.playerLeftGame(playerName);
+        } catch (RemoteException e){
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
     public void notifyTotemColor(String playerName, Color totemColor) {
         try {
             clientStub.chosenTotem(playerName, totemColor);

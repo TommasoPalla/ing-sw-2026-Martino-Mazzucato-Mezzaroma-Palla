@@ -4,6 +4,7 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 
 public interface Listener {
+    void notifyNameModified(String newName);
     void notifyTurnChange(String player);
     void notifyGameEvent();
     void notifyTotemPlaced(String player, OfferTile offerTile);
@@ -13,5 +14,4 @@ public interface Listener {
     void notifyPlayerJoined(int gameID, String playerName);
     void notifyPlayerLeft(int gameID, String playerName);
     void notifyGameStarted();
-
 }

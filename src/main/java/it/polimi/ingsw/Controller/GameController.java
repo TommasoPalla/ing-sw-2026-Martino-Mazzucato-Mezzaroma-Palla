@@ -69,7 +69,7 @@ public class GameController {
         if(gameInstance.getPlayersNames().contains(playerName)) {
             throw new NotJoinableGameException("ERROR: You can't join this game, because this name is already used by a player who is in this game.");
         }
-        else if (connectedClients.size() == getGameModel().getNumPlayer()) {
+        else if (gameInstance.getPlayers().size() == getGameModel().getNumPlayer()) {
             throw new NotJoinableGameException("ERROR: This lobby is already full, join another game or wait for someone to disconnect");
         }
         gameInstance.addPlayer(playerName);
@@ -88,7 +88,7 @@ public class GameController {
             gameInstance.removePlayer(playerName);
         }
         for(ClientNotifier notifier : connectedClients.values()){
-            //notifier.notifyPlayerLeft(playerName);
+            notifier.notifyPlayerLeftGame(playerName);
         }
     }
     /**
@@ -99,6 +99,7 @@ public class GameController {
      */
     public void addClient(String playerName, ClientNotifier notifier) {
         connectedClients.put(playerName, notifier);
+        notifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(),  gameInstance.getPlayersNames());
     }
 
     public void removeClient(String playerName) {
@@ -131,9 +132,9 @@ public class GameController {
     // (fase del game = INLOBBY)
     public void startGame(String requestingPlayer) {
         if(!requestingPlayer.equals(hostPlayer)) {
-            throw new NotTheHostException("ERROR: you can't start the game if you're not the host");
+            throw new NotTheHostException("ERROR: you can't start the game if you're not the host!");
         } else if (connectedClients.size() != gameInstance.getNumPlayer()) {
-            throw new NotEnoughPlayersException("ERROR: Not enough players to start the game.");
+            throw new NotEnoughPlayersException("ERROR: Not enough players to start the game!");
         }
         else gameInstance.startGame();
     }

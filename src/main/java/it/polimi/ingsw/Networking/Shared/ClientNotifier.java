@@ -14,6 +14,8 @@ public interface ClientNotifier {
     void notifyGameCreated(int gamID, int playerNum);
     //void notifyGameStarted();
     void notifyNewPlayerConnected(String playerName);
+    void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players);
+    void notifyPlayerLeftGame(String playerName);
     void notifyTotemColor(String playerName, Color totemColor);
     void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index);
     void notifyChosenTile(String playerName, int index);

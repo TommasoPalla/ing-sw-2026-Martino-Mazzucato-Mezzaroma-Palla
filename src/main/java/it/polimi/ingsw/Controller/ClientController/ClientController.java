@@ -16,6 +16,7 @@ import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ViewInterface;
 import it.polimi.ingsw.View.GamePlayers;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -101,6 +102,27 @@ public class ClientController implements ClientViewUpdate {
             //da gestire TUI o GUI
             System.out.println("Name already taken");
         }
+    }
+
+    @Override
+    public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) {
+        createLocalModel(gameID, numPlayers);
+        for (String player : players) {
+            localModel.addPlayer(player);
+        }
+    }
+
+    @Override
+    public void updatePlayerLeftGame(String player) {
+        if(this.playerName.equals(player)){
+            localModel = null;
+            System.out.println("You have left the lobby"); // temporaneo nel mentre che non funzionano le notify
+        }
+        else {
+            localModel.removePlayer(player);
+            System.out.println("Player " + player + " left the lobby"); // temporaneo nel mentre che non funzionano le notify
+        }
+        //notifyPlayerLeft(player) per notificare gli altri player nella lobby
     }
 
     //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-----------------------------
@@ -290,10 +312,6 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentOfferTile(String playerName, Character index) {
         localModel.updateOfferTile(playerName, index);
-    }
-
-    public void removePlayer(String name){
-        localModel.removePlayer(name);
     }
 
     @Override

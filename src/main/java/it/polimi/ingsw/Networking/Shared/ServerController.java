@@ -44,7 +44,7 @@ public class ServerController {
      * This method creates a Player object in the corresponding game to which it is connected
      * @param playerRecord
      */
-    public void addPlayerToGame(PlayerRecord playerRecord){
+    public synchronized void addPlayerToGame(PlayerRecord playerRecord){
         try {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
@@ -56,11 +56,11 @@ public class ServerController {
         }
     }
 
-    public void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
+    public synchronized void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
         controller.addClient(playerRecord.playerName(), clientNotifier);
     }
-    public void removeNotifierFromGame(PlayerRecord playerRecord){
+    public synchronized void removeNotifierFromGame(PlayerRecord playerRecord){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
         controller.removeClient(playerRecord.playerName());
     }
@@ -100,8 +100,8 @@ public class ServerController {
     }
 
     public void leaveGame(PlayerRecord leftingPlayer) {
-        removeNotifierFromGame(leftingPlayer);
         removePlayerFromGame(leftingPlayer);
+        removeNotifierFromGame(leftingPlayer);
     }
 
     public void startGame(String requestingPlayer, int gameID) {
