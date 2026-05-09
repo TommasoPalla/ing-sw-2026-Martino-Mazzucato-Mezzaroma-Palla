@@ -60,7 +60,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                 //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
             }
         });
-        commandHandlers.put(SocketHeaderNames.CONNECT_TO_GAME, parameters -> {
+        commandHandlers.put(SocketHeaderNames.JOIN_GAME, parameters -> {
             String playerName = (String) parameters[0];
             int gameID = (int) parameters[1];
             this.playerRecord = new PlayerRecord(gameID, playerName);
@@ -135,7 +135,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifyNewPlayerConnected(String playerName){
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.PLAYER_CONNECTED_TO_GAME, playerName);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.PLAYER_JOINED_GAME, playerName);
         outStream.println(gson.toJson(message));
     }
 

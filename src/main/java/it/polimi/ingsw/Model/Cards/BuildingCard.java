@@ -51,7 +51,7 @@ public abstract class BuildingCard extends Card {
 
     // actual functions
     /**
-     * check whether player has sufficient food to purchase this buildingCard
+     * checkIP whether player has sufficient food to purchase this buildingCard
      */
     // chiamata all'interno dei metodi di draw
     public boolean isPurchasable(Player player){

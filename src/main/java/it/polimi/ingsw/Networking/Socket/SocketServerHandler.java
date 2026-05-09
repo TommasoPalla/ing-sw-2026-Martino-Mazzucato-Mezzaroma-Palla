@@ -46,7 +46,7 @@ public class SocketServerHandler implements Runnable{
                //TODO: non so di preciso cosa ci sia da fare qui quindi lascio cosi', stessa cosa anche per tutti gli altri
            }
         });
-        commandHandlers.put(SocketHeaderNames.PLAYER_CONNECTED_TO_GAME, parameters -> {
+        commandHandlers.put(SocketHeaderNames.PLAYER_JOINED_GAME, parameters -> {
             String playerName = (String) parameters[0];
             try{
                 client.updatePlayerConnected(playerName);

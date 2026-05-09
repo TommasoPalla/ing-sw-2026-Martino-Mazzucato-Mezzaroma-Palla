@@ -137,7 +137,7 @@ public class OfferTrack{
     /**Method gets new building cards for the current era.
      * BuildingsDeck is already built with correct number of cards for each era,
      * considering the number of players,
-     * therefore no check is needed other than cards' era.
+     * therefore no checkIP is needed other than cards' era.
      */
     public void repopulateTopBuildingCards(){
         topBuildingCard = new ArrayList<>();

@@ -12,10 +12,10 @@ public class ServerConfigs {
     public static final int DEFAULT_SOCKET_SERVER_PORT = 8080;
 
 
-    public static final String RMI_SERVER_NAME = DEFAULT_RMI_SERVER_NAME;
-    public static final int RMI_SERVER_PORT = DEFAULT_RMI_SERVER_PORT;
-    public static final String RMI_IP_ADDR = DEFAULT_RMI_IP_ADDR;
+    public static String RMI_SERVER_NAME = DEFAULT_RMI_SERVER_NAME;
+    public static int RMI_SERVER_PORT = DEFAULT_RMI_SERVER_PORT;
+    public static String RMI_IP_ADDR = DEFAULT_RMI_IP_ADDR;
 
-    public static final String SOCKET_SERVER_IP_ADDR = DEFAULT_SOCKET_SERVER_IP_ADDR;
-    public static final int SOCKET_SERVER_PORT = DEFAULT_SOCKET_SERVER_PORT;
+    public static String SOCKET_SERVER_IP_ADDR = DEFAULT_SOCKET_SERVER_IP_ADDR;
+    public static int SOCKET_SERVER_PORT = DEFAULT_SOCKET_SERVER_PORT;
 }

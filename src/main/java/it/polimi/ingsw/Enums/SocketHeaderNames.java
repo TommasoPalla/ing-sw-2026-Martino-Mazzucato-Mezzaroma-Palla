@@ -3,16 +3,18 @@ package it.polimi.ingsw.Enums;
 public enum SocketHeaderNames {
     //azioni che il player puo' fare
     CREATE_GAME,
-    CONNECT_TO_GAME,
+    START_GAME,
+    GET_AVAILABLE_GAMES,
+    JOIN_GAME,
     CHOOSE_TOTEM_COLOR,
     DRAW_CARD,
     CHOOSE_OFFER_TILE,
-    START_GAME,
 
     //conseguenze che il server manda come aggiornamento ai player
     GAME_CREATED,
     GAME_STARTED,
-    PLAYER_CONNECTED_TO_GAME,
+    RECEIVED_AVAILABLE_GAMES,
+    PLAYER_JOINED_GAME,
     CHOSEN_TOTEM_COLOR,
     DRAWN_CARD,
     CHOSEN_OFFER_TILE,

@@ -94,7 +94,7 @@ public class SocketServerAdapter implements ServerConnection {
 
     @Override
     public void joinGame(String playerName, int gameID){
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CONNECT_TO_GAME, playerName, gameID);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.JOIN_GAME, playerName, gameID);
         outStream.println(gson.toJson(message));
     }
 
