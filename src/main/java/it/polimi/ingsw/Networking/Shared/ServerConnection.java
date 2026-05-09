@@ -20,7 +20,6 @@ public interface ServerConnection {
     void joinGame(String playerName, int gameID);
     void startGame(String playerName, int gameID);
     void leaveGame(String playerName, int gameID);
-    Map<Integer, GamePlayers> getActiveGames();
     void chooseTotem(Color totemColor);
     void chooseOfferTile(int index) throws OccupiedTileException;
     void drawCard(boolean fromTopRow, boolean fromBuildings, int index);

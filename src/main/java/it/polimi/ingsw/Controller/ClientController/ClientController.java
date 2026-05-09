@@ -16,8 +16,8 @@ import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ViewInterface;
 import it.polimi.ingsw.View.GamePlayers;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -31,9 +31,11 @@ public class ClientController implements ClientViewUpdate {
      * they can perform in that state
      */
     private ClientState clientState;
+    private Map<Integer, GamePlayers> availableGames;
 
     public ClientController() {
         clientState = ClientState.SETUP;
+        availableGames = new HashMap<>();
     }
     public String getPlayerName(){  //servirà da qualche parte
         return playerName;
@@ -50,12 +52,6 @@ public class ClientController implements ClientViewUpdate {
     public ClientState getClientState(){
         return clientState;
     }
-    public Map<Integer, GamePlayers> getActiveGames(){
-        if(clientState != ClientState.SETUP){
-            throw new IllegalActionPhaseException();
-        }
-        return connection.getActiveGames();
-    }
 
     /*no constructor defined, default constructor is used,
     then setPlayerName, onGameStarted, bindConnection, bindView
@@ -67,6 +63,9 @@ public class ClientController implements ClientViewUpdate {
     public void bindView(ViewInterface view){
         this.view = view;
     }
+    /*called when server responds with a successful 'startGame' request by first player
+    or next players join the game via 'joinGame' method
+    actually called by onGameStarted()*/
     public void createLocalModel(int gameId, int num){
         this.localModel = new ClientModel(gameId, num);
     }
@@ -126,10 +125,6 @@ public class ClientController implements ClientViewUpdate {
     }
 
     //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-----------------------------
-
-    /*called when server responds with a successful 'startGame' request by first player
-    or next players join the game via 'joinGame' method
-    actually called by onGameStarted()*/
     /**
      * This method forwards the request through the network to the Server Controller, which will add the
      * game to the list of active games.
@@ -146,6 +141,13 @@ public class ClientController implements ClientViewUpdate {
         connection.createGame(playerName, numPlayers);
         clientState = ClientState.IN_LOBBY;
         //da notificare il player della creazione del game in modo che stampi le possibili azioni da fare mentre in lobby
+    }
+
+    public Map<Integer, GamePlayers> getAvailableGames(){
+        if(clientState != ClientState.SETUP){
+            throw new IllegalActionPhaseException();
+        }
+        return availableGames;
     }
 
     public void joinGame(String playerName, int gameID){
@@ -277,6 +279,10 @@ public class ClientController implements ClientViewUpdate {
     /** Before making a call to the game controller methods, the client controller checks
      * if the player's draw is legal by checking the client light model
      */
+    public void updateAvailableGames(Map<Integer, GamePlayers> availableGames){
+        this.availableGames = availableGames;
+    }
+
     @Override
     public void updateGameCreated(int gameID, int numPlayers){
         //TODO: !!!! capire cosa ci va qui, questo e' il metodo che viene chiamato dal server per dire
@@ -312,6 +318,11 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentOfferTile(String playerName, Character index) {
         localModel.updateOfferTile(playerName, index);
+    }
+
+
+    public void removePlayer(String name){
+        localModel.removePlayer(name);
     }
 
     @Override

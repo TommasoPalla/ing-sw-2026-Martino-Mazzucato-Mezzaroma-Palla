@@ -11,6 +11,7 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -147,6 +149,11 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     @Override
     public void notifyPlayerLeftGame(String playerName) {
 
+    }
+    @Override
+    public void notifyAvailableGames(Map<Integer, GamePlayers> availableGames){
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GET_AVAILABLE_GAMES, availableGames);
+        outStream.println(gson.toJson(message));
     }
 
     @Override

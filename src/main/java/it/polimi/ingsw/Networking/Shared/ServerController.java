@@ -9,9 +9,15 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
+import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
+import it.polimi.ingsw.Networking.Socket.SocketClient;
+import it.polimi.ingsw.Networking.Socket.SocketClientHandler;
+import it.polimi.ingsw.Networking.Socket.VirtualSocketClient;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,6 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerController {
     //questa classe deve inoltre essere in grado di notificare TUTTI i client,
     //indipendentemente dal protocollo, dei cambiamenti avvuti
+    private List<VirtualRMIClient> RMIClients;
+    private List<SocketClientHandler> SocketClients;
+    //si potrebbe ottimizzare tenendo lista di clients non in partita (non giocatori) ma eviterebbe solo qualche aggiornamento inutile
     public record GameRecord(Game game, GameController gameController) {}
     private final Map<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
     private static int nextGameID = 0;
@@ -35,6 +44,7 @@ public class ServerController {
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController;
             gameController.removePlayer(playerName); // old: gameController.removeClient(playerName), ma già fatto in removeNotifierFromGame()
+
         } catch (IllegalArgumentException e){
             System.out.println("ERROR: could not remove player from game\n" + e.getMessage());
         }
@@ -59,6 +69,7 @@ public class ServerController {
     public synchronized void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
         controller.addClient(playerRecord.playerName(), clientNotifier);
+        //aggiungere update Available
     }
     public synchronized void removeNotifierFromGame(PlayerRecord playerRecord){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
@@ -115,15 +126,27 @@ public class ServerController {
             throw new NotEnoughPlayersException(e.getMessage());
         }
     }
-    public Map<Integer, GamePlayers> getActiveGames(){
+    public void notifyAvailableGames(){
         Map<Integer, GamePlayers> gamesData = new HashMap<>();
-        for (int ID: activeGames.keySet()){
-            //andrebbe sincronizzato
-            GamePlayers playersInfo = new GamePlayers(activeGames.get(ID).game().getNumPlayer(),
-                    activeGames.get(ID).game().getPlayersNames());
-            gamesData.put(ID, playersInfo);
+        synchronized (activeGames) {
+            for (int ID : activeGames.keySet()) {
+                int currentNumPlayers = activeGames.get(ID).gameController().getConnectedClients().size();
+                int numPlayersThreshold = activeGames.get(ID).gameController.getGameModel().getNumPlayer();
+                if(currentNumPlayers < numPlayersThreshold){
+                    GamePlayers playersInfo = new GamePlayers(currentNumPlayers,
+                            activeGames.get(ID).gameController().getConnectedClients());
+                    gamesData.put(ID, playersInfo);
+                }
+            }
         }
-        return gamesData;
+        for (VirtualRMIClient client: RMIClients){
+            //temporaneo, il notifier non è ancora creato per i client non in partita?
+            RMIClientNotifier notifier = new RMIClientNotifier(client);
+            notifier.notifyAvailableGames(gamesData);
+        }
+        for(SocketClientHandler client: SocketClients){
+            client.notifyAvailableGames(gamesData);
+        }
     }
 
     // logic of methods that modify the model state
@@ -159,5 +182,13 @@ public class ServerController {
         catch(OccupiedTileException e){
             throw new OccupiedTileException();
         }
+    }
+
+    public void updateRMIClients(List<VirtualRMIClient> clients){
+        RMIClients = clients;
+    }
+
+    public void updateSocketClients(List<SocketClientHandler> clients){
+        SocketClients = clients;
     }
 }

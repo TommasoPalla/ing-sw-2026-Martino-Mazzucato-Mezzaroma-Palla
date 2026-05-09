@@ -4,9 +4,12 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface VirtualSocketClient {
     void showUpdate() throws IOException;
@@ -15,6 +18,7 @@ public interface VirtualSocketClient {
     void updateGameCreated(int gameID, int numPlayers);
     void updateGameStarted(int gameID, int numPlayers) throws  IOException;
     void updatePlayerConnected(String playerName);
+    void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws IOException;
     void updateChosenTotemColor(String playerName, Color totemColor) throws  IOException;
     void updateDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws  IOException;
     void updateChosenTile(String playerName, int index) throws  IOException;

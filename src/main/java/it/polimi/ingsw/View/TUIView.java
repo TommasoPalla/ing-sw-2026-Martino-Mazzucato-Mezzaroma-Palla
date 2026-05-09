@@ -359,7 +359,7 @@ public class TUIView implements ViewInterface, Listener {
     private void printAvailableGames() {
         boolean gameJoined = false;
         tuiState = TUIState.JOIN_GAME;
-        Map<Integer, GamePlayers> availableGames = clientController.getActiveGames();
+        Map<Integer, GamePlayers> availableGames = clientController.getAvailableGames();
         System.out.println();
         if (availableGames.isEmpty()) {
             System.out.println("There are no available games. You'll be sent back to the setup state");

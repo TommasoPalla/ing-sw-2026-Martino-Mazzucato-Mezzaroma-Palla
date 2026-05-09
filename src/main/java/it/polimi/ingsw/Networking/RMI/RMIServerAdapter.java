@@ -109,15 +109,6 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public Map<Integer, GamePlayers> getActiveGames(){
-        try {
-            return serverStub.getActiveGames(clientStub);
-        } catch(RemoteException e){
-            throw new StubException("could not retreat active games.");
-        }
-    }
-
-    @Override
     public void chooseOfferTile(int index) throws OccupiedTileException {
         try {
             serverStub.chooseOfferTile(clientStub, index);

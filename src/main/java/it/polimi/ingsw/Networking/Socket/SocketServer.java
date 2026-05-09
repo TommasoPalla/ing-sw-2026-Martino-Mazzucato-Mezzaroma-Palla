@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
@@ -78,6 +79,13 @@ public class SocketServer implements VirtualSocketServer{
         serverController.addNotifierToGame(record, handler);
     }
 
+    public List<SocketClientHandler> getClients(){
+        return clients;
+    }
+
+    public void notifyClientsToController() {
+        serverController.updateSocketClients(clients);
+    }
 
     /*che cazzo è sta roba Lorenzo? è già implementato sopra
     @Override

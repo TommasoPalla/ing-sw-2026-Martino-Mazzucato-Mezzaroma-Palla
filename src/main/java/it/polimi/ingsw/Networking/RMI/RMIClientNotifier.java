@@ -1,14 +1,17 @@
 package it.polimi.ingsw.Networking.RMI;
 
+import it.polimi.ingsw.CustomException.StubException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class RMIClientNotifier implements ClientNotifier {
     private final VirtualRMIClient clientStub;
@@ -48,6 +51,15 @@ public class RMIClientNotifier implements ClientNotifier {
             clientStub.playerLeftGame(playerName);
         } catch (RemoteException e){
             //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyAvailableGames(Map<Integer, GamePlayers> availableGames){
+        try {
+            clientStub.updateAvailableGames(availableGames);
+        } catch (RemoteException e){
+            throw new StubException("could not notify active games");
         }
     }
 
