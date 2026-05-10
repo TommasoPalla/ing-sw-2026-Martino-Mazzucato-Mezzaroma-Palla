@@ -94,7 +94,7 @@ public class ClientApp {
         ViewInterface view;      //interfaccia implementata da GUI e TUI
         switch(UIType.toUpperCase()){
             case "TUI" -> view = new TUIView(clientController);
-            case "GUI"-> view = new Gui();
+            //case "GUI"-> view = new Gui();
             default -> {
                 System.out.println("view not supported");
                 return;

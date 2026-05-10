@@ -9,7 +9,7 @@ public class GuiStart extends Application {
     public void start(Stage stage) throws Exception {
         start(stage);
         Gui gui = new Gui(stage);
-        gui.connectionTypeScene();
+        gui.showConnectionTypeScene();
     }
 
     public static void main(String[] args) {
