@@ -97,7 +97,7 @@ public class Deck {
                 }
             }
             Collections.shuffle((tempDeck));
-            for(int i = 0; i < buildingsDeckLength[era] && i < tempDeck.size(); i++){
+            for(int i = 0; i < buildingsDeckLength[era-1] && i < tempDeck.size(); i++){
                 BuildingCard tempCard = tempDeck.get(i);
                 this.buildingsDeck.add(tempCard);
             }
