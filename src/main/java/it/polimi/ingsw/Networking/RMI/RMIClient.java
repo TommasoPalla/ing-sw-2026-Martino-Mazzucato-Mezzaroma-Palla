@@ -7,9 +7,11 @@ import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class RMIClient implements VirtualRMIClient {
 
@@ -33,6 +35,9 @@ public class RMIClient implements VirtualRMIClient {
     public void reportError(String errorMessage) throws RemoteException {
         System.out.println(errorMessage);
     }
+
+    @Override
+    public void gameStarted(int id, int numPlayers){}
 
     //CALLBACKS from players' actions
     @Override
@@ -59,6 +64,11 @@ public class RMIClient implements VirtualRMIClient {
     @Override
     public void playerLeftGame(String playerName) throws RemoteException {
         controller.updatePlayerLeftGame(playerName);
+    }
+
+    @Override
+    public void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException {
+        controller.updateAvailableGames(availableGames);
     }
 
     @Override

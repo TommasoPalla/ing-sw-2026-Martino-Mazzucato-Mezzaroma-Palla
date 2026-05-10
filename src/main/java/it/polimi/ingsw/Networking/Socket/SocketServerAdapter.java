@@ -6,6 +6,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.GamePlayers;
 
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.rmi.RemoteException;
 import java.util.Map;
 
@@ -71,10 +74,6 @@ public class SocketServerAdapter implements ServerConnection {
 
     }
 
-    @Override
-    public Map<Integer, GamePlayers> getActiveGames() {
-        return null;
-    }
 
     @Override
     public void leaveGame(String playerName, int gameID){

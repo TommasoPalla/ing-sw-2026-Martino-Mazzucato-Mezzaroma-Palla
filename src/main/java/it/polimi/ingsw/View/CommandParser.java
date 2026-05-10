@@ -50,7 +50,7 @@ public record CommandParser(ClientController clientController) {
         }
         String[] commandArgs = parseArguments(CommandType.CHOOSE_TOTEM_COLOR, argsString);
         try {
-            clientController.chooseTotem(Color.valueOf(commandArgs[0]));
+            clientController.chooseTotem(Color.valueOf(commandArgs[0].toUpperCase()));
         } catch (IllegalActionPhaseException e) {
             throw new IllegalActionPhaseException();
         } catch (IllegalArgumentException e) {

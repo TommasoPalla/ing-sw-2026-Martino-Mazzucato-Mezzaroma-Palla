@@ -20,7 +20,6 @@ import java.util.Map;
 public interface VirtualRMIServer extends Remote {
     void connect(VirtualRMIClient clientStub) throws RemoteException;
     void disconnect(VirtualRMIClient clientStub) throws RemoteException;
-    Map<Integer, GamePlayers> getActiveGames(VirtualRMIClient clientStub) throws RemoteException;
     void chooseOfferTile(VirtualRMIClient client, int index) throws OccupiedTileException, RemoteException;
     void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException;
     void chooseTotemColor(VirtualRMIClient client, Color totemColor) throws  RemoteException;

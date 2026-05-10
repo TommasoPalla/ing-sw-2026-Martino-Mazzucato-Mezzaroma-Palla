@@ -12,7 +12,6 @@ import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
-import it.polimi.ingsw.View.GamePlayers;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -48,14 +47,17 @@ public class RMIServer implements VirtualRMIServer {
     public void connect(VirtualRMIClient clientStub) {
         this.clients.add(clientStub);
         System.out.println(clientStub + "added to RMI server");
+        notifyClientsToController();
+
     }
 
     @Override
     public void createGame(VirtualRMIClient client, String playerName, int numPlayers) throws RemoteException {
-        //TODO: se e' temporaneo va sistemato
         ClientNotifier clientNotifier = new RMIClientNotifier(client);
         //da fare il clientRecord.put() capendo come prendere il game id
-        serverController.createNewGame(clientNotifier, playerName, numPlayers);
+        int gameID = serverController.createNewGame(clientNotifier, playerName, numPlayers); //QUI viene creato il game e assegnatogli il gameID
+        PlayerRecord playerRecord = new PlayerRecord(gameID, playerName);
+        clientRecords.put(client, playerRecord);
     }
 
     @Override
@@ -94,11 +96,8 @@ public class RMIServer implements VirtualRMIServer {
         serverController.removePlayerFromGame(clientRecords.get(clientStub));
         serverController.removeNotifierFromGame(clientRecords.get(clientStub));
         System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
-    }
-
-    @Override
-    public Map<Integer, GamePlayers> getActiveGames(VirtualRMIClient client) {
-        return serverController.getActiveGames();
+        //in realtà in questo caso forse il controller potrebbe capirlo internamente ma è più complicato
+        notifyClientsToController();
     }
 
     @Override
@@ -130,5 +129,13 @@ public class RMIServer implements VirtualRMIServer {
         }catch(OccupiedTileException e){
             throw new OccupiedTileException();
         }
+    }
+
+    public List<VirtualRMIClient> getClients(){
+        return clients;
+    }
+
+    public void notifyClientsToController() {
+        serverController.updateRMIClients(clients);
     }
 }

@@ -8,6 +8,7 @@ import it.polimi.ingsw.Enums.SocketHeaderNames;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 import com.google.gson.Gson;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.View.GamePlayers;
 
 public class SocketServerHandler implements Runnable{
 
@@ -51,6 +53,12 @@ public class SocketServerHandler implements Runnable{
             try{
                 client.updatePlayerConnected(playerName);
             } catch (Exception e){}
+        });
+        commandHandlers.put(SocketHeaderNames.GET_AVAILABLE_GAMES, parameters -> {
+            Map<Integer, GamePlayers> availableGames = (Map<Integer, GamePlayers>) parameters[0];
+            try {
+                client.updateAvailableGames(availableGames);
+            } catch(IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.CHOSEN_TOTEM_COLOR, parameters -> {
             String playerName = (String) parameters[0];

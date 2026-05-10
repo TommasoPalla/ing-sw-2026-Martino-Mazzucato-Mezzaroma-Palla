@@ -4,10 +4,12 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface VirtualRMIClient extends Remote {
     void showUpdate() throws RemoteException;
@@ -15,6 +17,9 @@ public interface VirtualRMIClient extends Remote {
 
     void updateGameCreated(int gameID, int numPlayers) throws RemoteException;
     void updateGameStarted(int gameID, int numPlayers) throws RemoteException;
+    //void updateGameCreated() throws RemoteException;
+    void gameStarted(int gameID, int numPlayers) throws RemoteException;
+    void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException;
     void playerJoinedGame(String playerName) throws RemoteException;
     void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) throws RemoteException;
     void playerLeftGame(String playerName) throws RemoteException;

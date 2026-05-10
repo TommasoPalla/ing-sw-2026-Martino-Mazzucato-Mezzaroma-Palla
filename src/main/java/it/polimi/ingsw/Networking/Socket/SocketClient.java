@@ -5,9 +5,12 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class SocketClient implements VirtualSocketClient {
     /*final BufferedReader input;  potrebbe essere necessario un reader diverso: da definire
@@ -45,6 +48,11 @@ public class SocketClient implements VirtualSocketClient {
     @Override
     public void updatePlayerConnected(String playerName) {
         controller.updatePlayerConnected(playerName);
+    }
+
+    @Override
+    public void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException {
+        controller.updateAvailableGames(availableGames);
     }
 
     @Override

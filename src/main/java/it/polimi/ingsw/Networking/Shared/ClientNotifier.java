@@ -4,8 +4,10 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface ClientNotifier {
     //void showUpdate() throws IOException;
@@ -16,6 +18,7 @@ public interface ClientNotifier {
     void notifyNewPlayerConnected(String playerName);
     void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players);
     void notifyPlayerLeftGame(String playerName);
+    void notifyAvailableGames(Map<Integer, GamePlayers> availableGames);
     void notifyTotemColor(String playerName, Color totemColor);
     void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index);
     void notifyChosenTile(String playerName, int index);
