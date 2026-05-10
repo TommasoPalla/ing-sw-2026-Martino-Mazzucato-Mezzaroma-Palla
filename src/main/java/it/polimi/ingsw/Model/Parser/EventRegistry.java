@@ -15,17 +15,17 @@ public class EventRegistry {
     private static final EnumMap<EventType, Class<? extends EventCard>> registry = new EnumMap<>(EventType.class);
 
     public EventRegistry(){
-        /*registry.put(EventType.CAVE_PAINTINGS, CavePaintingsEvent.class);
+        registry.put(EventType.CAVE_PAINTINGS, CavePaintingsEvent.class);
         registry.put(EventType.HUNT, HuntEvent.class);
         registry.put(EventType.SHAMANIC_RITUAL, ShamanicRitualEvent.class);
-        registry.put(EventType.SUSTENANCE, SustenanceEvent.class);*/
+        registry.put(EventType.SUSTENANCE, SustenanceEvent.class);
     }
     public void addEventType(EventType type, Class<? extends EventCard> eventClass) {
         registry.put(type, eventClass);
     }
 
     public EventCard createEvent(EventCardDTO eventData) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Class<? extends EventCard> eventType = registry.get(eventData.type);
+        Class<? extends EventCard> eventType = registry.get(eventData.eventType);
         if(eventType == null){
             throw new IllegalArgumentException("Event not identified");
         }

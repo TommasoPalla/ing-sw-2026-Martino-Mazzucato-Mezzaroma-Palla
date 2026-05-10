@@ -667,7 +667,7 @@
     },
     {
       "era": 3,
-      "cardID": "E1_E_C",
+      "cardID": "E3_E_C",
       "eventType": "C",
       "artistThreshold": 3,
       "prestigeMalus": 2,
@@ -675,7 +675,7 @@
     },
     {
       "era": 3,
-      "cardID": "E1_E_R",
+      "cardID": "E3_E_R",
       "eventType": "R",
       "prestigeBonus": 15,
       "prestigeMalus": 7

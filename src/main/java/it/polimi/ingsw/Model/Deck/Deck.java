@@ -25,8 +25,9 @@ public class Deck {
     private final List<BuildingCard> allBuildingCards;    //from JSON
 
     //constructor called by game.createGame()
-    public Deck(Game gameInstance, int numPlayers, String jsonPath){
+    public Deck(Game gameInstance, String jsonPath){
         this.game = gameInstance;
+        int numPlayers = game.getNumPlayer();
         switch (numPlayers){
             case 2 -> this.buildingsDeckLength = new int[]{1, 2, 3};
             case 3 -> this.buildingsDeckLength = new int[]{2, 2, 4};

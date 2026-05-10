@@ -47,38 +47,23 @@
       "era": 1,
       "cardID": "E1_E_H",
       "eventType": "H",
-      "parameters": {
-        "F+": 1,
-        "P+": 1
-      }
+      "prestigeBonus": 1,
+      "foodBonus": 1
     },
     {
-      "era": 1,
-      "cardID": "E1_E_S",
+      "era": 2,
+      "cardID": "E2_E_S",
       "eventType": "S",
-      "parameters": {
-        "F-": 1,
-        "P-": 1
-      }
+      "prestigeMalus": 2,
+      "foodMalus": 1
     },
     {
-      "era": 1,
-      "cardID": "E1_E_C",
+      "era": 3,
+      "cardID": "E3_E_C",
       "eventType": "C",
-      "parameters": {
-        "P+": 1,
-        "P-": 2,
-        "A" : 0
-      }
-    },
-    {
-      "era": 1,
-      "cardID": "E1_E_R",
-      "eventType": "R",
-      "parameters": {
-        "P+": 5,
-        "P-": 3
-      }
+      "artistThreshold": 3,
+      "prestigeMalus": 2,
+      "prestigeBonus": 3
     }
   ],
   "buildings": [

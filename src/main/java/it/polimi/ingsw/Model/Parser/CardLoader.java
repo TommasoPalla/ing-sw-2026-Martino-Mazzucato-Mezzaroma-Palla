@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**CardLoader class manages methods that load cards from JSON file
  * it has a method for each type of cards*
@@ -26,7 +27,7 @@ public class CardLoader {
      */
     private JsonArray getArrayFromRoot(String key, String path) {
         try (Reader reader = new InputStreamReader(
-                getClass().getClassLoader().getResourceAsStream(path))) {
+                Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(path)))) {
 
             JsonElement rootElement = JsonParser.parseReader(reader);
             JsonObject root = rootElement.getAsJsonObject();
@@ -92,7 +93,6 @@ public class CardLoader {
                         | IllegalAccessException e) {
                 throw new RuntimeException(e);
                 }
-                //old impl: allBuildingCards.add(BuildingCardFactory.createBuilding(dto));
             }
         }
         return allBuildingCards;

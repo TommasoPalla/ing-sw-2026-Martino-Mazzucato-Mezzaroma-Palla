@@ -3,11 +3,9 @@ package it.polimi.ingsw.Model.Game;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.LastPlayerOfTurnException;
 import it.polimi.ingsw.CustomException.LastRoundException;
-import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Deck.Deck;
@@ -111,7 +109,7 @@ public class Game {
         turnOrder = offerTrack.getTurnTile().initTurnOrder(players);
         currentPlayer = turnOrder.getFirst();
         eventManager = new EventManager();
-        deck = new Deck(this, numPlayers, "json/cards.json");
+        deck = new Deck(this, "json/cards.json");
         //inizializzo track
         offerTrack.initializeBottomRow();
         offerTrack.repopulateTopRow();
