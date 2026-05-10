@@ -101,16 +101,5 @@ public class ClientApp {
             }// GUI start
         }
         clientController.bindView(view);
-        //view.runView();
-
-        /*
-         * Al player viene chiesto il nickname da usare durante la partita
-         */
-        //System.out.println("Scegli nickname:");
-        //String playerName = scanner.nextLine();
-        //clientController.setPlayerName(playerName);
-        //si fara' una cosa molto simile a quella sopra per istanziare TUI o GUI:
-
-
     }
 }

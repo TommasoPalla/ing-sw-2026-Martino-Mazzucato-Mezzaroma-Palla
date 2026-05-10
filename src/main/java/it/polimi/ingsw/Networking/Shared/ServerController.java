@@ -46,7 +46,7 @@ public class ServerController {
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController;
             gameController.removePlayer(playerName); // old: gameController.removeClient(playerName), ma già fatto in removeNotifierFromGame()
-
+            notifyAvailableGames();
         } catch (IllegalArgumentException e){
             System.out.println("ERROR: could not remove player from game\n" + e.getMessage());
         }
@@ -62,6 +62,7 @@ public class ServerController {
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController();
             gameController.addPlayer(playerName);
+            notifyAvailableGames();
         }
         catch (NotJoinableGameException e){
             throw new NotJoinableGameException(e.getMessage());
@@ -71,11 +72,13 @@ public class ServerController {
     public synchronized void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
         controller.addClient(playerRecord.playerName(), clientNotifier);
+        notifyAvailableGames();
         //aggiungere update Available
     }
     public synchronized void removeNotifierFromGame(PlayerRecord playerRecord){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
         controller.removeClient(playerRecord.playerName());
+        notifyAvailableGames();
     }
 
     /**
@@ -97,7 +100,7 @@ public class ServerController {
         addNotifierToGame(newPlayer, notifier);
 
         notifier.notifyGameCreated(gameID, playerNum);
-
+        notifyAvailableGames();
         nextGameID += 1;
         return nextGameID-1;
     }
@@ -120,6 +123,7 @@ public class ServerController {
     public void startGame(String requestingPlayer, int gameID) {
         try {
             activeGames.get(gameID).gameController().startGame(requestingPlayer);
+            notifyAvailableGames();
         }
         catch (NotTheHostException e){
             throw new NotTheHostException(e.getMessage());
@@ -128,6 +132,7 @@ public class ServerController {
             throw new NotEnoughPlayersException(e.getMessage());
         }
     }
+
     public void notifyAvailableGames(){
         Map<Integer, GamePlayers> gamesData = new HashMap<>();
         synchronized (activeGames) {
@@ -142,7 +147,7 @@ public class ServerController {
             }
         }
         for (VirtualRMIClient client: RMIClients){
-            //temporaneo, il notifier non è ancora creato per i client non in partita?
+            //temporaneo, il notifier non è ancora creato per i client non in partita? Mi sa di no
             RMIClientNotifier notifier = new RMIClientNotifier(client);
             notifier.notifyAvailableGames(gamesData);
         }
@@ -153,7 +158,7 @@ public class ServerController {
 
     // logic of methods that modify the model state
     public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
-        System.out.println("Debug Server: Ricevuta richiesta da " + playerRecord.playerName() + " per GameID: " + playerRecord.gameID());
+        System.out.println("Debug Server: Request received from " + playerRecord.playerName() + " for GameID: " + playerRecord.gameID());
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
             try {
