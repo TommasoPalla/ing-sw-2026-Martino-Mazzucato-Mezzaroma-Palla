@@ -27,19 +27,19 @@ public class InventorsFoodTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
-        player1 =  new Player(game,"pippo");
-        player2 =  new Player(game,"pluto");
+        game.addPlayer("pippo");
+        game.addPlayer("pluto");
+        player1 =  game.getPlayers().getFirst();
+        player2 =  game.getPlayers().getLast();
         players = new ArrayList<>(Arrays.asList(player1, player2));
-        for(Player player : players)
-            game.addPlayer(player.getName());
-        game.startGame();
+        game.startGameUnshuffled();
         buildingManager = game.getBuildingManager();
     }
 
     @Test
     public void inventorsFoodTest() {
-        player2.getTribe().modifyFood(5);
-        player2.getTribe().addBuildingToTribe(inventorsFood);
+        player2.getTribe().modifyFood(2);                           //3 food because he is first + 2 = 5
+        player2.getTribe().addBuildingToTribe(inventorsFood);       //-5 = 0
         assertEquals(0, player2.getTribe().getFoodReserve());
         assertEquals(6, player2.getTribe().getPrestigePoints());
 

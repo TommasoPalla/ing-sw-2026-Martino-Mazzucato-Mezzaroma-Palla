@@ -70,6 +70,7 @@ public class ShamanicRitualEvent extends EventCard implements EventStrategy{
         //stessa identica cosa per i loser
         for(Player player : eventLosers){
             EffectContext context = new EffectContext(player);
+            context.putParam(Parameters.PRESTIGE_BONUS, 0);
             context.putParam(Parameters.PRESTIGE_MALUS, eventCard.getPrestigeMalus());
 
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);

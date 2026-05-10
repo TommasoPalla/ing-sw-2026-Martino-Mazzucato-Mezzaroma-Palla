@@ -102,11 +102,36 @@ public class Game {
         players.remove(getPlayerByName(playerName));
     }
 
+    public void startGameUnshuffled(){
+        this.currentRound = 1;
+        this.era = 1;
+
+        this.deck = new Deck(this, "json/cards.json");
+        this.eventManager = new EventManager();
+        this.buildingManager = new BuildingManager(players);
+
+        this.offerTrack = new OfferTrack(this, numPlayers);
+        this.offerTrack.initializeBottomRow();
+        this.offerTrack.repopulateTopRow();
+        this.offerTrack.repopulateTopBuildingCards();
+
+        this.turnOrder = offerTrack.getTurnTile().initTurnOrderUnshuffled(players);
+        this.currentPlayer = turnOrder.getFirst();
+
+        giveInitialFood(numPlayers);
+
+        this.currentPhase = GamePhase.START_TURN;
+
+    }
+
     public void startGame(){
         this.currentRound = 1;
         this.era = 1;
 
         this.deck = new Deck(this, "json/cards.json");
+        this.eventManager = new EventManager();
+        this.buildingManager = new BuildingManager(players);
+
 
         this.offerTrack = new OfferTrack(this, numPlayers);
         this.offerTrack.initializeBottomRow();
@@ -116,10 +141,8 @@ public class Game {
         this.turnOrder = offerTrack.getTurnTile().initTurnOrder(players);
         this.currentPlayer = turnOrder.getFirst();
 
-        this.eventManager = new EventManager();
-        this.buildingManager = new BuildingManager(players);
-
         giveInitialFood(numPlayers);
+
         this.currentPhase = GamePhase.START_TURN;
     }
 

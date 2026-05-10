@@ -3,7 +3,8 @@ package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
-import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
+import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusStars;
+import it.polimi.ingsw.Model.BuildingsManagement.Buildings.ComboFood;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Users.Player;
@@ -15,13 +16,13 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BonusPointsTest {
+public class BonusStarsTest {
     Game game;
     Player player1;
     Player player2;
     ArrayList<Player> players;
     BuildingManager buildingManager;
-    BuildingCard bonusPoints = new BonusPoints(3, "BP", 10, GamePhase.END_GAME, Effect.BONUS_POINTS, "", 25);
+    BuildingCard bonusStars = new BonusStars(2, "BS", 6, GamePhase.ON_PURCHASE, Effect.BONUS_STARS, "", 0, 3);
 
     @BeforeEach
     void setup(){
@@ -36,18 +37,13 @@ public class BonusPointsTest {
     }
 
     @Test
-    void bonusPointsTest(){
-        player1.getTribe().modifyFood(10);                      //+10 food
-        player1.getTribe().addBuildingToTribe(bonusPoints);     //-10 food
-        assertEquals(2, player1.getTribe().getFoodReserve());       //2 food because he is first
+    void bonusStarsStandard(){
+        player1.getTribe().modifyFood(4);                      //2 food because he is first + 4 = 6
+        player1.getTribe().addBuildingToTribe(bonusStars);     //-6 food = 0
+        assertEquals(0, player1.getTribe().getFoodReserve());
 
-        assertEquals(0, player1.getTribe().getPrestigePoints());    //before the end of the game, the player has 0food and 0pp
-
-        buildingManager.useBuilding(GamePhase.ON_PURCHASE, player1);
-        assertEquals(0, player1.getTribe().getPrestigePoints());    //during a generic phase the effect is not activated
-
-        buildingManager.useBuilding(GamePhase.END_GAME, player1);
-
-        assertEquals(25, player1.getTribe().getPrestigePoints());
+        //after purchase INDEPENDENTLY of GamePhases the player receives the stars
+        assertEquals(3, player1.getTribe().getShamansStars());
     }
+
 }

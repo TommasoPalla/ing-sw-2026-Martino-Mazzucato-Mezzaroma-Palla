@@ -10,6 +10,9 @@ public class EffectContext {
     private EnumMap<Parameters, Integer> parameters = new EnumMap<>(Parameters.class);
 
     public EffectContext(Player player){
+        for(Parameters parameter : Parameters.values()){
+            parameters.put(parameter, 0);
+        }
         this.player = player;
     }
 

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.EventManagement;
+package it.polimi.ingsw.Model.EventManagement;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.ArtistsFood;

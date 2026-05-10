@@ -31,7 +31,7 @@ public class DrawAdditionalCard extends BuildingCard {
     @Override
     public void applyEffect(){
 
-        //IMPORTANTE
+        //TODO: IMPORTANTE
         //da chiedere l'input all'utente che carta vuole pescare e impostare fromBuilding al valore corrispondente
         //stessa cosa per index.
 

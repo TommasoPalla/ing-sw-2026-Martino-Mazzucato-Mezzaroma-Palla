@@ -45,7 +45,7 @@ public class HuntEvent extends EventCard implements EventStrategy{
             EffectContext context = new EffectContext(player);
             context.putParam(Parameters.PRESTIGE_BONUS, initialPrestigeBonus);
             context.putParam(Parameters.FOOD_BONUS, initialFoodBonus);
-            //chiedo al buildin manager di gestire eventuali edifici modificando il context
+            //chiedo al building manager di gestire eventuali edifici modificando il context
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, HuntEvent.class);
 
             int finalPrestigeBonus = context.getParam(Parameters.PRESTIGE_BONUS);

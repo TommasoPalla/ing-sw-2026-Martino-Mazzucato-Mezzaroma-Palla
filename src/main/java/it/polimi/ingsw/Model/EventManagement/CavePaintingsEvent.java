@@ -56,8 +56,6 @@ public class CavePaintingsEvent extends EventCard implements EventStrategy{
                 player.getTribe().modifyPrestigePoints(eventCard.getPrestigeBonus() * player.getTribe().getArtistsNumber());
 
             EffectContext context = new EffectContext(player);
-            //senza la riga sotto chi non ha l'edificio quando si fa getParam(FOOD_BONUS) avra' NullPointerException
-            context.putParam(Parameters.FOOD_BONUS, 0);
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, CavePaintingsEvent.class);
             int buildingsFoodBonus = context.getParam(Parameters.FOOD_BONUS);
             context.getPlayer().getTribe().modifyFood(buildingsFoodBonus);

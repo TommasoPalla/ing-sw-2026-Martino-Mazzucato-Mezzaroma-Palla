@@ -1,4 +1,4 @@
-package it.polimi.ingsw.EventManagement;
+package it.polimi.ingsw.Model.EventManagement;
 
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;

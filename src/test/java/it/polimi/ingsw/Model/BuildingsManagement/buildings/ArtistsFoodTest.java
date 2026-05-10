@@ -23,33 +23,28 @@ public class ArtistsFoodTest {
     ArrayList<Player> players;
     BuildingManager buildingManager;
     BuildingCard artistsFood = new ArtistsFood(2, "AF", 7, GamePhase.ON_EVENT, Effect.ARTISTS_FOOD, "", 5, 1);
-    //1 food for each artist during CavePaintings (last parameter)
 
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
-        player1 =  new Player(game,"pippo");
-        player2 =  new Player(game,"pluto");
+        game.addPlayer("pippo");
+        game.addPlayer("pluto");
+        player1 =  game.getPlayers().getFirst();
+        player2 =  game.getPlayers().getLast();
         players = new ArrayList<>(Arrays.asList(player1, player2));
-        for(Player player : players)
-            game.addPlayer(player.getName());
-        game.startGame();
+        game.startGameUnshuffled();
         buildingManager = game.getBuildingManager();
     }
 
     @Test
-    public void artistsFoodTest() {
+    void artistsFoodTest() {
         CavePaintingsEvent cavePaintingsEvent = new CavePaintingsEvent(1, "CV", 1, 1, 1);
-        //if playerX has < 1 artist => -1pp otherwise +1pp per artist (last three parameters are threshold, ppbonus, ppmalus)
 
-        Artist artist1 = new Artist(1, "A1", 2);
-        Artist artist2 = new Artist(2, "A2", 2);
+        player1.getTribe().addCharacterToTribe(new Artist(1, "A1", 2));
+        player1.getTribe().addCharacterToTribe(new Artist(2, "A2", 2));
 
-        player1.getTribe().addCharacterToTribe(artist1);
-        player1.getTribe().addCharacterToTribe(artist2);
-
-        player1.getTribe().modifyFood(7);                       //+7 food
-        player1.getTribe().addBuildingToTribe(artistsFood);     //-7 food
+        player1.getTribe().modifyFood(5);                       //2 food because he is first +5 food = 7
+        player1.getTribe().addBuildingToTribe(artistsFood);     //-7 food = 0
 
         assertEquals(0, player1.getTribe().getFoodReserve());
         assertEquals(5, player1.getTribe().getPrestigePoints());    // before the event, the player has 0food and 5pp (from building)

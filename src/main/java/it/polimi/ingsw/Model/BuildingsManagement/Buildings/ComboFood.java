@@ -6,8 +6,10 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ComboFood extends BuildingCard {
     private final int foodBonus;
@@ -32,43 +34,29 @@ public class ComboFood extends BuildingCard {
         return this.foodBonus;
     }
 
-    // When the player purchases the building, initializes the variable currentSetsNumber
-    // with the number of sets already completed in their tribe
+    /**When the player purchases the building, initializes the variable currentSetsNumber
+     * with the number of sets already completed in their tribe
+     */
     @Override
     public void effectOnPurchase() {
-        Map<CharacterRole, Integer> occurrencesPerRole = new HashMap<>();
-        for (CharacterRole role : this.getOwner().getTribe().getPopulation().keySet()) {
-            occurrencesPerRole.put(role, this.getOwner().getTribe().getPopulation().get(role).size());
-        }
-        if(occurrencesPerRole.size() == 6) {
-            this.currentSetsNumber = occurrencesPerRole.values()
-                    .stream()
-                    .min(Integer::compare)
-                    .orElse(0);
-        }
-        else { this.currentSetsNumber = 0; }
+        this.currentSetsNumber = this.getOwner().getTribe().getPopulation().entrySet().stream()
+                .filter(entry -> entry.getKey() != CharacterRole.NONE)
+                .mapToInt(entry -> entry.getValue().size())
+                .min()
+                .orElse(0);
     }
 
     @Override
     public void applyEffect() {
-        // Maps every character's type to the number of its occurrences in the player's tribe
-        Map<CharacterRole, Integer> occurrencesPerRole = new HashMap<>();
-        for (CharacterRole role : this.getOwner().getTribe().getPopulation().keySet()) {
-            occurrencesPerRole.put(role, this.getOwner().getTribe().getPopulation().get(role).size());
-        }
-        // if there's at least one occurrence of every character's role, it extracts the
-        // value of the role with fewer occurrences (the number of sets),
-        // and if the number of sets has increased, the player takes 5 Food tokens
-        if(occurrencesPerRole.size() == 6) {
-            long setsNumber = occurrencesPerRole.values()
-                    .stream()
-                    .min(Integer::compare)
-                    .orElse(0);
+        int setsNumber = this.getOwner().getTribe().getPopulation().entrySet().stream()
+                .filter(entry -> entry.getKey() != CharacterRole.NONE)
+                .mapToInt(entry -> entry.getValue().size())
+                .min()
+                .orElse(0);
             if(setsNumber > this.currentSetsNumber) {
                 this.getOwner().getTribe().modifyFood(this.foodBonus);
-                currentSetsNumber++;
+                currentSetsNumber = setsNumber;
             }
-        }
     }
 }
 

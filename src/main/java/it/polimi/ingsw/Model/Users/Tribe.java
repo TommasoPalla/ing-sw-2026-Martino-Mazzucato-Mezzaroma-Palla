@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.Users;
 
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Enums.CharacterRole;
@@ -96,6 +97,7 @@ public class  Tribe {
         population.get(character.getRole()).add(character);
         character.applyEffect(tribeOwner);
         populationSize += 1;
+        game.getBuildingManager().useBuilding(GamePhase.ON_DRAW, this.tribeOwner);
     }
 
     // The owner of the building card is assigned and the building is added to the player's list
@@ -111,8 +113,7 @@ public class  Tribe {
         // Calls effectOnPurchase for the building. It only works with the buildings who override it
         building.effectOnPurchase();
         this.foodReserve -= building.getCost();
-        this.prestigePoints += building.getPrestige();  //TODO: non era stato fatto qui perche' era stato fatto altrove
-                                                        // o ce ne eravamo dimenticati?
+        this.prestigePoints += building.getPrestige();
     }
 
 
