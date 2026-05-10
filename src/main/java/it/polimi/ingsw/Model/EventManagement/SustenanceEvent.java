@@ -40,7 +40,7 @@ public class SustenanceEvent extends EventCard implements EventStrategy{
     @Override
     public void apply(EventCard eventCard, ArrayList<Player> players, BuildingManager buildingManager) {
         for(Player player : players){
-            int necessaryFood = player.getTribe().getPopulation().size() * eventCard.getFoodMalus();
+            int necessaryFood = player.getTribe().getPopulationSize() * eventCard.getFoodMalus();
             int gatherersDiscount = player.getTribe().getGatherersDiscount();
             int initialFoodToPay = necessaryFood - gatherersDiscount;
 

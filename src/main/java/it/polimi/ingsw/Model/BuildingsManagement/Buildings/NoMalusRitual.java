@@ -23,8 +23,7 @@ public class NoMalusRitual extends BuildingCard {
 
     @Override
     public void applyEffect(EffectContext context) {
-        int ritualPoints = context.getParam(Parameters.PRESTIGE_MALUS);
-        if(ritualPoints < 0) context.putParam(Parameters.PRESTIGE_MALUS, 0);
+        context.putParam(Parameters.PRESTIGE_MALUS, 0);
     }
 
     @Override

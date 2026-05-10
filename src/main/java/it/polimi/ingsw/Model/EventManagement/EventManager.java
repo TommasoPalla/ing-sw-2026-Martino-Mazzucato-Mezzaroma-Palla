@@ -12,16 +12,24 @@ import java.util.Map;
 public class EventManager {
     private Map<EventType, EventStrategy> strategies = new HashMap<>();
 
+    public EventManager(){
+        strategies.put(EventType.CAVE_PAINTINGS, new CavePaintingsEvent(0, "CAVE_PAINTINGS_DUMMY", 0, 0, 0));
+        strategies.put(EventType.HUNT, new HuntEvent(0, "HUNT_DUMMY", 0, 0));
+        strategies.put(EventType.SHAMANIC_RITUAL, new ShamanicRitualEvent(0, "SHAMANIC_RITUAL_DUMMY", 0, 0));
+        strategies.put(EventType.SUSTENANCE, new SustenanceEvent(0, "SUSTENANCE_DUMMY", 0, 0));
+    }
+
     public void resolve(ArrayList<EventCard> incomingEvents, ArrayList<Player> players, BuildingManager buildingManager){
 
-        ArrayList<EventCard> sustenance = new ArrayList<>();
+        ArrayList<EventCard> sustenanceEvents = new ArrayList<>();
         for(EventCard event : incomingEvents){
             if (event.getEventType() == EventType.SUSTENANCE){
-                sustenance.add(event);
-                incomingEvents.remove(event);
+                sustenanceEvents.add(event);
             }
         }
-        incomingEvents.addAll(sustenance);
+
+        incomingEvents.removeAll(sustenanceEvents);
+        incomingEvents.addAll(sustenanceEvents);
 
         for( EventCard event : incomingEvents ){
             EventStrategy eventStrategy = strategies.get(event.getEventType());

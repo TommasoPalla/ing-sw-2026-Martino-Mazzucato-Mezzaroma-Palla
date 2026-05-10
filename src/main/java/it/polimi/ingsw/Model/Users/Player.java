@@ -21,9 +21,8 @@ public class Player {
     public Player(Game gameInstance, String name) {
         this.game = gameInstance;
         this.name = name;
-        this.tribe = new Tribe(gameInstance);
+        this.tribe = new Tribe(gameInstance, this);
         this.currentOfferTile = null;
-        tribe.setOwner(this);
     }
 
     public void setTotemColor(Color totemColor){this.totemColor = totemColor;}

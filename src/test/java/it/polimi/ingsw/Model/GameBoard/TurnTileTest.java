@@ -62,21 +62,30 @@ public class TurnTileTest {
         Game game;
         @BeforeEach
         public void setup(){
-            Game game = new Game(1, 4);
+            game = new Game(5, 3);
 
             player1 = new Player(game, "1");
             player2 = new Player(game,"2");
             player3 = new Player(game,"3");
+
             turnOrder = new ArrayList<>();
             turnOrder.add(player3);
             turnOrder.add(player1);
             turnOrder.add(player2);
+
+            for(Player player : turnOrder){
+                game.addPlayer(player.getName());
+            }
+            game.startGame();
+
             offerTrack = new OfferTrack(game, turnOrder.size());
+            turnTile = new TurnTile(turnOrder.size());
+
+            turnTile.initTurnOrderUnshuffled(turnOrder);
+
             player1.chooseOfferTile(2, offerTrack);
             player2.chooseOfferTile(1, offerTrack);
             player3.chooseOfferTile(3, offerTrack);
-            turnTile = new TurnTile(turnOrder.size());
-            game = new Game(5,turnOrder.size());
 
             //in this scenario player1 chose to go on tile 2 and then player2 chose to go on tile 1
             //meaning that the next turn player 2 will play before player 1

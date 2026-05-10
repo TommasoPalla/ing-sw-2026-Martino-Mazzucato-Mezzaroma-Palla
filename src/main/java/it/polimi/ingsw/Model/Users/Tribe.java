@@ -14,6 +14,7 @@ public class  Tribe {
     private Player tribeOwner;
     private int prestigePoints;
     private int foodReserve;
+    private int populationSize = 0;
     private EnumMap<CharacterRole, ArrayList<CharacterCard>> population;
     private ArrayList<BuildingCard> buildings;
     private EnumMap<InventorType, Integer> inventorsPerType;
@@ -23,7 +24,7 @@ public class  Tribe {
     private int shamansStars = 0;
 
     //Tribe's constructor
-    public Tribe(Game gameInstance) {
+    public Tribe(Game gameInstance, Player tribeOwner) {
         this.game = gameInstance;
         this.prestigePoints = 0;
         this.foodReserve = 0;
@@ -33,6 +34,7 @@ public class  Tribe {
         }
         this.buildings = new ArrayList<>();
         this.inventorsPerType = new EnumMap<>(InventorType.class);
+        this.tribeOwner = tribeOwner;
     }
 
     //getters
@@ -69,12 +71,12 @@ public class  Tribe {
     public EnumMap<InventorType, Integer> getInventorsPerType() {
         return inventorsPerType;
     }
+    public int getPopulationSize(){return populationSize;}
 
     //actual methods
     public void modifyPrestigePoints(int pp) {
         prestigePoints += pp;
     }
-    public void setOwner(Player player){this.tribeOwner=player;}
     public void modifyBuildingDiscount(int discount){ this.builderDiscount += discount; }
 
     public void modifyFood(int food) {
@@ -93,6 +95,7 @@ public class  Tribe {
     public void addCharacterToTribe(CharacterCard character) {
         population.get(character.getRole()).add(character);
         character.applyEffect(tribeOwner);
+        populationSize += 1;
     }
 
     // The owner of the building card is assigned and the building is added to the player's list
@@ -101,12 +104,15 @@ public class  Tribe {
     //
     // Called in Player.
     public void addBuildingToTribe(BuildingCard building) {
+        //if(building.getCost() > foodReserve) return;
         buildings.add(building);
         building.assignOwner(tribeOwner);
         game.getBuildingManager().addBuilding(building, tribeOwner);
         // Calls effectOnPurchase for the building. It only works with the buildings who override it
         building.effectOnPurchase();
         this.foodReserve -= building.getCost();
+        this.prestigePoints += building.getPrestige();  //TODO: non era stato fatto qui perche' era stato fatto altrove
+                                                        // o ce ne eravamo dimenticati?
     }
 
 

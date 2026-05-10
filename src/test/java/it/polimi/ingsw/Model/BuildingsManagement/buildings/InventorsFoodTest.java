@@ -1,46 +1,58 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
+import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.InventorsFood;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Characters.Inventor;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Enums.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import it.polimi.ingsw.Model.Users.Player;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
+
 public class InventorsFoodTest {
+    Game game;
+    Player player1;
+    Player player2;
+    ArrayList<Player> players;
     BuildingManager buildingManager;
-    EnumMap<Parameters, Integer> mapca =  new EnumMap<>(Parameters.class);
     BuildingCard inventorsFood = new InventorsFood(3, "BBB", 5, GamePhase.ON_DRAW, Effect.INVENTORS_FOOD, "ciao", 6, 3);
+
+    @BeforeEach
+    void setup(){
+        game = new Game(0, 2);
+        player1 =  new Player(game,"pippo");
+        player2 =  new Player(game,"pluto");
+        players = new ArrayList<>(Arrays.asList(player1, player2));
+        for(Player player : players)
+            game.addPlayer(player.getName());
+        game.startGame();
+        buildingManager = game.getBuildingManager();
+    }
 
     @Test
     public void inventorsFoodTest() {
-        // GAME AND BUILDINGMANAGER INIT
-        Game game = null;
-        Player player1 =  new Player(game,"giocatore1");
-        Player player2 =  new Player(game,"giocatore2");
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(player1);
-        players.add(player2);
-        game = new Game(2, players.size());
-        // INVENTORSFOOD TEST
-        buildingManager = game.getBuildingManager();
-        /*CharacterCard inv1 = new CharacterCard(1, "A", 3, CharacterRole.INVENTOR, null, InventorType.BOAT, null, null, null);
-        CharacterCard inv2 = new CharacterCard(1, "B", 3, CharacterRole.INVENTOR, null, InventorType.NECKLACE, null, null, null);
-        CharacterCard inv3 = new CharacterCard(1, "C", 3, CharacterRole.INVENTOR, null, InventorType.BOAT, null, null, null);
-        */
         player2.getTribe().modifyFood(5);
         player2.getTribe().addBuildingToTribe(inventorsFood);
-        //player2.getTribe().addCharacterToTribe(inv1);
+        assertEquals(0, player2.getTribe().getFoodReserve());
+        assertEquals(6, player2.getTribe().getPrestigePoints());
+
+        player2.getTribe().addCharacterToTribe(new Inventor(1, "I1", 2, InventorType.NECKLACE));
         buildingManager.useBuilding(GamePhase.ON_DRAW, player2);
-        //player2.getTribe().addCharacterToTribe(inv2);
+        assertEquals(0, player2.getTribe().getFoodReserve());
+
+        player2.getTribe().addCharacterToTribe(new Inventor(1, "I1", 2, InventorType.BOAT));
         buildingManager.useBuilding(GamePhase.ON_DRAW, player2);
-        assertEquals(0, player2.getTribe().getFoodReserve()); // No food should be gained, since the two inventors are of different types
-        //player2.getTribe().addCharacterToTribe(inv3);
+        assertEquals(0, player2.getTribe().getFoodReserve());   //different InventorTypes => no food gained
+
+        player2.getTribe().addCharacterToTribe(new Inventor(1, "I1", 2, InventorType.BOAT));
         buildingManager.useBuilding(GamePhase.ON_DRAW, player2);
-        assertEquals(3, player2.getTribe().getFoodReserve()); // New couple of BOATS => 3 food bonus to the player's tribe
+        assertEquals(3, player2.getTribe().getFoodReserve());   //new couple of BOATS => 3 food bonus
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.Buildings;
 
+import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Parameters;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Enums.Effect;

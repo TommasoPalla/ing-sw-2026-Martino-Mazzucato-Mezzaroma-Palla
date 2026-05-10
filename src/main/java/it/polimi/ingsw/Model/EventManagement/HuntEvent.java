@@ -38,19 +38,16 @@ public class HuntEvent extends EventCard implements EventStrategy{
     @Override
     public void apply(EventCard eventCard, ArrayList<Player> players, BuildingManager buildingManager) {
         for(Player player : players){
-            //inizializzo i bonus di cibo e di punti solo considerando i cacciatori nella tribe
             int huntersNumber = player.getTribe().getHuntersNumber();
             int initialPrestigeBonus = huntersNumber * eventCard.getPrestigeBonus();
             int initialFoodBonus = huntersNumber * eventCard.getFoodBonus();
 
-            //metto questi valori nel context
             EffectContext context = new EffectContext(player);
             context.putParam(Parameters.PRESTIGE_BONUS, initialPrestigeBonus);
             context.putParam(Parameters.FOOD_BONUS, initialFoodBonus);
             //chiedo al buildin manager di gestire eventuali edifici modificando il context
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, HuntEvent.class);
 
-            //prendo il context eventualmente modificato e applico i cambiamenti
             int finalPrestigeBonus = context.getParam(Parameters.PRESTIGE_BONUS);
             int finalFoodBonus = context.getParam(Parameters.FOOD_BONUS);
             player.getTribe().modifyPrestigePoints(finalPrestigeBonus);

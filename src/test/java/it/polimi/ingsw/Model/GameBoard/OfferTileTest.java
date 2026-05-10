@@ -36,7 +36,7 @@ public class OfferTileTest {
         //tile A test
         tileA.occupy(player.getName());
         assertTrue(tileA.isOccupied());
-        assertEquals(player, tileA.getCurrentOccupant());
+        assertEquals(player.getName(), tileA.getCurrentOccupant());
         tileA.free();
         assertFalse(tileA.isOccupied());
         assertNull(tileA.getCurrentOccupant());
@@ -44,7 +44,7 @@ public class OfferTileTest {
         //tile G test
         tileG.occupy(player.getName());
         assertTrue(tileG.isOccupied());
-        assertEquals(player, tileG.getCurrentOccupant());
+        assertEquals(player.getName(), tileG.getCurrentOccupant());
         tileG.free();
         assertFalse(tileG.isOccupied());
         assertNull(tileG.getCurrentOccupant());

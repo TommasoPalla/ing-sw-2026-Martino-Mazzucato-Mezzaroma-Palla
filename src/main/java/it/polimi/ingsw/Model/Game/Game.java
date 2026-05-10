@@ -3,9 +3,11 @@ package it.polimi.ingsw.Model.Game;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.LastPlayerOfTurnException;
 import it.polimi.ingsw.CustomException.LastRoundException;
+import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Deck.Deck;
@@ -29,7 +31,7 @@ public class Game {
     private int currentRound;
     private GamePhase currentPhase;
     private OfferTrack offerTrack;
-    private final BuildingManager buildingManager;
+    private BuildingManager buildingManager;
     private EventManager eventManager = new EventManager();
     private Deck deck;
     private final Map<String, Color> totemColors = new HashMap<>();
@@ -40,7 +42,6 @@ public class Game {
         this.numPlayers = numPlayers;
         this.players = new ArrayList<>();
         this.currentRound = 0;
-        this.buildingManager = new BuildingManager(players);
     }
 
     //getters
@@ -102,20 +103,24 @@ public class Game {
     }
 
     public void startGame(){
-        currentRound = 1;
-        era = 1;
+        this.currentRound = 1;
+        this.era = 1;
 
-        offerTrack = new OfferTrack(this, numPlayers);
-        turnOrder = offerTrack.getTurnTile().initTurnOrder(players);
-        currentPlayer = turnOrder.getFirst();
-        eventManager = new EventManager();
-        deck = new Deck(this, "json/cards.json");
-        //inizializzo track
-        offerTrack.initializeBottomRow();
-        offerTrack.repopulateTopRow();
-        offerTrack.repopulateTopBuildingCards();
+        this.deck = new Deck(this, "json/cards.json");
+
+        this.offerTrack = new OfferTrack(this, numPlayers);
+        this.offerTrack.initializeBottomRow();
+        this.offerTrack.repopulateTopRow();
+        this.offerTrack.repopulateTopBuildingCards();
+
+        this.turnOrder = offerTrack.getTurnTile().initTurnOrder(players);
+        this.currentPlayer = turnOrder.getFirst();
+
+        this.eventManager = new EventManager();
+        this.buildingManager = new BuildingManager(players);
+
         giveInitialFood(numPlayers);
-        currentPhase = GamePhase.START_TURN;
+        this.currentPhase = GamePhase.START_TURN;
     }
 
 

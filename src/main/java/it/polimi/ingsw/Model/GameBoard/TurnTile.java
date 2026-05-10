@@ -52,6 +52,11 @@ public class TurnTile {
         return turnOrder;
     }
 
+    //This function is used only in testing because the true one is non-deterministic
+    public void initTurnOrderUnshuffled(ArrayList<Player> players){
+        turnOrder = new ArrayList<>(players);
+    }
+
     public ArrayList<Player> getTurnOrder(){
         return turnOrder;
     }
