@@ -37,9 +37,9 @@ public class BonusPointsTest {
 
     @Test
     void bonusPointsTest(){
-        player1.getTribe().modifyFood(10);                      //+10 food
+        player1.getTribe().modifyFood(8);                      //+10 food
         player1.getTribe().addBuildingToTribe(bonusPoints);     //-10 food
-        assertEquals(2, player1.getTribe().getFoodReserve());       //2 food because he is first
+        assertEquals(0, player1.getTribe().getFoodReserve());       //2 food because he is first
 
         assertEquals(0, player1.getTribe().getPrestigePoints());    //before the end of the game, the player has 0food and 0pp
 

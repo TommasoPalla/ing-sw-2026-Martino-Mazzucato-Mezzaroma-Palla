@@ -6,8 +6,9 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
-// At the end of the game, the owner gains the indicated amount of Prestige Points for each Character card
-// of the indicated role in his tribe
+/** At the end of the game, the owner gains the indicated amount of Prestige Points for each Character card
+ * of the indicated role in his tribe
+ */
 public class PointsPerRole extends BuildingCard {
     private final CharacterRole roleEffect;
     private final int prestigeBonus;
