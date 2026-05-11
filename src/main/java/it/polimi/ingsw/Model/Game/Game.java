@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.Game;
 
+import java.time.chrono.Era;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,6 +92,10 @@ public class Game {
         totemColors.put(playerName, totemColor);
     }
 
+    //mainly used for tests
+    public void setEra(int era){
+        this.era = era;
+    }
     public void addPlayer(String playerName) {
         Player newPlayer = new Player(this, playerName);
         players.add(newPlayer);
