@@ -134,7 +134,7 @@ public class GameController {
         if(!requestingPlayer.equals(hostPlayer)) {
             throw new NotTheHostException("ERROR: you can't start the game if you're not the host!");
         } else if (connectedClients.size() != gameInstance.getNumPlayer()) {
-            throw new NotEnoughPlayersException("ERROR: Not enough players to start the game!");
+            throw new NotEnoughPlayersException();
         }
         else gameInstance.startGame();
     }

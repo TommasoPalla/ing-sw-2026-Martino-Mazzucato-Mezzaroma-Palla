@@ -186,7 +186,7 @@ public class ClientController implements ClientViewUpdate {
         } catch (NotTheHostException e) {
             throw new NotTheHostException(e.getMessage());
         } catch (NotEnoughPlayersException e) {
-            throw new NotEnoughPlayersException(e.getMessage());
+            throw new NotEnoughPlayersException();
         }
     }
 

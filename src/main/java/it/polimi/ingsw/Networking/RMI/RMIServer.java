@@ -86,7 +86,7 @@ public class RMIServer implements VirtualRMIServer {
         } catch (NotTheHostException e) {
             throw new NotTheHostException(e.getMessage());
         } catch (NotEnoughPlayersException e) {
-            throw new NotEnoughPlayersException(e.getMessage());
+            throw new NotEnoughPlayersException();
         }
     }
 

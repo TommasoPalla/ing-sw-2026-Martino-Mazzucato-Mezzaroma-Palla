@@ -1,14 +1,9 @@
 package it.polimi.ingsw.Model.Game;
 
-import java.time.chrono.Era;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
-import it.polimi.ingsw.CustomException.IllegalDrawException;
-import it.polimi.ingsw.CustomException.LastPlayerOfTurnException;
-import it.polimi.ingsw.CustomException.LastRoundException;
-import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Deck.Deck;
@@ -19,53 +14,62 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.EventManagement.EventManager;
 
 public class Game {
+    private boolean isStarted;
     private final int gameID;
+    private final int numPlayers;
     private final ArrayList<Player> players;
-    final private int numPlayers;
     private Player currentPlayer;
-
-    /*è ridondante rispetto allo stesso attributo di TurnTile
-    ma dato che viene usato molto si potrebbe lasciare
-     */
-    private ArrayList<Player> turnOrder;
+    private final Map<String, Color> totemColors;
     private int era;
     private int currentRound;
     private GamePhase currentPhase;
     private OfferTrack offerTrack;
     private BuildingManager buildingManager;
-    private EventManager eventManager = new EventManager();
+    private final EventManager eventManager;
     private Deck deck;
-    private final Map<String, Color> totemColors = new HashMap<>();
+    private static final String jsonCardsPath = "json/cards.json";
 
 
     public Game(int gameID, int numPlayers) {
+        isStarted = false;
         this.gameID = gameID;
         this.numPlayers = numPlayers;
         this.players = new ArrayList<>();
-        this.currentRound = 0;
+        eventManager = new EventManager();
+        totemColors = new HashMap<>();
     }
 
     //getters
     public int getGameID(){
         return gameID;
     }
-    public Deck getDeck() {return deck;}
-    public GamePhase getGamePhase(){return currentPhase;}
-    public Player getCurrentPlayer(){return currentPlayer;}
+    public int getNumPlayer(){return numPlayers;}
+    public Player getCurrentPlayer(){
+        if(isStarted){
+            return currentPlayer;
+        }
+        throw new GameNotStartedException();
+    }
     public ArrayList<String> getPlayersNames(){
         ArrayList<String> names = new ArrayList<>();
+        if(players.isEmpty()){
+            throw new GameNotStartedException("no players added.");
+        }
         for (Player p: players){
             names.add(p.getName());
         }
         return names;
     }
-    public ArrayList<Player> getPlayers(){ return players; }
-    public int getNumPlayer(){return numPlayers;}
-    public OfferTrack getOfferTrack(){return offerTrack;}
-    public BuildingManager getBuildingManager(){return buildingManager;}
-    public EventManager getEventManager(){return eventManager;}
-    public ArrayList<Player> getTurnOrder(){return turnOrder;}
-    public int getEra(){return era;}
+    public ArrayList<Player> getPlayers(){
+        if(players.isEmpty()){
+            throw new GameNotStartedException("no players added.");
+        }
+        return players;
+    }
+    public Player getPlayerByName(String playerName){
+        return players.stream().filter(p -> p.getName().equals(playerName))
+                .findFirst().orElse(null);
+    }
     public Set<Color> getAvailableColors(){
         Set<Color> colors = EnumSet.allOf(Color.class);
         for(Color color: totemColors.values()){
@@ -73,16 +77,42 @@ public class Game {
         }
         return colors;
     }
-
-    public Player getPlayerByName(String playerName){
-        return players.stream().filter(p -> p.getName().equals(playerName))
-                .findFirst().orElse(null);
+    public int getEra(){
+        if(isStarted){
+            return era;
+        }
+        throw new GameNotStartedException();
     }
-
-    public Player getNextPlayer() {
-        int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
-        if  (currentPlayerIndex < turnOrder.size()-1) return turnOrder.get(currentPlayerIndex+1);
-        else throw new LastPlayerOfTurnException();
+    public int getCurrentRound(){
+        if(isStarted){
+            return currentRound;
+        }
+        throw new GameNotStartedException();
+    }
+    public GamePhase getGamePhase(){
+        if(isStarted){
+            return currentPhase;
+        }
+        throw new GameNotStartedException();
+    }
+    public OfferTrack getOfferTrack(){
+        if(isStarted){
+            return offerTrack;
+        }
+        throw new GameNotStartedException();
+    }
+    public BuildingManager getBuildingManager(){
+        if(isStarted){
+            return buildingManager;
+        }
+        throw new GameNotStartedException();
+    }
+    public EventManager getEventManager(){return eventManager;}
+    public Deck getDeck() {
+        if(isStarted){
+            return deck;
+        }
+        throw new GameNotStartedException();
     }
 
     //not sure about the logic here but also can't see anything horribly wrong
@@ -107,12 +137,18 @@ public class Game {
         players.remove(getPlayerByName(playerName));
     }
 
+    //used for testing
     public void startGameUnshuffled(){
-        this.currentRound = 1;
-        this.era = 1;
+        if(isStarted){
+            throw new IllegalCallerException("Game already started.");
+        }
+        isStarted = true;
 
-        this.deck = new Deck(this, "json/cards.json");
-        this.eventManager = new EventManager();
+        this.era = 1;
+        this.currentRound = 1;
+        this.currentPhase = GamePhase.START_GAME;
+
+        this.deck = new Deck(this, jsonCardsPath);
         this.buildingManager = new BuildingManager(players);
 
         this.offerTrack = new OfferTrack(this, numPlayers);
@@ -120,35 +156,31 @@ public class Game {
         this.offerTrack.repopulateTopRow();
         this.offerTrack.repopulateTopBuildingCards();
 
-        this.turnOrder = offerTrack.getTurnTile().initTurnOrderUnshuffled(players);
-        this.currentPlayer = turnOrder.getFirst();
+        this.currentPlayer = offerTrack.getTurnTile().initTurnOrderUnshuffled(players).getFirst();
 
         giveInitialFood(numPlayers);
-
-        this.currentPhase = GamePhase.START_TURN;
-
     }
 
     public void startGame(){
-        this.currentRound = 1;
+        if(isStarted){
+            throw new IllegalCallerException("Game already started.");
+        }
+        isStarted = true;
         this.era = 1;
+        this.currentRound = 1;
+        this.currentPhase = GamePhase.START_GAME;
 
-        this.deck = new Deck(this, "json/cards.json");
-        this.eventManager = new EventManager();
+        this.deck = new Deck(this, jsonCardsPath);
         this.buildingManager = new BuildingManager(players);
-
 
         this.offerTrack = new OfferTrack(this, numPlayers);
         this.offerTrack.initializeBottomRow();
         this.offerTrack.repopulateTopRow();
         this.offerTrack.repopulateTopBuildingCards();
 
-        this.turnOrder = offerTrack.getTurnTile().initTurnOrder(players);
-        this.currentPlayer = turnOrder.getFirst();
+        this.currentPlayer = offerTrack.getTurnTile().initTurnOrder(players).getFirst();
 
         giveInitialFood(numPlayers);
-
-        this.currentPhase = GamePhase.START_TURN;
     }
 
 
@@ -162,7 +194,16 @@ public class Game {
 
     //actual functions
     public Player setNextPlayer(){
-        return currentPlayer = getNextPlayer();
+        if(!isStarted){
+            throw new GameNotStartedException();
+        }
+        ArrayList<Player> turnOrder = offerTrack.getTurnTile().getTurnOrder();
+        int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
+        if  (currentPlayerIndex < turnOrder.size()-1){
+            this.currentPlayer =  turnOrder.get(currentPlayerIndex+1);
+            return this.currentPlayer;
+        }
+        throw new LastPlayerOfTurnException();
     }
 
     /*
@@ -177,6 +218,7 @@ public class Game {
     }
 
     private void giveInitialFood(int numPlayers){
+        ArrayList<Player> turnOrder = offerTrack.getTurnTile().getTurnOrder();
         turnOrder.get(0).getTribe().modifyFood(2);
         turnOrder.get(1).getTribe().modifyFood(3);
 
@@ -224,21 +266,22 @@ public class Game {
 
                 currentPlayer.chooseOfferTile(k, offerTrack);
                 buildingManager.useBuilding(currentPhase, currentPlayer);
-                currentPlayer=getNextPlayer();
+                setNextPlayer();
             }
 
             //se qualcuno sceglie la tessera A dagli 3 cibo
             for(int i=0; i<this.numPlayers;i++){
-                turnOrder.get(i).getTribe().modifyFood(turnOrder.get(i).getCurrentOfferTile().getFoodBonus());
+                Player player = offerTrack.getTurnTile().getTurnOrder().get(i);
+                player.getTribe().modifyFood(player.getCurrentOfferTile().getFoodBonus());
             }
 
             this.updateCurrentPhase();//fase draw
             //aggiornare turnorder qui
             //return turnTile
-            turnOrder = offerTrack.getTurnTile().updateTurnOrder();
+            offerTrack.getTurnTile().updateTurnOrder();
 
             //forse dentro questo for il discorso currentPlayer e n-esima iterazione del ciclo si può gestire meglio
-            for(Player player : turnOrder){//tutti scelgono le loro carte in ordine
+            for(Player player : offerTrack.getTurnTile().getTurnOrder()){//tutti scelgono le loro carte in ordine
 
                 //classe controller richiede gli indici input
                 boolean fromTopRow = false;
@@ -285,7 +328,7 @@ public class Game {
                 offerTrack.getTurnTile().returnToStartingTile(currentPlayer, buildingManager);
                 currentPhase = GamePhase.ON_DRAW;
 
-                currentPlayer = getNextPlayer();
+                setNextPlayer();
             }
 
             this.updateCurrentPhase();//fase eventi
@@ -304,7 +347,7 @@ public class Game {
 
             for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del round
                 buildingManager.useBuilding(currentPhase, currentPlayer);
-                currentPlayer=getNextPlayer();
+                setNextPlayer();
             }
 
 
@@ -321,7 +364,7 @@ public class Game {
         for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del gioco
             buildingManager.useBuilding(currentPhase, currentPlayer);
             currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculateFinalPoints());
-            currentPlayer=getNextPlayer();
+            setNextPlayer();
         }
         ArrayList<Player> ranking = new ArrayList<>(players);
         ranking=players.stream().sorted(Comparator.comparingInt(

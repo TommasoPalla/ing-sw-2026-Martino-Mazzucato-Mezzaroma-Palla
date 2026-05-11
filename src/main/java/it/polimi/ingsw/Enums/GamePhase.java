@@ -10,5 +10,5 @@ public enum GamePhase {
   START_TURN,
   RETURN_TO_TILE,
   ON_PURCHASE,
-  START_GAME;
+  START_GAME
 }
