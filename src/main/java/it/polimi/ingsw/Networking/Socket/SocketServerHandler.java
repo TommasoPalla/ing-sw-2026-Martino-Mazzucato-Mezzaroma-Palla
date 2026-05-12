@@ -39,8 +39,8 @@ public class SocketServerHandler implements Runnable{
     private void initCommandHandler(){
         //----------------CALLBACKS FROM PLAYERS' ACTIONS-------------------------
         commandHandlers.put(SocketHeaderNames.GAME_CREATED, parameters -> {
-           int gameID = (int) parameters[0];
-           int playerNum = (int) parameters[1];
+           int gameID = ((Double) parameters[0]).intValue();
+           int playerNum = ((Double) parameters[1]).intValue();
            try{
                client.updateGameCreated(gameID, playerNum);     //TODO:capire cosa ci va qui, correlato al TODO in ServerController
            } catch (Exception e){
@@ -54,8 +54,8 @@ public class SocketServerHandler implements Runnable{
             } catch (Exception e){}
         });
         commandHandlers.put(SocketHeaderNames.SUCCESSFULLY_JOINED, parameters -> {
-           int gameID = (int) parameters[0];
-           int playerNum = (int) parameters[1];
+           int gameID = ((Double) parameters[0]).intValue();
+           int playerNum = ((Double) parameters[1]).intValue();
            Type type = new TypeToken<ArrayList<String>>(){}.getType();
            ArrayList<String> playerNames = gson.fromJson(gson.toJson(parameters[2]), type);
            try {
@@ -80,14 +80,14 @@ public class SocketServerHandler implements Runnable{
             String playerName = (String) parameters[0];
             boolean fromTopRow = (boolean) parameters[1];
             boolean fromBuildings = (boolean) parameters[2];
-            int index = (int) parameters[3];
+            int index = ((Double) parameters[3]).intValue();
             try{
                 client.updateDrawnCard(playerName, fromTopRow, fromBuildings, index);
             } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.CHOSEN_OFFER_TILE, parameters -> {
             String playerName = (String) parameters[0];
-            int index = (int) parameters[1];
+            int index = ((Double) parameters[1]).intValue();
             try{
                 client.updateChosenTile(playerName, index);
             } catch (IOException e) {}
@@ -96,21 +96,21 @@ public class SocketServerHandler implements Runnable{
         //----------------CALLBACKS FROM GAME STATE (SERVER) UPDATES-------------------------
         commandHandlers.put(SocketHeaderNames.ADDED_FOOD, parameters -> {
             String playerName = (String) parameters[0];
-            int food = (int) parameters[1];
+            int food = ((Double) parameters[1]).intValue();
             try{
                 client.updateFood(playerName, food);
             } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.ADDED_SHAMAN_STARS, parameters -> {
             String playerName = (String) parameters[0];
-            int shamanStars = (int) parameters[1];
+            int shamanStars = ((Double) parameters[1]).intValue();
             try{
                 client.updateShamansStars(playerName, shamanStars);
             } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.ADDED_PRESTIGE_POINTS, parameters -> {
             String playerName = (String) parameters[0];
-            int prestigePoints = (int) parameters[1];
+            int prestigePoints = ((Double) parameters[1]).intValue();
             try{
                 client.updateShamansStars(playerName, prestigePoints);
             } catch (IOException e) {}
@@ -144,7 +144,7 @@ public class SocketServerHandler implements Runnable{
             client.updateGamePhase(phase);
         });
         commandHandlers.put(SocketHeaderNames.CHANGED_ERA, parameters -> {
-           int newEra = (int) parameters[0];
+           int newEra = ((Double) parameters[0]).intValue();
            client.updateEra(newEra);
         });
     }
