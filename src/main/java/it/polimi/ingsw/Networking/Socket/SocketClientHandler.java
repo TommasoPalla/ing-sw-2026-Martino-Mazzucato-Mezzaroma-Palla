@@ -55,7 +55,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     private void initCommandHandler(){
         commandHandlers.put(SocketHeaderNames.CREATE_GAME, parameters -> {
             String playerName = (String) parameters[0];
-            int numPlayers = (int) parameters[1];
+            int numPlayers = ((Double) parameters[1]).intValue();
             try {
                 server.createGame(this, playerName, numPlayers);
             } catch (Exception e){
@@ -64,7 +64,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         });
         commandHandlers.put(SocketHeaderNames.JOIN_GAME, parameters -> {
             String playerName = (String) parameters[0];
-            int gameID = (int) parameters[1];
+            int gameID = ((Double) parameters[1]).intValue();
             this.playerRecord = new PlayerRecord(gameID, playerName);
             try {
                 server.joinGame(this);
@@ -83,7 +83,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         commandHandlers.put(SocketHeaderNames.DRAW_CARD, parameters -> {
             boolean fromTopRow = (boolean) parameters[0];
             boolean fromBuildings = (boolean) parameters[1];
-            int index = (int) parameters[2];
+            int index = ((Double) parameters[2]).intValue();
             try {
                 server.drawCard(fromTopRow, fromBuildings, index, this);
             } catch (IllegalDrawException e){
@@ -92,7 +92,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         });
         commandHandlers.put(SocketHeaderNames.CHOOSE_OFFER_TILE, parameters -> {
             try {
-                int index = (int) parameters[0];
+                int index = ((Double) parameters[0]).intValue();
                 server.chooseOfferTile(index, this);
             }catch(OccupiedTileException e){
                 throw new OccupiedTileException();
@@ -143,7 +143,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players) {
-
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.SUCCESSFULLY_JOINED, gameID, playerNum, players);
+        outStream.println(gson.toJson(message));
     }
 
     @Override

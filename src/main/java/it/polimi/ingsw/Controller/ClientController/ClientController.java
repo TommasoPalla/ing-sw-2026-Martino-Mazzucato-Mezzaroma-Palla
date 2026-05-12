@@ -66,8 +66,8 @@ public class ClientController implements ClientViewUpdate {
     /*called when server responds with a successful 'startGame' request by first player
     or next players join the game via 'joinGame' method
     actually called by onGameStarted()*/
-    public void createLocalModel(int gameId, int num){
-        this.localModel = new ClientModel(gameId, num);
+    public void createLocalModel(int gameId, int numPlayers){
+        this.localModel = new ClientModel(gameId, numPlayers);
     }
     public void setClientState(ClientState clientState){
         this.clientState = clientState;
@@ -285,6 +285,8 @@ public class ClientController implements ClientViewUpdate {
 
     @Override
     public void updateGameCreated(int gameID, int numPlayers){
+        createLocalModel(gameID, numPlayers);
+        this.clientState = ClientState.IN_LOBBY;
         //TODO: !!!! capire cosa ci va qui, questo e' il metodo che viene chiamato dal server per dire
         // "oh fra guarda che ho creato il game che mi hai chiesto di creare" !!!!
     }

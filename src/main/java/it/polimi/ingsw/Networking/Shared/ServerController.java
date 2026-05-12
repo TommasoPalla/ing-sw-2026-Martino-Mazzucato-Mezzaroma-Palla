@@ -36,12 +36,12 @@ public class ServerController {
     private static int nextGameID = 0;
 
     // logic handling connected players
-    public void removePlayerFromGame(PlayerRecord playerRecord){
+    public void removeClientFromGame(PlayerRecord playerRecord){
         try {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController;
-            gameController.removePlayer(playerName); // old: gameController.removeClient(playerName), ma già fatto in removeNotifierFromGame()
+            gameController.removePlayer(playerName);
             notifyAvailableGames();
         } catch (IllegalArgumentException e){
             System.out.println("ERROR: could not remove player from game\n" + e.getMessage());
@@ -52,30 +52,31 @@ public class ServerController {
      * This method creates a Player object in the corresponding game to which it is connected
      * @param playerRecord
      */
-    public synchronized void addPlayerToGame(PlayerRecord playerRecord){
+    //forse si può rimuovere e chiamare direttamente addClient di gameController negli usages, attenzione sincronizzazione
+    public synchronized void addClientToGame(PlayerRecord playerRecord, ClientNotifier notifier){
         try {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController();
-            gameController.addPlayer(playerName);
-            notifyAvailableGames();
+            gameController.addClient(playerName, notifier);
+            //notifyAvailableGames();
         }
         catch (NotJoinableGameException e){
             throw new NotJoinableGameException(e.getMessage());
         }
     }
 
-    public synchronized void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
+    /*public synchronized void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
         controller.addClient(playerRecord.playerName(), clientNotifier);
-        notifyAvailableGames();
+        //notifyAvailableGames();
         //aggiungere update Available
     }
     public synchronized void removeNotifierFromGame(PlayerRecord playerRecord){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
         controller.removeClient(playerRecord.playerName());
         notifyAvailableGames();
-    }
+    }*/
 
     /**
      * This method adds a new game to the list of active games
@@ -91,9 +92,9 @@ public class ServerController {
         activeGames.put(gameID, new GameRecord(newGame, gameController));
 
         PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
-        addPlayerToGame(newPlayer);
-        //gameController.addPlayer(firstPlayerName); TODO: capire se e' da fare anche questo
-        addNotifierToGame(newPlayer, notifier);
+        addClientToGame(newPlayer, notifier);
+
+        //addNotifierToGame(newPlayer, notifier);
 
         notifier.notifyGameCreated(gameID, playerNum);
         notifyAvailableGames();
@@ -103,25 +104,24 @@ public class ServerController {
 
     public void joinGame(ClientNotifier notifier, PlayerRecord newPlayer) {
         try {
-            addPlayerToGame(newPlayer);
-            addNotifierToGame(newPlayer, notifier);
-            //notifier.notifySuccessfullyJoinedGame(newPlayer.gameID(), playerNum, players);
+            addClientToGame(newPlayer, notifier);
+            //addNotifierToGame(newPlayer, notifier);
+            notifyAvailableGames();
         } catch (NotJoinableGameException e) {
             throw new NotJoinableGameException(e.getMessage());
         }
     }
 
     public void leaveGame(PlayerRecord leavingPlayer) {
-        if (activeGames.containsKey(leavingPlayer.gameID())) {
+        if (activeGames.containsKey(leavingPlayer.gameID())) {  //inutile? il get non fa nulla se la key non è contenuta
+            removeClientFromGame(leavingPlayer);
             if(activeGames.get(leavingPlayer.gameID()).game().getPlayers().size() == 1) {
-                removePlayerFromGame(leavingPlayer);
-                removeNotifierFromGame(leavingPlayer);
+                //removeNotifierFromGame(leavingPlayer);
                 activeGames.remove(leavingPlayer.gameID());
             }
-            else {
-                removePlayerFromGame(leavingPlayer);
-                removeNotifierFromGame(leavingPlayer);
-            }
+            /*else {
+                //removeNotifierFromGame(leavingPlayer);
+            }*/
             notifyAvailableGames();
         }
     }
@@ -169,11 +169,11 @@ public class ServerController {
         synchronized (currentController){
             try {
                 currentController.chooseTotemColor(playerRecord, totemColor);
-            }catch(UnavailableColorException e) {
+            } catch(UnavailableColorException e) {
                 throw new UnavailableColorException(totemColor);
-                }
             }
         }
+    }
 
     public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Networking.RMI;
 
-import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
 import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
@@ -18,7 +17,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -93,8 +91,8 @@ public class RMIServer implements VirtualRMIServer {
     @Override
     public void disconnect(VirtualRMIClient clientStub) {
         this.clients.remove(clientStub);
-        serverController.removePlayerFromGame(clientRecords.get(clientStub));
-        serverController.removeNotifierFromGame(clientRecords.get(clientStub));
+        serverController.removeClientFromGame(clientRecords.get(clientStub));
+        //serverController.removeNotifierFromGame(clientRecords.get(clientStub));
         System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
         //in realtà in questo caso forse il controller potrebbe capirlo internamente ma è più complicato
         serverController.updateRMIClients(this.clients);

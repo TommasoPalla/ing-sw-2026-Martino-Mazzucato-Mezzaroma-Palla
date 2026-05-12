@@ -32,7 +32,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.playerJoinedGame(playerName);
         } catch (RemoteException e){
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify new player");
         }
     }
 
@@ -41,7 +41,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.successfullyJoinedGame(gameID, playerNum, players);
         } catch (RemoteException e){
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify game created");
         }
     }
 
@@ -50,7 +50,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.playerLeftGame(playerName);
         } catch (RemoteException e){
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify player left");
         }
     }
 
@@ -68,7 +68,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.chosenTotem(playerName, totemColor);
         } catch (RemoteException e) {
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify totem color");
         }
     }
 

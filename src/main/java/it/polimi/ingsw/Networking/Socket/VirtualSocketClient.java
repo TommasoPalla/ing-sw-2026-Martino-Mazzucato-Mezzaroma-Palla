@@ -7,7 +7,6 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -17,7 +16,8 @@ public interface VirtualSocketClient {
 
     void updateGameCreated(int gameID, int numPlayers);
     void updateGameStarted(int gameID, int numPlayers) throws  IOException;
-    void updatePlayerConnected(String playerName);
+    void updatePlayerConnected(String playerName) throws IOException;
+    void successfullyJoinedGame(int gameID, int playerNum, ArrayList<String> playerNames) throws IOException;
     void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws IOException;
     void updateChosenTotemColor(String playerName, Color totemColor) throws  IOException;
     void updateDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws  IOException;

@@ -14,6 +14,7 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.EventManagement.EventManager;
 
 public class Game {
+    private boolean readyToStart;   //set to true when all players joined
     private boolean isStarted;
     private final int gameID;
     private final int numPlayers;
@@ -31,6 +32,7 @@ public class Game {
 
 
     public Game(int gameID, int numPlayers) {
+        readyToStart = false;
         isStarted = false;
         this.gameID = gameID;
         this.numPlayers = numPlayers;
@@ -40,6 +42,12 @@ public class Game {
     }
 
     //getters
+    public boolean isReadyToStart(){
+        return readyToStart;
+    }
+    public boolean isStarted(){
+        return isStarted;
+    }
     public int getGameID(){
         return gameID;
     }
@@ -109,22 +117,29 @@ public class Game {
         throw new GameNotStartedException();
     }
 
-    //not sure about the logic here but also can't see anything horribly wrong
-    //maybe the control logic should con in GameController and here the values
-    //are only set to what they should be and nothing more
-    public void chooseTotemColor(String playerName, Color totemColor){
-        totemColors.put(playerName, totemColor);
-    }
-
     //mainly used for tests
     public void setEra(int era){
         this.era = era;
     }
+
+    public void setReadyToStart(){
+        readyToStart = true;
+    }
+
+    public void setCurrentPhase(GamePhase phase){
+        currentPhase = phase;
+    }
+
+    //Next methods are used for update game data, according to player's actions
+    public void chooseTotemColor(String playerName, Color totemColor){
+        Player player = getPlayerByName(playerName);
+        player.setTotemColor(totemColor);
+        totemColors.put(playerName, totemColor);
+    }
+
     public void addPlayer(String playerName) {
         Player newPlayer = new Player(this, playerName);
         players.add(newPlayer);
-        //if(players.size() == numPlayers) currentPhase = READY_TO_START; Se il numero di giocatori necessario
-        // è stato raggiunto, cambia la fase da IN_LOBBY a READY_TO_START
     }
 
     public void removePlayer(String playerName) {
@@ -133,48 +148,27 @@ public class Game {
 
     //used for testing
     public void startGameUnshuffled(){
-        if(isStarted){
-            throw new IllegalCallerException("Game already started.");
-        }
         isStarted = true;
-
         this.era = 1;
         this.currentRound = 1;
         this.currentPhase = GamePhase.START_GAME;
-
         this.deck = new Deck(this, jsonCardsPath);
         this.buildingManager = new BuildingManager(players);
-
         this.offerTrack = new OfferTrack(this, numPlayers);
-        this.offerTrack.initializeBottomRow();
-        this.offerTrack.repopulateTopRow();
-        this.offerTrack.repopulateTopBuildingCards();
-
         this.currentPlayer = offerTrack.getTurnTile().initTurnOrderUnshuffled(players).getFirst();
-
         giveInitialFood(numPlayers);
     }
 
     public void startGame(){
-        if(isStarted){
-            throw new IllegalCallerException("Game already started.");
-        }
         isStarted = true;
         this.era = 1;
         this.currentRound = 1;
         this.currentPhase = GamePhase.START_GAME;
-
         this.deck = new Deck(this, jsonCardsPath);
         this.buildingManager = new BuildingManager(players);
-
         this.offerTrack = new OfferTrack(this, numPlayers);
-        this.offerTrack.initializeBottomRow();
-        this.offerTrack.repopulateTopRow();
-        this.offerTrack.repopulateTopBuildingCards();
-
-        this.currentPlayer = offerTrack.getTurnTile().initTurnOrder(players).getFirst();
-
         giveInitialFood(numPlayers);
+        this.currentPlayer = offerTrack.getTurnTile().initTurnOrder(players).getFirst();
     }
 
 
