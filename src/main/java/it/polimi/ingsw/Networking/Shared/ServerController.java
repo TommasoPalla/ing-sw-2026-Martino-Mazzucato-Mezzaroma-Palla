@@ -32,8 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerController {
     //questa classe deve inoltre essere in grado di notificare TUTTI i client,
     //indipendentemente dal protocollo, dei cambiamenti avvuti
-    private List<VirtualRMIClient> RMIClients;
-    private List<SocketClientHandler> SocketClients;
+    private ArrayList<VirtualRMIClient> RMIClients = new ArrayList<>();
+    private ArrayList<SocketClientHandler> SocketClients = new ArrayList<>();
     //si potrebbe ottimizzare tenendo lista di clients non in partita (non giocatori) ma eviterebbe solo qualche aggiornamento inutile
     public record GameRecord(Game game, GameController gameController) {}
     private final Map<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
@@ -115,9 +115,19 @@ public class ServerController {
         }
     }
 
-    public void leaveGame(PlayerRecord leftingPlayer) {
-        removePlayerFromGame(leftingPlayer);
-        removeNotifierFromGame(leftingPlayer);
+    public void leaveGame(PlayerRecord leavingPlayer) {
+        if (activeGames.containsKey(leavingPlayer.gameID())) {
+            if(activeGames.get(leavingPlayer.gameID()).game().getPlayers().size() == 1) {
+                removePlayerFromGame(leavingPlayer);
+                removeNotifierFromGame(leavingPlayer);
+                activeGames.remove(leavingPlayer.gameID());
+            }
+            else {
+                removePlayerFromGame(leavingPlayer);
+                removeNotifierFromGame(leavingPlayer);
+            }
+            notifyAvailableGames();
+        }
     }
 
     public void startGame(String requestingPlayer, int gameID) {
@@ -140,7 +150,7 @@ public class ServerController {
                 int currentNumPlayers = activeGames.get(ID).gameController().getConnectedClients().size();
                 int numPlayersThreshold = activeGames.get(ID).gameController.getGameModel().getNumPlayer();
                 if(currentNumPlayers < numPlayersThreshold){
-                    GamePlayers playersInfo = new GamePlayers(currentNumPlayers,
+                    GamePlayers playersInfo = new GamePlayers(numPlayersThreshold,
                             activeGames.get(ID).gameController().getConnectedClients());
                     gamesData.put(ID, playersInfo);
                 }
@@ -191,11 +201,11 @@ public class ServerController {
             throw new OccupiedTileException();
         }
     }
-    public void updateRMIClients(List<VirtualRMIClient> clients){
+    public void updateRMIClients(ArrayList<VirtualRMIClient> clients){
         RMIClients = clients;
     }
 
-    public void updateSocketClients(List<SocketClientHandler> clients){
+    public void updateSocketClients(ArrayList<SocketClientHandler> clients){
         SocketClients = clients;
     }
 }

@@ -40,7 +40,8 @@ public class ClientApp {
                     String IPAddress = scanner.nextLine();
                     if(IPAddress.isEmpty()) break;
                     validSocketConnection = connectionValidator.checkIP(IPAddress);
-                    ServerConfigs.SOCKET_SERVER_IP_ADDR = IPAddress;
+                    if(validSocketConnection)
+                        ServerConfigs.SOCKET_SERVER_IP_ADDR = IPAddress;
                 } while(!validSocketConnection);
                 validSocketConnection = false;
                 do{
@@ -48,7 +49,8 @@ public class ClientApp {
                     String port = scanner.nextLine();
                     if(port.isEmpty()) break;
                     validSocketConnection = connectionValidator.checkPort(port);
-                    ServerConfigs.SOCKET_SERVER_PORT = parseInt(port);
+                    if(validSocketConnection)
+                        ServerConfigs.SOCKET_SERVER_PORT = parseInt(port);
                 }while(!validSocketConnection);
                 connection = new SocketServerAdapter(ServerConfigs.SOCKET_SERVER_IP_ADDR, ServerConfigs.SOCKET_SERVER_PORT, clientController);
             }
@@ -59,7 +61,8 @@ public class ClientApp {
                     String IPAddress = scanner.nextLine();
                     if(IPAddress.isEmpty()) break;
                     validRMIConnection = connectionValidator.checkIP(IPAddress);
-                    ServerConfigs.RMI_IP_ADDR = IPAddress;
+                    if(validRMIConnection)
+                        ServerConfigs.RMI_IP_ADDR = IPAddress;
                 } while(!validRMIConnection);
                 validRMIConnection = false;
                 do{
@@ -67,7 +70,8 @@ public class ClientApp {
                     String port = scanner.nextLine();
                     if(port.isEmpty()) break;
                     validRMIConnection = connectionValidator.checkPort(port);
-                    ServerConfigs.RMI_SERVER_PORT = parseInt(port);
+                    if(validRMIConnection)
+                        ServerConfigs.RMI_SERVER_PORT = parseInt(port);
                 } while (!validRMIConnection);
                 System.out.println("Enter the RMI server name (Default is " + ServerConfigs.DEFAULT_RMI_SERVER_NAME + "):");
                 String RMIServerName = scanner.nextLine();

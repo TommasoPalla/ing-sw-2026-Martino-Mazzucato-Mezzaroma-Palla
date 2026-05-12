@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RMIServer implements VirtualRMIServer {
     final ServerController serverController;
-    final List<VirtualRMIClient> clients = new ArrayList<>();   //lista dei client connessi al server in generale
+    final ArrayList<VirtualRMIClient> clients = new ArrayList<>();   //lista dei client connessi al server in generale
 
     //Mappa che associa ad ogni client il proprio player record (nome e gameID) DOPO che ha joinato un game
     private Map<VirtualRMIClient, PlayerRecord> clientRecords = new ConcurrentHashMap<>();
@@ -47,8 +47,8 @@ public class RMIServer implements VirtualRMIServer {
     public void connect(VirtualRMIClient clientStub) {
         this.clients.add(clientStub);
         System.out.println(clientStub + "added to RMI server");
-        notifyClientsToController();
-
+        serverController.updateRMIClients(this.clients);
+        serverController.notifyAvailableGames();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class RMIServer implements VirtualRMIServer {
         serverController.removeNotifierFromGame(clientRecords.get(clientStub));
         System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
         //in realtà in questo caso forse il controller potrebbe capirlo internamente ma è più complicato
-        notifyClientsToController();
+        serverController.updateRMIClients(this.clients);
     }
 
     @Override
@@ -135,7 +135,4 @@ public class RMIServer implements VirtualRMIServer {
         return clients;
     }
 
-    public void notifyClientsToController() {
-        serverController.updateRMIClients(clients);
-    }
 }

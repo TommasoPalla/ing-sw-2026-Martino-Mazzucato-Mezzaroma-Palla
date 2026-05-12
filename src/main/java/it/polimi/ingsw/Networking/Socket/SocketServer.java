@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SocketServer implements VirtualSocketServer{
-    private final List<SocketClientHandler> clients = new ArrayList<>();
+    private final ArrayList<SocketClientHandler> clients = new ArrayList<>();
     private final ServerController serverController;
 
     public SocketServer(ServerController serverController){this.serverController = serverController;}
@@ -40,6 +40,8 @@ public class SocketServer implements VirtualSocketServer{
     public void connect(SocketClientHandler handler) {
         this.clients.add(handler);
         System.out.println("New TCP client connected");
+        serverController.updateSocketClients(this.clients);
+        serverController.notifyAvailableGames();
     }
 
     @Override

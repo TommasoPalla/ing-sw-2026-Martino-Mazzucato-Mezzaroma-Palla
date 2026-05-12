@@ -114,7 +114,7 @@ public class TUIView implements ViewInterface, Listener {
             }
         }
         else{
-            System.out.println("Invalid command, please try again...");
+            System.out.println("ERROR: Invalid command, please try again or enter \"help()\" to know the available commands.");
         }
     }
 
