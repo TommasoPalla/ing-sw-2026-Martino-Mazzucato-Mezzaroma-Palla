@@ -34,7 +34,7 @@ public class ClientController implements ClientViewUpdate {
     private Map<Integer, GamePlayers> availableGames;
 
     public ClientController() {
-        clientState = ClientState.SETUP;
+        clientState = ClientState.CONNECTING;
         availableGames = new HashMap<>();
     }
     public String getPlayerName(){  //servirà da qualche parte
@@ -74,7 +74,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void setPlayerName(String playerName) {
-        if (clientState != ClientState.SETUP) {
+        if (clientState != ClientState.SETUP &&  clientState != ClientState.CONNECTING) {
             throw new IllegalClientStateActionException("ERROR: You can no longer change your name!");
         }
         this.playerName = playerName;
@@ -87,42 +87,6 @@ public class ClientController implements ClientViewUpdate {
     }
 
     //TODO: siamo sicuri che vada fatto cosi?
-
-    /**
-     * When a new player enters the lobby, the client controller updates his local model's list of players.
-     * @param player the player who entered the lobby.
-     */
-    @Override
-    public void updatePlayerConnected(String player) {
-        if(!localModel.checkNameAvailable(player)){
-            localModel.addPlayer(player);
-        }
-        else {
-            //da gestire TUI o GUI
-            System.out.println("Name already taken");
-        }
-    }
-
-    @Override
-    public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) {
-        createLocalModel(gameID, numPlayers);
-        for (String player : players) {
-            localModel.addPlayer(player);
-        }
-    }
-
-    @Override
-    public void updatePlayerLeftGame(String player) {
-        if(this.playerName.equals(player)){
-            localModel = null;
-            System.out.println("You have left the lobby"); // temporaneo nel mentre che non funzionano le notify
-        }
-        else {
-            localModel.removePlayer(player);
-            System.out.println("Player " + player + " left the lobby"); // temporaneo nel mentre che non funzionano le notify
-        }
-        //notifyPlayerLeft(player) per notificare gli altri player nella lobby
-    }
 
     //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-----------------------------
     /**
@@ -162,7 +126,7 @@ public class ClientController implements ClientViewUpdate {
      */
     public void leaveGame(){
         if(clientState == ClientState.SETUP){
-            throw new IllegalClientStateActionException("ERROR: You can't leave a game if you're not in one!");
+            throw new IllegalClientStateActionException("ERROR: You can't leave a game if yo're not in one!");
         }
         if(clientState != ClientState.IN_LOBBY){
             throw new IllegalClientStateActionException("ERROR: You can't leave the game now!");
@@ -280,15 +244,56 @@ public class ClientController implements ClientViewUpdate {
      * if the player's draw is legal by checking the client light model
      */
     public void updateAvailableGames(Map<Integer, GamePlayers> availableGames){
-        this.availableGames = availableGames;
+      this.availableGames = availableGames;
+      if(clientState == ClientState.SETUP){
+            view.notifyNewAvailableGames();
+        }
+    }
+
+    @Override
+    public void updateNameModified(String newName) {
+        view.notifyNameModified(newName);
     }
 
     @Override
     public void updateGameCreated(int gameID, int numPlayers){
         createLocalModel(gameID, numPlayers);
         this.clientState = ClientState.IN_LOBBY;
+        view.notifyGameCreated(gameID);
         //TODO: !!!! capire cosa ci va qui, questo e' il metodo che viene chiamato dal server per dire
         // "oh fra guarda che ho creato il game che mi hai chiesto di creare" !!!!
+    }
+
+    /**
+     * When a new player enters the lobby, the client controller updates his local model's list of players.
+     * @param player the player who entered the lobby.
+     */
+    @Override
+    public void updatePlayerConnected(String player) {
+//        localModel.addPlayer(player);
+        view.notifyPlayerJoinedLobby(getLocalModel().getGameId(),  player); // sbagliato, serve mandargli in ingresso il game modificato
+    }
+
+    @Override
+    public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) {
+        createLocalModel(gameID, numPlayers);
+//        for (String player : players) {
+//            localModel.addPlayer(player);
+//        }
+        clientState = ClientState.IN_LOBBY;
+        view.notifySuccessfullyJoinedGame(gameID);
+    }
+
+    @Override
+    public void updatePlayerLeftGame(String player) {
+        //TODO da aggiungere controllo del gameID
+        view.notifyPlayerLeftLobby(player, getLocalModel().getGameId());
+        if(this.playerName.equals(player)){
+            localModel = null;
+        }
+        else {
+            localModel.removePlayer(player);
+        }
     }
 
     @Override

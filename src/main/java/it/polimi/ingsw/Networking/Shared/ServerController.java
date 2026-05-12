@@ -42,7 +42,6 @@ public class ServerController {
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController;
             gameController.removePlayer(playerName);
-            notifyAvailableGames();
         } catch (IllegalArgumentException e){
             System.out.println("ERROR: could not remove player from game\n" + e.getMessage());
         }
@@ -58,8 +57,7 @@ public class ServerController {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController();
-            gameController.addClient(playerName, notifier);
-            //notifyAvailableGames();
+            gameController.addPlayer(playerName, notifier);
         }
         catch (NotJoinableGameException e){
             throw new NotJoinableGameException(e.getMessage());
@@ -93,7 +91,6 @@ public class ServerController {
 
         PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
         addClientToGame(newPlayer, notifier);
-
         //addNotifierToGame(newPlayer, notifier);
 
         notifier.notifyGameCreated(gameID, playerNum);
@@ -113,9 +110,9 @@ public class ServerController {
     }
 
     public void leaveGame(PlayerRecord leavingPlayer) {
-        if (activeGames.containsKey(leavingPlayer.gameID())) {  //inutile? il get non fa nulla se la key non è contenuta
+        if (activeGames.containsKey(leavingPlayer.gameID())) {//inutile? il get non fa nulla se la key non è contenuta
             removeClientFromGame(leavingPlayer);
-            if(activeGames.get(leavingPlayer.gameID()).game().getPlayers().size() == 1) {
+            if(activeGames.get(leavingPlayer.gameID()).game().getPlayers().isEmpty()) {
                 //removeNotifierFromGame(leavingPlayer);
                 activeGames.remove(leavingPlayer.gameID());
             }

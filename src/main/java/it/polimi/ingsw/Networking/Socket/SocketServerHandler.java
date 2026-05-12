@@ -62,6 +62,13 @@ public class SocketServerHandler implements Runnable{
                client.successfullyJoinedGame(gameID, playerNum, playerNames);
            } catch (IOException e){}
         });
+        commandHandlers.put(SocketHeaderNames.LEFT_GAME, parameters -> {
+            int gameID = ((Double) parameters[0]).intValue();
+            String playerName = (String) parameters[1];
+            try{
+                client.updatePlayerLeftGame(gameID, playerName);
+            } catch (IOException e){}
+        });
         commandHandlers.put(SocketHeaderNames.GET_AVAILABLE_GAMES, parameters -> {
             Type type = new TypeToken<Map<Integer, GamePlayers>>(){}.getType();
             Map<Integer, GamePlayers> availableGames = gson.fromJson(gson.toJson(parameters[0]), type) ;

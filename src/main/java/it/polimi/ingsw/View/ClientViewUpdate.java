@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public interface ClientViewUpdate {
     void updateCurrentRound(int round);
-
+    void updateNameModified(String newName);
     void updateGameCreated(int gameID, int numPlayers);
     //void updateGameStarted();
     void updatePlayerConnected(String playerName);

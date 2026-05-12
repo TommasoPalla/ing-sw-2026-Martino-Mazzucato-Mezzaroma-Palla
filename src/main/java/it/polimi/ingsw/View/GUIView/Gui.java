@@ -81,6 +81,36 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyNewAvailableGames() {
+
+    }
+
+    @Override
+    public void notifyNameModified(String newName) {
+
+    }
+
+    @Override
+    public void notifyGameCreated(int gameID) {
+
+    }
+
+    @Override
+    public void notifyPlayerJoinedLobby(int gameID, String playerName) {
+
+    }
+
+    @Override
+    public void notifyPlayerLeftLobby(String playerName, int gameID) {
+
+    }
+
+    @Override
+    public void notifySuccessfullyJoinedGame(int gameID) {
+
+    }
+
+    @Override
     public void showCreationChoiceScene() throws IOException {
 
         Platform.runLater(() -> {//serve a thread, carica la scena appena possibile, lambda e esempio di uso gui con thread

@@ -9,9 +9,5 @@ public interface Listener {
     void notifyGameEvent();
     void notifyTotemPlaced(String player, OfferTile offerTile);
     void notifyCardDrawn(String player, Card card, boolean topRow);
-    void notifyGameCreated(int gameID);
-    void notifyGameJoined(int gameID);
-    void notifyPlayerJoined(int gameID, String playerName);
-    void notifyPlayerLeft(int gameID, String playerName);
     void notifyGameStarted();
 }

@@ -50,7 +50,7 @@ public class GameController {
      * If player is the first one, the method sets it as the host,
      * if player is the last one, the method updates current game phase.
      */
-    public void addPlayer(String playerName) {
+    public void addPlayer(String playerName, ClientNotifier newNotifier) {
         if(gameInstance.getPlayersNames().contains(playerName)) {
             throw new NotJoinableGameException("ERROR: You can't join this game, because this name is already used by a player in the game.");
         }
@@ -72,6 +72,7 @@ public class GameController {
                 handleCriticalDisconnection();
             }
         }
+        addClient(playerName, newNotifier);
     }
 
     /**
@@ -82,7 +83,6 @@ public class GameController {
     public void removePlayer(String playerName) {
         if(gameInstance.getPlayersNames().contains(playerName)) {
             gameInstance.removePlayer(playerName);
-            removeClient(playerName);
             for(ClientNotifier notifier : connectedClients.values()){
                 try {
                     notifier.notifyPlayerLeftGame(playerName);
@@ -90,6 +90,7 @@ public class GameController {
                     handleCriticalDisconnection();
                 }
             }
+            removeClient(playerName);
         }
     }
 
