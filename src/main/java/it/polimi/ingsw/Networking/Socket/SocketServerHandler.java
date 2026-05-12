@@ -55,7 +55,8 @@ public class SocketServerHandler implements Runnable{
             } catch (Exception e){}
         });
         commandHandlers.put(SocketHeaderNames.GET_AVAILABLE_GAMES, parameters -> {
-            Map<Integer, GamePlayers> availableGames = (Map<Integer, GamePlayers>) parameters[0];
+            Type type = new TypeToken<Map<Integer, GamePlayers>>(){}.getType();
+            Map<Integer, GamePlayers> availableGames = gson.fromJson(gson.toJson(parameters[0]), type) ;
             try {
                 client.updateAvailableGames(availableGames);
             } catch(IOException e){}

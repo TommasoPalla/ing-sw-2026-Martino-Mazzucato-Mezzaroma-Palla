@@ -121,12 +121,12 @@ class DeckTest {
 
     @Test
     public void drawCardTest(){
-        /*Game game = new Game(2, 3);
+        Game game = new Game(2, 3);
         game.addPlayer("mickey");
         game.addPlayer("duffy");
         game.addPlayer("goofy");
         game.startGame();
-        Deck deck = game.getDeck();*/
+        Deck deck = game.getDeck();
         initDeck(4);
         /*Card card =*/ deck.drawCard();
         /*while(card.getEra() != 3){
