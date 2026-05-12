@@ -52,18 +52,12 @@ public class Game {
     }
     public ArrayList<String> getPlayersNames(){
         ArrayList<String> names = new ArrayList<>();
-        if(players.isEmpty()){
-            throw new GameNotStartedException("no players added.");
-        }
         for (Player p: players){
             names.add(p.getName());
         }
         return names;
     }
     public ArrayList<Player> getPlayers(){
-        if(players.isEmpty()){
-            throw new GameNotStartedException("no players added.");
-        }
         return players;
     }
     public Player getPlayerByName(String playerName){
