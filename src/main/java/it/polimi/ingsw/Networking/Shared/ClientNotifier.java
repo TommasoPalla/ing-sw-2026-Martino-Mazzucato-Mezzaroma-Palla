@@ -22,7 +22,7 @@ public interface ClientNotifier {
     void notifyTotemColor(String playerName, Color totemColor);
     void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index);
     void notifyChosenTile(String playerName, int index);
-
+    //notifyGameReady() carino, ma non necessario
     void notifyFoodToAdd(String playerName, int food);
     void notifyShamansStarsToAdd(String playerName, int food);
     void notifyPrestigePointsToAdd(String playerName, int food);
