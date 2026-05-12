@@ -47,6 +47,8 @@ public class SocketServer implements VirtualSocketServer{
     @Override
     public void disconnect(SocketClientHandler handler) {
         this.clients.remove(handler);
+        serverController.updateSocketClients(this.clients);
+        serverController.notifyAvailableGames();
         System.out.println("TCP client removed");   //magari usare un handler.toString() per includerlo nel log
     }
 
@@ -77,16 +79,14 @@ public class SocketServer implements VirtualSocketServer{
     @Override
     public void joinGame(SocketClientHandler handler){
         PlayerRecord record = handler.getPlayerRecord();
-        serverController.addPlayerToGame(record);
-        serverController.addNotifierToGame(record, handler);
+        this.clients.add(handler);
+        //serverController.addPlayerToGame(record);
+        //serverController.addNotifierToGame(record, handler);
+        serverController.joinGame(handler, record);
     }
 
-    public List<SocketClientHandler> getClients(){
+    public ArrayList<SocketClientHandler> getClients(){
         return clients;
-    }
-
-    public void notifyClientsToController() {
-        serverController.updateSocketClients(clients);
     }
 
     /*che cazzo è sta roba Lorenzo? è già implementato sopra

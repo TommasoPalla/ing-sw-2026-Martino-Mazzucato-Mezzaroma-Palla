@@ -51,7 +51,7 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException {
+    public void updateAvailableGames(Map<Integer, GamePlayers> availableGames) {
         controller.updateAvailableGames(availableGames);
     }
 

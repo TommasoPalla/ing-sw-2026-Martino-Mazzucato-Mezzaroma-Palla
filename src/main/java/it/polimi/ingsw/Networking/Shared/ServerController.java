@@ -11,15 +11,11 @@ import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
 import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
-import it.polimi.ingsw.Networking.Socket.SocketClient;
 import it.polimi.ingsw.Networking.Socket.SocketClientHandler;
-import it.polimi.ingsw.Networking.Socket.VirtualSocketClient;
-import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,7 +29,7 @@ public class ServerController {
     //questa classe deve inoltre essere in grado di notificare TUTTI i client,
     //indipendentemente dal protocollo, dei cambiamenti avvuti
     private ArrayList<VirtualRMIClient> RMIClients = new ArrayList<>();
-    private ArrayList<SocketClientHandler> SocketClients = new ArrayList<>();
+    private ArrayList<SocketClientHandler> socketClients = new ArrayList<>();
     //si potrebbe ottimizzare tenendo lista di clients non in partita (non giocatori) ma eviterebbe solo qualche aggiornamento inutile
     public record GameRecord(Game game, GameController gameController) {}
     private final Map<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
@@ -156,12 +152,12 @@ public class ServerController {
                 }
             }
         }
-        for (VirtualRMIClient client: RMIClients){
+        for (VirtualRMIClient client : RMIClients){
             //temporaneo, il notifier non è ancora creato per i client non in partita? Mi sa di no
             RMIClientNotifier notifier = new RMIClientNotifier(client);
             notifier.notifyAvailableGames(gamesData);
         }
-        for(SocketClientHandler client: SocketClients){
+        for(SocketClientHandler client : socketClients){
             client.notifyAvailableGames(gamesData);
         }
     }
@@ -206,6 +202,6 @@ public class ServerController {
     }
 
     public void updateSocketClients(ArrayList<SocketClientHandler> clients){
-        SocketClients = clients;
+        socketClients = clients;
     }
 }

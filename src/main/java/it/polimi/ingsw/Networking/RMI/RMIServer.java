@@ -131,7 +131,7 @@ public class RMIServer implements VirtualRMIServer {
         }
     }
 
-    public List<VirtualRMIClient> getClients(){
+    public ArrayList<VirtualRMIClient> getClients(){
         return clients;
     }
 
