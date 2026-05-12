@@ -35,14 +35,14 @@ public class TUIView implements ViewInterface, Listener {
          */
         this.tuiState = TUIState.SETUP;
         // Starts the thread of this TUI, using 'run()' as Thread.run() method
-        Thread TUIThread = new Thread(this::runView);
-        TUIThread.start();
+        Thread commandListenThread = new Thread(this::runView);
+        commandListenThread.start();
     }
 
 
     @Override
     public void runView() {
-        System.out.println("Benvenuto su Mesos sesos pesos quevos");
+        System.out.println("Benvenuto su Mesos!");
         System.out.println("Scegli il tuo nome:");
         boolean nameVerified = false;
         do {
@@ -62,6 +62,12 @@ public class TUIView implements ViewInterface, Listener {
         while(!Thread.currentThread().isInterrupted()) {
             String command = commandScanner.nextLine();
             parseCommand(command);
+        }
+    }
+
+    private void runNotifiesListener() {
+        while(!Thread.currentThread().isInterrupted()) {
+
         }
     }
 
@@ -128,7 +134,10 @@ public class TUIView implements ViewInterface, Listener {
         String argsString = matcher.group(2);
 
         switch (commandType) {
-            case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
+            case CREATE_GAME            -> {
+                                                commandParser.parseCreateGame(argsString);
+                                                changeClientState(clientController.getClientState());
+                                            }
             case JOIN_GAME              -> printAvailableGames();
             case LEAVE_GAME             -> { clientController.leaveGame();
                                              System.out.println("You have left the game successfully.");
@@ -359,6 +368,19 @@ public class TUIView implements ViewInterface, Listener {
     }
 
     /**
+     * Prints to terminal the available colors the players can choose while in the lobby.
+     */
+    private void printAvailableColors() {
+        EnumSet<Color> availableColors = EnumSet.allOf(Color.class);
+        for(Color color : localModel.getTotemColors().values()) {
+            availableColors.remove(color);
+        }
+        for(Color color : availableColors) {
+            System.out.println("- " + color);
+        }
+    }
+
+    /**
      * Prints to terminal the list of available games a client can join after he sent the "join_game()" command
      * and takes in input the gameID of the game the client wants to join.
      */
@@ -434,13 +456,7 @@ public class TUIView implements ViewInterface, Listener {
                 System.out.println("- leave_game(): To end the game.");
                 System.out.println();
                 System.out.println("Available totem colors: ");
-                EnumSet<Color> availableColors = EnumSet.allOf(Color.class);
-//                for(Color color : localModel.getTotemColors().values()) {
-//                    availableColors.remove(color);
-//                }
-//                for(Color color : availableColors) {
-//                    System.out.println("- " + color);
-//                }
+                printAvailableColors();
                 break;
             case PLACE_TOTEM:
                 System.out.println("- place_totem(offer_track_index)");

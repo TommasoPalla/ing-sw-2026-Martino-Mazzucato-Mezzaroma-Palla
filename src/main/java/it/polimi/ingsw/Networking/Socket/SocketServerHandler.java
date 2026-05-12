@@ -159,7 +159,9 @@ public class SocketServerHandler implements Runnable{
 
                 Consumer<Object[]> handler = commandHandlers.get(socketHeader);
                 if(handler != null){
-                    handler.accept(socketDTO.getParameters());
+                    new Thread(() -> {
+                        handler.accept(socketDTO.getParameters());
+                    }).start();
                 } else {
                     System.out.println("ERROR: " + socketHeader + " is not a valid command"); //chiaramente un placeholder, va messo qualcosa di meglio
                 }
