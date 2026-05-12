@@ -8,7 +8,6 @@ import it.polimi.ingsw.Enums.SocketHeaderNames;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +52,15 @@ public class SocketServerHandler implements Runnable{
             try{
                 client.updatePlayerConnected(playerName);
             } catch (Exception e){}
+        });
+        commandHandlers.put(SocketHeaderNames.SUCCESSFULLY_JOINED, parameters -> {
+           int gameID = (int) parameters[0];
+           int playerNum = (int) parameters[1];
+           Type type = new TypeToken<ArrayList<String>>(){}.getType();
+           ArrayList<String> playerNames = gson.fromJson(gson.toJson(parameters[2]), type);
+           try {
+               client.successfullyJoinedGame(gameID, playerNum, playerNames);
+           } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.GET_AVAILABLE_GAMES, parameters -> {
             Type type = new TypeToken<Map<Integer, GamePlayers>>(){}.getType();

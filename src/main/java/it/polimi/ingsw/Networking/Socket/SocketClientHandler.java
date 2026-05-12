@@ -143,7 +143,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players) {
-
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.SUCCESSFULLY_JOINED, gameID, playerNum, players);
+        outStream.println(gson.toJson(message));
     }
 
     @Override

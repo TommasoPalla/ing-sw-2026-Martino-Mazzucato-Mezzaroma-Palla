@@ -58,7 +58,7 @@ public class ServerController {
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController();
             gameController.addPlayer(playerName);
-            notifyAvailableGames();
+            //notifyAvailableGames();
         }
         catch (NotJoinableGameException e){
             throw new NotJoinableGameException(e.getMessage());
@@ -68,7 +68,7 @@ public class ServerController {
     public synchronized void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
         GameController controller = activeGames.get(playerRecord.gameID()).gameController();
         controller.addClient(playerRecord.playerName(), clientNotifier);
-        notifyAvailableGames();
+        //notifyAvailableGames();
         //aggiungere update Available
     }
     public synchronized void removeNotifierFromGame(PlayerRecord playerRecord){
@@ -105,7 +105,7 @@ public class ServerController {
         try {
             addPlayerToGame(newPlayer);
             addNotifierToGame(newPlayer, notifier);
-            //notifier.notifySuccessfullyJoinedGame(newPlayer.gameID(), playerNum, players);
+            notifyAvailableGames();
         } catch (NotJoinableGameException e) {
             throw new NotJoinableGameException(e.getMessage());
         }
