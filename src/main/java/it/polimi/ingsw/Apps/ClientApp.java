@@ -7,8 +7,10 @@ import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Utils.ConnectionValidator;
 import it.polimi.ingsw.View.GUIView.Gui;
+import it.polimi.ingsw.View.GUIView.GuiStart;
 import it.polimi.ingsw.View.ViewInterface;
 import it.polimi.ingsw.View.TUIView;
+import javafx.application.Application;
 
 import java.util.Scanner;
 
@@ -97,13 +99,18 @@ public class ClientApp {
 
         ViewInterface view;      //interfaccia implementata da GUI e TUI
         switch(UIType.toUpperCase()){
-            case "TUI" -> view = new TUIView(clientController);
-            //case "GUI"-> view = new Gui();
+            case "TUI" -> {
+                view = new TUIView(clientController);
+                clientController.bindView(view);
+            }
+            case "GUI" ->  {
+                GuiStart.bindController(clientController);
+                Application.launch(GuiStart.class, args);
+            }
             default -> {
                 System.out.println("view not supported");
                 return;
-            }// GUI start
+            }
         }
-        clientController.bindView(view);
     }
 }

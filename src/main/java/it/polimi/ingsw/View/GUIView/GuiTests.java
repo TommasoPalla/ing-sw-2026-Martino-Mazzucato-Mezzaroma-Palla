@@ -12,7 +12,7 @@ public class GuiTests extends Application {
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/gui/ConnectionType.fxml"));
+                new FXMLLoader(getClass().getResource("/gui/IntroScene.fxml"));
 
         Parent root = loader.load();
 

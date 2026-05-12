@@ -4,28 +4,28 @@ import it.polimi.ingsw.View.GUIView.Gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class connectionTypeSceneController {
+public class chooseToCreateController {
 
     private Gui gui;
 
     @FXML
-    private Button RMIButton;
+    private Button Join;
 
     @FXML
-    private Button SocketButton;
+    private Button Create;
 
     public void setGUI(Gui gui) {
         this.gui = gui;
     }
 
     @FXML
-    private void handleSocket() {
-        gui.handleSocket();
+    private void handleJoin() {
+        gui.handleJoin();
         gui.showGameIdScene();
     }
     @FXML
-    private void handleRMI() {
-        gui.handleRMI();
-        gui.showGameIdScene();
+    private void handleCreate() {
+        gui.handleCreate();
+        gui.showNumberOfPlayers();
     }
 }
