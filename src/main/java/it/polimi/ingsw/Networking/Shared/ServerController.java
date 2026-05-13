@@ -40,7 +40,7 @@ public class ServerController {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController();
-            gameController.removePlayer(playerName);
+            gameController.removeClient(playerName);
         } catch (IllegalArgumentException e){
             System.out.println("ERROR: could not remove player from game\n" + e.getMessage());  //da cambiare con exception
         }
@@ -96,7 +96,7 @@ public class ServerController {
     public void leaveGame(PlayerRecord leavingPlayer) {
         if (activeGames.containsKey(leavingPlayer.gameID())) {
             removeClientFromGame(leavingPlayer);
-            if(activeGames.get(leavingPlayer.gameID()).game().getPlayers().isEmpty()) {
+            if(activeGames.get(leavingPlayer.gameID()).gameController().getConnectedClients().isEmpty()) {
                 activeGames.remove(leavingPlayer.gameID());
             }
             notifyAvailableGames();
@@ -144,7 +144,7 @@ public class ServerController {
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
             try {
-                currentController.chooseTotemColor(playerRecord, totemColor);
+                currentController.chooseTotemColor(playerRecord.playerName(), totemColor);
             } catch(UnavailableColorException e) {
                 throw new UnavailableColorException(totemColor);
             }

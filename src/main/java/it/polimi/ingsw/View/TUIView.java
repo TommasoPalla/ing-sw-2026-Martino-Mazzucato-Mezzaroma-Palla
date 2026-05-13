@@ -127,10 +127,7 @@ public class TUIView implements ViewInterface, Listener {
         switch (commandType) {
             case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
             case JOIN_GAME              -> joinAvailableGames();
-            case LEAVE_GAME             -> { clientController.leaveGame();
-                                             System.out.println("You have left the game successfully.");
-                                             changeClientState(ClientState.SETUP);
-                                           }
+            case LEAVE_GAME             -> clientController.leaveGame();
             case START_GAME             -> clientController.startGame(player);
             case MODIFY_NAME            -> commandParser.parseModifyName(argsString);
             case CHOOSE_TOTEM_COLOR     -> commandParser.parseChooseTotemColor(argsString);
@@ -300,17 +297,18 @@ public class TUIView implements ViewInterface, Listener {
 
     @Override
     public void notifyGameCreated(int gameID) {
+        tuiState = TUIState.IN_LOBBY;
         System.out.println("The game was successfully created with ID: " +  gameID + "!");
         System.out.println("You are the host of this game.");
         printAvailableActions(clientController.getClientState());
     }
 
     @Override
-    public void notifyPlayerJoinedLobby(int gameID, String playerName) {
-        if(tuiState == TUIState.IN_LOBBY && gameID == clientController.getLocalModel().getGameId()) {
+    public void notifyPlayerJoinedLobby(String playerName) {
+        if(tuiState == TUIState.IN_LOBBY) {
             System.out.println(playerName + " joined the lobby!");
         }
-        else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+        //else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
     }
 
     @Override
@@ -321,16 +319,30 @@ public class TUIView implements ViewInterface, Listener {
     }
 
     @Override
-    public void notifyPlayerLeftLobby(String playerName, int gameID) {
+    public void notifyPlayerLeftLobby(String playerName) {
         if (playerName.equals(player)) {
             tuiState = TUIState.SETUP;
             System.out.println("You have successfully left the lobby!");
+            printAvailableActions(clientController.getClientState());
             return;
         }
-        if(tuiState == TUIState.IN_LOBBY && gameID == clientController.getLocalModel().getGameId()) {
+        if(tuiState == TUIState.IN_LOBBY) {
             System.out.println("Player " + playerName + " left the lobby!");
         }
         else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+    }
+
+    @Override
+    public void notifyChosenTotemColor(String playerName, Color totemColor) {
+        if (this.player.equals(playerName)) {
+            System.out.println("You have successfully chosen totem color: " + totemColor + "!");
+        }
+        else if (tuiState == TUIState.IN_LOBBY) {
+            System.out.println(playerName + " has chosen the " + totemColor.toString().toLowerCase() + " totem!");
+            if (!clientController.getLocalModel().getTotemColors().containsKey(playerName)) {
+                printAvailableColors();
+            }
+        }
     }
 
     @Override
@@ -372,7 +384,8 @@ public class TUIView implements ViewInterface, Listener {
      * Prints to terminal the available colors the players can choose while in the lobby.
      */
     private void printAvailableColors() {
-        if(clientController.getLocalModel() == null) System.out.println("palle sudatew");
+        System.out.println();
+        System.out.println("Available colors:");
         EnumSet<Color> availableColors = EnumSet.allOf(Color.class);
         for(Color color : clientController.getLocalModel().getTotemColors().values()) {
             availableColors.remove(color);
@@ -410,6 +423,7 @@ public class TUIView implements ViewInterface, Listener {
         Map<Integer, GamePlayers> availableGames = printAvailableGames();
         if(availableGames == null) {
             System.out.println("There are no available games. You'll be sent back to the setup state");
+            tuiState = TUIState.IN_LOBBY;
             printAvailableActions(ClientState.SETUP);
             return;
         }
@@ -463,8 +477,6 @@ public class TUIView implements ViewInterface, Listener {
                 System.out.println("- choose_totem_color(color): To choose an available totem color from the list.");
                 System.out.println("- start_game(): To start the game. It only works if you're the host.");
                 System.out.println("- leave_game(): To end the game.");
-                System.out.println();
-                System.out.println("Available totem colors: ");
                 printAvailableColors();
                 break;
             case PLACE_TOTEM:

@@ -171,7 +171,7 @@ public class ClientModel {
     public ArrayList<BuildingCard> getBottomBuildings(){return bottomBuildings;};
     public Color getColors(String playerName){return totemColors.get(playerName);}
     public boolean isColorAvailable(Color color){
-        return totemColors.containsValue(color);
+        return !totemColors.containsValue(color);
     }
     public Map<String,Color> getTotemColors(){return totemColors;}
     public ArrayList<OfferTile> getOfferTiles(){return offerTiles;}

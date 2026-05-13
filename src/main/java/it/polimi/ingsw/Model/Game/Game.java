@@ -133,8 +133,8 @@ public class Game {
 
     //Next methods are used for update game data, according to player's actions
     public void chooseTotemColor(String playerName, Color totemColor){
-        Player player = getPlayerByName(playerName);
-        player.setTotemColor(totemColor);
+//        Player player = getPlayerByName(playerName);
+//        player.setTotemColor(totemColor);
         totemColors.put(playerName, totemColor);
     }
 

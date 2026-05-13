@@ -48,13 +48,13 @@ public class GameController {
      */
     private void addPlayer(String playerName) {
         gameInstance.addPlayer(playerName);
-        for(ClientNotifier notifier : connectedClients.values()){
-            try {
-                notifier.notifyNewPlayerConnected(playerName);
-            } catch (StubException e){
-                handleCriticalDisconnection();
-            }
-        }
+//        for(ClientNotifier notifier : connectedClients.values()){
+//            try {
+//                notifier.notifyNewPlayerConnected(playerName);
+//            } catch (StubException e){
+//                handleCriticalDisconnection();
+//            }
+//        }
     }
 
     /**
@@ -65,14 +65,13 @@ public class GameController {
     public void removePlayer(String playerName) {
         if(gameInstance.getPlayersNames().contains(playerName)) {
             gameInstance.removePlayer(playerName);
-            for(ClientNotifier notifier : connectedClients.values()){
-                try {
-                    notifier.notifyPlayerLeftGame(playerName);
-                } catch(StubException e){
-                    handleCriticalDisconnection();
-                }
-            }
-            removeClient(playerName);
+//            for(ClientNotifier notifier : connectedClients.values()){
+//                try {
+//                    notifier.notifyPlayerLeftGame(playerName);
+//                } catch(StubException e){
+//                    handleCriticalDisconnection();
+//                }
+//            }
         }
     }
 
@@ -82,9 +81,9 @@ public class GameController {
      * Moreover, connectedClients identifies players waiting in the lobby
      * for hostClient to start the game.
      * @param playerName a valid name, not already used by a player in this lobby
-     * @param notifier relative to this specific playerName, to update them
+     * @param newNotifier relative to this specific playerName, to update them
      */
-    public void addClient(String playerName, ClientNotifier notifier) {
+    public void addClient(String playerName, ClientNotifier newNotifier) {
         if(connectedClients.containsKey(playerName)) {
             throw new NotJoinableGameException("ERROR: You can't join this game, because this name is already used by a player in the game.");
         }
@@ -93,37 +92,59 @@ public class GameController {
         } else if (connectedClients.isEmpty()){
             hostClient = playerName;
         }
-        connectedClients.put(playerName, notifier);
+        // notifica gli altri giocatori nella lobby
+        for(ClientNotifier notifier : connectedClients.values()){
+            try {
+                notifier.notifyNewPlayerConnected(playerName);
+            } catch (StubException e){
+                handleCriticalDisconnection();
+            }
+        }
+        connectedClients.put(playerName, newNotifier);
         if (connectedClients.size() == gameInstance.getNumPlayer()){
             gameInstance.setReadyToStart();
         }
-        try {
-            notifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(),  gameInstance.getPlayersNames());
+        // se è il primo player, vuol dire che ha creato il game, quindi non entra qui
+        if (connectedClients.size() > 1) {
+            ArrayList<String> clients = new ArrayList<>(connectedClients.keySet());
+            try {
+                newNotifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(), clients);
             /*if(gameInstance.isReadyToStart()){
                     notifier.notifyGameReady();         da definire
                 }*/
-        } catch(StubException e){
-            handleCriticalDisconnection();
+            } catch(StubException e){
+                handleCriticalDisconnection();
+            }
         }
+
     }
 
     //forse è usato solo insieme a removePlayer, in quel caso fare merge: valutare alla fine
     public void removeClient(String playerName) {
-        connectedClients.remove(playerName);
+        if(connectedClients.containsKey(playerName)) {
+            for(ClientNotifier notifier : connectedClients.values()){
+                try {
+                    notifier.notifyPlayerLeftGame(playerName);
+                } catch(StubException e){
+                    handleCriticalDisconnection();
+                }
+            }
+            connectedClients.remove(playerName);
+        }
     }
 
     /** chooseTotemColor method is called by View, following player's input.
      * It verifies chosen color is available and then calls respective method
      * in Game class, that updates model. Finally, all clients are notified.     *
      */
-    public synchronized void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
+    public synchronized void chooseTotemColor(String player, Color totemColor){
         if(!gameInstance.getAvailableColors().contains(totemColor)){
             throw new UnavailableColorException(totemColor);
         }
-        gameInstance.chooseTotemColor(playerRecord.playerName(), totemColor);
+        gameInstance.chooseTotemColor(player, totemColor);
         for(ClientNotifier notifier : connectedClients.values()) {
             try {
-                notifier.notifyTotemColor(playerRecord.playerName(), totemColor);
+                notifier.notifyTotemColor(player, totemColor);
             } catch (StubException e){
                 handleCriticalDisconnection();
             }

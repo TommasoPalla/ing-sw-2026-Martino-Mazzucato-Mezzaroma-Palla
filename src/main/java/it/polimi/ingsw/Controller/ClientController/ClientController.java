@@ -154,12 +154,15 @@ public class ClientController implements ClientViewUpdate {
     /*methods used for client's requests,
     ClientController checks if localModel allows them and then send to server,
     identified by connection field (RMI/socket)*/
-    public void chooseTotem(Color color){
+    public void chooseTotemColor(Color color){
         if (clientState != ClientState.IN_LOBBY) {
             throw new IllegalClientStateActionException("ERROR: You cannot choose a totem right now.");
         }
+        if (localModel.getTotemColors().containsKey(playerName)) {
+            throw new AlreadyChosenTotemException();
+        }
         try {
-            if (localModel.isColorAvailable(color)) throw new IllegalArgumentException();
+            //if (!localModel.isColorAvailable(color)) throw new IllegalArgumentException(); CONTROLLO VA FATTO DAL SERVER
             connection.chooseTotem(color);
         }catch (UnavailableColorException e){
             throw new UnavailableColorException(color);
@@ -268,7 +271,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updatePlayerConnected(String player) {
 //        localModel.addPlayer(player);
-        view.notifyPlayerJoinedLobby(getLocalModel().getGameId(),  player); // sbagliato, serve mandargli in ingresso il game modificato
+        view.notifyPlayerJoinedLobby(player); // sbagliato, serve mandargli in ingresso il game modificato
     }
 
     @Override
@@ -284,12 +287,14 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updatePlayerLeftGame(String player) {
         //TODO da aggiungere controllo del gameID
-        view.notifyPlayerLeftLobby(player, getLocalModel().getGameId());
         if(this.playerName.equals(player)){
+            clientState = ClientState.SETUP;
+            view.notifyPlayerLeftLobby(player);
             localModel = null;
         }
         else {
             localModel.removePlayer(player);
+            view.notifyPlayerLeftLobby(player);
         }
     }
 
@@ -314,9 +319,15 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
+    /**
+     * The client controller updates the local model adding the choise of the totem color by the player.
+     * @param playerName the player who chose the totem color
+     * @param totemColor the totem color chosen.
+     */
     @Override
     public void updateTotemColor(String playerName, Color totemColor) {
         localModel.chosenTotemColor(playerName, totemColor);
+        view.notifyChosenTotemColor(playerName, totemColor);
     }
 
     @Override

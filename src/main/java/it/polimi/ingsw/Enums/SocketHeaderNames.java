@@ -6,6 +6,7 @@ public enum SocketHeaderNames {
     START_GAME,
     GET_AVAILABLE_GAMES,
     JOIN_GAME,
+    LEAVE_GAME,
     CHOOSE_TOTEM_COLOR,
     DRAW_CARD,
     CHOOSE_OFFER_TILE,

@@ -73,7 +73,7 @@ public class RMIClient implements VirtualRMIClient {
     @Override
     public void chosenTotem(String playerName, Color totemColor){
         try{
-            controller.chooseTotem(totemColor);
+            controller.updateTotemColor(playerName, totemColor);
         }catch(UnavailableColorException e){
             throw new UnavailableColorException(totemColor);
         }
