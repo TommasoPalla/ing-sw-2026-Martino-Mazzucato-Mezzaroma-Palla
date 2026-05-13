@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Controller.ClientController;
 
-import it.polimi.ingsw.CustomException.IllegalDrawException;
-import it.polimi.ingsw.CustomException.InsufficientFoodException;
+import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.CustomException.UIException.*;
-import it.polimi.ingsw.CustomException.OccupiedTileException;
-import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;

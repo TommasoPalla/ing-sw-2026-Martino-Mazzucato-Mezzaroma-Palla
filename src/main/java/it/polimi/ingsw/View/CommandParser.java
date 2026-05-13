@@ -1,8 +1,8 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
-import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
-import it.polimi.ingsw.CustomException.UIException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;

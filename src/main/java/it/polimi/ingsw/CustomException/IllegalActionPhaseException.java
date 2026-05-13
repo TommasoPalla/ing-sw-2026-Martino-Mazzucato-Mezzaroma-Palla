@@ -1,6 +1,6 @@
-package it.polimi.ingsw.CustomException.UIException;
+package it.polimi.ingsw.CustomException;
 
-//UI-side Exception
+//goes under InvalidSelection
 public class IllegalActionPhaseException extends RuntimeException {
     public IllegalActionPhaseException() {
         super("You can't do this action during this game phase.");

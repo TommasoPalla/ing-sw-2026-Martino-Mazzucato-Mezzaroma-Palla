@@ -87,7 +87,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.chosenTile(playerName, index);
         } catch (RemoteException e) {
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify chosen tile");
         }
     }
 

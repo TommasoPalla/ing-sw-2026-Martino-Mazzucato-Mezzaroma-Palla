@@ -109,13 +109,6 @@ public class Deck {
      * @return instance of Card
      */
     public Card drawCard() {
-        int era = game.getEra();
-        if(era != 3) {
-            assert tribeDeck.peek() != null;
-            if (tribeDeck.peek().getEra() != era) {
-                game.changeEra();
-            }
-        }
         return tribeDeck.pop();
     }
 }

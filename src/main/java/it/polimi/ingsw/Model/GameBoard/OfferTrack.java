@@ -56,10 +56,6 @@ public class OfferTrack{
         if(playerNumber >= 3) offerTiles.add(new OfferTile('D'));
         if(playerNumber >= 4) offerTiles.add(new OfferTile('G'));
         if(playerNumber == 5) offerTiles.add(new OfferTile('A'));
-
-        initializeBottomRow();
-        repopulateTopRow();
-        repopulateTopBuildingCards();
     }
 
 

@@ -6,6 +6,6 @@ public class InvalidSelectionException extends RuntimeException {
         super(message, cause);
     }
     public InvalidSelectionException(Throwable cause){
-        super("Invalid selection ", cause);
+        super("Invalid selection: ", cause);
     }
 }

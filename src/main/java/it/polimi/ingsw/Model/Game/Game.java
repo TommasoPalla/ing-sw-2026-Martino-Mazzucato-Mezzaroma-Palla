@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Deck.Deck;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.Users.*;
@@ -150,37 +151,38 @@ public class Game {
     public void startGameUnshuffled(){
         isStarted = true;
         this.era = 1;
-        this.currentRound = 1;
+        this.currentRound = 0;
         this.currentPhase = GamePhase.START_GAME;
         this.deck = new Deck(this, jsonCardsPath);
         this.buildingManager = new BuildingManager(players);
         this.offerTrack = new OfferTrack(this, numPlayers);
-        this.currentPlayer = offerTrack.getTurnTile().initTurnOrderUnshuffled(players).getFirst();
         giveInitialFood(numPlayers);
     }
 
     public void startGame(){
         isStarted = true;
         this.era = 1;
-        this.currentRound = 1;
+        this.currentRound = 0;
         this.currentPhase = GamePhase.START_GAME;
         this.deck = new Deck(this, jsonCardsPath);
         this.buildingManager = new BuildingManager(players);
         this.offerTrack = new OfferTrack(this, numPlayers);
         giveInitialFood(numPlayers);
-        this.currentPlayer = offerTrack.getTurnTile().initTurnOrder(players).getFirst();
     }
-
 
     /*
     public void finishGame(){
       if(currentRound == 10){
-
       }
     }
      */
 
     //actual functions
+    public String setFirstPlayer(){
+        currentPlayer = offerTrack.getTurnTile().getTurnOrder().getFirst();
+        return currentPlayer.getName();
+    }
+
     public Player setNextPlayer(){
         if(!isStarted){
             throw new GameNotStartedException();
@@ -194,13 +196,29 @@ public class Game {
         throw new LastPlayerOfTurnException();
     }
 
+    public void initOfferTrack() {
+        if(currentRound == 1){
+            offerTrack.initializeBottomRow();
+            offerTrack.repopulateTopRow();
+            offerTrack.repopulateTopBuildingCards();
+        } else if(currentRound <= 10){
+            offerTrack.moveCardsToBottom();
+            offerTrack.repopulateTopRow();
+        }
+        for(Card card: offerTrack.getTopRow()){
+            if(card.getEra() != era){
+                throw new ChangeEraException();
+            }
+        }
+    }
+
     /*
     * Called in "startTurn()" in GameController, return the next round, throws Last_Round_Exception if
     * the last round has been played
      */
-    public int getNextRound() {
+    public int setNextRound() {
         if(currentRound == 10) {
-            throw new LastRoundException("Fine del gioco raggiunta");
+            throw new LastRoundException("Fine del gioco raggiunta");//fare un ciclo da 10
         }
         return currentRound++;
     }
@@ -212,36 +230,24 @@ public class Game {
 
         if(numPlayers >= 3) turnOrder.get(2).getTribe().modifyFood(3);
         if(numPlayers >= 4) turnOrder.get(3).getTribe().modifyFood(4);
-        if(numPlayers >= 5) turnOrder.get(4).getTribe().modifyFood(5);
+        if(numPlayers >= 5) turnOrder.get(4).getTribe().modifyFood(4);
     }
 
-    public void updateCurrentPhase(){
-        switch(currentPhase){
-            case GamePhase.START_TURN:
-                currentPhase=GamePhase.ON_DRAW;
-                break;
-            case GamePhase.ON_DRAW:
-                currentPhase=GamePhase.ON_EVENT;
-                break;
-            case GamePhase.ON_EVENT:
-                currentPhase=GamePhase.END_TURN;
-                break;
-            case GamePhase.END_TURN:
-                currentPhase=GamePhase.START_TURN;
-                break;
-        }
-
-
-    }
-
-    public void changeEra() { //da mettere un'eccezione
+    public void changeEra() { //da mettere un'eccezione (inutile)
         era++;
         offerTrack.moveBuildings();
         offerTrack.repopulateTopBuildingCards();
     }
 
+    public void chooseOfferTile(Player player, int index){
+        player.chooseOfferTile(index, offerTrack);
+    }
+
 
     //direi che potrebbe essere il caso di fare una classe turnManager: ci sono un sacco di cose di cui tener conto
+    /**
+     * @deprecated
+     */
     public void playGame() throws IllegalDrawException {
 
         this.startGame();
@@ -263,7 +269,7 @@ public class Game {
                 player.getTribe().modifyFood(player.getCurrentOfferTile().getFoodBonus());
             }
 
-            this.updateCurrentPhase();//fase draw
+            this.setCurrentPhase(GamePhase.END_GAME);//fase draw
             //aggiornare turnorder qui
             //return turnTile
             offerTrack.getTurnTile().updateTurnOrder();
@@ -319,7 +325,7 @@ public class Game {
                 setNextPlayer();
             }
 
-            this.updateCurrentPhase();//fase eventi
+            this.setCurrentPhase(GamePhase.END_GAME);//fase eventi
             // If round is 10 then resolves both top and bottom rows' events.
             if(currentRound<10){
                 eventManager.resolve(offerTrack.getBottomEvents(), players, buildingManager);
@@ -331,7 +337,7 @@ public class Game {
             }
 
 
-            this.updateCurrentPhase();//fase finale
+            this.setCurrentPhase(GamePhase.END_GAME);//fase finale
 
             for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del round
                 buildingManager.useBuilding(currentPhase, currentPlayer);
@@ -340,7 +346,7 @@ public class Game {
 
 
             //fase inizializzata
-            this.updateCurrentPhase();
+            this.setCurrentPhase(GamePhase.END_GAME);
 
             //track inizializzata
             offerTrack.moveCardsToBottom();
