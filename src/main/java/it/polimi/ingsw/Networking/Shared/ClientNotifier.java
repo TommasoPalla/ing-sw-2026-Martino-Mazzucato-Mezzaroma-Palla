@@ -14,7 +14,7 @@ public interface ClientNotifier {
     //void showUpdate() throws IOException;
     //void reportError(String errorMessage) throws IOException;
 
-    void notifyGameCreated(int gamID, int playerNum);
+    void notifyGameCreated(int gamID, String playerName, int playerNum);
     void notifyGameStarted(List<String> shuffledFirstPlayingOrder);
     void notifyNewPlayerConnected(String playerName);
     void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players);

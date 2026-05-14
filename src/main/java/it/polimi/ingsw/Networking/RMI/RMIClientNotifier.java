@@ -19,7 +19,7 @@ public class RMIClientNotifier implements ClientNotifier {
     public RMIClientNotifier(VirtualRMIClient stub) {this.clientStub = stub;}
 
     @Override
-    public void notifyGameCreated(int gameID, int playerNum) {
+    public void notifyGameCreated(int gameID, String playerName, int playerNum) {
         try {
             clientStub.updateGameCreated(gameID, playerNum);
         } catch (RemoteException e){

@@ -145,7 +145,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     //CALLBACKS actions from clients
     @Override
-    public void notifyGameCreated(int gameID, int playerNum){
+    public void notifyGameCreated(int gameID, String playerName, int playerNum){
+        this.playerRecord = new PlayerRecord(gameID, playerName);
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_CREATED, gameID, playerNum);
         outStream.println(gson.toJson(message));
     }

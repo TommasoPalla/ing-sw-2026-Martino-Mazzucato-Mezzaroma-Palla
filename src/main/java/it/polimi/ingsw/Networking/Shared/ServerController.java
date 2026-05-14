@@ -85,7 +85,7 @@ public class ServerController {
 
         new Thread( () -> {
             try {
-                notifier.notifyGameCreated(gameID, playerNum);
+                notifier.notifyGameCreated(gameID, firstPlayerName, playerNum);
             } catch (Exception e){}
         }).start();
 
