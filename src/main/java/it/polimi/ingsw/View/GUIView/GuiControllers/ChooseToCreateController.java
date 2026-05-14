@@ -4,7 +4,7 @@ import it.polimi.ingsw.View.GUIView.Gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class chooseToCreateController {
+public class ChooseToCreateController {
 
     private Gui gui;
 
@@ -21,11 +21,9 @@ public class chooseToCreateController {
     @FXML
     private void handleJoin() {
         gui.handleJoin();
-        gui.showGameIdScene();
     }
     @FXML
     private void handleCreate() {
         gui.handleCreate();
-        gui.showNumberOfPlayers();
     }
 }

@@ -9,6 +9,9 @@ import javafx.scene.control.TextField;
 public class ChooseNumberOfPlayersController {
     private Gui gui;
 
+    public void setGUI(Gui gui) {
+        this.gui = gui;
+    }
     @FXML
     private Button ConfirmButton;
 
@@ -23,9 +26,13 @@ public class ChooseNumberOfPlayersController {
         try {
             String nickname = numberField.getText();
             int number = Integer.parseInt(nickname);
-            gui.handleNumber(number);
+            if(number <=5) {
+                gui.handleNumber(number);
+            }else{
+                errorLabel.setText("Insert a number <= 5 please!");
+            }
         }catch (NumberFormatException e){
-            errorLabel.setText("Insert a valid number");
+            errorLabel.setText("Insert a valid number please!");
         }
     }
 }

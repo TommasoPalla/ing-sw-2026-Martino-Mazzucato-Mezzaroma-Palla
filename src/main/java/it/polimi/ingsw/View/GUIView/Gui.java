@@ -4,9 +4,9 @@ import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseGameIdController;
-import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNickNameScene;
+import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNickNameController;
 import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController;
-import it.polimi.ingsw.View.GUIView.GuiControllers.chooseToCreateController;
+import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseToCreateController;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -55,21 +55,16 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/IntroScene.fxml"));
-
             Parent root = loader.load();
-
             Scene scene = new Scene(root);
-
             primaryStage.setScene(scene);
-
             primaryStage.show();
-
             PauseTransition delay = new PauseTransition(Duration.seconds(3));//splash iniziale dura 3 secondi
 
             delay.setOnFinished(event -> {
 
                 try {
-                    showCreationChoiceScene();//CREATION SCENE
+                    nicknameScene();
 
                 } catch (Exception e) {
                     System.out.println("Error: " + e);
@@ -129,7 +124,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
                 Parent root = loader.load();
 
-                chooseToCreateController controller = loader.getController();
+                ChooseToCreateController controller = loader.getController();
 
                 controller.setGUI(this);
 
@@ -167,15 +162,12 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseNickName.fxml"));
-
             Parent root = loader.load();
-
-            ChooseNickNameScene controller = loader.getController();
+            ChooseNickNameController controller = loader.getController();
+            controller.setGUI(this);
 
             Scene scene = new Scene(root);
-
             primaryStage.setScene(scene);
-
             primaryStage.show();
         }catch (Exception e){
             System.out.println("Error: " + e);
@@ -188,12 +180,12 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void showNumberOfPlayers() {
+    public void playGameScene() {
 
     }
 
     @Override
-    public void playGameScene() {
+    public void lobbyScene() {
 
     }
 
@@ -202,15 +194,12 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseNumberOfPlayers.fxml"));
-
             Parent root = loader.load();
-
             ChooseNumberOfPlayersController controller = loader.getController();
+            controller.setGUI(this);
 
             Scene scene = new Scene(root);
-
             primaryStage.setScene(scene);
-
             primaryStage.show();
         }catch (Exception e){
             System.out.println("Error: " + e);
@@ -226,17 +215,16 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     public void handleGameID(int ID){
         gameID = ID;
-        nicknameScene();
     }
 
-    public void handleNickname(String Nickname){
+    public void handleNickname(String Nickname) throws IOException{
         nickname = Nickname;
-        controller.joinGame(nickname, gameID);
-        //TODO: propagazione eccezione
+        controller.setPlayerName(nickname);
+        showCreationChoiceScene();
     }
     public void handleNumber(int number){
         controller.createGame(number);
         gameID = controller.getLocalModel().getGameId();
-        nicknameScene();
+
     }
 }

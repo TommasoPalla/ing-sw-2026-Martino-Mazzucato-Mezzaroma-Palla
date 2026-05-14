@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController">
 <children>
-    <Text layoutX="197.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose GameID" textAlignment="CENTER">
+    <Text layoutX="197.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose number of players" textAlignment="CENTER">
         <font>
             <Font size="29.0" />
         </font>

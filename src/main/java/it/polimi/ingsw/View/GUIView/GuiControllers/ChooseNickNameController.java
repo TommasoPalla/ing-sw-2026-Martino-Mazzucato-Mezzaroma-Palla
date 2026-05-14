@@ -5,9 +5,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class ChooseNickNameScene {
+import java.io.IOException;
+
+public class ChooseNickNameController {
     private Gui gui;
 
+    public void setGUI(Gui gui) {
+        this.gui = gui;
+    }
     @FXML
     private Button ConfirmButton;
 
@@ -18,7 +23,10 @@ public class ChooseNickNameScene {
     private void handleConfirm() {
 
         String nickname = nicknameField.getText();
-        gui.handleNickname(nickname);
+        try{
+            gui.handleNickname(nickname);
+        }catch(IOException e){
 
+        }
     }
 }
