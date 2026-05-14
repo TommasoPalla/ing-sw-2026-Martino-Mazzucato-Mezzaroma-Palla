@@ -9,6 +9,7 @@ import it.polimi.ingsw.View.GamePlayers;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface VirtualRMIClient extends Remote {
@@ -16,9 +17,8 @@ public interface VirtualRMIClient extends Remote {
     void reportError(String errorMessage) throws RemoteException;
 
     void updateGameCreated(int gameID, int numPlayers) throws RemoteException;
-    void updateGameStarted(int gameID, int numPlayers) throws RemoteException;
+    void updateGameStarted(List<String> firstTurnOrder) throws RemoteException;
     //void updateGameCreated() throws RemoteException;
-    void gameStarted(int gameID, int numPlayers) throws RemoteException;
     void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException;
     void playerJoinedGame(String playerName) throws RemoteException;
     void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) throws RemoteException;

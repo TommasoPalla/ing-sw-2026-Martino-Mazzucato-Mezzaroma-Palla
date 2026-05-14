@@ -11,6 +11,7 @@ import it.polimi.ingsw.View.GamePlayers;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class RMIClient implements VirtualRMIClient {
@@ -36,9 +37,6 @@ public class RMIClient implements VirtualRMIClient {
         System.out.println(errorMessage);
     }
 
-    @Override
-    public void gameStarted(int id, int numPlayers){}
-
     //CALLBACKS from players' actions
     @Override
     public void updateGameCreated(int gameID, int numPlayers){
@@ -46,8 +44,8 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void updateGameStarted(int gameID, int numPlayers) {
-        //controller.updateGameStarted(gameID);
+    public void updateGameStarted(List<String> firstTurnOrder) {
+        //controller.updateGameStarted(firstTurnOrder);
     }
 
     @Override

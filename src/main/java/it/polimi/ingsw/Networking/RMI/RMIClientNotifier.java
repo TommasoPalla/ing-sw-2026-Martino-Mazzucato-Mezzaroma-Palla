@@ -11,6 +11,7 @@ import it.polimi.ingsw.View.GamePlayers;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class RMIClientNotifier implements ClientNotifier {
@@ -25,6 +26,13 @@ public class RMIClientNotifier implements ClientNotifier {
             //TODO: da sistemare tutte queste eccezioni
             //throw new StubException("could not notify");
         }
+    }
+
+    @Override
+    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder) {
+        try {
+            clientStub.updateGameStarted(shuffledFirstPlayingOrder);
+        } catch (RemoteException e){}
     }
 
     @Override

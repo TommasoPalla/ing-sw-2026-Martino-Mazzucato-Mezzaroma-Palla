@@ -8,6 +8,7 @@ import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface VirtualSocketClient {
@@ -15,10 +16,10 @@ public interface VirtualSocketClient {
     void reportError(String errorMessage) throws IOException;
 
     void updateGameCreated(int gameID, int numPlayers);
-    void updateGameStarted(int gameID, int numPlayers) throws  IOException;
+    void updateGameStarted(List<String> firstTurnOrder) throws  IOException;
     void updatePlayerConnected(String playerName) throws IOException;
     void successfullyJoinedGame(int gameID, int playerNum, ArrayList<String> playerNames) throws IOException;
-    void updatePlayerLeftGame(int gameID, String playerName) throws IOException;
+    void updatePlayerLeftGame(String playerName) throws IOException;
     void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws IOException;
     void updateChosenTotemColor(String playerName, Color totemColor) throws  IOException;
     void updateDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws  IOException;

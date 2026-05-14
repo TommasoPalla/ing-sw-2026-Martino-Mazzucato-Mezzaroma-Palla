@@ -71,7 +71,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void setPlayerName(String playerName) {
-        if (clientState != ClientState.SETUP) {
+        if (clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) {
             throw new IllegalClientStateActionException("ERROR: You can no longer change your name!");
         }
         this.playerName = playerName;
@@ -331,8 +331,8 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void updateCurrentOfferTile(String playerName, Character index) {
-        localModel.updateOfferTile(playerName, index);
+    public void updateCurrentOfferTile(String playerName, int index) {
+        localModel.chosenOfferTile(playerName, index);
     }
 
 

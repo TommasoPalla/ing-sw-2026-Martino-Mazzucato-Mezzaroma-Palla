@@ -85,6 +85,16 @@ public class SocketServer implements VirtualSocketServer{
         serverController.joinGame(handler, record);
     }
 
+    @Override
+    public void startGame(String requestingPlayerName, int gameID) {
+        serverController.startGame(requestingPlayerName, gameID);
+    }
+
+    @Override
+    public void leaveGame(PlayerRecord leavingPlayer) {
+        serverController.leaveGame(leavingPlayer);
+    }
+
     public ArrayList<SocketClientHandler> getClients(){
         return clients;
     }

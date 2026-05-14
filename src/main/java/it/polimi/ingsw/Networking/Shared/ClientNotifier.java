@@ -7,6 +7,7 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface ClientNotifier {
@@ -14,7 +15,7 @@ public interface ClientNotifier {
     //void reportError(String errorMessage) throws IOException;
 
     void notifyGameCreated(int gamID, int playerNum);
-    //void notifyGameStarted();
+    void notifyGameStarted(List<String> shuffledFirstPlayingOrder);
     void notifyNewPlayerConnected(String playerName);
     void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players);
     void notifyPlayerLeftGame(String playerName);

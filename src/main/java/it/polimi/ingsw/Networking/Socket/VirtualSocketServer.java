@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
+import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
 /**
  * this interface has all the methods that need to be called from the client
@@ -17,5 +18,7 @@ public interface VirtualSocketServer {
     void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) throws IllegalDrawException;
     void chooseTotemColor(Color totemColor, SocketClientHandler clientHandler);
     void joinGame(SocketClientHandler clientHandler);
+    void leaveGame(PlayerRecord leavingPlayer);
     void createGame(ClientNotifier notifier, String playerName, int numPlayers);
+    void startGame(String requestingPlayerName, int gameID);
 }

@@ -31,7 +31,6 @@ public class ClientModel {
     private ArrayList<BuildingCard> topBuildings;
     private ArrayList<BuildingCard> bottomBuildings;
     private final Map<String, Color> totemColors;
-    private final Map<String, Character> currentOfferTiles;
     private TurnTile turnTile;
     private ArrayList<OfferTile> offerTiles;
     //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
@@ -42,7 +41,6 @@ public class ClientModel {
         this.players = new HashMap<>();
         this.currentPhase = GamePhase.START_GAME;
         this.currentRound = 0;
-        this.currentOfferTiles = new HashMap<>();
         this.topRow = new ArrayList<>();
         this.bottomRow = new ArrayList<>();
         this.topBuildings = new ArrayList<>();
@@ -82,10 +80,10 @@ public class ClientModel {
         currentRound++;
     }
     void addPlayer(String playerName){
-        if(players.size()<=numPlayers){
+        if(players.size() <= numPlayers){
             LightTribe lightTribe = new LightTribe(playerName);
             players.put(playerName, lightTribe);
-            currentOfferTiles.put(playerName, null);
+            //currentOfferTiles.put(playerName, null);
         }
     }
     void removePlayer(String name){
@@ -104,9 +102,11 @@ public class ClientModel {
     }
 
     //aggiungere metodo clearOfferTile(), in player c'è freeOfferTile e in OfferTile c'è free, decidere cosa fare
+    /*
     void updateOfferTile(String playerName, Character index) {
         currentOfferTiles.put(playerName, index);
     }
+     */
     void updateTurnTile(TurnTile remoteTurnTile){
         turnTile = remoteTurnTile;
     }
@@ -175,7 +175,6 @@ public class ClientModel {
     }
     public Map<String,Color> getTotemColors(){return totemColors;}
     public ArrayList<OfferTile> getOfferTiles(){return offerTiles;}
-    public int getOfferTiles(String playerName){return currentOfferTiles.get(playerName);}
     public TurnTile getTurnTile(){return turnTile;}
     public ArrayList<OfferTile> getOfferTilesNumber(){return offerTiles;}
 }

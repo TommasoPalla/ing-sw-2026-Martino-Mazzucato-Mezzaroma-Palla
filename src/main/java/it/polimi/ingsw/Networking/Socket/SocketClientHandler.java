@@ -62,6 +62,13 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                 //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
             }
         });
+        commandHandlers.put(SocketHeaderNames.START_GAME, parameters -> {
+            String requestingPlayerName = (String) parameters[0];
+            int gameID = ((Double) parameters[1]).intValue();
+            try {
+                server.startGame(requestingPlayerName, gameID);
+            } catch (Exception e) {}
+        });
         commandHandlers.put(SocketHeaderNames.JOIN_GAME, parameters -> {
             String playerName = (String) parameters[0];
             int gameID = ((Double) parameters[1]).intValue();
@@ -71,6 +78,14 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
             } catch (Exception e){
                 //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
             }
+        });
+        commandHandlers.put(SocketHeaderNames.LEAVE_GAME, parameters -> {
+            String playerName = (String) parameters[0];
+            int gameID = ((Double) parameters[1]).intValue();
+            PlayerRecord leavingPlayer = new PlayerRecord(gameID, playerName);
+            try {
+                server.leaveGame(leavingPlayer);
+            } catch (Exception e) {}
         });
         commandHandlers.put(SocketHeaderNames.CHOOSE_TOTEM_COLOR, parameters -> {
             Color totemColor = Color.valueOf((String) parameters[0]) ;
@@ -136,6 +151,12 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
+    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder){
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_STARTED, shuffledFirstPlayingOrder);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
     public void notifyNewPlayerConnected(String playerName){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.PLAYER_JOINED_GAME, playerName);
         outStream.println(gson.toJson(message));
@@ -149,6 +170,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifyPlayerLeftGame(String playerName) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.LEFT_GAME, playerName);
+        outStream.println(gson.toJson(message));
 
     }
     @Override

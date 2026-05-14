@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -47,6 +48,13 @@ public class SocketServerHandler implements Runnable{
                //TODO: non so di preciso cosa ci sia da fare qui quindi lascio cosi', stessa cosa anche per tutti gli altri
            }
         });
+        commandHandlers.put(SocketHeaderNames.GAME_STARTED, parameters -> {
+            Type type = new TypeToken<List<String>>(){}.getType();
+            List<String> firstTurnOrder = gson.fromJson(gson.toJson(parameters[0]), type);
+            try {
+                client.updateGameStarted(firstTurnOrder);
+            } catch (Exception e) {}
+        });
         commandHandlers.put(SocketHeaderNames.PLAYER_JOINED_GAME, parameters -> {
             String playerName = (String) parameters[0];
             try{
@@ -63,10 +71,9 @@ public class SocketServerHandler implements Runnable{
            } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.LEFT_GAME, parameters -> {
-            int gameID = ((Double) parameters[0]).intValue();
-            String playerName = (String) parameters[1];
+            String playerName = (String) parameters[0];
             try{
-                client.updatePlayerLeftGame(gameID, playerName);
+                client.updatePlayerLeftGame(playerName);
             } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.GET_AVAILABLE_GAMES, parameters -> {
@@ -119,7 +126,7 @@ public class SocketServerHandler implements Runnable{
             String playerName = (String) parameters[0];
             int prestigePoints = ((Double) parameters[1]).intValue();
             try{
-                client.updateShamansStars(playerName, prestigePoints);
+                client.updatePrestigePoints(playerName, prestigePoints);
             } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.UPDATED_TOP_ROW, parameters -> {
@@ -140,7 +147,7 @@ public class SocketServerHandler implements Runnable{
         commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, parameters -> {
             Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
             ArrayList<BuildingCard> newBottomBuildings = gson.fromJson(gson.toJson(parameters[0]), type);
-            client.updateTopBuildings(newBottomBuildings);
+            client.updateBottomBuildings(newBottomBuildings);
         });
         commandHandlers.put(SocketHeaderNames.NEXT_PLAYER, parameters -> {
            String playerName = (String) parameters[0];

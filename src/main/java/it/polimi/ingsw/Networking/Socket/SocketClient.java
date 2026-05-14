@@ -10,6 +10,7 @@ import it.polimi.ingsw.View.GamePlayers;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class SocketClient implements VirtualSocketClient {
@@ -40,8 +41,8 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updateGameStarted(int gameID, int numPlayers) {
-
+    public void updateGameStarted(List<String> firstTurnOrder) {
+        //TODO: cosa chiamo??
     }
 
     @Override
@@ -55,7 +56,7 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updatePlayerLeftGame(int gameID, String playerName) throws RemoteException {
+    public void updatePlayerLeftGame(String playerName) throws RemoteException {
         controller.updatePlayerLeftGame(playerName);
     }
 
@@ -71,9 +72,7 @@ public class SocketClient implements VirtualSocketClient {
 
     @Override
     public void updateChosenTile(String playerName, int index) {
-        //TODO: NON FUNZIONA 100%. La tile 'A' c'e' solo se si gioca in due sto indice e' sballato altrimenti, fixare i metodi a monte
-        Character charIndex = (char) ('A' + index);
-        controller.updateCurrentOfferTile(playerName, charIndex);
+        controller.updateCurrentOfferTile(playerName, index);
     }
 
     @Override

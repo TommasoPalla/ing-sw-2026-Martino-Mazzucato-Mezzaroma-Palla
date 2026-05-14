@@ -77,17 +77,20 @@ public class SocketServerAdapter implements ServerConnection {
 
     @Override
     public void leaveGame(String playerName, int gameID){
-
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.LEAVE_GAME, playerName, gameID);
+        outStream.println(gson.toJson(message));
     }
 
-    @Override
-    public void startGame(String playerName, int gameID) {
-
-    }
 
     @Override
     public void createGame(String playerName, int numPlayers){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CREATE_GAME, playerName, numPlayers);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void startGame(String playerName, int gameID) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_GAME,  playerName, gameID);
         outStream.println(gson.toJson(message));
     }
 
