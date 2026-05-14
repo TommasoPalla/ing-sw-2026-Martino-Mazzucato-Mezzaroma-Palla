@@ -2,11 +2,10 @@ package it.polimi.ingsw.View.GUIView;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
-import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
 import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseGameIdController;
 import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNickNameScene;
+import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController;
 import it.polimi.ingsw.View.GUIView.GuiControllers.chooseToCreateController;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
@@ -149,17 +148,14 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     @Override
     public void showGameIdScene() {
         try {
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseGameId.fxml"));
-
             Parent root = loader.load();
-
-            ChooseGameIdController controller = loader.getController();
+            ChooseGameIdController Controller = loader.getController();
+            Controller.setGUI(this);//important to pass the gui, this way I can access the valid controller
+            Controller.loadGames(controller.getAvailableGames());
 
             Scene scene = new Scene(root);
-
             primaryStage.setScene(scene);
-
             primaryStage.show();
         }catch (Exception e){
             System.out.println("Error: " + e);
@@ -203,7 +199,22 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void chooseNumberOfPlayers() {
+        try {
 
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseNumberOfPlayers.fxml"));
+
+            Parent root = loader.load();
+
+            ChooseNumberOfPlayersController controller = loader.getController();
+
+            Scene scene = new Scene(root);
+
+            primaryStage.setScene(scene);
+
+            primaryStage.show();
+        }catch (Exception e){
+            System.out.println("Error: " + e);
+        }
     }
 
     public void handleJoin(){
@@ -221,9 +232,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     public void handleNickname(String Nickname){
         nickname = Nickname;
         controller.joinGame(nickname, gameID);
+        //TODO: propagazione eccezione
     }
     public void handleNumber(int number){
         controller.createGame(number);
         gameID = controller.getLocalModel().getGameId();
+        nicknameScene();
     }
 }
