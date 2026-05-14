@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Controller.ClientController;
 
-import it.polimi.ingsw.CustomException.IllegalDrawException;
-import it.polimi.ingsw.CustomException.InsufficientFoodException;
+import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.CustomException.UIException.*;
-import it.polimi.ingsw.CustomException.OccupiedTileException;
-import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
@@ -34,7 +31,7 @@ public class ClientController implements ClientViewUpdate {
     private Map<Integer, GamePlayers> availableGames;
 
     public ClientController() {
-        clientState = ClientState.SETUP;
+        clientState = ClientState.CONNECTING;
         availableGames = new HashMap<>();
     }
     public String getPlayerName(){  //servirà da qualche parte
@@ -87,42 +84,6 @@ public class ClientController implements ClientViewUpdate {
     }
 
     //TODO: siamo sicuri che vada fatto cosi?
-
-    /**
-     * When a new player enters the lobby, the client controller updates his local model's list of players.
-     * @param player the player who entered the lobby.
-     */
-    @Override
-    public void updatePlayerConnected(String player) {
-        if(!localModel.checkNameAvailable(player)){
-            localModel.addPlayer(player);
-        }
-        else {
-            //da gestire TUI o GUI
-            System.out.println("Name already taken");
-        }
-    }
-
-    @Override
-    public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) {
-        createLocalModel(gameID, numPlayers);
-        for (String player : players) {
-            localModel.addPlayer(player);
-        }
-    }
-
-    @Override
-    public void updatePlayerLeftGame(String player) {
-        if(this.playerName.equals(player)){
-            localModel = null;
-            System.out.println("You have left the lobby"); // temporaneo nel mentre che non funzionano le notify
-        }
-        else {
-            localModel.removePlayer(player);
-            System.out.println("Player " + player + " left the lobby"); // temporaneo nel mentre che non funzionano le notify
-        }
-        //notifyPlayerLeft(player) per notificare gli altri player nella lobby
-    }
 
     //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-----------------------------
     /**
@@ -193,12 +154,15 @@ public class ClientController implements ClientViewUpdate {
     /*methods used for client's requests,
     ClientController checks if localModel allows them and then send to server,
     identified by connection field (RMI/socket)*/
-    public void chooseTotem(Color color){
+    public void chooseTotemColor(Color color){
         if (clientState != ClientState.IN_LOBBY) {
             throw new IllegalClientStateActionException("ERROR: You cannot choose a totem right now.");
         }
+        if (localModel.getTotemColors().containsKey(playerName)) {
+            throw new AlreadyChosenTotemException();
+        }
         try {
-            if (localModel.isColorAvailable(color)) throw new IllegalArgumentException();
+            //if (!localModel.isColorAvailable(color)) throw new IllegalArgumentException(); CONTROLLO VA FATTO DAL SERVER
             connection.chooseTotem(color);
         }catch (UnavailableColorException e){
             throw new UnavailableColorException(color);
@@ -280,15 +244,58 @@ public class ClientController implements ClientViewUpdate {
      * if the player's draw is legal by checking the client light model
      */
     public void updateAvailableGames(Map<Integer, GamePlayers> availableGames){
-        this.availableGames = availableGames;
+      this.availableGames = availableGames;
+      if(clientState == ClientState.SETUP){
+            view.notifyNewAvailableGames();
+        }
+    }
+
+    @Override
+    public void updateNameModified(String newName) {
+        view.notifyNameModified(newName);
     }
 
     @Override
     public void updateGameCreated(int gameID, int numPlayers){
         createLocalModel(gameID, numPlayers);
         this.clientState = ClientState.IN_LOBBY;
+        view.notifyGameCreated(gameID);
         //TODO: !!!! capire cosa ci va qui, questo e' il metodo che viene chiamato dal server per dire
         // "oh fra guarda che ho creato il game che mi hai chiesto di creare" !!!!
+    }
+
+    /**
+     * When a new player enters the lobby, the client controller updates his local model's list of players.
+     * @param player the player who entered the lobby.
+     */
+    @Override
+    public void updatePlayerConnected(String player) {
+//        localModel.addPlayer(player);
+        view.notifyPlayerJoinedLobby(player); // sbagliato, serve mandargli in ingresso il game modificato
+    }
+
+    @Override
+    public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) {
+        createLocalModel(gameID, numPlayers);
+//        for (String player : players) {
+//            localModel.addPlayer(player);
+//        }
+        clientState = ClientState.IN_LOBBY;
+        view.notifySuccessfullyJoinedGame(gameID);
+    }
+
+    @Override
+    public void updatePlayerLeftGame(String player) {
+        //TODO da aggiungere controllo del gameID
+        if(this.playerName.equals(player)){
+            clientState = ClientState.SETUP;
+            view.notifyPlayerLeftLobby(player);
+            localModel = null;
+        }
+        else {
+            localModel.removePlayer(player);
+            view.notifyPlayerLeftLobby(player);
+        }
     }
 
     @Override
@@ -312,9 +319,15 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
+    /**
+     * The client controller updates the local model adding the choise of the totem color by the player.
+     * @param playerName the player who chose the totem color
+     * @param totemColor the totem color chosen.
+     */
     @Override
     public void updateTotemColor(String playerName, Color totemColor) {
         localModel.chosenTotemColor(playerName, totemColor);
+        view.notifyChosenTotemColor(playerName, totemColor);
     }
 
     @Override

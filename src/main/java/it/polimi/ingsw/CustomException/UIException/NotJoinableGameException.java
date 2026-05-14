@@ -4,4 +4,7 @@ public class NotJoinableGameException extends RuntimeException {
     public NotJoinableGameException(String message) {
         super(message);
     }
+    public NotJoinableGameException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

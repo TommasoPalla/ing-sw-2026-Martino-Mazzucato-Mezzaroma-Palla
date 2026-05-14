@@ -1,8 +1,9 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
-import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
-import it.polimi.ingsw.CustomException.UIException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.UIException.AlreadyChosenTotemException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;
@@ -50,13 +51,15 @@ public record CommandParser(ClientController clientController) {
         }
         String[] commandArgs = parseArguments(CommandType.CHOOSE_TOTEM_COLOR, argsString);
         try {
-            clientController.chooseTotem(Color.valueOf(commandArgs[0].toUpperCase()));
-        } catch (IllegalActionPhaseException e) {
-            throw new IllegalActionPhaseException();
+            clientController.chooseTotemColor(Color.valueOf(commandArgs[0].toUpperCase()));
+        } catch (IllegalClientStateActionException e) {
+            throw new IllegalClientStateActionException(e.getMessage());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("ERROR: " + commandArgs[0] + " is not a valid color!");
-        } catch(UnavailableColorException e) {
-            throw new IllegalArgumentException("ERROR: this totem colore is already taken!");
+        } catch (AlreadyChosenTotemException e){
+            throw new IllegalArgumentException("ERROR: You have already chosen a totem color!");
+        } catch (UnavailableColorException e) {
+            throw new IllegalArgumentException("ERROR: this totem color is already taken!");
         }
     }
 

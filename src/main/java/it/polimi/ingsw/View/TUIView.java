@@ -1,14 +1,13 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
-import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.UIException.*;
 
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
-import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.View.Listeners.Listener;
 
@@ -20,7 +19,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TUIView implements ViewInterface, Listener {
-    final private ClientModel localModel;
     final private ClientController clientController;
     final private CommandParser commandParser;
     private String player;
@@ -28,7 +26,6 @@ public class TUIView implements ViewInterface, Listener {
 
     public TUIView(ClientController clientController) {
         this.clientController = clientController;
-        this.localModel = clientController.getLocalModel();
         this.commandParser = new CommandParser(clientController);
         /*
          * This attribute defines which state of the TUI the player is currently visualizing.
@@ -62,12 +59,6 @@ public class TUIView implements ViewInterface, Listener {
         while(!Thread.currentThread().isInterrupted()) {
             String command = commandScanner.nextLine();
             parseCommand(command);
-        }
-    }
-
-    private void runNotifiesListener() {
-        while(!Thread.currentThread().isInterrupted()) {
-
         }
     }
 
@@ -134,19 +125,11 @@ public class TUIView implements ViewInterface, Listener {
         String argsString = matcher.group(2);
 
         switch (commandType) {
-            case CREATE_GAME            -> {
-                                                commandParser.parseCreateGame(argsString);
-                                                changeClientState(clientController.getClientState());
-                                            }
-            case JOIN_GAME              -> printAvailableGames();
-            case LEAVE_GAME             -> { clientController.leaveGame();
-                                             System.out.println("You have left the game successfully.");
-                                             changeClientState(ClientState.SETUP);
-                                           }
+            case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
+            case JOIN_GAME              -> joinAvailableGames();
+            case LEAVE_GAME             -> clientController.leaveGame();
             case START_GAME             -> clientController.startGame(player);
-            case MODIFY_NAME            -> commandParser.parseModifyName(argsString); // ATT! l'attributo player della TUI viene modificato quando ricevuta la notify, che
-                                                                                      // per ora non è mai chiamata, quindi se il player cambia nome e poi joina un game
-                                                                                      // e il nome è già presente riesce comunque a entrare nella lobby
+            case MODIFY_NAME            -> commandParser.parseModifyName(argsString);
             case CHOOSE_TOTEM_COLOR     -> commandParser.parseChooseTotemColor(argsString);
             case SHOW_OFFER_TRACK       -> printOfferTrack();
             case SHOW_TOP_ROW           -> printTopRow();
@@ -165,7 +148,7 @@ public class TUIView implements ViewInterface, Listener {
      */
     private void printTribe(String playerName) {
         System.out.println("This is your tribe:\n");
-        LightTribe localTribe = localModel.getPlayerTribe(player);
+        LightTribe localTribe = clientController.getLocalModel().getPlayerTribe(player);
         if(localTribe != null) {
             System.out.println("Food Reserve: " + localTribe.getFoodReserve());
             System.out.println("Prestige Points: " + localTribe.getPrestigePoints());
@@ -205,7 +188,7 @@ public class TUIView implements ViewInterface, Listener {
      * Prints to terminal the top row of the offerTrack
      */
     private void printTopRow() {
-        if(localModel.getTopRow().isEmpty()) {
+        if(clientController.getLocalModel().getTopRow().isEmpty()) {
             System.out.println("La fila superiore è vuota");
             return;
         }
@@ -215,7 +198,7 @@ public class TUIView implements ViewInterface, Listener {
      * Prints to terminal the bottom row of the offerTrack
      */
     private void printBottomRow() {
-        if(localModel.getBottomRow().isEmpty()) {
+        if(clientController.getLocalModel().getBottomRow().isEmpty()) {
             System.out.println("La fila inferiore è vuota");
             return;
         }
@@ -229,7 +212,7 @@ public class TUIView implements ViewInterface, Listener {
 
         tuiState = TUIState.SHOW_OFFER_TRACK;
         System.out.print("This is the current offer track");
-        for (OfferTile tile : localModel.getOfferTiles()) {
+        for (OfferTile tile : clientController.getLocalModel().getOfferTiles()) {
             topBorder.append("+-----------------+ ");
 
             if (tile.getFoodBonus() != 0) actionRow.append(String.format("| %-15s | ", tile.getFoodBonus()));
@@ -303,33 +286,63 @@ public class TUIView implements ViewInterface, Listener {
         System.out.println("You successfully modified your name to " + newName + "!");
     }
 
+    /**
+     * Refreshes the available games' list in case a new game is created and the player is in the
+     * "JOIN_GAME" TUI state.
+     */
+    @Override
+    public void notifyNewAvailableGames() {
+        if(tuiState == TUIState.JOIN_GAME) printAvailableGames();
+    }
+
     @Override
     public void notifyGameCreated(int gameID) {
+        tuiState = TUIState.IN_LOBBY;
         System.out.println("The game was successfully created with ID: " +  gameID + "!");
         System.out.println("You are the host of this game.");
-        changeClientState(ClientState.IN_LOBBY);
+        printAvailableActions(clientController.getClientState());
     }
 
     @Override
-    public void notifyGameJoined(int gameID) {
-        System.out.println("You have successfully joined the game with ID: " +  gameID + "!");
-        changeClientState(ClientState.IN_LOBBY);
-    }
-
-    @Override
-    public void notifyPlayerJoined(int gameID, String playerName) {
-        if(tuiState == TUIState.IN_LOBBY && gameID == localModel.getGameId()) {
-            System.out.println("Player " + playerName + " joined the lobby!");
+    public void notifyPlayerJoinedLobby(String playerName) {
+        if(tuiState == TUIState.IN_LOBBY) {
+            System.out.println(playerName + " joined the lobby!");
         }
-        else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+        //else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
     }
 
     @Override
-    public void notifyPlayerLeft(int gameID, String playerName) {
-        if(tuiState == TUIState.IN_LOBBY && gameID == localModel.getGameId()) {
+    public void notifySuccessfullyJoinedGame(int gameID) {
+        tuiState = TUIState.IN_LOBBY;
+        System.out.println("You have successfully joined the game with ID: " + gameID + "!");
+        printAvailableActions(clientController.getClientState());
+    }
+
+    @Override
+    public void notifyPlayerLeftLobby(String playerName) {
+        if (playerName.equals(player)) {
+            tuiState = TUIState.SETUP;
+            System.out.println("You have successfully left the lobby!");
+            printAvailableActions(clientController.getClientState());
+            return;
+        }
+        if(tuiState == TUIState.IN_LOBBY) {
             System.out.println("Player " + playerName + " left the lobby!");
         }
         else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+    }
+
+    @Override
+    public void notifyChosenTotemColor(String playerName, Color totemColor) {
+        if (this.player.equals(playerName)) {
+            System.out.println("You have successfully chosen totem color: " + totemColor + "!");
+        }
+        else if (tuiState == TUIState.IN_LOBBY) {
+            System.out.println(playerName + " has chosen the " + totemColor.toString().toLowerCase() + " totem!");
+            if (!clientController.getLocalModel().getTotemColors().containsKey(playerName)) {
+                printAvailableColors();
+            }
+        }
     }
 
     @Override
@@ -371,8 +384,10 @@ public class TUIView implements ViewInterface, Listener {
      * Prints to terminal the available colors the players can choose while in the lobby.
      */
     private void printAvailableColors() {
+        System.out.println();
+        System.out.println("Available colors:");
         EnumSet<Color> availableColors = EnumSet.allOf(Color.class);
-        for(Color color : localModel.getTotemColors().values()) {
+        for(Color color : clientController.getLocalModel().getTotemColors().values()) {
             availableColors.remove(color);
         }
         for(Color color : availableColors) {
@@ -380,19 +395,11 @@ public class TUIView implements ViewInterface, Listener {
         }
     }
 
-    /**
-     * Prints to terminal the list of available games a client can join after he sent the "join_game()" command
-     * and takes in input the gameID of the game the client wants to join.
-     */
-    private void printAvailableGames() {
-        boolean gameJoined = false;
-        tuiState = TUIState.JOIN_GAME;
+    private Map<Integer, GamePlayers> printAvailableGames() {
         Map<Integer, GamePlayers> availableGames = clientController.getAvailableGames();
         System.out.println();
         if (availableGames.isEmpty()) {
-            System.out.println("There are no available games. You'll be sent back to the setup state");
-            printAvailableActions(ClientState.SETUP);
-            return;
+            return null;
         }
         System.out.println("These are the available games:");
         for(Map.Entry<Integer, GamePlayers> entry : availableGames.entrySet()) {
@@ -402,6 +409,23 @@ public class TUIView implements ViewInterface, Listener {
                 System.out.print(player + ", ");
             }
             System.out.println(";");
+        }
+        return availableGames;
+    }
+
+    /**
+     * Prints to terminal the list of available games a client can join after he sent the "join_game()" command
+     * and takes in input the gameID of the game the client wants to join.
+     */
+    private void joinAvailableGames() {
+        boolean gameJoined = false;
+        tuiState = TUIState.JOIN_GAME;
+        Map<Integer, GamePlayers> availableGames = printAvailableGames();
+        if(availableGames == null) {
+            System.out.println("There are no available games. You'll be sent back to the setup state");
+            tuiState = TUIState.IN_LOBBY;
+            printAvailableActions(ClientState.SETUP);
+            return;
         }
         System.out.println();
         System.out.println("Enter a gameID to join the respective game.");
@@ -419,11 +443,10 @@ public class TUIView implements ViewInterface, Listener {
                     // prova a joinare il game
                     try {
                         clientController.joinGame(player, gameID);
-                        changeClientState(ClientState.IN_LOBBY);
                     }
                     catch (NotJoinableGameException e) {
                         System.out.println(e.getMessage());
-                        printAvailableGames();
+                        joinAvailableGames();
                     }
                 }
             } catch(NumberFormatException e) {
@@ -454,8 +477,6 @@ public class TUIView implements ViewInterface, Listener {
                 System.out.println("- choose_totem_color(color): To choose an available totem color from the list.");
                 System.out.println("- start_game(): To start the game. It only works if you're the host.");
                 System.out.println("- leave_game(): To end the game.");
-                System.out.println();
-                System.out.println("Available totem colors: ");
                 printAvailableColors();
                 break;
             case PLACE_TOTEM:

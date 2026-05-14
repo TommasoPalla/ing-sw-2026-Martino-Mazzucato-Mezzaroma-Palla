@@ -18,6 +18,7 @@ public interface VirtualSocketClient {
     void updateGameStarted(int gameID, int numPlayers) throws  IOException;
     void updatePlayerConnected(String playerName) throws IOException;
     void successfullyJoinedGame(int gameID, int playerNum, ArrayList<String> playerNames) throws IOException;
+    void updatePlayerLeftGame(int gameID, String playerName) throws IOException;
     void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws IOException;
     void updateChosenTotemColor(String playerName, Color totemColor) throws  IOException;
     void updateDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws  IOException;

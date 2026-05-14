@@ -1,15 +1,13 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.CustomException.*;
-import it.polimi.ingsw.CustomException.UIException.IllegalActionPhaseException;
+import it.polimi.ingsw.CustomException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
 import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Game.Game;
-import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
@@ -18,6 +16,9 @@ import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 /**
  * Game controller of a single game instance, used to extract
@@ -27,7 +28,8 @@ import java.util.Map;
 public class GameController {
     private final Game gameInstance;
     private final Map<String, ClientNotifier> connectedClients;
-    private String hostPlayer;
+    private String hostClient;
+    private final ExecutorService notificationThreads = Executors.newCachedThreadPool();
 
     /**
      * GameController's constructor is called in the GameManager when a new game is added
@@ -46,32 +48,27 @@ public class GameController {
     }
 
     /**
-     * Adds player to the game creating the Player object and notifying other players.
-     * If player is the first one, the method sets it as the host,
-     * if player is the last one, the method updates current game phase.
+     * This method calls the respective method in Game to add a player while in Lobby State
      */
-    public void addPlayer(String playerName) {
-        if(gameInstance.getPlayersNames().contains(playerName)) {
-            throw new NotJoinableGameException("ERROR: You can't join this game, because this name is already used by a player in the game.");
-        }
-        if (gameInstance.getPlayers().size() == gameInstance.getNumPlayer()) {
-            throw new NotJoinableGameException("ERROR: This lobby is already full, join another game or wait for someone to disconnect.");
-        }
-        gameInstance.addPlayer(playerName);
-        if(hostPlayer == null) hostPlayer = playerName;
-        else if (gameInstance.getPlayers().size() == gameInstance.getNumPlayer()){
-            gameInstance.setReadyToStart();
-        }
+
+    public synchronized void notifyAll(Consumer<ClientNotifier> action){
         for(ClientNotifier notifier : connectedClients.values()){
-            try {
-                notifier.notifyNewPlayerConnected(playerName);
-                /*if(gameInstance.isReadyToStart()){
-                    notifier.notifyGameReady();         da definire a tempo perso
-                }*/
-            } catch (StubException e){
-                handleCriticalDisconnection();
-            }
+            notificationThreads.submit( () -> {
+                try {
+                    action.accept(notifier);
+                } catch (Exception e) {/*exception della notifica fallita*/}
+            });
         }
+    }
+
+
+    /**
+     * Adds player to the game creating the Player object
+     * @param playerName
+     * Adds player to the game creating the Player object and notifying other players.
+     */
+    private void addPlayer(String playerName) {
+        gameInstance.addPlayer(playerName);
     }
 
     /**
@@ -82,52 +79,85 @@ public class GameController {
     public void removePlayer(String playerName) {
         if(gameInstance.getPlayersNames().contains(playerName)) {
             gameInstance.removePlayer(playerName);
-            removeClient(playerName);
-            for(ClientNotifier notifier : connectedClients.values()){
-                try {
-                    notifier.notifyPlayerLeftGame(playerName);
-                } catch(StubException e){
-                    handleCriticalDisconnection();
-                }
-            }
         }
     }
 
     /**
      * Adds a ClientNotifier to connectedClients. This is used to broadcast an update
-     * to everyone, regardless of what networking protocol they are using
-     * @param playerName
-     * @param notifier
+     * to everyone, regardless of what networking protocol they are using.
+     * Moreover, connectedClients identifies players waiting in the lobby
+     * for hostClient to start the game.
+     * @param playerName a valid name, not already used by a player in this lobby
+     * @param newNotifier relative to this specific playerName, to update them
      */
-    public void addClient(String playerName, ClientNotifier notifier) {
-        connectedClients.put(playerName, notifier);
+    public void addClient(String playerName, ClientNotifier newNotifier) {
+        if(connectedClients.containsKey(playerName)) {
+            throw new NotJoinableGameException("ERROR: You can't join this game, because this name is already used by a player in the game.");
+        }
+        if (connectedClients.size() == gameInstance.getNumPlayer()) {
+            throw new NotJoinableGameException("ERROR: This lobby is already full, join another game or wait for someone to disconnect.");
+        } else if (connectedClients.isEmpty()){
+            hostClient = playerName;
+        }
+        // notifica gli altri giocatori nella lobby
+        //TODO: da cambiare
         try {
-            notifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(),  gameInstance.getPlayersNames());
-        } catch(StubException e){
+            notifyAll( n -> {
+                n.notifyNewPlayerConnected(playerName);
+            });
+        } catch (StubException e) {
             handleCriticalDisconnection();
         }
+
+        connectedClients.put(playerName, newNotifier);
+        if (connectedClients.size() == gameInstance.getNumPlayer()){
+            gameInstance.setReadyToStart();
+        }
+        // se è il primo player, vuol dire che ha creato il game, quindi non entra qui
+        if (connectedClients.size() > 1) {
+            ArrayList<String> clients = new ArrayList<>(connectedClients.keySet());
+            try {
+                newNotifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(), clients);
+            /*if(gameInstance.isReadyToStart()){
+                    notifier.notifyGameReady();         da definire
+                }*/
+            } catch(StubException e){
+                handleCriticalDisconnection();
+            }
+        }
+
     }
 
     //forse è usato solo insieme a removePlayer, in quel caso fare merge: valutare alla fine
     public void removeClient(String playerName) {
-        connectedClients.remove(playerName);
+        if(connectedClients.containsKey(playerName)) {
+            //TODO: da cambiare
+            try {
+                notifyAll( n -> {
+                    n.notifyPlayerLeftGame(playerName);
+                });
+            } catch (StubException e) {
+                handleCriticalDisconnection();
+            }
+            connectedClients.remove(playerName);
+        }
     }
 
     /** chooseTotemColor method is called by View, following player's input.
      * It verifies chosen color is available and then calls respective method
      * in Game class, that updates model. Finally, all clients are notified.     *
      */
-    public synchronized void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
+    public synchronized void chooseTotemColor(String playerName, Color totemColor){
         if(!gameInstance.getAvailableColors().contains(totemColor)){
             throw new UnavailableColorException(totemColor);
         }
-        gameInstance.chooseTotemColor(playerRecord.playerName(), totemColor);
-        for(ClientNotifier notifier : connectedClients.values()) {
-            try {
-                notifier.notifyTotemColor(playerRecord.playerName(), totemColor);
-            } catch (StubException e){
-                handleCriticalDisconnection();
-            }
+        gameInstance.chooseTotemColor(playerName, totemColor);
+        try {
+            notifyAll( n -> {
+                n.notifyTotemColor(playerName, totemColor);
+            });
+        } catch (StubException e) {
+            handleCriticalDisconnection();
         }
     }
 
@@ -140,15 +170,26 @@ public class GameController {
     public synchronized void checkPhase(GamePhase phase) {
         if(phase != gameInstance.getGamePhase()){
             throw new IllegalActionPhaseException();
-        };
+        }
     }
 
+    public synchronized void checkPlayer(Player player){
+        if(player != gameInstance.getCurrentPlayer()){
+            throw new IllegalActionTurnException();
+        }
+    }
+
+
+    //da capire se serve
     public synchronized Player setNextPlayer() {
         try {
             Player nextPlayer =  gameInstance.setNextPlayer();
-            for (ClientNotifier notifier : connectedClients.values()) {
-                //client.updateCurrentPlayer(nextPlayer.getName()); @Deprecated
-                //client.notifyCurrentPlayer(...)   TODO: funzione da fare in ClientNotifier
+            try {
+                notifyAll( n -> {
+                    n.notifyNextPlayer(nextPlayer.getName());
+                });
+            } catch (StubException e) {
+                handleCriticalDisconnection();
             }
             return nextPlayer;
         }
@@ -159,8 +200,9 @@ public class GameController {
 
     // chiamata da parte client quando il player vuole startare il game.
     // throwa l'eccezione se cerca di far partire il game senza che tutti i giocatori siano entrati
+    // (fase del game = INLOBBY)
     public void startGame(String requestingPlayer) {
-        if(!requestingPlayer.equals(hostPlayer)) {
+        if(!requestingPlayer.equals(hostClient)) {
             throw new NotTheHostException("ERROR: you can't start the game if you're not the host!");
         } else if (!gameInstance.isReadyToStart()) {
             throw new NotEnoughPlayersException();
@@ -168,48 +210,91 @@ public class GameController {
             throw new IllegalActionPhaseException();
         }
         else {
+            for(String player: connectedClients.keySet()){
+                addPlayer(player);
+            }
             gameInstance.startGame();
+            //TODO: notify game started da fare in socket e chiamare qui
             //notifyAll(n -> n.notifyGameStarted());
+            //notifyInitialFood;
+            startTurn();
         }
 
     }
 
     /**
      * When a new round starts, after all the events are resolved and the rows are repopulated
-     * @param turnOrder: the current order for placing totems
      */
-    // ANCORA IN BOZZA. NO PLAYGAME() IN GAME MA FLOW DEL GAME DA ATTURARE TRAMITE CHIAMATE DI METODI NEL GAME CONTROLLER
-    public void startTurn(ArrayList<Player> turnOrder) {
+    public void startTurn() {
+        gameInstance.setCurrentPhase(GamePhase.START_TURN);
+        int newRound = gameInstance.setNextRound();
+
+        //int oldEra = gameInstance.getEra();
         try {
-            int newRound = gameInstance.getNextRound();
+            gameInstance.initOfferTrack();
+        } catch(ChangeEraException e){
+            gameInstance.changeEra();
+        }
+
+        String firstPlayer = gameInstance.setFirstPlayer();
+        try {
+            notifyAll(n -> {
+                    n.notifyNextPlayer(firstPlayer);
+            });
+            // ????? che roba e' questa qua sotto?
+            /*
             for (ClientNotifier client : connectedClients.values()) {
+                //notifyAll(showUpdateOfferTrack();
+
+                //if(oldEra != gameInstance.getEra()){
+                //    notifyAll(changedEra); per farlo fancy si potrebbe mandare la carta della nuova era
+                //changedEra dovrebbe mostrare interruzione di repopulateTopRow e cambio di edifici: più complicato
+                //ma scritto nelle regole
+
                 //inoltra chiamata a server controller per update round a tutti i player
                 //client.updateCurrentPlayer(turnOrder.getFirst().getName()); @Deprecated
-                //client.notifyNewCurrentPlayer(); TODO: funzione da fare in ClientNotifier
-            }
-            this.playTurn(turnOrder.getFirst());
+                //client.notifyNewCurrentPlayer();
+            }*/
         }
         catch (LastRoundException e) {
             //throw EndOfGame_Exception();
+        } catch (StubException e) {
+            handleCriticalDisconnection();
         }
+        setNextPlayer();
     }
 
+    /**
+     * @deprecated
+     */
     public void playTurn(Player player) {
         //????
     }
 
-    public synchronized void handleChooseOfferTile (PlayerRecord playerRecord, int index) {
-        Player player = gameInstance.getPlayerByName(playerRecord.playerName());
-        OfferTrack offerTrack = gameInstance.getOfferTrack();
+    /**Handles the player request to place the totem on a specific
+     * offer tile. It checks whether it is player's turn and the correct phase of the game.
+     * The method delegates the update of the model to Game class.
+     *
+     * @param playerName the player who requests to place the totem
+     * @param index index of the offer tile, starting from 0
+     */
+    public synchronized void handleChooseOfferTile (String playerName, int index) {
+        //throws to ServerController IllegalActionPhaseException
+        checkPhase(GamePhase.START_TURN);
+        Player player = gameInstance.getPlayerByName(playerName);
+        //throws to ServerController IllegalActionTurnException
+        checkPlayer(player);
         try {
-            OfferTile chosen = player.chooseOfferTile(index, offerTrack);
-            for(ClientNotifier client : connectedClients.values()) {
-                //client.updateCurrentOfferTile(player.getName(), index); @Deprecated
-                //client.notifyChosenOfferTile(...); TODO: funzione da fare in ClientNotifier
-            }
+            gameInstance.chooseOfferTile(player, index);
+            notifyAll( n -> {
+                n.notifyChosenTile(playerName, index);
+            });
         }
-        catch (OccupiedTileException e) {
+        catch (OccupiedTileException e) {   //viene catchata da serverController ma acknowledged qua, se ne può parlare
             throw new OccupiedTileException();
+        }
+        catch(StubException e){
+            handleCriticalDisconnection();
         }
     }
 
@@ -220,22 +305,23 @@ public class GameController {
             boolean cardIsDrawable = currPlayer.drawable(fromTopRow, fromBuilding, index, offerTrack);
 
             if(cardIsDrawable){
-                currPlayer.drawCard(fromTopRow, fromBuilding, index, this.getGameModel().getOfferTrack());
+                try{
+                    notifyAll( n -> {
+                        n.notifyDrawnCard(playerName, fromTopRow, fromBuilding, index);
+                    });
+                } catch (StubException e) {
+                    handleCriticalDisconnection();
+                }
             }
     }
 
-    public synchronized void repopulateTopRow (Player player) {
-        // Sarebbe sensato fare un try catch con un eccezione per quando finisce il gioco?
-        ArrayList<Card> newTopRow = gameInstance.getOfferTrack().repopulateTopRow();
-        for(ClientNotifier client : connectedClients.values()) {
-            //client.updateTopRow(newTopRow);   @Deprecated
-            //client.notifyNewTopRow(...)   TODO: funzione da fare in ClientNotifier
-        }
-    }
-
     /*TODO: definire la fase di shutdown del game a seguito di un client disconnesso e gestire
-     in socket la disconnessione*/
+       in socket la disconnessione*/
     public void handleCriticalDisconnection(){
-
+        notifyAll( n -> {
+            //n.notifyCriticalDisconnection
+            //removeClient();
+            //come dico a serverController di togliere il game dalla lista di activeGames?
+        });
     }
 }

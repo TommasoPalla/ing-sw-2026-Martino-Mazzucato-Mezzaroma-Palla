@@ -8,6 +8,7 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -51,6 +52,11 @@ public class SocketClient implements VirtualSocketClient {
     @Override
     public void successfullyJoinedGame(int gameID, int playerNum, ArrayList<String> playerNames) throws IOException {
         controller.updateSuccessfullyJoinedGame(gameID, playerNum, playerNames);
+    }
+
+    @Override
+    public void updatePlayerLeftGame(int gameID, String playerName) throws RemoteException {
+        controller.updatePlayerLeftGame(playerName);
     }
 
     @Override

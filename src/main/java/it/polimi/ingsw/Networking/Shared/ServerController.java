@@ -1,14 +1,13 @@
 package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Controller.GameController;
-import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.*;
+import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
 import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
 import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
-import it.polimi.ingsw.CustomException.OccupiedTileException;
-import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
 import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 import it.polimi.ingsw.Networking.Socket.SocketClientHandler;
@@ -18,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * This class has all the method of the model and some other
@@ -26,13 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class ServerController {
-    //questa classe deve inoltre essere in grado di notificare TUTTI i client,
-    //indipendentemente dal protocollo, dei cambiamenti avvuti
     private ArrayList<VirtualRMIClient> RMIClients = new ArrayList<>();
     private ArrayList<SocketClientHandler> socketClients = new ArrayList<>();
+
     //si potrebbe ottimizzare tenendo lista di clients non in partita (non giocatori) ma eviterebbe solo qualche aggiornamento inutile
     public record GameRecord(Game game, GameController gameController) {}
     private final Map<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
+
+    private final ExecutorService notificationThreads = Executors.newCachedThreadPool();
     private static int nextGameID = 0;
 
     // logic handling connected players
@@ -40,11 +42,10 @@ public class ServerController {
         try {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
-            GameController gameController = activeGames.get(gameID).gameController;
-            gameController.removePlayer(playerName);
-            notifyAvailableGames();
+            GameController gameController = activeGames.get(gameID).gameController();
+            gameController.removeClient(playerName);
         } catch (IllegalArgumentException e){
-            System.out.println("ERROR: could not remove player from game\n" + e.getMessage());
+            System.out.println("ERROR: could not remove player from game\n" + e.getMessage());  //da cambiare con exception
         }
     }
 
@@ -59,25 +60,11 @@ public class ServerController {
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController();
             gameController.addClient(playerName, notifier);
-            //notifyAvailableGames();
         }
         catch (NotJoinableGameException e){
             throw new NotJoinableGameException(e.getMessage());
         }
     }
-
-    /*public synchronized void addNotifierToGame(PlayerRecord playerRecord, ClientNotifier clientNotifier){
-        GameController controller = activeGames.get(playerRecord.gameID()).gameController();
-        controller.addClient(playerRecord.playerName(), clientNotifier);
-        //notifyAvailableGames();
-        //aggiungere update Available
-    }
-    public synchronized void removeNotifierFromGame(PlayerRecord playerRecord){
-        GameController controller = activeGames.get(playerRecord.gameID()).gameController();
-        controller.removeClient(playerRecord.playerName());
-        notifyAvailableGames();
-    }*/
-
     /**
      * This method adds a new game to the list of active games
      *  and instantiates its game controller, so the game can start
@@ -96,7 +83,12 @@ public class ServerController {
 
         //addNotifierToGame(newPlayer, notifier);
 
-        notifier.notifyGameCreated(gameID, playerNum);
+        new Thread( () -> {
+            try {
+                notifier.notifyGameCreated(gameID, playerNum);
+            } catch (Exception e){}
+        }).start();
+
         notifyAvailableGames();
         nextGameID += 1;
         return nextGameID-1;
@@ -105,7 +97,6 @@ public class ServerController {
     public void joinGame(ClientNotifier notifier, PlayerRecord newPlayer) {
         try {
             addClientToGame(newPlayer, notifier);
-            //addNotifierToGame(newPlayer, notifier);
             notifyAvailableGames();
         } catch (NotJoinableGameException e) {
             throw new NotJoinableGameException(e.getMessage());
@@ -113,15 +104,11 @@ public class ServerController {
     }
 
     public void leaveGame(PlayerRecord leavingPlayer) {
-        if (activeGames.containsKey(leavingPlayer.gameID())) {  //inutile? il get non fa nulla se la key non è contenuta
+        if (activeGames.containsKey(leavingPlayer.gameID())) {
             removeClientFromGame(leavingPlayer);
-            if(activeGames.get(leavingPlayer.gameID()).game().getPlayers().size() == 1) {
-                //removeNotifierFromGame(leavingPlayer);
+            if(activeGames.get(leavingPlayer.gameID()).gameController().getConnectedClients().isEmpty()) {
                 activeGames.remove(leavingPlayer.gameID());
             }
-            /*else {
-                //removeNotifierFromGame(leavingPlayer);
-            }*/
             notifyAvailableGames();
         }
     }
@@ -129,7 +116,7 @@ public class ServerController {
     public void startGame(String requestingPlayer, int gameID) {
         try {
             activeGames.get(gameID).gameController().startGame(requestingPlayer);
-            notifyAvailableGames();
+            notifyAvailableGames(); //superfluo probabilmente, quando si aggiunge l'ultimo player il game sarà già unavailable
         }
         catch (NotTheHostException e){
             throw new NotTheHostException(e.getMessage());
@@ -144,7 +131,7 @@ public class ServerController {
         synchronized (activeGames) {
             for (int ID : activeGames.keySet()) {
                 int currentNumPlayers = activeGames.get(ID).gameController().getConnectedClients().size();
-                int numPlayersThreshold = activeGames.get(ID).gameController.getGameModel().getNumPlayer();
+                int numPlayersThreshold = activeGames.get(ID).gameController().getGameModel().getNumPlayer();
                 if(currentNumPlayers < numPlayersThreshold){
                     GamePlayers playersInfo = new GamePlayers(numPlayersThreshold,
                             activeGames.get(ID).gameController().getConnectedClients());
@@ -152,13 +139,19 @@ public class ServerController {
                 }
             }
         }
+
         for (VirtualRMIClient client : RMIClients){
-            //temporaneo, il notifier non è ancora creato per i client non in partita? Mi sa di no
-            RMIClientNotifier notifier = new RMIClientNotifier(client);
-            notifier.notifyAvailableGames(gamesData);
+            notificationThreads.submit( () -> {
+               try {
+                   RMIClientNotifier notifier = new RMIClientNotifier(client);
+                   notifier.notifyAvailableGames(gamesData);
+               } catch (Exception e) {}
+            });
         }
         for(SocketClientHandler client : socketClients){
-            client.notifyAvailableGames(gamesData);
+            notificationThreads.submit( () -> {
+                client.notifyAvailableGames(gamesData);
+            });
         }
     }
 
@@ -168,7 +161,7 @@ public class ServerController {
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
             try {
-                currentController.chooseTotemColor(playerRecord, totemColor);
+                currentController.chooseTotemColor(playerRecord.playerName(), totemColor);
             } catch(UnavailableColorException e) {
                 throw new UnavailableColorException(totemColor);
             }
@@ -190,13 +183,13 @@ public class ServerController {
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         try {
             synchronized (currentController) {
-                currentController.handleChooseOfferTile(playerRecord, index);
+                currentController.handleChooseOfferTile(playerRecord.playerName(), index);
             }
-        }
-        catch(OccupiedTileException e){
-            throw new OccupiedTileException();
+        } catch(IllegalActionPhaseException | IllegalActionTurnException | OccupiedTileException e){
+            throw new InvalidSelectionException(e);
         }
     }
+
     public void updateRMIClients(ArrayList<VirtualRMIClient> clients){
         RMIClients = clients;
     }

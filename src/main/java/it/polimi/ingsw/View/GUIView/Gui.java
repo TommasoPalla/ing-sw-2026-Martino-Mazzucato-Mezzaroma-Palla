@@ -1,6 +1,7 @@
 package it.polimi.ingsw.View.GUIView;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
@@ -82,6 +83,41 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
             System.out.println("Error: " + e);
         }
+    }
+
+    @Override
+    public void notifyNewAvailableGames() {
+
+    }
+
+    @Override
+    public void notifyNameModified(String newName) {
+
+    }
+
+    @Override
+    public void notifyGameCreated(int gameID) {
+
+    }
+
+    @Override
+    public void notifyPlayerJoinedLobby(String playerName) {
+
+    }
+
+    @Override
+    public void notifyPlayerLeftLobby(String playerName) {
+
+    }
+
+    @Override
+    public void notifySuccessfullyJoinedGame(int gameID) {
+
+    }
+
+    @Override
+    public void notifyChosenTotemColor(String playerName, Color totemColor) {
+
     }
 
     @Override
