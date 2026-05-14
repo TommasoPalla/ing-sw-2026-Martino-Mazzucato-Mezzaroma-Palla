@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * This class has all the method of the model and some other
@@ -25,13 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class ServerController {
-    //questa classe deve inoltre essere in grado di notificare TUTTI i client,
-    //indipendentemente dal protocollo, dei cambiamenti avvuti
     private ArrayList<VirtualRMIClient> RMIClients = new ArrayList<>();
     private ArrayList<SocketClientHandler> socketClients = new ArrayList<>();
+
     //si potrebbe ottimizzare tenendo lista di clients non in partita (non giocatori) ma eviterebbe solo qualche aggiornamento inutile
     public record GameRecord(Game game, GameController gameController) {}
     private final Map<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
+
+    private final ExecutorService notificationThreads = Executors.newCachedThreadPool();
     private static int nextGameID = 0;
 
     // logic handling connected players
@@ -78,7 +81,14 @@ public class ServerController {
         PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
         addClientToGame(newPlayer, notifier);
 
-        notifier.notifyGameCreated(gameID, playerNum);
+        //addNotifierToGame(newPlayer, notifier);
+
+        new Thread( () -> {
+            try {
+                notifier.notifyGameCreated(gameID, playerNum);
+            } catch (Exception e){}
+        }).start();
+
         notifyAvailableGames();
         nextGameID += 1;
         return nextGameID-1;
@@ -129,12 +139,19 @@ public class ServerController {
                 }
             }
         }
+
         for (VirtualRMIClient client : RMIClients){
-            RMIClientNotifier notifier = new RMIClientNotifier(client);
-            notifier.notifyAvailableGames(gamesData);
+            notificationThreads.submit( () -> {
+               try {
+                   RMIClientNotifier notifier = new RMIClientNotifier(client);
+                   notifier.notifyAvailableGames(gamesData);
+               } catch (Exception e) {}
+            });
         }
         for(SocketClientHandler client : socketClients){
-            client.notifyAvailableGames(gamesData);
+            notificationThreads.submit( () -> {
+                client.notifyAvailableGames(gamesData);
+            });
         }
     }
 
@@ -164,10 +181,9 @@ public class ServerController {
 
     public void chooseOfferTile(PlayerRecord playerRecord, int index){
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
-        String player = playerRecord.playerName();
         try {
             synchronized (currentController) {
-                currentController.handleChooseOfferTile(player, index);
+                currentController.handleChooseOfferTile(playerRecord.playerName(), index);
             }
         } catch(IllegalActionPhaseException | IllegalActionTurnException | OccupiedTileException e){
             throw new InvalidSelectionException(e);

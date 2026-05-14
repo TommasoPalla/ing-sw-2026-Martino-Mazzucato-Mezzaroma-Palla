@@ -166,7 +166,7 @@ public class SocketServerHandler implements Runnable{
 
                 Consumer<Object[]> handler = commandHandlers.get(socketHeader);
                 if(handler != null){
-                    new Thread(() -> {
+                    new Thread( () -> {
                         handler.accept(socketDTO.getParameters());
                     }).start();
                 } else {

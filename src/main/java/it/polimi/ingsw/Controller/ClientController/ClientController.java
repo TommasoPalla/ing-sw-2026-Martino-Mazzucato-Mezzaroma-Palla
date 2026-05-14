@@ -71,7 +71,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void setPlayerName(String playerName) {
-        if (clientState != ClientState.SETUP &&  clientState != ClientState.CONNECTING) {
+        if (clientState != ClientState.SETUP) {
             throw new IllegalClientStateActionException("ERROR: You can no longer change your name!");
         }
         this.playerName = playerName;
@@ -123,7 +123,7 @@ public class ClientController implements ClientViewUpdate {
      */
     public void leaveGame(){
         if(clientState == ClientState.SETUP){
-            throw new IllegalClientStateActionException("ERROR: You can't leave a game if yo're not in one!");
+            throw new IllegalClientStateActionException("ERROR: You can't leave a game if you're not in one!");
         }
         if(clientState != ClientState.IN_LOBBY){
             throw new IllegalClientStateActionException("ERROR: You can't leave the game now!");
