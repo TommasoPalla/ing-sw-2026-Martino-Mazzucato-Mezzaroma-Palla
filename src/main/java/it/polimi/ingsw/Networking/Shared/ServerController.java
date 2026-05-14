@@ -2,10 +2,7 @@ package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.CustomException.*;
-import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
-import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
-import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
-import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
+import it.polimi.ingsw.CustomException.UIException.*;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Networking.RMI.RMIClientNotifier;
@@ -117,12 +114,12 @@ public class ServerController {
         try {
             activeGames.get(gameID).gameController().startGame(requestingPlayer);
             notifyAvailableGames(); //superfluo probabilmente, quando si aggiunge l'ultimo player il game sarà già unavailable
-        }
-        catch (NotTheHostException e){
+        } catch (NotTheHostException e){
             throw new NotTheHostException(e.getMessage());
-        }
-        catch (NotEnoughPlayersException e){
+        } catch (NotEnoughPlayersException e){
             throw new NotEnoughPlayersException();
+        } catch (TotemColorNotChosen e){
+            throw new TotemColorNotChosen();
         }
     }
 

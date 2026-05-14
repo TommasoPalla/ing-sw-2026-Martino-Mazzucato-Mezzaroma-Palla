@@ -5,15 +5,18 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public interface ClientViewUpdate {
     void updateCurrentRound(int round);
     void updateNameModified(String newName);
     void updateGameCreated(int gameID, int numPlayers);
-    //void updateGameStarted();
+    void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood);
     void updatePlayerConnected(String playerName);
-    void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players);
+    void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) throws RemoteException;
     void updatePlayerLeftGame(String playerName);
     //void updatePlayerDisconnected(String playerName);
     void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);

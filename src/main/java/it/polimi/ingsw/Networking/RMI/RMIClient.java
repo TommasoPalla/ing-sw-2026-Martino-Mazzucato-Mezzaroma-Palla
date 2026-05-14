@@ -44,8 +44,8 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder) {
-        //controller.updateGameStarted(firstTurnOrder);
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood) {
+        controller.updateGameStarted(firstTurnOrder, initialFood);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) throws RemoteException {
-        controller.updateSuccessfullyJoinedGame(gameID, numPlayers, players);
+    public void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) throws RemoteException {
+        controller.updateSuccessfullyJoinedGame(gameID, numPlayers, players, totemColors);
     }
 
     @Override

@@ -80,6 +80,10 @@ public class Game {
         }
         return colors;
     }
+
+    public Map<String, Color> getPlayersTotemColors(){
+        return totemColors;
+    }
     public int getEra(){
         if(isStarted){
             return era;
@@ -133,18 +137,12 @@ public class Game {
 
     //Next methods are used for update game data, according to player's actions
     public void chooseTotemColor(String playerName, Color totemColor){
-//        Player player = getPlayerByName(playerName);
-//        player.setTotemColor(totemColor);
         totemColors.put(playerName, totemColor);
     }
 
     public void addPlayer(String playerName) {
-        Player newPlayer = new Player(this, playerName);
+        Player newPlayer = new Player(this, playerName, totemColors.get(playerName));
         players.add(newPlayer);
-    }
-
-    public void removePlayer(String playerName) {
-        players.remove(getPlayerByName(playerName));
     }
 
     //used for testing
@@ -156,10 +154,11 @@ public class Game {
         this.deck = new Deck(this, jsonCardsPath);
         this.buildingManager = new BuildingManager(players);
         this.offerTrack = new OfferTrack(this, numPlayers);
+        offerTrack.getTurnTile().initTurnOrderUnshuffled(players);
         giveInitialFood(numPlayers);
     }
 
-    public void startGame(){
+    public Map<String,Integer> startGame(){
         isStarted = true;
         this.era = 1;
         this.currentRound = 0;
@@ -167,7 +166,8 @@ public class Game {
         this.deck = new Deck(this, jsonCardsPath);
         this.buildingManager = new BuildingManager(players);
         this.offerTrack = new OfferTrack(this, numPlayers);
-        giveInitialFood(numPlayers);
+        offerTrack.getTurnTile().initTurnOrder(players);
+        return new HashMap<>(giveInitialFood(numPlayers));
     }
 
     /*
@@ -213,7 +213,7 @@ public class Game {
     }
 
     /*
-    * Called in "startTurn()" in GameController, return the next round, throws Last_Round_Exception if
+    * Called in "startRound()" in GameController, return the next round, throws Last_Round_Exception if
     * the last round has been played
      */
     public int setNextRound() {
@@ -223,14 +223,27 @@ public class Game {
         return currentRound++;
     }
 
-    private void giveInitialFood(int numPlayers){
+    private Map<String,Integer> giveInitialFood(int numPlayers){
         ArrayList<Player> turnOrder = offerTrack.getTurnTile().getTurnOrder();
+        Map<String,Integer> initialFood = new HashMap<>();
         turnOrder.get(0).getTribe().modifyFood(2);
+        initialFood.put(turnOrder.get(0).getName(), 2);
         turnOrder.get(1).getTribe().modifyFood(3);
+        initialFood.put(turnOrder.get(1).getName(), 3);
 
-        if(numPlayers >= 3) turnOrder.get(2).getTribe().modifyFood(3);
-        if(numPlayers >= 4) turnOrder.get(3).getTribe().modifyFood(4);
-        if(numPlayers >= 5) turnOrder.get(4).getTribe().modifyFood(4);
+        if(numPlayers >= 3) {
+            turnOrder.get(2).getTribe().modifyFood(3);
+            initialFood.put(turnOrder.get(2).getName(), 3);
+        }
+        if(numPlayers >= 4) {
+            turnOrder.get(3).getTribe().modifyFood(4);
+            initialFood.put(turnOrder.get(3).getName(), 4);
+        }
+        if(numPlayers >= 5) {
+            turnOrder.get(4).getTribe().modifyFood(4);
+            initialFood.put(turnOrder.get(4).getName(), 4);
+        }
+        return initialFood;
     }
 
     public void changeEra() { //da mettere un'eccezione (inutile)

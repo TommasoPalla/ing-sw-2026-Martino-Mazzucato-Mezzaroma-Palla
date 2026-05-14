@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GamePlayers;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,9 @@ public interface ClientNotifier {
     //void reportError(String errorMessage) throws IOException;
 
     void notifyGameCreated(int gamID, String playerName, int playerNum);
-    void notifyGameStarted(List<String> shuffledFirstPlayingOrder);
+    void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood);
     void notifyNewPlayerConnected(String playerName);
-    void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players);
+    void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players, Map<String, Color> totemColors);
     void notifyPlayerLeftGame(String playerName);
     void notifyAvailableGames(Map<Integer, GamePlayers> availableGames);
     void notifyTotemColor(String playerName, Color totemColor);

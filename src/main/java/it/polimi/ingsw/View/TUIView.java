@@ -211,11 +211,12 @@ public class TUIView implements ViewInterface, Listener {
         StringBuilder bottomBorder = new StringBuilder();
 
         tuiState = TUIState.SHOW_OFFER_TRACK;
-        System.out.print("This is the current offer track");
+        System.out.print("This is the current offer track:");
+        System.out.println();
         for (OfferTile tile : clientController.getLocalModel().getOfferTiles()) {
             topBorder.append("+-----------------+ ");
 
-            if (tile.getFoodBonus() != 0) actionRow.append(String.format("| %-15s | ", tile.getFoodBonus()));
+            if (tile.getFoodBonus() != 0) actionRow.append(String.format("| %-15s | ", tile.getFoodBonus() + "F"));
             else if (tile.getCardsFromAbove() != 0 && tile.getCardsFromBelow() != 0) {
                 actionRow.append(String.format("| %-15s | ", "^ " + tile.getCardsFromAbove() + " v " + tile.getCardsFromBelow()));
             } else if (tile.getCardsFromAbove() != 0) {
@@ -237,6 +238,7 @@ public class TUIView implements ViewInterface, Listener {
         System.out.println(actionRow);
         System.out.println(playerRow);
         System.out.println(bottomBorder);
+        System.out.println();
     }
 
     public void changeClientState(ClientState clientState) {
@@ -328,6 +330,11 @@ public class TUIView implements ViewInterface, Listener {
         }
         if(tuiState == TUIState.IN_LOBBY) {
             System.out.println("Player " + playerName + " left the lobby!");
+            // se il player non ha ancora scelto il totem, ristampa la lista dei colori aggiungendo
+            // il colore del player che è uscito
+            if (!clientController.getLocalModel().getTotemColors().containsKey(this.player)) {
+                printAvailableColors();
+            }
         }
         else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
     }
@@ -339,7 +346,9 @@ public class TUIView implements ViewInterface, Listener {
         }
         else if (tuiState == TUIState.IN_LOBBY) {
             System.out.println(playerName + " has chosen the " + totemColor.toString().toLowerCase() + " totem!");
-            if (!clientController.getLocalModel().getTotemColors().containsKey(playerName)) {
+            // se il player non ha ancora scelto il totem, ristampa la lista dei colori rimuovendo
+            // il colore del player che ha appena scelto il totem
+            if (!clientController.getLocalModel().getTotemColors().containsKey(this.player)) {
                 printAvailableColors();
             }
         }
@@ -347,7 +356,13 @@ public class TUIView implements ViewInterface, Listener {
 
     @Override
     public void notifyGameStarted() {
-        System.out.println("The game has started! GLHF!");
+        System.out.println("                  ----------------------------------------------------                ");
+        System.out.println("        ------------------------------------------------------------------------      ");
+        System.out.println("  ----------------------------- THE GAME HAS STARTED -------------------------------- ");
+        System.out.println("----------------------------------------- GLHF! ----------------------------------------");
+        System.out.println("        ------------------------------------------------------------------------      ");
+        System.out.println("                  ----------------------------------------------------                ");
+        System.out.println();
     }
 
     @Override
@@ -363,11 +378,31 @@ public class TUIView implements ViewInterface, Listener {
      */
     @Override
     public void notifyTotemPlaced(String player, OfferTile offerTile) {
+        System.out.println();
         if(this.player.equals(player)) {
-            System.out.println();
-            System.out.println(player + " has placed his totem on offer tile " + offerTile.getTileCode());
+            System.out.println("You have placed your totem!");
+        }
+        else {
+            System.out.println(player + " has placed his totem on offer tile " + offerTile.getTileCode() + "!");
         }
         if(tuiState == TUIState.SHOW_OFFER_TRACK) printOfferTrack();
+    }
+
+    @Override
+    public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
+        System.out.println();
+        System.out.println("Every player gets some initial food based on their first turn order!");
+        System.out.println("You get " + initialFood.get(this.player) + "!");
+        System.out.println();
+        printOfferTrack();
+        if (clientController.getLocalModel().getCurrentPlayer().equals(this.player)) {
+            System.out.println("It's your turn! Place your totem on a free offer tile.");
+            printAvailableActions(clientController.getClientState());
+        }
+        else {
+            System.out.println(clientController.getLocalModel().getCurrentPlayer() + " is placing his totem. Wait for your turn!");
+            printAvailableActions(clientController.getClientState());
+        }
     }
 
     @Override
@@ -418,6 +453,9 @@ public class TUIView implements ViewInterface, Listener {
      * and takes in input the gameID of the game the client wants to join.
      */
     private void joinAvailableGames() {
+        if (clientController.getClientState() != ClientState.SETUP) {
+            throw new IllegalClientStateActionException("You cannot do that right now!");
+        }
         boolean gameJoined = false;
         tuiState = TUIState.JOIN_GAME;
         Map<Integer, GamePlayers> availableGames = printAvailableGames();
@@ -466,25 +504,32 @@ public class TUIView implements ViewInterface, Listener {
      */
     private void printAvailableActions(ClientState clientState) {
         System.out.println();
-        System.out.println("These are the available actions in the " +  clientState.toString().toLowerCase() + " state:");
         switch(clientState) {
             case SETUP:
+                System.out.println("These are the available actions in the setup state::");
                 System.out.println("- create_game(number_of_players): To create a new game with a specific number of players.");
                 System.out.println("- join_game(): To join an existing game.");
                 System.out.println("- modify_name(new_name): To modify your name.");
                 break;
             case IN_LOBBY:
+                System.out.println("These are the available actions you can take while in lobby:");
                 System.out.println("- choose_totem_color(color): To choose an available totem color from the list.");
                 System.out.println("- start_game(): To start the game. It only works if you're the host.");
                 System.out.println("- leave_game(): To end the game.");
                 printAvailableColors();
                 break;
+            case NOT_IN_TURN:
+                System.out.println("You can't perform any action, since it's not your turn.");
+                printGeneralCommands();
+                break;
             case PLACE_TOTEM:
                 System.out.println("- place_totem(offer_track_index)");
                 printGeneralCommands();
+                break;
             case DRAW_CARD:
                 System.out.println("- draw_card(top/bottom, char/building, offer_track_index): To draw a card from top or bottom row. You have also to specify if the card\nis a character card or a building and the index of the row.");
                 printGeneralCommands();
+                break;
         }
     }
     /**
@@ -499,6 +544,8 @@ public class TUIView implements ViewInterface, Listener {
         System.out.println("- show_bottom_row(): to visualize the current state of the bottom row.");
         System.out.println("- show_card_info(cardID): to see all the information about the card.");
         System.out.println("- show_my_tribe(): to visualize your own tribe.");
-        System.out.println(" -show_other_tribe(player_name): to visualize the tribe of another player.");
+        System.out.println("- show_other_tribe(player_name): to visualize the tribe of another player.");
+        System.out.println();
+        System.out.println("Type \"help()\" at any time to know which commands are available in that game phase or turn!");
     }
 }

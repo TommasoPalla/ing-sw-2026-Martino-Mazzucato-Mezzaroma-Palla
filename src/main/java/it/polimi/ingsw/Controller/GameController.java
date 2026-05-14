@@ -5,6 +5,7 @@ import it.polimi.ingsw.CustomException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
 import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
+import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Game.Game;
@@ -15,6 +16,7 @@ import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,27 +63,6 @@ public class GameController {
         }
     }
 
-
-    /**
-     * Adds player to the game creating the Player object
-     * @param playerName
-     * Adds player to the game creating the Player object and notifying other players.
-     */
-    private void addPlayer(String playerName) {
-        gameInstance.addPlayer(playerName);
-    }
-
-    /**
-     * This method removes a player from the Game's players' list after he decided to leave the lobby
-     */
-    /*TODO: valutare quando usarlo e in caso se aggiungere controlli o chiamate ad altri metodi
-       per esempio legate a handleCriticalDisconnection()*/
-    public void removePlayer(String playerName) {
-        if(gameInstance.getPlayersNames().contains(playerName)) {
-            gameInstance.removePlayer(playerName);
-        }
-    }
-
     /**
      * Adds a ClientNotifier to connectedClients. This is used to broadcast an update
      * to everyone, regardless of what networking protocol they are using.
@@ -117,7 +98,7 @@ public class GameController {
         if (connectedClients.size() > 1) {
             ArrayList<String> clients = new ArrayList<>(connectedClients.keySet());
             try {
-                newNotifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(), clients);
+                newNotifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(), clients, gameInstance.getPlayersTotemColors());
             /*if(gameInstance.isReadyToStart()){
                     notifier.notifyGameReady();         da definire
                 }*/
@@ -131,6 +112,7 @@ public class GameController {
     //forse è usato solo insieme a removePlayer, in quel caso fare merge: valutare alla fine
     public void removeClient(String playerName) {
         if(connectedClients.containsKey(playerName)) {
+            gameInstance.getPlayersTotemColors().remove(playerName);
             //TODO: da cambiare
             try {
                 notifyAll( n -> {
@@ -200,32 +182,37 @@ public class GameController {
 
     // chiamata da parte client quando il player vuole startare il game.
     // throwa l'eccezione se cerca di far partire il game senza che tutti i giocatori siano entrati
-    // (fase del game = INLOBBY)
     public void startGame(String requestingPlayer) {
         if(!requestingPlayer.equals(hostClient)) {
             throw new NotTheHostException("ERROR: you can't start the game if you're not the host!");
-        } else if (!gameInstance.isReadyToStart()) {
+        }
+        else if (!gameInstance.isReadyToStart()) {
             throw new NotEnoughPlayersException();
-        } else if(gameInstance.isStarted()){
+        }
+        else if (gameInstance.getPlayersTotemColors().size() < gameInstance.getNumPlayer()) {
+            throw new TotemColorNotChosen();
+        }
+        else if(gameInstance.isStarted()){
             throw new IllegalActionPhaseException();
         }
         else {
             for(String player: connectedClients.keySet()){
-                addPlayer(player);
+                gameInstance.addPlayer(player);
             }
-            gameInstance.startGame();
+            Map<String,Integer> initialFood = new HashMap<>(gameInstance.startGame());
+            List<String> shuffledFirstPlayingOrder = gameInstance.getOfferTrack().getTurnTile().getTurnOrder().stream()
+                    .map(Player::getName)
+                    .toList();
             //TODO: notify game started da fare in socket e chiamare qui
-            //notifyAll(n -> n.notifyGameStarted());
-            //notifyInitialFood;
-            startTurn();
+            notifyAll(n -> n.notifyGameStarted(shuffledFirstPlayingOrder, initialFood));
+            startRound();
         }
-
     }
 
     /**
      * When a new round starts, after all the events are resolved and the rows are repopulated
      */
-    public void startTurn() {
+    public void startRound() {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
         int newRound = gameInstance.setNextRound();
 

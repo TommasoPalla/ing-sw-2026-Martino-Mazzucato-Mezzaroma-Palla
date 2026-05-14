@@ -64,10 +64,12 @@ public class SocketServerHandler implements Runnable{
         commandHandlers.put(SocketHeaderNames.SUCCESSFULLY_JOINED, parameters -> {
            int gameID = ((Double) parameters[0]).intValue();
            int playerNum = ((Double) parameters[1]).intValue();
-           Type type = new TypeToken<ArrayList<String>>(){}.getType();
-           ArrayList<String> playerNames = gson.fromJson(gson.toJson(parameters[2]), type);
+           Type playersType = new TypeToken<ArrayList<String>>(){}.getType();
+           ArrayList<String> playerNames = gson.fromJson(gson.toJson(parameters[2]), playersType);
+           Type totemMapType = new TypeToken<Map<String, Color>>(){}.getType();
+           Map<String, Color> playerToColors = gson.fromJson(gson.toJson(parameters[3]), totemMapType);
            try {
-               client.successfullyJoinedGame(gameID, playerNum, playerNames);
+               client.successfullyJoinedGame(gameID, playerNum, playerNames, playerToColors);
            } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.LEFT_GAME, parameters -> {

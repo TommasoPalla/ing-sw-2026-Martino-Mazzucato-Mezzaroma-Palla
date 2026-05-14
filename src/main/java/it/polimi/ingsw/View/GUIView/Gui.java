@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class Gui implements ViewInterfaceGui, ViewInterface {
 
@@ -115,7 +116,17 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyGameStarted() {
+
+    }
+
+    @Override
     public void notifyChosenTotemColor(String playerName, Color totemColor) {
+
+    }
+
+    @Override
+    public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
 
     }
 

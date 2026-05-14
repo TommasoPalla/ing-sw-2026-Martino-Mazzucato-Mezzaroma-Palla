@@ -25,10 +25,4 @@ public class ListenerManager {
             listener.notifyTurnChange(player);
         }
     }
-
-    public void notifyTotemPlaced(String player, OfferTile offerTile){
-        for(Listener listener : listeners){
-            listener.notifyTotemPlaced(player, offerTile);
-        }
-    }
 }

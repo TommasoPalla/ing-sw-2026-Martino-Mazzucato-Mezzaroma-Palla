@@ -45,27 +45,23 @@ public class OfferTrack{
                 availableBuildingsPerEra = new  int[]{2, 3, 5};
                 break;
         }
-
-        //throw an exception if the number of players is wrong, otherwise initialize the OfferTrack
-        if(playerNumber < 2 || playerNumber > 5) throw new IllegalArgumentException("The number of player should be between 2 and 5.");
-
+        if(playerNumber == 5) offerTiles.add(new OfferTile('A'));
         offerTiles.add(new OfferTile('B'));
         offerTiles.add(new OfferTile('C'));
+        if(playerNumber >= 3) offerTiles.add(new OfferTile('D'));
         offerTiles.add(new OfferTile('E'));
         offerTiles.add(new OfferTile('F'));
-        if(playerNumber >= 3) offerTiles.add(new OfferTile('D'));
         if(playerNumber >= 4) offerTiles.add(new OfferTile('G'));
-        if(playerNumber == 5) offerTiles.add(new OfferTile('A'));
     }
 
-
-    //getters
+    // GETTERS ---------------------------------------------------------------------------------------------------------
     public ArrayList<OfferTile> getOfferTiles() {return offerTiles;}
     public ArrayList<Card> getTopRow() {return topRow;}
     public ArrayList<Card> getBottomRow() {return bottomRow;}
     public ArrayList<BuildingCard> getTopBuildingCard() {return topBuildingCard;}
     public ArrayList<BuildingCard> getBottomBuildingCard() {return bottomBuildingCard;}
     public TurnTile getTurnTile() {return turnTile;}
+    // -----------------------------------------------------------------------------------------------------------------
 
     /**
      * Here visitor pattern is used to identify only the Event Cards
