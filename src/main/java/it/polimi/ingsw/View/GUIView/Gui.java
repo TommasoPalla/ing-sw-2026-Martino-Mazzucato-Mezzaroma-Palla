@@ -40,6 +40,10 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         controller = Controller;
     }
 
+    public ClientController getClientController(){
+        return this.controller;
+    }
+
     @Override
     public void runView() {
 
@@ -180,6 +184,10 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     public void handleNickname(String Nickname){
         nickname = Nickname;
-        connection.joinGame(nickname, gameID);
+        controller.joinGame(nickname, gameID);
+    }
+    public void handleNumber(int number){
+        controller.createGame(number);
+        gameID = controller.getLocalModel().getGameId();
     }
 }
