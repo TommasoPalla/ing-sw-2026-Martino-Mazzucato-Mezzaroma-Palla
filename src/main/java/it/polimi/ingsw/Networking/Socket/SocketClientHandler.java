@@ -153,7 +153,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String, Integer> initialFood){
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_STARTED, shuffledFirstPlayingOrder);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_STARTED, shuffledFirstPlayingOrder, initialFood);
         outStream.println(gson.toJson(message));
     }
 

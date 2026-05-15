@@ -41,8 +41,8 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder) {
-        //TODO: cosa chiamo??
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String, Integer> initialFood) {
+        controller.updateGameStarted(firstTurnOrder, initialFood);
     }
 
     @Override

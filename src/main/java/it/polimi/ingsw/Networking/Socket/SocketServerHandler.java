@@ -49,10 +49,12 @@ public class SocketServerHandler implements Runnable{
            }
         });
         commandHandlers.put(SocketHeaderNames.GAME_STARTED, parameters -> {
-            Type type = new TypeToken<List<String>>(){}.getType();
-            List<String> firstTurnOrder = gson.fromJson(gson.toJson(parameters[0]), type);
+            Type playersListType = new TypeToken<List<String>>(){}.getType();
+            List<String> firstTurnOrder = gson.fromJson(gson.toJson(parameters[0]), playersListType);
+            Type foodMapType = new TypeToken<Map<String, Integer>>(){}.getType();
+            Map<String, Integer> initialFood = gson.fromJson(gson.toJson(parameters[1]), foodMapType);
             try {
-                client.updateGameStarted(firstTurnOrder);
+                client.updateGameStarted(firstTurnOrder, initialFood);
             } catch (Exception e) {}
         });
         commandHandlers.put(SocketHeaderNames.PLAYER_JOINED_GAME, parameters -> {
