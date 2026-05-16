@@ -1,0 +1,80 @@
+package it.polimi.ingsw.View.GUIView.Utils;
+
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+
+import java.io.InputStream;
+
+/**ImageManager class is used to show game assets images in the GUI.
+ * getCardNode method returns the card's image or a placeholder if an exception occur.
+ *
+ */
+public class ImageManager {
+    // Path inside the src/main/resources folder
+    private static final String RESOURCE_PATH_PREFIX = "/CardImages/";
+
+    private static final double CARD_WIDTH = 103;   //da cambiare
+    private static final double CARD_HEIGHT = 153;  //da cambiare
+
+    /**
+     * Returns the graphical representation of a card given its unique ID.
+     * Loads the image from the internal resources if present, otherwise generates a text fallback.
+     *
+     * @param cardId unique card ID received from the server
+     * @return a JavaFX Node ready to be added to the scene
+     */
+    public static Node getCardNode(String cardId) {
+        Node cardNode;
+        String fullResourcePath = RESOURCE_PATH_PREFIX + cardId + ".png";
+
+        InputStream imageStream = ImageManager.class.getResourceAsStream(fullResourcePath);
+
+        if (imageStream != null) {
+            try {
+                // Background loading is set false to ensure the stream is read safely before closing
+                Image image = new Image(imageStream, CARD_WIDTH, CARD_HEIGHT, true, true);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(CARD_WIDTH);
+                imageView.setFitHeight(CARD_HEIGHT);
+                cardNode = imageView;
+            } catch (Exception e) {
+                System.err.println("Error rendering internal image resource for ID " + cardId + ". Using fallback.");
+                cardNode = createPlaceholder(cardId);
+            }
+        } else {
+            cardNode = createPlaceholder(cardId);
+        }
+        return cardNode;
+    }
+
+    private static Node createPlaceholder(String cardId) {
+        StackPane pane = new StackPane();
+        pane.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
+
+        // Placeholder background (Rectangle with border)
+        Rectangle background = new Rectangle(CARD_WIDTH, CARD_HEIGHT);
+        background.setFill(Color.LIGHTGRAY);
+        background.setStroke(Color.DARKGRAY);
+        background.setStrokeWidth(2);
+        background.setArcWidth(10);
+        background.setArcHeight(10);
+
+        // Descriptive label
+        Label textLabel = new Label("MESOS\n\nCARD\nID: " + cardId);
+        textLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        textLabel.setTextFill(Color.BLACK);
+        textLabel.setAlignment(Pos.CENTER);
+        textLabel.setStyle("-fx-text-alignment: center;");
+
+        pane.getChildren().addAll(background, textLabel);
+        return pane;
+    }
+}

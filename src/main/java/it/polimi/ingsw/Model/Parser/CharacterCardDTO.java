@@ -3,7 +3,6 @@ package it.polimi.ingsw.Model.Parser;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.InventorType;
 
-//da completare
 public class CharacterCardDTO {
     public int era;
     public String cardID;
@@ -15,5 +14,4 @@ public class CharacterCardDTO {
     public boolean hunterIcon;
     public InventorType inventorType;
     public int shamanStars;
-
 }

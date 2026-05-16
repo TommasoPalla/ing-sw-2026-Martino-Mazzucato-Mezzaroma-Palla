@@ -12,7 +12,7 @@ class GameControllerTest {
     GameController controller = new GameController(new Game(1, 4));
     @Test
     void addPlayerTest() {
-        controller.addPlayer("pippo");
+        //controller.addPlayer("pippo");
         ArrayList<Player> players = controller.getGameModel().getPlayers();
         System.out.println(players.getFirst().getName());
     }

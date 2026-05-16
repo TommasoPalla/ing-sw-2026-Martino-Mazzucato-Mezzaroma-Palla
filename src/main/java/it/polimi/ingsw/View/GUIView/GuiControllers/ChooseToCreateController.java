@@ -4,7 +4,7 @@ import it.polimi.ingsw.View.GUIView.Gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class chooseToCreateController {
+public class ChooseToCreateController {
 
     private Gui gui;
 

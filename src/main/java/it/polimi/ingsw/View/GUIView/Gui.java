@@ -3,10 +3,7 @@ package it.polimi.ingsw.View.GUIView;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
-import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseGameIdController;
-import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNickNameScene;
-import it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController;
-import it.polimi.ingsw.View.GUIView.GuiControllers.chooseToCreateController;
+import it.polimi.ingsw.View.GUIView.GuiControllers.*;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -140,7 +137,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
                 Parent root = loader.load();
 
-                chooseToCreateController controller = loader.getController();
+                ChooseToCreateController controller = loader.getController();
 
                 controller.setGUI(this);
 
