@@ -8,7 +8,7 @@ public interface ViewInterface {
     void runView();
     void notifyNameModified(String newName);
     void notifyNewAvailableGames();
-    void notifyGameCreated(int gameID);
+    void notifyGameCreated(int gameID) ;
     void notifyGameStarted();
     void notifyPlayerJoinedLobby(String playerName);
     void notifySuccessfullyJoinedGame(int gameID);

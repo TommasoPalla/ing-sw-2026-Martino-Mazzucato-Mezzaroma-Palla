@@ -16,10 +16,10 @@
             <Font size="29.0" />
         </font>
     </Text>
-    <TextField fx:id="nicknameField" layoutX="211.0" layoutY="200.0" />
+    <TextField fx:id="numberField" layoutX="211.0" layoutY="200.0" />
     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="25.0" layoutX="24.0" layoutY="200.0" stroke="BLACK" strokeType="INSIDE" width="119.0" />
     <Polygon fill="DODGERBLUE" layoutX="167.0" layoutY="188.0" points="-50.0, 40.0, 50.0, 40.0, 5.500292778015137, 8.999707221984863" rotate="90.0" stroke="BLACK" strokeType="INSIDE" />
-    <Button fx:id="ConfirmButton" layoutX="395.0" layoutY="200.0" mnemonicParsing="false" text="CONFIRM" />
+    <Button fx:id="ConfirmButton" layoutX="395.0" layoutY="200.0" mnemonicParsing="false" onAction="#handleConfirm" text="CONFIRM" />
     <Label fx:id="errorLabel" layoutX="204.0" layoutY="314.0" textFill="#e80707" />
 </children>
 </AnchorPane>

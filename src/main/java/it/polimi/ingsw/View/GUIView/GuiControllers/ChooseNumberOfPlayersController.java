@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
 public class ChooseNumberOfPlayersController {
     private Gui gui;
 
@@ -31,7 +33,7 @@ public class ChooseNumberOfPlayersController {
             }else{
                 errorLabel.setText("Insert a number <= 5 please!");
             }
-        }catch (NumberFormatException e){
+        }catch (IOException e){
             errorLabel.setText("Insert a valid number please!");
         }
     }
