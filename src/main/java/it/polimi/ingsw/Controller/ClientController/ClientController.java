@@ -15,6 +15,7 @@ import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -106,7 +107,7 @@ public class ClientController implements ClientViewUpdate {
 
     public Map<Integer, GamePlayers> getAvailableGames(){
         if(clientState != ClientState.SETUP){
-            throw new IllegalActionPhaseException();
+            throw new IllegalClientStateActionException("You cannot do that right now!");
         }
         return availableGames;
     }
@@ -146,8 +147,10 @@ public class ClientController implements ClientViewUpdate {
             connection.startGame(player, localModel.getGameId());
         } catch (NotTheHostException e) {
             throw new NotTheHostException(e.getMessage());
+        } catch (TotemColorNotChosen e) {
+            throw new IllegalArgumentException("ERROR: The game cannot be started, because not all players have chosen their totem color.");
         } catch (NotEnoughPlayersException e) {
-            throw new NotEnoughPlayersException();
+            throw new IllegalArgumentException("ERROR: " + (localModel.getNumPlayers() - localModel.getTotemColors().size()) + " player more needed to start the game!");
         }
     }
 
@@ -264,22 +267,31 @@ public class ClientController implements ClientViewUpdate {
         // "oh fra guarda che ho creato il game che mi hai chiesto di creare" !!!!
     }
 
+    @Override
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood){
+        localModel.setNextPlayer(firstTurnOrder.getFirst());
+        if (firstTurnOrder.getFirst().equals(this.playerName)) clientState = ClientState.PLACE_TOTEM;
+        else clientState = ClientState.NOT_IN_TURN;
+        localModel.addPlayersTribes(firstTurnOrder);
+        localModel.setNextRound();
+        view.notifyGameStarted();
+        updateInitialFood(initialFood);
+    }
     /**
      * When a new player enters the lobby, the client controller updates his local model's list of players.
      * @param player the player who entered the lobby.
      */
     @Override
     public void updatePlayerConnected(String player) {
-//        localModel.addPlayer(player);
         view.notifyPlayerJoinedLobby(player); // sbagliato, serve mandargli in ingresso il game modificato
     }
 
     @Override
-    public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) {
+    public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) {
         createLocalModel(gameID, numPlayers);
-//        for (String player : players) {
-//            localModel.addPlayer(player);
-//        }
+        for (String playerName : totemColors.keySet()) {
+            localModel.chosenTotemColor(playerName, totemColors.get(playerName));
+        }
         clientState = ClientState.IN_LOBBY;
         view.notifySuccessfullyJoinedGame(gameID);
     }
@@ -293,7 +305,8 @@ public class ClientController implements ClientViewUpdate {
             localModel = null;
         }
         else {
-            localModel.removePlayer(player);
+            // rimuove il player dalla mappa di colori del model
+            localModel.updatePlayerLeft(player);
             view.notifyPlayerLeftLobby(player);
         }
     }
@@ -330,14 +343,17 @@ public class ClientController implements ClientViewUpdate {
         view.notifyChosenTotemColor(playerName, totemColor);
     }
 
+    private void updateInitialFood(Map<String, Integer> initialFood) {
+        for(String player : initialFood.keySet()) {
+            localModel.getPlayerTribe(player).addFood(initialFood.get(player));
+            System.out.println(player + "'s food = " + localModel.getPlayerTribe(player).getFoodReserve());
+        }
+        view.notifyGiveInitialFood(initialFood);
+    }
+
     @Override
     public void updateCurrentOfferTile(String playerName, int index) {
         localModel.chosenOfferTile(playerName, index);
-    }
-
-
-    public void removePlayer(String name){
-        localModel.removePlayer(name);
     }
 
     @Override
@@ -389,5 +405,4 @@ public class ClientController implements ClientViewUpdate {
     public void updateCurrentEra(int era) {
         localModel.updateEra(era);
     }
-
 }

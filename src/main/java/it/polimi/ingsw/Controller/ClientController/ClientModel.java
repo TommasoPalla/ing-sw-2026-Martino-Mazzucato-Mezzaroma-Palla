@@ -9,10 +9,7 @@ import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.TurnTile;
 import it.polimi.ingsw.Model.Users.DrawableCardVisitor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Light model for the client to be accessed. Updated when the model state is modified. Update methods
@@ -48,6 +45,13 @@ public class ClientModel {
         this.totemColors = new HashMap<>();
         this.turnTile = new TurnTile(numPlayers);
         this.offerTiles = new ArrayList<>();
+        if(numPlayers == 5) offerTiles.add(new OfferTile('A'));
+        offerTiles.add(new OfferTile('B'));
+        offerTiles.add(new OfferTile('C'));
+        if(numPlayers >= 3) offerTiles.add(new OfferTile('D'));
+        offerTiles.add(new OfferTile('E'));
+        offerTiles.add(new OfferTile('F'));
+        if(numPlayers >= 4) offerTiles.add(new OfferTile('G'));
     }
 
     /*drawable è void in quanto la gestione del caso negativo (la carta non è pescabile)
@@ -86,8 +90,13 @@ public class ClientModel {
             //currentOfferTiles.put(playerName, null);
         }
     }
-    void removePlayer(String name){
-        players.remove(name);
+    void addPlayersTribes(List<String> newPlayers){
+        for (String player : newPlayers) {
+            players.put(player, new LightTribe(player));
+        }
+    }
+    void updatePlayerLeft(String playerName){
+        totemColors.remove(playerName);
     }
 
 

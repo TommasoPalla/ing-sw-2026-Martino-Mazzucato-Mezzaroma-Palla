@@ -15,13 +15,11 @@ import java.util.Map;
 public interface VirtualRMIClient extends Remote {
     void showUpdate() throws RemoteException;
     void reportError(String errorMessage) throws RemoteException;
-
     void updateGameCreated(int gameID, int numPlayers) throws RemoteException;
-    void updateGameStarted(List<String> firstTurnOrder) throws RemoteException;
-    //void updateGameCreated() throws RemoteException;
+    void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood) throws RemoteException;
     void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException;
     void playerJoinedGame(String playerName) throws RemoteException;
-    void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players) throws RemoteException;
+    void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String, Color> totemColors) throws RemoteException;
     void playerLeftGame(String playerName) throws RemoteException;
     void chosenTotem(String playerName, Color totemColor) throws RemoteException;
     void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws RemoteException;

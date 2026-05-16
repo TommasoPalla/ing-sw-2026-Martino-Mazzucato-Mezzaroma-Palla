@@ -41,8 +41,8 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder) {
-        //TODO: cosa chiamo??
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String, Integer> initialFood) {
+        controller.updateGameStarted(firstTurnOrder, initialFood);
     }
 
     @Override
@@ -51,8 +51,8 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void successfullyJoinedGame(int gameID, int playerNum, ArrayList<String> playerNames) throws IOException {
-        controller.updateSuccessfullyJoinedGame(gameID, playerNum, playerNames);
+    public void successfullyJoinedGame(int gameID, int playerNum, ArrayList<String> playerNames, Map<String, Color> totemColors) throws IOException {
+        controller.updateSuccessfullyJoinedGame(gameID, playerNum, playerNames, totemColors);
     }
 
     @Override

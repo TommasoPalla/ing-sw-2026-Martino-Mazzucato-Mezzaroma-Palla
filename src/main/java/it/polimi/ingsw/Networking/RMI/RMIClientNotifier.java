@@ -8,7 +8,6 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.View.GamePlayers;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +28,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder) {
+    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood) {
         try {
-            clientStub.updateGameStarted(shuffledFirstPlayingOrder);
+            clientStub.updateGameStarted(shuffledFirstPlayingOrder, initialFood);
         } catch (RemoteException e){}
     }
 
@@ -45,9 +44,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players) {
+    public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players, Map<String, Color> totemColors) {
         try {
-            clientStub.successfullyJoinedGame(gameID, playerNum, players);
+            clientStub.successfullyJoinedGame(gameID, playerNum, players, totemColors);
         } catch (RemoteException e){
             throw new StubException("could not notify game created");
         }

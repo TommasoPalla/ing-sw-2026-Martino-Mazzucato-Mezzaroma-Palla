@@ -14,18 +14,17 @@ import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 public class Player {
     private final Game game;
     private final String name;
-    private Color totemColor;
+    private final Color totemColor;
     private final Tribe tribe;
     private OfferTile currentOfferTile;
 
-    public Player(Game gameInstance, String name) {
+    public Player(Game gameInstance, String name, Color totemColor) {
         this.game = gameInstance;
         this.name = name;
         this.tribe = new Tribe(gameInstance, this);
+        this.totemColor = totemColor;
         this.currentOfferTile = null;
     }
-
-    public void setTotemColor(Color totemColor){this.totemColor = totemColor;}
 
     //getters
     public Game getGame(){

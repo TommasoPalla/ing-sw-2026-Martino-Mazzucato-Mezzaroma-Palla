@@ -152,8 +152,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder){
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_STARTED, shuffledFirstPlayingOrder);
+    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String, Integer> initialFood){
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_STARTED, shuffledFirstPlayingOrder, initialFood);
         outStream.println(gson.toJson(message));
     }
 
@@ -164,8 +164,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.SUCCESSFULLY_JOINED, gameID, playerNum, players);
+    public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players, Map<String, Color> totemColors) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.SUCCESSFULLY_JOINED, gameID, playerNum, players,  totemColors);
         outStream.println(gson.toJson(message));
     }
 

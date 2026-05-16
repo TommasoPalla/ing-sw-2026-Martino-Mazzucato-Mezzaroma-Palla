@@ -37,18 +37,20 @@ public class TurnTile {
 
     public int[] getTileModifier() {return tileModifier;}
 
-    /**initTurnOrder method is called only when the game is started,
+    /** initTurnOrder method is called only when the game is started,
      * unlike the TurnTile class constructor which is invoked right after
      * the OfferTrack class is instantiated by the Game class constructor
      * i.e. when the game is created and players are still in the lobby.
      * @param players list of players
      * @return the initial turn order, randomly selected.
      */
-    //si potrebbe controllare che il numero di giocatori sia corretto, ma andrebbe passato il game per parametro
-    //prima ad offertrack e poi qua, non vale la pena
     public ArrayList<Player> initTurnOrder(ArrayList<Player> players){
-        turnOrder = new ArrayList<>(players);
+        this.turnOrder = new ArrayList<>(players);
         Collections.shuffle(turnOrder);
+        //
+        ArrayList<String> playerNames = turnOrder.stream().map(Player::getName).collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("Turn Order: " + playerNames);
+        //
         return turnOrder;
     }
 

@@ -9,5 +9,4 @@ public interface Listener {
     void notifyGameEvent();
     void notifyTotemPlaced(String player, OfferTile offerTile);
     void notifyCardDrawn(String player, Card card, boolean topRow);
-    void notifyGameStarted();
 }

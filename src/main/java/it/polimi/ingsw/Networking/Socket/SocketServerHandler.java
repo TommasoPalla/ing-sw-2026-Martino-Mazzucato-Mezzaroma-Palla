@@ -49,10 +49,12 @@ public class SocketServerHandler implements Runnable{
            }
         });
         commandHandlers.put(SocketHeaderNames.GAME_STARTED, parameters -> {
-            Type type = new TypeToken<List<String>>(){}.getType();
-            List<String> firstTurnOrder = gson.fromJson(gson.toJson(parameters[0]), type);
+            Type playersListType = new TypeToken<List<String>>(){}.getType();
+            List<String> firstTurnOrder = gson.fromJson(gson.toJson(parameters[0]), playersListType);
+            Type foodMapType = new TypeToken<Map<String, Integer>>(){}.getType();
+            Map<String, Integer> initialFood = gson.fromJson(gson.toJson(parameters[1]), foodMapType);
             try {
-                client.updateGameStarted(firstTurnOrder);
+                client.updateGameStarted(firstTurnOrder, initialFood);
             } catch (Exception e) {}
         });
         commandHandlers.put(SocketHeaderNames.PLAYER_JOINED_GAME, parameters -> {
@@ -64,10 +66,12 @@ public class SocketServerHandler implements Runnable{
         commandHandlers.put(SocketHeaderNames.SUCCESSFULLY_JOINED, parameters -> {
            int gameID = ((Double) parameters[0]).intValue();
            int playerNum = ((Double) parameters[1]).intValue();
-           Type type = new TypeToken<ArrayList<String>>(){}.getType();
-           ArrayList<String> playerNames = gson.fromJson(gson.toJson(parameters[2]), type);
+           Type playersType = new TypeToken<ArrayList<String>>(){}.getType();
+           ArrayList<String> playerNames = gson.fromJson(gson.toJson(parameters[2]), playersType);
+           Type totemMapType = new TypeToken<Map<String, Color>>(){}.getType();
+           Map<String, Color> playerToColors = gson.fromJson(gson.toJson(parameters[3]), totemMapType);
            try {
-               client.successfullyJoinedGame(gameID, playerNum, playerNames);
+               client.successfullyJoinedGame(gameID, playerNum, playerNames, playerToColors);
            } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.LEFT_GAME, parameters -> {
