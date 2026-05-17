@@ -13,7 +13,7 @@ class CardLoaderTest {
     CardLoader loader = new CardLoader();
     @Test
     void loadBuildings() {
-        List<BuildingCard> allBuildings = loader.loadBuildings("json/buildingTest.json");
+        List<BuildingCard> allBuildings = loader.loadBuildings("json/test_card.json");
         assertEquals("E1_B_2", allBuildings.get(1).getCardID());
     }
     @Test
