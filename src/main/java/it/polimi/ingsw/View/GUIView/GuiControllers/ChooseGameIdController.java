@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import java.io.IOException;
 import java.util.Map;
 
 public class ChooseGameIdController {
@@ -66,8 +68,7 @@ public class ChooseGameIdController {
 
         idColumn.setCellValueFactory(cellData -> {
 
-            Integer id =
-                    cellData.getValue().getKey();
+            Integer id = cellData.getValue().getKey();
 
             return new SimpleObjectProperty<>(id);
         });
@@ -90,7 +91,11 @@ public class ChooseGameIdController {
 
         int gameId = selected.getKey();//selected.getKey() is ID
 
-        gui.handleGameID(gameId);
+        try{
+            gui.handleGameID(gameId);
+        }catch(IOException e){
+            System.out.println("Error: " + e);
+        }
     }
 
 }
