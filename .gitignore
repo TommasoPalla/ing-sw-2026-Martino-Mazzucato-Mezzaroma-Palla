@@ -9,7 +9,7 @@
 
 # Ignore game assets
 assets/*
-src/main/resources/CardImages/
+src/main/resources/Images/
 
 # User-specific stuff
 .idea/**/workspace.xml
