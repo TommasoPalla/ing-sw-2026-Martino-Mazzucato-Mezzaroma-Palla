@@ -19,10 +19,12 @@ import java.io.InputStream;
  */
 public class ImageManager {
     // Path inside the src/main/resources folder
-    private static final String RESOURCE_PATH_PREFIX = "/CardImages/";
+    private static final String RESOURCE_PATH_PREFIX = "/Images/";
 
     private static final double CARD_WIDTH = 103;   //da cambiare
     private static final double CARD_HEIGHT = 153;  //da cambiare
+    private static final double TILE_WIDTH = 103;
+    private static final double TILE_HEIGHT = 153;
 
     /**
      * Returns the graphical representation of a card given its unique ID.
@@ -33,7 +35,7 @@ public class ImageManager {
      */
     public static Node getCardNode(String cardId) {
         Node cardNode;
-        String fullResourcePath = RESOURCE_PATH_PREFIX + cardId + ".png";
+        String fullResourcePath = RESOURCE_PATH_PREFIX + "CardImages/" + cardId + ".png";
 
         InputStream imageStream = ImageManager.class.getResourceAsStream(fullResourcePath);
 
@@ -55,6 +57,53 @@ public class ImageManager {
         return cardNode;
     }
 
+    public static Node getOfferTileNode(char id){
+        Node tileNode;
+        String fullPath = RESOURCE_PATH_PREFIX + "Tiles/Offer" + id + ".png";
+
+        InputStream imageStream = ImageManager.class.getResourceAsStream(fullPath);
+
+        if(imageStream != null) {
+            try {
+                Image image = new Image(imageStream, TILE_WIDTH, TILE_HEIGHT, true, true);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(CARD_WIDTH);
+                imageView.setFitHeight(CARD_HEIGHT);
+                tileNode = imageView;
+            } catch (Exception e) {
+                System.err.println("Error rendering internal image resource for ID " + id + ". Using fallback.");
+                tileNode = createPlaceholderTile(id);   //da adattare il placeholder anche pr tiles
+            }
+        } else {
+            tileNode = createPlaceholderTile(id);
+        }
+        return tileNode;
+    }
+
+    //è uguale, ma da sstemare
+    private static Node createPlaceholderTile(char id){
+        StackPane pane = new StackPane();
+        pane.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
+
+        // Placeholder background (Rectangle with border)
+        Rectangle background = new Rectangle(CARD_WIDTH, CARD_HEIGHT);
+        background.setFill(Color.LIGHTGRAY);
+        background.setStroke(Color.DARKGRAY);
+        background.setStrokeWidth(2);
+        background.setArcWidth(10);
+        background.setArcHeight(10);
+
+        // Descriptive label
+        Label textLabel = new Label("TILE\nID: " + id);
+        textLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        textLabel.setTextFill(Color.BLACK);
+        textLabel.setAlignment(Pos.CENTER);
+        textLabel.setStyle("-fx-text-alignment: center;");
+
+        pane.getChildren().addAll(background, textLabel);
+        return pane;
+    }
+
     private static Node createPlaceholder(String cardId) {
         StackPane pane = new StackPane();
         pane.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
@@ -68,7 +117,7 @@ public class ImageManager {
         background.setArcHeight(10);
 
         // Descriptive label
-        Label textLabel = new Label("MESOS\n\nCARD\nID: " + cardId);
+        Label textLabel = new Label("CARD\nID: " + cardId);
         textLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         textLabel.setTextFill(Color.BLACK);
         textLabel.setAlignment(Pos.CENTER);

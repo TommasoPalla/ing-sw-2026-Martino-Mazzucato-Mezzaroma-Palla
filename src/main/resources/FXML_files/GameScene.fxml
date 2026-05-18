@@ -1,17 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameSceneController">
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameSceneController"
+            maxHeight="2160" maxWidth="3840" minHeight="720" minWidth="1020" prefHeight="1080.0" prefWidth="1920.0"
+            style="-fx-background-image: url('/Images/Background.png');
+                   -fx-background-size: cover;
+                   -fx-background-position: center;
+                   -fx-background-repeat: no-repeat;">
+
    <children>
-      <HBox layoutX="808.0" layoutY="160.0" prefHeight="153.0" prefWidth="698.0" style="-fx-background-color: D4DAE1;" AnchorPane.rightAnchor="414.0">
-         <children>
-            <Pane fx:id="cardSlot01" prefHeight="153.0" prefWidth="103.0" />
-         </children>
+      <Label fx:id="bannerLabel" prefWidth="400" prefHeight="300" alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="48.0"/>
+         </font>
+      </Label>
+      <HBox fx:id="topRow" spacing="10" AnchorPane.topAnchor="160" AnchorPane.leftAnchor="80"
+            style="-fx-background-color: #CFD5DA;
+                   -fx-background-radius: 15.0;
+                   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 10.0, 0.0, 0.0, 5.0);">
+         <padding>
+            <Insets left="10" top="10" right="10" bottom="10"/>
+         </padding>
       </HBox>
-      <HBox layoutX="338.0" layoutY="178.0" prefHeight="153.0" prefWidth="200.0" style="-fx-background-color: green;" />
+      <HBox layoutX="515.0" layoutY="153.0" prefHeight="173.0" prefWidth="515.0" fx:id="topBuildings" style="-fx-background-color: green;" AnchorPane.topAnchor="160" AnchorPane.rightAnchor="530"/>
+      <HBox layoutX="618.0" layoutY="153.0" prefHeight="173.0" prefWidth="618.0" fx:id="bottomRow" style="-fx-background-color: red;" AnchorPane.topAnchor="566" AnchorPane.leftAnchor="80"/>
+      <HBox layoutX="309.0" layoutY="153.0" prefHeight="173.0" prefWidth="309.0" fx:id="bottomBuildings" style="-fx-background-color: yellow;" AnchorPane.topAnchor="566" AnchorPane.rightAnchor="530"/>
+
+      <HBox fx:id="offerTrack" layoutX="309.0" layoutY="173.0" prefHeight="180.0" prefWidth="968.0"  style="-fx-background-color: pink;" AnchorPane.topAnchor="363" AnchorPane.leftAnchor="300"/>
+
+      <VBox fx:id="infoBoard" layoutX="200" layoutY="100" prefHeight="900" prefWidth="400" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="50" style="-fx-background-color: beige" />
+      <VBox fx:id="tribeRegion" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="350" prefWidth="758" prefHeight="300"
+            styleClass="cards-Box">
+         <children>
+            <Label  text="My Tribe" alignment="TOP_CENTER" prefWidth="100">
+               <VBox.margin>
+                  <Insets left="329"/>
+               </VBox.margin>
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <HBox fx:id="myTribe" spacing="20.0" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="350" prefWidth="758" prefHeight="300">
+               <padding>
+                  <Insets top="15.0" bottom="10.0" left="10.0" right="10.0" />
+               </padding>
+               <children>
+                  <VBox fx:id="hunterColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
+                  <VBox fx:id="builderColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
+                  <VBox fx:id="gathererColumn" prefWidth="113" prefHeight="270"  spacing="-20"/>
+                  <VBox fx:id="artistColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
+                  <VBox fx:id="shamanColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
+                  <VBox fx:id="inventorColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+
    </children>
 </AnchorPane>

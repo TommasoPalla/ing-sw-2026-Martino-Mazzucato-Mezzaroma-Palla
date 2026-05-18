@@ -30,6 +30,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     private ClientState guiState = ClientState.SETUP;
 
     public Gui(Stage stage){
+
         this.primaryStage = stage;
         this.players = new ArrayList<>();
     }
@@ -141,6 +142,8 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyGameStarted() {
+        //try catch da fare meglio
+            playGameScene();
 
     }
 
@@ -213,9 +216,9 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     @Override
     public void chooseTotemScene() {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseTotemScene.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseNickName.fxml"));
             Parent root = loader.load();
-            ChooseTotemController controller = loader.getController();
+            ChooseNickNameController controller = loader.getController();
             controller.setGUI(this);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
@@ -228,6 +231,19 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void playGameScene() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/GameScene.fxml"));
+            Parent root = loader.load();
+            GameSceneController controller = loader.getController();
+            controller.setGUI(this);
+            gameSceneController = controller;
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+
+        } catch (IOException e){
+            System.out.println("Error: "+ e);
+        }
 
     }
 
@@ -265,7 +281,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             System.out.println("Error: " + e);
         }
     }
-    //public Set<String> getLobbyPlayers(){return lobbyPlayers;}
+
 
     public void handleJoin(){
         showGameIdScene();

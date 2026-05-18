@@ -1,0 +1,15 @@
+.card-panel {
+    -fx-background-color: brown;
+    -fx-background-radius: 15.0;
+    -fx-border-color: beige;
+    -fx-border-radius: 15.0;
+    -fx-border-width: 2.0;
+}
+
+.cards-Box {
+    -fx-background-color: green;
+    -fx-background-radius: 15.0;
+    -fx-border-color: green;
+    -fx-border-radius: 15.0;
+    -fx-border-width: 2.0;
+}
