@@ -100,7 +100,12 @@ public class RMIServer implements VirtualRMIServer {
 
     @Override
     public void chooseOfferTile(VirtualRMIClient client, int index) throws OccupiedTileException {
-
+        PlayerRecord callerRecord = clientRecords.get(client);
+        try{
+            serverController.chooseOfferTile(callerRecord, index);
+        }catch(OccupiedTileException e){
+            throw new OccupiedTileException();
+        }
     }
 
     @Override
@@ -119,6 +124,7 @@ public class RMIServer implements VirtualRMIServer {
         }
     }
 
+    /*
     @Override
     public void chooseOfferTile(VirtualRMIClient client, PlayerRecord playerRecord, int index) throws RemoteException {
         try{
@@ -128,6 +134,7 @@ public class RMIServer implements VirtualRMIServer {
             throw new OccupiedTileException();
         }
     }
+     */
 
     public ArrayList<VirtualRMIClient> getClients(){
         return clients;

@@ -111,7 +111,6 @@ public class GameController {
     public void removeClient(String playerName) {
         if(connectedClients.containsKey(playerName)) {
             gameInstance.getPlayersTotemColors().remove(playerName);
-            //TODO: da cambiare
             try {
                 notifyAll( n -> {
                     n.notifyPlayerLeftGame(playerName);
@@ -171,6 +170,7 @@ public class GameController {
             } catch (StubException e) {
                 handleCriticalDisconnection();
             }
+            System.out.println("DEBUG: new current player: " + nextPlayer.getName());
             return nextPlayer;
         }
         catch (LastPlayerOfTurnException e) {
@@ -207,9 +207,7 @@ public class GameController {
         }
     }
 
-    /**
-     * When a new round starts, after all the events are resolved and the rows are repopulated
-     */
+    /** * When a new round starts, after all the events are resolved and the rows are repopulated */
     public void startRound() {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
         int newRound = gameInstance.setNextRound();
@@ -246,14 +244,7 @@ public class GameController {
         } catch (StubException e) {
             handleCriticalDisconnection();
         }
-        setNextPlayer();
-    }
-
-    /**
-     * @deprecated
-     */
-    public void playTurn(Player player) {
-        //????
+        //setNextPlayer();
     }
 
     /**Handles the player request to place the totem on a specific
@@ -263,7 +254,9 @@ public class GameController {
      * @param playerName the player who requests to place the totem
      * @param index index of the offer tile, starting from 0
      */
+    //TODO: da fare che se tutti hanno scelto si passa alla fase di pesca delle carte
     public synchronized void handleChooseOfferTile (String playerName, int index) {
+        System.out.println("DEBUG TURNO -> Richiesto da: [" + playerName + "], Turno attuale sul Server: [" + gameInstance.getCurrentPlayer().getName() + "]");
         //throws to ServerController IllegalActionPhaseException
         checkPhase(GamePhase.START_TURN);
         Player player = gameInstance.getPlayerByName(playerName);
@@ -281,6 +274,7 @@ public class GameController {
         catch(StubException e){
             handleCriticalDisconnection();
         }
+        setNextPlayer();
     }
 
     public synchronized void handleDraw(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuilding, int index){

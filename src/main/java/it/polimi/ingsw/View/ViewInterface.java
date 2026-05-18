@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
 
 import java.util.ArrayList;
@@ -16,4 +17,6 @@ public interface ViewInterface {
     void notifyPlayerLeftLobby(String playerName);
     void notifyChosenTotemColor(String playerName, Color totemColor);
     void notifyGiveInitialFood(Map<String,Integer> initialFood);
+    void notifyTileChosen(String playerName, int index);
+    void notifyNewCurrentPlayer(String playerName, ClientState clientState);
 }

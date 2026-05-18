@@ -3,6 +3,7 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UIException.AlreadyChosenTotemException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
@@ -60,6 +61,30 @@ public record CommandParser(ClientController clientController) {
             throw new IllegalArgumentException("ERROR: You have already chosen a totem color!");
         } catch (UnavailableColorException e) {
             throw new IllegalArgumentException("ERROR: this totem color is already taken!");
+        }
+    }
+
+    public void parseChooseOfferTile(String argsString){
+        if (argsString.trim().isEmpty()) {
+            throw new IllegalArgumentException("ERROR: you have to choose an offer tile!");
+        }
+        String[] commandArgs = parseArguments(CommandType.PLACE_TOTEM, argsString);
+        int index;
+        try {
+            index = Integer.parseInt(commandArgs[0]);
+        } catch (NumberFormatException e) {
+            //throw new RuntimeException(e.getMessage()); forse??
+            return;
+        }
+        try {
+            clientController.chooseOfferTile(index);
+        } catch (IllegalClientStateActionException e) {
+            throw new IllegalClientStateActionException(e.getMessage());
+        } catch (IllegalActionPhaseException e) {
+            System.out.println(clientController.getLocalModel().getCurrentPhase());
+            throw new IllegalActionPhaseException();
+        } catch (OccupiedTileException e) {
+            throw new OccupiedTileException();
         }
     }
 

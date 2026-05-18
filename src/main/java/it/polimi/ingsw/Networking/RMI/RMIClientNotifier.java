@@ -162,16 +162,29 @@ public class RMIClientNotifier implements ClientNotifier {
 
     @Override
     public void notifyNextPlayer(String playerName) {
-
+        try {
+            clientStub.updateNextPlayer(playerName);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
     }
 
     @Override
     public void notifyGamePhase(GamePhase newPhase) {
+        try {
+            clientStub.updateGamePhase(newPhase);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
 
     }
 
     @Override
     public void notifyEra(int era) {
-
+        try {
+            clientStub.updateEra(era);
+        } catch (RemoteException e){
+            //throw new StubException("could not notify");
+        }
     }
 }

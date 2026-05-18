@@ -96,6 +96,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyNewCurrentPlayer(String playerName, ClientState clientState) {
+
+    }
+
+    @Override
     public void notifyGameCreated(int gameID) {
         Platform.runLater(() -> {//avoids to throw exception required by lobbyScene
             try{
@@ -154,6 +159,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
+
+    }
+
+    @Override
+    public void notifyTileChosen(String playerName, int index) {
 
     }
 
@@ -236,7 +246,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             Parent root = loader.load();
             GameSceneController controller = loader.getController();
             controller.setGUI(this);
-            gameSceneController = controller;
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.show();

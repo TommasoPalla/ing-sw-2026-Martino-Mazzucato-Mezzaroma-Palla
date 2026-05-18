@@ -84,8 +84,6 @@ public class ClientController implements ClientViewUpdate {
         localModel.updateCurrentRound(round);
     }
 
-    //TODO: siamo sicuri che vada fatto cosi?
-
     //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-----------------------------
     /**
      * This method forwards the request through the network to the Server Controller, which will add the
@@ -287,7 +285,6 @@ public class ClientController implements ClientViewUpdate {
         view.notifyPlayerJoinedLobby(player); // sbagliato, serve mandargli in ingresso il game modificato
     }
 
-    //TODO: forse da togliere ArrayList<String> players siccome usiamo la mappa per prendere tutti i nomi(?)
     @Override
     public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) {
         createLocalModel(gameID, numPlayers);
@@ -357,6 +354,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentOfferTile(String playerName, int index) {
         localModel.chosenOfferTile(playerName, index);
+        view.notifyTileChosen(playerName, index);
     }
 
     @Override
@@ -397,15 +395,36 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentPlayer(String playerName) {
         localModel.setNextPlayer(playerName);
+        System.out.println("DEBUG: ricevuto nuovo giocatore attuale: " + playerName);
+        syncClientState();
+        view.notifyNewCurrentPlayer(playerName, this.clientState);
     }
 
     @Override
     public void updateGamePhase(GamePhase phase) {
         localModel.updateGamePhase(phase);
+        syncClientState();
     }
 
     @Override
     public void updateCurrentEra(int era) {
         localModel.updateEra(era);
+    }
+
+    private void syncClientState() {
+        if (!this.playerName.equals(localModel.getCurrentPlayer())) {
+            setClientState(ClientState.NOT_IN_TURN);
+            return;
+        }
+
+        switch (localModel.getCurrentPhase()){
+            case START_GAME:
+            case START_TURN:
+                setClientState(ClientState.PLACE_TOTEM);
+                break;
+            default:
+                setClientState(ClientState.DRAW_CARD);
+                break;
+        }
     }
 }

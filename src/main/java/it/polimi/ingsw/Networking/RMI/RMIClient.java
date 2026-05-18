@@ -85,7 +85,7 @@ public class RMIClient implements VirtualRMIClient {
     @Override
     public void chosenTile(String playerName, int index){
         try{
-            controller.chooseOfferTile(index);
+            controller.updateCurrentOfferTile(playerName, index);
         }catch(OccupiedTileException e){
             throw new OccupiedTileException();
         }

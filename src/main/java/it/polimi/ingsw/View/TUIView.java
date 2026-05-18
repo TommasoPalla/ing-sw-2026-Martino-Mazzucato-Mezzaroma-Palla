@@ -137,7 +137,7 @@ public class TUIView implements ViewInterface, Listener {
             case SHOW_MY_TRIBE          -> printTribe(player);
             //case SHOW_OTHER_TRIBE       -> parsePrintTribe();
             case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
-            //case PLACE_TOTEM            ->
+            case PLACE_TOTEM            -> commandParser.parseChooseOfferTile(argsString);
             case HELP                   -> printAvailableActions(clientController.getClientState());
             default                     -> throw new IllegalArgumentException("ERROR: Invalid command, please try again or enter \"help()\" to know the available commands.");
         }
@@ -413,6 +413,25 @@ public class TUIView implements ViewInterface, Listener {
         }
         if(tuiState == TUIState.SHOW_TOP_ROW && topRow) printTopRow();
         else if(tuiState == TUIState.SHOW_BOTTOM_ROW && !topRow) printBottomRow();
+    }
+
+    @Override
+    public void notifyTileChosen(String playerName, int index) {
+        if(!playerName.equals(this.player))
+            System.out.println("\n" + playerName + " placed his totem on tile " + index + "!");
+        else
+            System.out.println("\nYou placed your totem on tile " + index + "!");
+    }
+
+    @Override
+    public void notifyNewCurrentPlayer(String currentPlayerName, ClientState clientState) {
+        if(currentPlayerName.equals(this.player))
+            System.out.println("\nIt's your turn!");
+        else
+            System.out.println("\nIt's " + currentPlayerName + "'s turn, wait patiently!");
+
+        printAvailableActions(clientState);
+        System.out.println();
     }
 
     /**
