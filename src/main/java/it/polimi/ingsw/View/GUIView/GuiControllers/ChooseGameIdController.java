@@ -25,6 +25,9 @@ public class ChooseGameIdController {
     private Button confirmButton;
 
     @FXML
+    private Button goBack;
+
+    @FXML
     private TableView<Map.Entry<Integer, GamePlayers>> gamesTable;
 
     //each table column has a specific field
@@ -78,6 +81,14 @@ public class ChooseGameIdController {
         gamesTable.getItems().clear();
 
         gamesTable.getItems().addAll(availableGames.entrySet());
+    }
+    @FXML
+    private void handleLeave(){
+        try{
+            gui.showCreationChoiceScene();
+        }catch(IOException e){
+
+        }
     }
     @FXML
     private void handleConfirm() {

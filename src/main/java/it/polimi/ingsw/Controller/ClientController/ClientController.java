@@ -283,6 +283,7 @@ public class ClientController implements ClientViewUpdate {
      */
     @Override
     public void updatePlayerConnected(String player) {
+        localModel.addPlayer(player);
         view.notifyPlayerJoinedLobby(player); // sbagliato, serve mandargli in ingresso il game modificato
     }
 
@@ -291,6 +292,7 @@ public class ClientController implements ClientViewUpdate {
     public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) {
         createLocalModel(gameID, numPlayers);
         for (String playerName : totemColors.keySet()) {
+            localModel.addPlayer(playerName);
             localModel.chosenTotemColor(playerName, totemColors.get(playerName));
         }
         clientState = ClientState.IN_LOBBY;

@@ -16,13 +16,14 @@
          </font>
       </Text>
       <Label fx:id="errorLabel" layoutX="204.0" layoutY="314.0" textFill="#e80707" />
-      <TableView fx:id="gamesTable" layoutX="33.0" layoutY="294.0" prefHeight="456.0" prefWidth="877.0">
+      <TableView fx:id="gamesTable" layoutX="33.0" layoutY="294.0" prefHeight="456.0" prefWidth="680.0">
         <columns>
           <TableColumn fx:id="connectedColumn" prefWidth="175.5" text="available" />
-          <TableColumn fx:id="playersColumn" prefWidth="1006.5" text="connected.." />
-            <TableColumn fx:id="idColumn" prefWidth="119.0" text="ID" />
+          <TableColumn fx:id="playersColumn" prefWidth="405.5" text="connected.." />
+            <TableColumn fx:id="idColumn" prefWidth="100.0" text="ID" />
         </columns>
       </TableView>
-      <Button fx:id="confirmButton" layoutX="1049.0" layoutY="467.0" mnemonicParsing="false" onAction="#handleConfirm" prefHeight="110.0" prefWidth="181.0" text="CONFIRM" />
+      <Button fx:id="confirmButton" layoutX="842.0" layoutY="467.0" mnemonicParsing="false" onAction="#handleConfirm" prefHeight="110.0" prefWidth="181.0" text="CONFIRM" />
+      <Button fx:id="goBack" layoutX="872.0" layoutY="273.0" mnemonicParsing="false" onAction="#handleLeave" prefHeight="70.0" prefWidth="121.0" text="Back" />
    </children>
 </AnchorPane>

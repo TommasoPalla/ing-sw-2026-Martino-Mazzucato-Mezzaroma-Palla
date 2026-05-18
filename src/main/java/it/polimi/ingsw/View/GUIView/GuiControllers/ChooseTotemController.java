@@ -8,6 +8,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
 public class ChooseTotemController {
     private Gui gui;
 
@@ -31,7 +33,12 @@ public class ChooseTotemController {
     @FXML
     private void handleWhite() {
         if(gui.getClientController().getLocalModel().isColorAvailable(Color.WHITE)){
+            gui.getClientController().chooseTotemColor(Color.WHITE);
+            try{
+                gui.lobbyScene();
+            }catch(IOException e){
 
+            }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
         }
@@ -39,7 +46,12 @@ public class ChooseTotemController {
     @FXML
     private void handleRed() {
         if(gui.getClientController().getLocalModel().isColorAvailable(Color.RED)){
+            gui.getClientController().chooseTotemColor(Color.RED);
+            try{
+                gui.lobbyScene();
+            }catch(IOException e){
 
+            }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
         }
@@ -47,7 +59,12 @@ public class ChooseTotemController {
     @FXML
     private void handlePurple() {
         if(gui.getClientController().getLocalModel().isColorAvailable(Color.BLACK)){
+            gui.getClientController().chooseTotemColor(Color.BLACK);
+            try{
+                gui.lobbyScene();
+            }catch(IOException e){
 
+            }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
         }
@@ -55,7 +72,12 @@ public class ChooseTotemController {
     @FXML
     private void handleYellow() {
         if(gui.getClientController().getLocalModel().isColorAvailable(Color.YELLOW)){
+            gui.getClientController().chooseTotemColor(Color.YELLOW);
+            try{
+                gui.lobbyScene();
+            }catch(IOException e){
 
+            }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
         }
@@ -63,7 +85,12 @@ public class ChooseTotemController {
     @FXML
     private void handleBlue() {
         if(gui.getClientController().getLocalModel().isColorAvailable(Color.BLUE)){
+            gui.getClientController().chooseTotemColor(Color.BLUE);
+            try{
+                gui.lobbyScene();
+            }catch(IOException e){
 
+            }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
         }

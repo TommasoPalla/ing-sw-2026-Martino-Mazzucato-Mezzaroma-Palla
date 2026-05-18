@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 public class Gui implements ViewInterfaceGui, ViewInterface {
 
@@ -24,20 +25,28 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     private String nickname;
     private ChooseGameIdController ChooseId;
     private LobbySceneController lobby;
+    private ArrayList<String> players;
 
     private ClientState guiState = ClientState.SETUP;
 
     public Gui(Stage stage){
-
         this.primaryStage = stage;
+        this.players = new ArrayList<>();
     }
 
-    public void bindController( ClientController Controller){
+    public void bindController(ClientController Controller){
         controller = Controller;
     }
 
     public ClientController getClientController(){
         return this.controller;
+    }
+
+    public ArrayList<String> getPlayers(){
+        return players;
+    }
+    public void removeMe(){
+        players.remove(nickname);
     }
 
     @Override
@@ -98,15 +107,22 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyPlayerJoinedLobby(String playerName) {
-        lobby.notifyPlayerJoined(playerName);
-        ChooseId.loadGames(controller.getAvailableGames());//private controllers keep the reference to the active ones
-        System.out.println("LOBBY REF = " + lobby);
+        Platform.runLater(() -> {//avoids to throw exception required by lobbyScene
+            try{
+                lobby.notifyPlayerJoined(playerName);
+                //ChooseId.loadGames(controller.getAvailableGames());//private controllers keep the reference to the active ones
+                players.add(playerName);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
     public void notifyPlayerLeftLobby(String playerName) {
         lobby.notifyPlayerLeft(playerName);
         ChooseId.loadGames(controller.getAvailableGames());
+        players.remove(playerName);
     }
 
     @Override
@@ -120,6 +136,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             lobby.notifyPlayerJoined(playerName);
             //TODO: da fare anche la notifica di scelta dei totem in base a totemColors (gia' presi)
         }
+        players=playerNames;
     }
 
     @Override
@@ -196,9 +213,9 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     @Override
     public void chooseTotemScene() {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseNickName.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseTotemScene.fxml"));
             Parent root = loader.load();
-            ChooseNickNameController controller = loader.getController();
+            ChooseTotemController controller = loader.getController();
             controller.setGUI(this);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
@@ -222,6 +239,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             LobbySceneController Controller = loader.getController();
             Controller.setGUI(this);
             lobby = Controller;
+            Controller.init();
 
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
@@ -247,12 +265,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             System.out.println("Error: " + e);
         }
     }
+    //public Set<String> getLobbyPlayers(){return lobbyPlayers;}
 
     public void handleJoin(){
         showGameIdScene();
     }
     public void handleCreate(){
         chooseNumberOfPlayers();
+        players.add(nickname);
+
     }
 
     public void handleGameID(int ID) throws IOException{
@@ -264,9 +285,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         nickname = Nickname;
         controller.setPlayerName(nickname);
         showCreationChoiceScene();
+
     }
     public void handleNumber(int number) throws IOException{
         controller.setClientState(ClientState.SETUP);
         controller.createGame(number);
+
     }
 }
