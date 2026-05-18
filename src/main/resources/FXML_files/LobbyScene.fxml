@@ -18,7 +18,7 @@
             <Font size="29.0" />
          </font>
       </Label>
-      <ComboBox fx:id="comboTendina" layoutX="236.0" layoutY="598.0" prefHeight="89.0" prefWidth="301.0" />
+      <ComboBox fx:id="comboDropDownMenu" layoutX="236.0" layoutY="598.0" prefHeight="89.0" prefWidth="301.0" />
       <Label fx:id="updateLabel" layoutX="1359.0" layoutY="590.0" textFill="#4b1ab5">
          <font>
             <Font size="29.0" />

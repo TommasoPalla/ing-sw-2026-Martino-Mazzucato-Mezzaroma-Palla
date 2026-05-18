@@ -286,6 +286,7 @@ public class ClientController implements ClientViewUpdate {
         view.notifyPlayerJoinedLobby(player); // sbagliato, serve mandargli in ingresso il game modificato
     }
 
+    //TODO: forse da togliere ArrayList<String> players siccome usiamo la mappa per prendere tutti i nomi(?)
     @Override
     public void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) {
         createLocalModel(gameID, numPlayers);
@@ -293,7 +294,7 @@ public class ClientController implements ClientViewUpdate {
             localModel.chosenTotemColor(playerName, totemColors.get(playerName));
         }
         clientState = ClientState.IN_LOBBY;
-        view.notifySuccessfullyJoinedGame(gameID);
+        view.notifySuccessfullyJoinedGame(gameID, players, totemColors);
     }
 
     @Override

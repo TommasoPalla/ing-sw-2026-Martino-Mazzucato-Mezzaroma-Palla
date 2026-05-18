@@ -26,7 +26,6 @@ public class RMIClientNotifier implements ClientNotifier {
             //throw new StubException("could not notify");
         }
     }
-
     @Override
     public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood) {
         try {

@@ -3,7 +3,6 @@ package it.polimi.ingsw.View.GUIView;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
-import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.GUIView.GuiControllers.*;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
@@ -15,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Gui implements ViewInterfaceGui, ViewInterface {
@@ -110,8 +110,16 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifySuccessfullyJoinedGame(int gameID) {
-
+    public void notifySuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
+        for(String playerName : playerNames){
+            /*
+            mezzo sbagliato. siccome notifyPlayerJoined era un metodo pensato per chi e' gia' in lobby
+            prende il nome passato e lo stampa dicendo "ha joinato". in questo caso pero' non e' chi
+            e' passato per parametro a joinare perche' era gia' in lobby. e' una cosa di cui possiamo
+            non preoccuparci*/
+            lobby.notifyPlayerJoined(playerName);
+            //TODO: da fare anche la notifica di scelta dei totem in base a totemColors (gia' presi)
+        }
     }
 
     @Override
@@ -248,8 +256,8 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     public void handleGameID(int ID) throws IOException{
-        controller.joinGame(nickname, ID);
         lobbyScene();
+        controller.joinGame(nickname, ID);
     }
 
     public void handleNickname(String Nickname) throws IOException{

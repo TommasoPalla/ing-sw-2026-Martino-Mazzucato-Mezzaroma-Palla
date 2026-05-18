@@ -314,7 +314,7 @@ public class TUIView implements ViewInterface, Listener {
     }
 
     @Override
-    public void notifySuccessfullyJoinedGame(int gameID) {
+    public void notifySuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
         tuiState = TUIState.IN_LOBBY;
         System.out.println("You have successfully joined the game with ID: " + gameID + "!");
         printAvailableActions(clientController.getClientState());

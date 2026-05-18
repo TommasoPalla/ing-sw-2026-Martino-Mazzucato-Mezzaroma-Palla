@@ -80,8 +80,6 @@ public class GameController {
         } else if (connectedClients.isEmpty()){
             hostClient = playerName;
         }
-        // notifica gli altri giocatori nella lobby
-        //TODO: da cambiare
         try {
             notifyAll( n -> {
                 n.notifyNewPlayerConnected(playerName);
