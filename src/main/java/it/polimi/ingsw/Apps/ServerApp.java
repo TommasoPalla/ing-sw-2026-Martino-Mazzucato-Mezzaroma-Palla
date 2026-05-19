@@ -15,7 +15,16 @@ public class ServerApp {
     public static void main(String[] args) throws Exception {
         //UNICO CONTROLLER CON ASSOCIATO IL MODEL
         ServerController mainController = new ServerController();
-        System.setProperty("java.rmi.server.hostname", java.net.InetAddress.getLocalHost().getHostAddress());
+
+        String realIp = "127.0.0.1";
+        try (java.net.DatagramSocket socket = new java.net.DatagramSocket()) {
+            socket.connect(java.net.InetAddress.getByName("8.8.8.8"), 10002);
+            realIp = socket.getLocalAddress().getHostAddress();
+        } catch (Exception e) {
+            System.out.println("You are offline");
+        }
+        System.setProperty("java.rmi.server.hostname", realIp);
+        System.out.println("Server RMI avviato automaticamente su IP LAN: " + realIp);
 
         try{
             RMIServer rmiServer = new RMIServer(mainController);

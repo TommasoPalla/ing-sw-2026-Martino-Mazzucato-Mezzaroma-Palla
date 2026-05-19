@@ -41,7 +41,15 @@ public class RMIServerAdapter implements ServerConnection {
             //System.setProperty("java.rmi.server.hostname", ServerConfigs.DEFAULT_RMI_IP_ADDR);    //forces the server to use 127.0.0.1 as localhost
             //String clientIp = java.net.InetAddress.getLocalHost().getHostAddress();
             //System.setProperty("java.rmi.server.hostname", clientIp);
-            System.setProperty("java.rmi.server.hostname", java.net.InetAddress.getLocalHost().getHostAddress());
+            //System.setProperty("java.rmi.server.hostname", java.net.InetAddress.getLocalHost().getHostAddress());
+
+            String clientIp = "127.0.0.1";
+            try (java.net.DatagramSocket socket = new java.net.DatagramSocket()) {
+                socket.connect(java.net.InetAddress.getByName("8.8.8.8"), 10002);
+                clientIp = socket.getLocalAddress().getHostAddress();
+            } catch (Exception e) {}
+            System.setProperty("java.rmi.server.hostname", clientIp);
+
 
             Registry registry = LocateRegistry.getRegistry(host, port);
             serverStub = (VirtualRMIServer) registry.lookup(ServerConfigs.DEFAULT_RMI_SERVER_NAME);
@@ -51,8 +59,8 @@ public class RMIServerAdapter implements ServerConnection {
             System.out.println("Error during connection to RMI server\n" + e.getMessage());
         } catch (NotBoundException e){
             System.out.println("Error during RMI server lookup\n" + e.getMessage());
-        } catch (UnknownHostException e) {
-            System.out.println("INVALID IP ADDRESS");
+        //} catch (UnknownHostException e) {
+            //System.out.println("INVALID IP ADDRESS");
         }
     }
 
