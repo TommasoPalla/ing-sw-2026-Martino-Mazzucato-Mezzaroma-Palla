@@ -193,6 +193,11 @@ public class Game {
             this.currentPlayer =  turnOrder.get(currentPlayerIndex+1);
             return this.currentPlayer;
         }
+        // se è finita la fase di piazzamento dei totem, si passa a pescare le carte
+        else if (currentPhase == GamePhase.START_TURN) {
+            offerTrack.getTurnTile().updateTurnOrder();
+            this.currentPlayer = offerTrack.getTurnTile().getTurnOrder().getFirst();
+        }
         throw new LastPlayerOfTurnException();
     }
 
@@ -218,7 +223,7 @@ public class Game {
      */
     public int setNextRound() {
         if(currentRound == 10) {
-            throw new LastRoundException("Fine del gioco raggiunta");//fare un ciclo da 10
+            throw new LastRoundException("Fine del gioco raggiunta");
         }
         return currentRound++;
     }
@@ -258,127 +263,127 @@ public class Game {
     }
 
 
-    //direi che potrebbe essere il caso di fare una classe turnManager: ci sono un sacco di cose di cui tener conto
-    /**
-     * @deprecated
-     */
-    public void playGame() throws IllegalDrawException {
-
-        this.startGame();
-        while(this.currentRound <= 10){
-            //turno di player 1 da createGame()
-            for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
-
-                //classe controller richiede l'indice input
-                int k=0;
-
-                //currentPlayer.chooseOfferTile(k, offerTrack);
-                buildingManager.useBuilding(currentPhase, currentPlayer);
-                setNextPlayer();
-            }
-
-            //se qualcuno sceglie la tessera A dagli 3 cibo
-            for(int i=0; i<this.numPlayers;i++){
-                Player player = offerTrack.getTurnTile().getTurnOrder().get(i);
-                player.getTribe().modifyFood(player.getCurrentOfferTile().getFoodBonus());
-            }
-
-            this.setCurrentPhase(GamePhase.END_GAME);//fase draw
-            //aggiornare turnorder qui
-            //return turnTile
-            offerTrack.getTurnTile().updateTurnOrder();
-
-            //forse dentro questo for il discorso currentPlayer e n-esima iterazione del ciclo si può gestire meglio
-            for(Player player : offerTrack.getTurnTile().getTurnOrder()){//tutti scelgono le loro carte in ordine
-
-                //classe controller richiede gli indici input
-                boolean fromTopRow = false;
-                int index = 0;
-                boolean isBuilding = true;
-
-                int topDrawable = currentPlayer.getCurrentOfferTile().getCardsFromAbove();
-                int bottomDrawable = currentPlayer.getCurrentOfferTile().getCardsFromBelow();
-                for(int j = 0; j < topDrawable + bottomDrawable; j++) {
-                    //getRow && index da controller
-
-                    //da verificare che cardsLeft funzioni bene
-                    int cardsLeft = (fromTopRow) ? topDrawable : bottomDrawable;
-                    if(cardsLeft > 0){
-                        while(!currentPlayer.drawable(fromTopRow, isBuilding, index, offerTrack)){
-                            //chiede nuovi input
-                        }
-                        currentPlayer.drawCard(fromTopRow, isBuilding, index, offerTrack);
-                        if (fromTopRow) topDrawable--;
-                        else bottomDrawable--;
-                    }
-                    /* versione non ottimizzata
-                    if (fromTopRow == 0 && topDrawable > 0) {
-                        while(currentPlayer.drawable(index, fromTopRow, isBuilding, offerTrack) == false){
-                            //chiede nuovi input
-                        }
-                        currentPlayer.drawCard(index, fromTopRow, isBuilding, offerTrack);
-                        topDrawable--;
-                    }
-                    else if(fromTopRow == 1 && bottomDrawable > 0){
-                        while(currentPlayer.drawable(index, fromTopRow, isBuilding, offerTrack) == false){
-                            //chiede nuovi input
-                        }
-                        currentPlayer.drawCard(index, fromTopRow, isBuilding, offerTrack);
-                        bottomDrawable--;
-                    }*/
-                    else{
-                        throw new IllegalDrawException();
-                    }
-                    buildingManager.useBuilding(currentPhase, currentPlayer);
-                }
-                //fase intermittente tra return to tile on draw
-                currentPhase = GamePhase.RETURN_TO_TILE;
-                offerTrack.getTurnTile().returnToStartingTile(currentPlayer, buildingManager);
-                currentPhase = GamePhase.ON_DRAW;
-
-                setNextPlayer();
-            }
-
-            this.setCurrentPhase(GamePhase.END_GAME);//fase eventi
-            // If round is 10 then resolves both top and bottom rows' events.
-            if(currentRound<10){
-                eventManager.resolve(offerTrack.getBottomEvents(), players, buildingManager);
-            }else{
-                ArrayList<EventCard> allEvents = new ArrayList<>();
-                allEvents.addAll(offerTrack.getBottomEvents());
-                allEvents.addAll(offerTrack.getTopEvents());
-                eventManager.resolve(allEvents, players, buildingManager);
-            }
-
-
-            this.setCurrentPhase(GamePhase.END_GAME);//fase finale
-
-            for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del round
-                buildingManager.useBuilding(currentPhase, currentPlayer);
-                setNextPlayer();
-            }
-
-
-            //fase inizializzata
-            this.setCurrentPhase(GamePhase.END_GAME);
-
-            //track inizializzata
-            offerTrack.moveCardsToBottom();
-            offerTrack.repopulateTopRow();
-            currentRound++;
-        }
-        currentPhase = GamePhase.END_GAME;
-
-        for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del gioco
-            buildingManager.useBuilding(currentPhase, currentPlayer);
-            currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculateFinalPoints());
-            setNextPlayer();
-        }
-        ArrayList<Player> ranking = new ArrayList<>(players);
-        ranking=players.stream().sorted(Comparator.comparingInt(
-                (Player p) -> p.getTribe().getPrestigePoints()).reversed())
-                        .collect(Collectors.toCollection(ArrayList::new));
-        //showRanking nella view o qualcosa del genere
-    }
+//    //direi che potrebbe essere il caso di fare una classe turnManager: ci sono un sacco di cose di cui tener conto
+//    /**
+//     * @deprecated
+//     */
+//    public void playGame() throws IllegalDrawException {
+//
+//        this.startGame();
+//        while(this.currentRound <= 10){
+//            //turno di player 1 da createGame()
+//            for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
+//
+//                //classe controller richiede l'indice input
+//                int k=0;
+//
+//                //currentPlayer.chooseOfferTile(k, offerTrack);
+//                buildingManager.useBuilding(currentPhase, currentPlayer);
+//                setNextPlayer();
+//            }
+//
+//            //se qualcuno sceglie la tessera A dagli 3 cibo
+//            for(int i=0; i<this.numPlayers;i++){
+//                Player player = offerTrack.getTurnTile().getTurnOrder().get(i);
+//                player.getTribe().modifyFood(player.getCurrentOfferTile().getFoodBonus());
+//            }
+//
+//            this.setCurrentPhase(GamePhase.END_GAME);//fase draw
+//            //aggiornare turnorder qui
+//            //return turnTile
+//            offerTrack.getTurnTile().updateTurnOrder();
+//
+//            //forse dentro questo for il discorso currentPlayer e n-esima iterazione del ciclo si può gestire meglio
+//            for(Player player : offerTrack.getTurnTile().getTurnOrder()){//tutti scelgono le loro carte in ordine
+//
+//                //classe controller richiede gli indici input
+//                boolean fromTopRow = false;
+//                int index = 0;
+//                boolean isBuilding = true;
+//
+//                int topDrawable = currentPlayer.getCurrentOfferTile().getCardsFromAbove();
+//                int bottomDrawable = currentPlayer.getCurrentOfferTile().getCardsFromBelow();
+//                for(int j = 0; j < topDrawable + bottomDrawable; j++) {
+//                    //getRow && index da controller
+//
+//                    //da verificare che cardsLeft funzioni bene
+//                    int cardsLeft = (fromTopRow) ? topDrawable : bottomDrawable;
+//                    if(cardsLeft > 0){
+//                        while(!currentPlayer.drawable(fromTopRow, isBuilding, index, offerTrack)){
+//                            //chiede nuovi input
+//                        }
+//                        currentPlayer.drawCard(fromTopRow, isBuilding, index, offerTrack);
+//                        if (fromTopRow) topDrawable--;
+//                        else bottomDrawable--;
+//                    }
+//                    /* versione non ottimizzata
+//                    if (fromTopRow == 0 && topDrawable > 0) {
+//                        while(currentPlayer.drawable(index, fromTopRow, isBuilding, offerTrack) == false){
+//                            //chiede nuovi input
+//                        }
+//                        currentPlayer.drawCard(index, fromTopRow, isBuilding, offerTrack);
+//                        topDrawable--;
+//                    }
+//                    else if(fromTopRow == 1 && bottomDrawable > 0){
+//                        while(currentPlayer.drawable(index, fromTopRow, isBuilding, offerTrack) == false){
+//                            //chiede nuovi input
+//                        }
+//                        currentPlayer.drawCard(index, fromTopRow, isBuilding, offerTrack);
+//                        bottomDrawable--;
+//                    }*/
+//                    else{
+//                        throw new IllegalDrawException();
+//                    }
+//                    buildingManager.useBuilding(currentPhase, currentPlayer);
+//                }
+//                //fase intermittente tra return to tile on draw
+//                currentPhase = GamePhase.RETURN_TO_TILE;
+//                offerTrack.getTurnTile().returnToStartingTile(currentPlayer, buildingManager);
+//                currentPhase = GamePhase.ON_DRAW;
+//
+//                setNextPlayer();
+//            }
+//
+//            this.setCurrentPhase(GamePhase.END_GAME);//fase eventi
+//            // If round is 10 then resolves both top and bottom rows' events.
+//            if(currentRound<10){
+//                eventManager.resolve(offerTrack.getBottomEvents(), players, buildingManager);
+//            }else{
+//                ArrayList<EventCard> allEvents = new ArrayList<>();
+//                allEvents.addAll(offerTrack.getBottomEvents());
+//                allEvents.addAll(offerTrack.getTopEvents());
+//                eventManager.resolve(allEvents, players, buildingManager);
+//            }
+//
+//
+//            this.setCurrentPhase(GamePhase.END_GAME);//fase finale
+//
+//            for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del round
+//                buildingManager.useBuilding(currentPhase, currentPlayer);
+//                setNextPlayer();
+//            }
+//
+//
+//            //fase inizializzata
+//            this.setCurrentPhase(GamePhase.END_GAME);
+//
+//            //track inizializzata
+//            offerTrack.moveCardsToBottom();
+//            offerTrack.repopulateTopRow();
+//            currentRound++;
+//        }
+//        currentPhase = GamePhase.END_GAME;
+//
+//        for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del gioco
+//            buildingManager.useBuilding(currentPhase, currentPlayer);
+//            currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculateFinalPoints());
+//            setNextPlayer();
+//        }
+//        ArrayList<Player> ranking = new ArrayList<>(players);
+//        ranking=players.stream().sorted(Comparator.comparingInt(
+//                (Player p) -> p.getTribe().getPrestigePoints()).reversed())
+//                        .collect(Collectors.toCollection(ArrayList::new));
+//        //showRanking nella view o qualcosa del genere
+//    }
 
 }

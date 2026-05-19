@@ -22,9 +22,10 @@ public interface VirtualSocketClient {
     void updatePlayerLeftGame(String playerName) throws IOException;
     void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws IOException;
     void updateChosenTotemColor(String playerName, Color totemColor) throws  IOException;
+
+    void updateStartRound() throws IOException;
     void updateDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws  IOException;
     void updateChosenTile(String playerName, int index) throws  IOException;
-
     void updateFood(String playerName, int food) throws IOException;
     void updateShamansStars(String playerName, int stars) throws IOException;
     void updatePrestigePoints(String playerName, int points) throws IOException;

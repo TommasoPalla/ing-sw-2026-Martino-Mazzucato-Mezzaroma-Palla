@@ -144,8 +144,13 @@ public class OfferTrack{
         }
     }
 
+    /**
+     * When the round is over and the events have been resolved, the bottom row is cleared and the top
+     * row cards are moved to the bottom row.
+     */
     public void moveCardsToBottom(){
-        bottomRow = topRow;
+        bottomRow.clear();
+        bottomRow.addAll(topRow);
         topRow = new ArrayList<>();
 
     }

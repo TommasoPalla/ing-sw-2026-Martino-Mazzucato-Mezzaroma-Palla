@@ -270,8 +270,8 @@ public class ClientController implements ClientViewUpdate {
         localModel.setNextPlayer(firstTurnOrder.getFirst());
         if (firstTurnOrder.getFirst().equals(this.playerName)) clientState = ClientState.PLACE_TOTEM;
         else clientState = ClientState.NOT_IN_TURN;
+        localModel.updateGamePhase(GamePhase.START_TURN);
         localModel.addPlayersTribes(firstTurnOrder);
-        localModel.setNextRound();
         view.notifyGameStarted();
         updateInitialFood(initialFood);
     }
@@ -339,16 +339,23 @@ public class ClientController implements ClientViewUpdate {
      */
     @Override
     public void updateTotemColor(String playerName, Color totemColor) {
-        localModel.chosenTotemColor(playerName, totemColor);
-        view.notifyChosenTotemColor(playerName, totemColor);
+        if (clientState == ClientState.IN_LOBBY) {
+            localModel.chosenTotemColor(playerName, totemColor);
+            view.notifyChosenTotemColor(playerName, totemColor);
+        }
     }
 
     private void updateInitialFood(Map<String, Integer> initialFood) {
         for(String player : initialFood.keySet()) {
             localModel.getPlayerTribe(player).addFood(initialFood.get(player));
-            System.out.println(player + "'s food = " + localModel.getPlayerTribe(player).getFoodReserve());
         }
         view.notifyGiveInitialFood(initialFood);
+    }
+
+    public void updateStartRound() {
+        localModel.setNextRound();
+        localModel.updateGamePhase(GamePhase.START_TURN);
+        view.notifyStartRound(localModel.getCurrentRound());
     }
 
     @Override
@@ -404,6 +411,7 @@ public class ClientController implements ClientViewUpdate {
     public void updateGamePhase(GamePhase phase) {
         localModel.updateGamePhase(phase);
         syncClientState();
+        view.notifyNewGamePhase(phase);
     }
 
     @Override
@@ -412,6 +420,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     private void syncClientState() {
+        System.out.println("DEBUG: current phase: " +  localModel.getCurrentPhase());
         if (!this.playerName.equals(localModel.getCurrentPlayer())) {
             setClientState(ClientState.NOT_IN_TURN);
             return;
@@ -419,6 +428,7 @@ public class ClientController implements ClientViewUpdate {
 
         switch (localModel.getCurrentPhase()){
             case START_GAME:
+                break;
             case START_TURN:
                 setClientState(ClientState.PLACE_TOTEM);
                 break;

@@ -3,6 +3,7 @@ package it.polimi.ingsw.View.GUIView;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GUIView.GuiControllers.*;
 import it.polimi.ingsw.View.ViewInterface;
@@ -154,6 +155,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyStartRound(int round) {
+
+    }
+
+    @Override
     public void notifyChosenTotemColor(String playerName, Color totemColor) {
 
     }
@@ -170,6 +176,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyCardDrawn(String player, Card card, boolean topRow) {
+
+    }
+
+    @Override
+    public void notifyNewGamePhase(GamePhase newGamePhase) {
 
     }
 

@@ -79,6 +79,15 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
+    public void notifyStartRound() {
+        try {
+            clientStub.startRound();
+        } catch (RemoteException e) {
+            throw new StubException("could not notify start of new round");
+        }
+    }
+
+    @Override
     public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
         try {
             clientStub.drawnCard(playerName, fromTopRow, fromBuildings, index);

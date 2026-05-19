@@ -71,6 +71,11 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
+    public void updateStartRound() {
+        controller.updateStartRound();
+    }
+
+    @Override
     public void updateChosenTile(String playerName, int index) {
         controller.updateCurrentOfferTile(playerName, index);
     }

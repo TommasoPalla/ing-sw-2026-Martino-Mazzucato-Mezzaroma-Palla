@@ -87,6 +87,11 @@ public class SocketServerHandler implements Runnable{
                 client.updateAvailableGames(availableGames);
             } catch(IOException e){}
         });
+        commandHandlers.put(SocketHeaderNames.START_ROUND, parameters -> {
+            try {
+                client.updateStartRound();
+            } catch (IOException e){}
+        });
         commandHandlers.put(SocketHeaderNames.CHOSEN_TOTEM_COLOR, parameters -> {
             String playerName = (String) parameters[0];
             Color totemColor = Color.valueOf((String) parameters[1]) ;

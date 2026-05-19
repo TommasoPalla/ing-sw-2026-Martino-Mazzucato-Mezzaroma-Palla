@@ -69,6 +69,11 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
+    public void startRound() throws RemoteException {
+        controller.updateStartRound();
+    }
+
+    @Override
     public void chosenTotem(String playerName, Color totemColor){
         try{
             controller.updateTotemColor(playerName, totemColor);

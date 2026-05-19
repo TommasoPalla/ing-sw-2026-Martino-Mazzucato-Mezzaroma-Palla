@@ -22,9 +22,10 @@ public interface VirtualRMIClient extends Remote {
     void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String, Color> totemColors) throws RemoteException;
     void playerLeftGame(String playerName) throws RemoteException;
     void chosenTotem(String playerName, Color totemColor) throws RemoteException;
+
+    void startRound() throws RemoteException;
     void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws RemoteException;
     void chosenTile(String playerName, int index) throws RemoteException;
-
     void updateFood(String playerName, int food) throws RemoteException;
     void updateShamansStars(String playerName, int stars) throws RemoteException;
     void updatePrestigePoints(String playerName, int points) throws RemoteException;

@@ -173,7 +173,7 @@ public class GameController {
             return nextPlayer;
         }
         catch (LastPlayerOfTurnException e) {
-            return null;
+            throw new LastPlayerOfTurnException();
         }
     }
 
@@ -200,6 +200,7 @@ public class GameController {
             List<String> shuffledFirstPlayingOrder = gameInstance.getOfferTrack().getTurnTile().getTurnOrder().stream()
                     .map(Player::getName)
                     .toList();
+            System.out.println("DEBUG: GRR" + shuffledFirstPlayingOrder);
             //TODO: notify game started da fare in socket e chiamare qui
             notifyAll(n -> n.notifyGameStarted(shuffledFirstPlayingOrder, initialFood));
             startRound();
@@ -209,11 +210,19 @@ public class GameController {
     /** * When a new round starts, after all the events are resolved and the rows are repopulated */
     public void startRound() {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
-        int newRound = gameInstance.setNextRound();
-
+        try {
+            int newRound = gameInstance.setNextRound();
+        } catch (LastRoundException e) {
+            // chiama i metodi per il calcolo finale dei punti e notifica i players
+        }
+        notifyAll(ClientNotifier::notifyStartRound);
         //int oldEra = gameInstance.getEra();
         try {
             gameInstance.initOfferTrack();
+            notifyAll( n -> {
+                n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
+                n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
+            });
         } catch(ChangeEraException e){
             gameInstance.changeEra();
         }
@@ -277,11 +286,13 @@ public class GameController {
             handleCriticalDisconnection();
         }
         try {
-            Player nextPlayer = setNextPlayer();
-            // da notificare il prossimo player a tutti
+            setNextPlayer();
         } catch (LastPlayerOfTurnException e) {
             gameInstance.setCurrentPhase(GamePhase.ON_DRAW);
-            // da notificare il fine turno fase ai player
+            notifyAll(n -> {
+                n.notifyGamePhase(gameInstance.getGamePhase());
+            });
+            setNextPlayer();
         }
     }
 

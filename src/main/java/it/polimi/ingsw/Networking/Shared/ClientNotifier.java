@@ -22,6 +22,7 @@ public interface ClientNotifier {
     void notifyAvailableGames(Map<Integer, GamePlayers> availableGames);
     void notifyTotemColor(String playerName, Color totemColor);
 
+    void notifyStartRound();
     void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index);
     void notifyChosenTile(String playerName, int index);
     void notifyFoodToAdd(String playerName, int food);

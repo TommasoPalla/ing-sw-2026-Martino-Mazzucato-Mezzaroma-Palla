@@ -377,15 +377,21 @@ public class TUIView implements ViewInterface{
         System.out.println("You get " + initialFood.get(this.player) + "!");
         System.out.println();
         printOfferTrack();
-        if (clientController.getLocalModel().getCurrentPlayer().equals(this.player)) {
-            System.out.println("It's your turn! Place your totem on a free offer tile.");
-            printAvailableActions(clientController.getClientState(), false);
+        printGeneralCommands();
+    }
+
+    /**
+     * The player is notified when a new round starts.
+     * @param round the current round.
+     */
+    @Override
+    public void notifyStartRound(int round) {
+        if (round < 10) {
+            System.out.println();
+            System.out.println("Round " + round + " has started!");
         }
-        else {
-            String currentPlayer = clientController.getLocalModel().getCurrentPlayer();
-            System.out.println(clientController.getLocalModel().getColors(currentPlayer).colorize(currentPlayer) + " is placing his totem. Wait for your turn!");
-            printAvailableActions(clientController.getClientState(), false);
-        }
+        else
+            System.out.println("The last round has started!");
     }
 
     @Override
@@ -422,13 +428,22 @@ public class TUIView implements ViewInterface{
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        if(currentPlayerName.equals(this.player))
+        if(currentPlayerName.equals(this.player)) {
             System.out.println("\nIt's your turn!");
+            printAvailableActions(clientController.getClientState(), false);
+        }
         else
             System.out.println("\nIt's " + clientController.getLocalModel().getColors(currentPlayerName).colorize(currentPlayerName) + "'s turn, wait patiently!");
+    }
 
-        printAvailableActions(clientState, false);
+    @Override
+    public void notifyNewGamePhase(GamePhase newGamePhase) {
         System.out.println();
+        if(newGamePhase == GamePhase.START_TURN) {
+            System.out.println("New game phase: It's time to place the totems!");
+        }
+        else
+            System.out.println("New game phase: It's time to draw the cards!");
     }
 
     /**

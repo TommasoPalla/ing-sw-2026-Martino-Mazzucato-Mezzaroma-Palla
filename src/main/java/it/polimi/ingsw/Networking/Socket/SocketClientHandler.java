@@ -188,6 +188,12 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
+    public void notifyStartRound() {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_ROUND);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
     public void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.DRAWN_CARD, playerName, fromTopRow, fromBuildings, index);
         outStream.println(gson.toJson(message));
