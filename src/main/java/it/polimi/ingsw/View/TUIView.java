@@ -9,7 +9,6 @@ import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
-import it.polimi.ingsw.View.Listeners.Listener;
 
 import java.util.*;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TUIView implements ViewInterface, Listener {
+public class TUIView implements ViewInterface{
     final private ClientController clientController;
     final private CommandParser commandParser;
     private String player;
@@ -138,7 +137,7 @@ public class TUIView implements ViewInterface, Listener {
             //case SHOW_OTHER_TRIBE       -> parsePrintTribe();
             case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
             case PLACE_TOTEM            -> commandParser.parseChooseOfferTile(argsString);
-            case HELP                   -> printAvailableActions(clientController.getClientState());
+            case HELP                   -> printAvailableActions(clientController.getClientState(), true);
             default                     -> throw new IllegalArgumentException("ERROR: Invalid command, please try again or enter \"help()\" to know the available commands.");
         }
     }
@@ -249,20 +248,20 @@ public class TUIView implements ViewInterface, Listener {
             case SETUP -> {
                 System.out.println("You are in the setup state.");
                 tuiState = TUIState.SETUP;
-                printAvailableActions(ClientState.SETUP);
+                printAvailableActions(ClientState.SETUP, false);
             }
             case IN_LOBBY ->  {
                 System.out.println("Welcome to the lobby!");
                 tuiState = TUIState.IN_LOBBY;
-                printAvailableActions(ClientState.IN_LOBBY);
+                printAvailableActions(ClientState.IN_LOBBY, false);
             }
             case PLACE_TOTEM ->  {
                 System.out.println("It's your turn to place the totem!");
-                printAvailableActions(ClientState.PLACE_TOTEM);
+                printAvailableActions(ClientState.PLACE_TOTEM, false);
             }
             case DRAW_CARD ->   {
                 System.out.println("You can now draw a card.");
-                printAvailableActions(ClientState.DRAW_CARD);
+                printAvailableActions(ClientState.DRAW_CARD, false);
             }
             case NOT_IN_TURN ->   {
                 System.out.println("Wait for your turn.");
@@ -271,16 +270,16 @@ public class TUIView implements ViewInterface, Listener {
         }
     }
 
-    @Override
-    public void notifyTurnChange(String player) {
-        if(this.player.equals(player)) {
-            System.out.println("It's your turn!");
-            printAvailableActions(ClientState.PLACE_TOTEM);
-        }
-        else {
-            System.out.println("It's now " + player + "'s turn!");
-        }
-    }
+//    @Override
+//    public void notifyTurnChange(String player) {
+//        if(this.player.equals(player)) {
+//            System.out.println("It's your turn!");
+//            printAvailableActions(ClientState.PLACE_TOTEM, false);
+//        }
+//        else {
+//            System.out.println("It's now " + player + "'s turn!");
+//        }
+//    }
 
     @Override
     public void notifyNameModified(String newName) {
@@ -302,7 +301,7 @@ public class TUIView implements ViewInterface, Listener {
         tuiState = TUIState.IN_LOBBY;
         System.out.println("The game was successfully created with ID: " +  gameID + "!");
         System.out.println("You are the host of this game.");
-        printAvailableActions(clientController.getClientState());
+        printAvailableActions(clientController.getClientState(), false);
     }
 
     @Override
@@ -317,7 +316,7 @@ public class TUIView implements ViewInterface, Listener {
     public void notifySuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
         tuiState = TUIState.IN_LOBBY;
         System.out.println("You have successfully joined the game with ID: " + gameID + "!");
-        printAvailableActions(clientController.getClientState());
+        printAvailableActions(clientController.getClientState(), false);
     }
 
     @Override
@@ -325,7 +324,7 @@ public class TUIView implements ViewInterface, Listener {
         if (playerName.equals(player)) {
             tuiState = TUIState.SETUP;
             System.out.println("You have successfully left the lobby!");
-            printAvailableActions(clientController.getClientState());
+            printAvailableActions(clientController.getClientState(), false);
             return;
         }
         if(tuiState == TUIState.IN_LOBBY) {
@@ -365,10 +364,10 @@ public class TUIView implements ViewInterface, Listener {
         System.out.println();
     }
 
-    @Override
-    public void notifyGameEvent() {
-
-    }
+//    @Override
+//    public void notifyGameEvent() {
+//
+//    }
 
     @Override
     public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
@@ -379,11 +378,12 @@ public class TUIView implements ViewInterface, Listener {
         printOfferTrack();
         if (clientController.getLocalModel().getCurrentPlayer().equals(this.player)) {
             System.out.println("It's your turn! Place your totem on a free offer tile.");
-            printAvailableActions(clientController.getClientState());
+            printAvailableActions(clientController.getClientState(), false);
         }
         else {
-            System.out.println(clientController.getLocalModel().getCurrentPlayer() + " is placing his totem. Wait for your turn!");
-            printAvailableActions(clientController.getClientState());
+            String currentPlayer = clientController.getLocalModel().getCurrentPlayer();
+            System.out.println(clientController.getLocalModel().getColors(currentPlayer).colorize(currentPlayer) + " is placing his totem. Wait for your turn!");
+            printAvailableActions(clientController.getClientState(), false);
         }
     }
 
@@ -407,7 +407,7 @@ public class TUIView implements ViewInterface, Listener {
     public void notifyTileChosen(String playerName, int index) {
         System.out.println();
         if(!playerName.equals(this.player))
-            System.out.println("\n" + playerName + " placed his totem on tile " + index + "!");
+            System.out.println("\n" + clientController.getLocalModel().getColors(playerName).colorize(playerName) + " placed his totem on tile " + index + "!");
         else
             System.out.println("\nYou placed your totem on tile " + index + "!");
         if(tuiState == TUIState.SHOW_OFFER_TRACK) printOfferTrack();
@@ -418,9 +418,9 @@ public class TUIView implements ViewInterface, Listener {
         if(currentPlayerName.equals(this.player))
             System.out.println("\nIt's your turn!");
         else
-            System.out.println("\nIt's " + currentPlayerName + "'s turn, wait patiently!");
+            System.out.println("\nIt's " + clientController.getLocalModel().getColors(currentPlayerName).colorize(currentPlayerName) + "'s turn, wait patiently!");
 
-        printAvailableActions(clientState);
+        printAvailableActions(clientState, false);
         System.out.println();
     }
 
@@ -471,7 +471,7 @@ public class TUIView implements ViewInterface, Listener {
         if(availableGames == null) {
             System.out.println("There are no available games. You'll be sent back to the setup state");
             tuiState = TUIState.IN_LOBBY;
-            printAvailableActions(ClientState.SETUP);
+            printAvailableActions(ClientState.SETUP, false);
             return;
         }
         System.out.println();
@@ -499,7 +499,7 @@ public class TUIView implements ViewInterface, Listener {
             } catch(NumberFormatException e) {
                 if(input.equalsIgnoreCase("exit")) {
                     tuiState = TUIState.SETUP;
-                    printAvailableActions(ClientState.SETUP);
+                    printAvailableActions(ClientState.SETUP, false);
                     break;
                 }
                 else System.out.println("Invalid input. Please enter a valid gameID or enter \"exit\" to go back to the setup state.");
@@ -511,7 +511,7 @@ public class TUIView implements ViewInterface, Listener {
      * Prints the available actions a player can make while in a certain state.
      * @param clientState The state of the TUI the player is currently visualising.
      */
-    private void printAvailableActions(ClientState clientState) {
+    private void printAvailableActions(ClientState clientState, boolean help) {
         System.out.println();
         switch(clientState) {
             case SETUP:
@@ -529,17 +529,15 @@ public class TUIView implements ViewInterface, Listener {
                 break;
             case NOT_IN_TURN:
                 System.out.println("You can't perform any action, since it's not your turn.");
-                printGeneralCommands();
                 break;
             case PLACE_TOTEM:
                 System.out.println("- place_totem(offer_track_index)");
-                printGeneralCommands();
                 break;
             case DRAW_CARD:
                 System.out.println("- draw_card(top/bottom, char/building, offer_track_index): To draw a card from top or bottom row. You have also to specify if the card\nis a character card or a building and the index of the row.");
-                printGeneralCommands();
                 break;
         }
+        if(help) printGeneralCommands();
     }
     /**
     * This method prints to terminal the commands who can be performed at every game phase during the entire

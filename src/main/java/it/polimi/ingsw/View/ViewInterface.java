@@ -2,6 +2,7 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 
 import java.util.ArrayList;
@@ -19,5 +20,6 @@ public interface ViewInterface {
     void notifyChosenTotemColor(String playerName, Color totemColor);
     void notifyGiveInitialFood(Map<String,Integer> initialFood);
     void notifyTileChosen(String playerName, int index);
+    void notifyCardDrawn(String player, Card card, boolean topRow);
     void notifyNewCurrentPlayer(String playerName, ClientState clientState);
 }
