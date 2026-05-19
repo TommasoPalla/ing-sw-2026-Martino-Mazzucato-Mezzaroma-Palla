@@ -3,6 +3,7 @@ package it.polimi.ingsw.View.GUIView;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GUIView.GuiControllers.*;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
@@ -164,6 +165,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyTileChosen(String playerName, int index) {
+
+    }
+
+    @Override
+    public void notifyCardDrawn(String player, Card card, boolean topRow) {
 
     }
 

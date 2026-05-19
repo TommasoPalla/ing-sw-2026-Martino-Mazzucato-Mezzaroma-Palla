@@ -85,6 +85,8 @@ public record CommandParser(ClientController clientController) {
             throw new IllegalActionPhaseException();
         } catch (OccupiedTileException e) {
             throw new OccupiedTileException();
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("ERROR: the index must be a number ranging from 1 to " + clientController.getLocalModel().getOfferTiles().size());
         }
     }
 
@@ -121,25 +123,6 @@ public record CommandParser(ClientController clientController) {
             clientController.setPlayerName(commandArgs[0]);
         } catch (IllegalClientStateActionException e) {
             throw new IllegalActionPhaseException();
-        }
-    }
-
-    public void parsePlaceTotem(String argsString) {
-        if (argsString.trim().isEmpty()) {
-            throw new IllegalArgumentException("ERROR: you need to enter the new index of the offer track!");
-        }
-        String[] commandArgs = parseArguments(CommandType.PLACE_TOTEM, argsString);
-        int index;
-        try {
-            index = Integer.parseInt(commandArgs[0]);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("ERROR: the index of the offer track must be a number!");
-        }
-        try {
-            clientController.chooseOfferTile(index);
-        }
-        catch (IndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("ERROR: the index must be a number ranging from 1 to " + clientController.getLocalModel().getOfferTiles().size());
         }
     }
 

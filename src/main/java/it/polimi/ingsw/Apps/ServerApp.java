@@ -15,6 +15,7 @@ public class ServerApp {
     public static void main(String[] args) throws Exception {
         //UNICO CONTROLLER CON ASSOCIATO IL MODEL
         ServerController mainController = new ServerController();
+        System.setProperty("java.rmi.server.hostname", java.net.InetAddress.getLocalHost().getHostAddress());
 
         try{
             RMIServer rmiServer = new RMIServer(mainController);

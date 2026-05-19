@@ -2,6 +2,7 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UIException.*;
 
 import it.polimi.ingsw.Enums.*;
@@ -104,7 +105,7 @@ public class TUIView implements ViewInterface{
             //per ora è gestito il caso di drawCard,
             //stampa "cant draw this card" + "insufficient food / cant draw event"
             catch(InvalidSelectionException | IllegalArgumentException | NotEnoughPlayersException |
-                  NotTheHostException | IllegalClientStateActionException e){
+                  NotTheHostException | IllegalClientStateActionException | OccupiedTileException e){
                 String causeMsg = (e.getCause() != null) ? e.getCause().getMessage() : "";
                 System.out.println(e.getMessage() + causeMsg);
             }
@@ -415,6 +416,12 @@ public class TUIView implements ViewInterface{
 
     @Override
     public void notifyNewCurrentPlayer(String currentPlayerName, ClientState clientState) {
+        //TODO: da togliere questa sleep e fare una queue sia lato client che lato server
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         if(currentPlayerName.equals(this.player))
             System.out.println("\nIt's your turn!");
         else
