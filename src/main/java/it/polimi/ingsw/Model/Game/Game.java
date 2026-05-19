@@ -253,7 +253,8 @@ public class Game {
     }
 
     public void chooseOfferTile(Player player, int index){
-        player.chooseOfferTile(index, offerTrack);
+        offerTrack.getOfferTiles().get(index).occupy(player.getName());
+        player.setCurrentOfferTile(offerTrack.getOfferTiles().get(index));
     }
 
 
@@ -271,7 +272,7 @@ public class Game {
                 //classe controller richiede l'indice input
                 int k=0;
 
-                currentPlayer.chooseOfferTile(k, offerTrack);
+                //currentPlayer.chooseOfferTile(k, offerTrack);
                 buildingManager.useBuilding(currentPhase, currentPlayer);
                 setNextPlayer();
             }

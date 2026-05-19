@@ -370,24 +370,6 @@ public class TUIView implements ViewInterface, Listener {
 
     }
 
-    /**
-     * The player is notified when a player has placed his totem. If the player was visualizing the offer track
-     * before this notification, the offer track view is reloaded.
-     * @param player the name of the player who placed the totem
-     * @param offerTile the offer tile on which the totem was placed.
-     */
-    @Override
-    public void notifyTotemPlaced(String player, OfferTile offerTile) {
-        System.out.println();
-        if(this.player.equals(player)) {
-            System.out.println("You have placed your totem!");
-        }
-        else {
-            System.out.println(player + " has placed his totem on offer tile " + offerTile.getTileCode() + "!");
-        }
-        if(tuiState == TUIState.SHOW_OFFER_TRACK) printOfferTrack();
-    }
-
     @Override
     public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
         System.out.println();
@@ -415,12 +397,20 @@ public class TUIView implements ViewInterface, Listener {
         else if(tuiState == TUIState.SHOW_BOTTOM_ROW && !topRow) printBottomRow();
     }
 
+    /**
+     * The player is notified when a player has placed his totem. If the player was visualizing the offer track
+     * before this notification, the offer track view is reloaded.
+     * @param playerName the name of the player who placed the totem
+     * @param index the index of the offer tile on which the totem was placed.
+     */
     @Override
     public void notifyTileChosen(String playerName, int index) {
+        System.out.println();
         if(!playerName.equals(this.player))
             System.out.println("\n" + playerName + " placed his totem on tile " + index + "!");
         else
             System.out.println("\nYou placed your totem on tile " + index + "!");
+        if(tuiState == TUIState.SHOW_OFFER_TRACK) printOfferTrack();
     }
 
     @Override

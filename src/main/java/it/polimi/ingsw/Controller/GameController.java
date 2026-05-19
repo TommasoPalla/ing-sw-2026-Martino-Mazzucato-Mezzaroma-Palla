@@ -104,7 +104,6 @@ public class GameController {
                 handleCriticalDisconnection();
             }
         }
-
     }
 
     //forse è usato solo insieme a removePlayer, in quel caso fare merge: valutare alla fine
@@ -262,6 +261,9 @@ public class GameController {
         Player player = gameInstance.getPlayerByName(playerName);
         //throws to ServerController IllegalActionTurnException
         checkPlayer(player);
+        if(gameInstance.getOfferTrack().getOfferTiles().get(index).isOccupied()) {
+            throw new OccupiedTileException();
+        }
         try {
             gameInstance.chooseOfferTile(player, index);
             notifyAll( n -> {
@@ -274,7 +276,13 @@ public class GameController {
         catch(StubException e){
             handleCriticalDisconnection();
         }
-        setNextPlayer();
+        try {
+            Player nextPlayer = setNextPlayer();
+            // da notificare il prossimo player a tutti
+        } catch (LastPlayerOfTurnException e) {
+            gameInstance.setCurrentPhase(GamePhase.ON_DRAW);
+            // da notificare il fine turno fase ai player
+        }
     }
 
     public synchronized void handleDraw(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuilding, int index){

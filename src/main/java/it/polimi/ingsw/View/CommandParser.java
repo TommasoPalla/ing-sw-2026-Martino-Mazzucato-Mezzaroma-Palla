@@ -124,6 +124,25 @@ public record CommandParser(ClientController clientController) {
         }
     }
 
+    public void parsePlaceTotem(String argsString) {
+        if (argsString.trim().isEmpty()) {
+            throw new IllegalArgumentException("ERROR: you need to enter the new index of the offer track!");
+        }
+        String[] commandArgs = parseArguments(CommandType.PLACE_TOTEM, argsString);
+        int index;
+        try {
+            index = Integer.parseInt(commandArgs[0]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ERROR: the index of the offer track must be a number!");
+        }
+        try {
+            clientController.chooseOfferTile(index);
+        }
+        catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("ERROR: the index must be a number ranging from 1 to " + clientController.getLocalModel().getOfferTiles().size());
+        }
+    }
+
     /**
      * This method parses the command to pick a card from top or bottom row of the offer track.
      * @param argsString the string with the arguments passed by the player.

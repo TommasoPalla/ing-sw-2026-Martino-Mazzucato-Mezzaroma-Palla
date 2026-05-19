@@ -21,8 +21,8 @@ public interface ClientViewUpdate {
     //void updatePlayerDisconnected(String playerName);
     void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
     void updateTotemColor(String playerName, Color totemColor);
-    void updateCurrentOfferTile(String playerName, int offerTileIndex);
 
+    void updateCurrentOfferTile(String playerName, int index);
     void updateFoodReserve(String playerName, int food);
     void updateShamansStars(String playerName, int stars);
     void updatePrestigePoints(String playerName, int pp);

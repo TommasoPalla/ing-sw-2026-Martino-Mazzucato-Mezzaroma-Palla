@@ -176,13 +176,13 @@ public class ServerController {
         }
     }
 
-    public void chooseOfferTile(PlayerRecord playerRecord, int index){
+    public void chooseOfferTile(PlayerRecord playerRecord, int index) {
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         try {
             synchronized (currentController) {
                 currentController.handleChooseOfferTile(playerRecord.playerName(), index);
             }
-        } catch(IllegalActionPhaseException | IllegalActionTurnException | OccupiedTileException e){
+        } catch(IllegalActionPhaseException | IllegalActionTurnException | OccupiedTileException e) {
             throw new InvalidSelectionException(e);
         }
     }

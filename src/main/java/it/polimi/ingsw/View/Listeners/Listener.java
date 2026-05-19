@@ -7,6 +7,5 @@ public interface Listener {
     void notifyNameModified(String newName);
     void notifyTurnChange(String player);
     void notifyGameEvent();
-    void notifyTotemPlaced(String player, OfferTile offerTile);
     void notifyCardDrawn(String player, Card card, boolean topRow);
 }

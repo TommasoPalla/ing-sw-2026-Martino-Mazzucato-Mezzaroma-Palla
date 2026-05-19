@@ -47,15 +47,13 @@ public class Player {
     }
 
     //functions
-    /*funzione che dipende da controller anche che è ancora da implementare, qui bozza sbagliata ma circa completa*/
-    public void chooseOfferTile(int index, OfferTrack offerTrack) {
-        OfferTile chosen = offerTrack.getOfferTiles().get(index);
-        if (chosen.isOccupied()) {
-            throw new OccupiedTileException();
-        } else {
-            chosen.occupy(this.name);
-            currentOfferTile = chosen;
-        }
+
+    /**
+     * Sets the player current offer tile when he occupies one.
+     * @param offerTile the offer tile he occupied.
+     */
+    public void setCurrentOfferTile(OfferTile offerTile) {
+        this.currentOfferTile = offerTile;
     }
 
     public void freeOfferTile(){

@@ -6,7 +6,6 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GamePlayers;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +21,9 @@ public interface ClientNotifier {
     void notifyPlayerLeftGame(String playerName);
     void notifyAvailableGames(Map<Integer, GamePlayers> availableGames);
     void notifyTotemColor(String playerName, Color totemColor);
+
     void notifyDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index);
     void notifyChosenTile(String playerName, int index);
-    //notifyGameReady() carino, ma non necessario
     void notifyFoodToAdd(String playerName, int food);
     void notifyShamansStarsToAdd(String playerName, int food);
     void notifyPrestigePointsToAdd(String playerName, int food);
