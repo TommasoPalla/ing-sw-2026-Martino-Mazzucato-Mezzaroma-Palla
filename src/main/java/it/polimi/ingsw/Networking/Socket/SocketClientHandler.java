@@ -11,6 +11,7 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
+import it.polimi.ingsw.Utils.GsonFactory;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.BufferedReader;
@@ -32,7 +33,7 @@ import java.util.function.Consumer;
 public class SocketClientHandler implements ClientNotifier, Runnable {
 
     private final Map<SocketHeaderNames, Consumer<Object[]>> commandHandlers = new HashMap<>();
-    private final Gson gson = new Gson();
+    private final Gson gson = GsonFactory.create();
     private final BufferedReader inStream;
     private final PrintWriter outStream;
     private final VirtualSocketServer server;

@@ -54,24 +54,31 @@ public class GsonFactory {
             SustenanceEvent.class
     );
 
-    public static Gson create(){
+    public static Gson create() {
         RuntimeTypeAdapterFactory<Card> cardAdapter = RuntimeTypeAdapterFactory
                 .of(Card.class, "cardType")
-                .registerSubtype(EventCard.class, "evetCard")
+                .registerSubtype(EventCard.class, "eventCard")
                 .registerSubtype(CharacterCard.class, "characterCard")
                 .registerSubtype(BuildingCard.class, "buildingCard");
 
-        for(Class<? extends BuildingCard> buildingType : buildingTypes)
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapterFactory(cardAdapter);
+
+        for (Class<? extends BuildingCard> buildingType : buildingTypes) {
             cardAdapter.registerSubtype(buildingType, buildingType.getSimpleName().toUpperCase());
+            builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of((Class<BuildingCard>) buildingType, "cardType").registerSubtype(buildingType, buildingType.getSimpleName().toUpperCase()));
+        }
 
-        for(Class<? extends CharacterCard> characterType : characterTypes)
+        for (Class<? extends CharacterCard> characterType : characterTypes){
             cardAdapter.registerSubtype(characterType, characterType.getSimpleName().toUpperCase());
+        builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of((Class<CharacterCard>) characterType, "cardType").registerSubtype(characterType, characterType.getSimpleName().toUpperCase()));
+        }
 
-        for(Class<? extends EventCard> eventType : eventTypes)
+        for(Class<? extends EventCard> eventType : eventTypes){
             cardAdapter.registerSubtype(eventType, eventType.getSimpleName().toUpperCase());
+            builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of((Class<EventCard>)eventType, "cardType").registerSubtype(eventType, eventType.getSimpleName().toUpperCase()));
+        }
 
-        return new GsonBuilder()
-                .registerTypeAdapterFactory(cardAdapter)
-                .create();
+        return builder.create();
     }
 }

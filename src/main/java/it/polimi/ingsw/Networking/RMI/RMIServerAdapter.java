@@ -59,8 +59,6 @@ public class RMIServerAdapter implements ServerConnection {
             System.out.println("Error during connection to RMI server\n" + e.getMessage());
         } catch (NotBoundException e){
             System.out.println("Error during RMI server lookup\n" + e.getMessage());
-        //} catch (UnknownHostException e) {
-            //System.out.println("INVALID IP ADDRESS");
         }
     }
 

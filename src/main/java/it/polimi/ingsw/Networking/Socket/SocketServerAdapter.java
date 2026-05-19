@@ -8,6 +8,7 @@ import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
+import it.polimi.ingsw.Utils.GsonFactory;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.BufferedReader;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 public class SocketServerAdapter implements ServerConnection {
 
-    private Gson gson = new Gson();
+    private final Gson gson = GsonFactory.create();
 
     private Socket socket;
     private PrintWriter outStream;

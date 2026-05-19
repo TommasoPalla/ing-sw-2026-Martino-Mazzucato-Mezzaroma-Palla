@@ -17,13 +17,14 @@ import java.util.function.Consumer;
 import com.google.gson.Gson;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Utils.GsonFactory;
 import it.polimi.ingsw.View.GamePlayers;
 
 public class SocketServerHandler implements Runnable{
 
     private final Map<SocketHeaderNames, Consumer<Object[]>> commandHandlers = new HashMap<>();
     private final BufferedReader inStream;
-    private final Gson gson = new Gson();
+    private final Gson gson = GsonFactory.create();
     private final VirtualSocketClient client;
 
     public SocketServerHandler(BufferedReader inStream, VirtualSocketClient client) {
@@ -49,10 +50,13 @@ public class SocketServerHandler implements Runnable{
            }
         });
         commandHandlers.put(SocketHeaderNames.GAME_STARTED, parameters -> {
+            String playersString = gson.toJson(parameters[0]);
             Type playersListType = new TypeToken<List<String>>(){}.getType();
-            List<String> firstTurnOrder = gson.fromJson(gson.toJson(parameters[0]), playersListType);
+            List<String> firstTurnOrder = gson.fromJson(playersString, playersListType);
+
+            String foodString = gson.toJson(parameters[1]);
             Type foodMapType = new TypeToken<Map<String, Integer>>(){}.getType();
-            Map<String, Integer> initialFood = gson.fromJson(gson.toJson(parameters[1]), foodMapType);
+            Map<String, Integer> initialFood = gson.fromJson(foodString, foodMapType);
             try {
                 client.updateGameStarted(firstTurnOrder, initialFood);
             } catch (Exception e) {}
@@ -66,10 +70,14 @@ public class SocketServerHandler implements Runnable{
         commandHandlers.put(SocketHeaderNames.SUCCESSFULLY_JOINED, parameters -> {
            int gameID = ((Double) parameters[0]).intValue();
            int playerNum = ((Double) parameters[1]).intValue();
+
+           String playersString = gson.toJson(parameters[2]);
            Type playersType = new TypeToken<ArrayList<String>>(){}.getType();
-           ArrayList<String> playerNames = gson.fromJson(gson.toJson(parameters[2]), playersType);
+           ArrayList<String> playerNames = gson.fromJson(playersString, playersType);
+
+           String colorsString = gson.toJson(parameters[3]);
            Type totemMapType = new TypeToken<Map<String, Color>>(){}.getType();
-           Map<String, Color> playerToColors = gson.fromJson(gson.toJson(parameters[3]), totemMapType);
+           Map<String, Color> playerToColors = gson.fromJson(colorsString, totemMapType);
            try {
                client.successfullyJoinedGame(gameID, playerNum, playerNames, playerToColors);
            } catch (IOException e){}
@@ -81,8 +89,9 @@ public class SocketServerHandler implements Runnable{
             } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.GET_AVAILABLE_GAMES, parameters -> {
+            String gamesString = gson.toJson(parameters[0]);
             Type type = new TypeToken<Map<Integer, GamePlayers>>(){}.getType();
-            Map<Integer, GamePlayers> availableGames = gson.fromJson(gson.toJson(parameters[0]), type) ;
+            Map<Integer, GamePlayers> availableGames = gson.fromJson(gamesString, type) ;
             try {
                 client.updateAvailableGames(availableGames);
             } catch(IOException e){}
@@ -139,23 +148,27 @@ public class SocketServerHandler implements Runnable{
             } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.UPDATED_TOP_ROW, parameters -> {
+            String topRowString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<Card>>(){}.getType();
-            ArrayList<Card> newTopRow = gson.fromJson(gson.toJson(parameters[0]), type);
+            ArrayList<Card> newTopRow = gson.fromJson(topRowString, type);
             client.updateTopRow(newTopRow);
         });
         commandHandlers.put(SocketHeaderNames.UPDATED_TOP_BUILDINGS, parameters -> {
+            String topBuildingsString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
-            ArrayList<BuildingCard> newTopBuildings = gson.fromJson(gson.toJson(parameters[0]), type);
+            ArrayList<BuildingCard> newTopBuildings = gson.fromJson(topBuildingsString, type);
             client.updateTopBuildings(newTopBuildings);
         });
         commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_ROW, parameters -> {
+            String bottomRowString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<Card>>(){}.getType();
-            ArrayList<Card> newBottomRow = gson.fromJson(gson.toJson(parameters[0]), type);
+            ArrayList<Card> newBottomRow = gson.fromJson(bottomRowString, type);
             client.updateBottomRow(newBottomRow);
         });
         commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, parameters -> {
+            String bottomBuildingsString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
-            ArrayList<BuildingCard> newBottomBuildings = gson.fromJson(gson.toJson(parameters[0]), type);
+            ArrayList<BuildingCard> newBottomBuildings = gson.fromJson(bottomBuildingsString, type);
             client.updateBottomBuildings(newBottomBuildings);
         });
         commandHandlers.put(SocketHeaderNames.NEXT_PLAYER, parameters -> {
