@@ -228,6 +228,7 @@ public class ClientController implements ClientViewUpdate {
         //manda l'info al server per notificare gli altri player
     }
 
+    //stessa discussione di connection.endTurn(). serve davvero?
     public void endTurn(){
         if(localModel.getCurrentPlayer().equals(playerName)) {
             connection.endTurn(playerName);

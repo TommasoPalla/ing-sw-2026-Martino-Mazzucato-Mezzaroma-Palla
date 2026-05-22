@@ -54,9 +54,17 @@ public class SocketServer implements VirtualSocketServer{
         clientHeartBeats.put(handler, heartBeat);
         heartBeat.start();
 
-        System.out.println("New TCP client connected");
+        System.out.println("[TCP] New client connected: " + handler);
         serverController.updateSocketClients(this.clients);
         serverController.notifyAvailableGames();
+    }
+
+    @Override
+    public void disconnect(SocketClientHandler handler) {
+        this.clients.remove(handler);
+        serverController.updateSocketClients(this.clients);
+        serverController.notifyAvailableGames();
+        System.out.println("[TCP] Client disconnected " + handler);
     }
 
     @Override
@@ -101,16 +109,7 @@ public class SocketServer implements VirtualSocketServer{
     }
 
     @Override
-    public void disconnect(SocketClientHandler handler) {
-        this.clients.remove(handler);
-        serverController.updateSocketClients(this.clients);
-        serverController.notifyAvailableGames();
-        System.out.println("TCP client removed");
-    }
-
-    @Override
     public void ping(SocketClientHandler client) {
-        System.out.println("PING received from " + client);
         HeartBeat heartBeat = clientHeartBeats.get(client);
         if(heartBeat != null){
             heartBeat.receivedPing();
@@ -118,10 +117,10 @@ public class SocketServer implements VirtualSocketServer{
     }
 
     private void handleClientTimeout(SocketClientHandler socketClient){
-        System.out.println("Client timeout: " + socketClient.getPlayerRecord().playerName());
+        String playerName = (socketClient.getPlayerRecord() != null) ? socketClient.getPlayerRecord().playerName() : "Unknown";
+        System.err.println("[TCP] Client timeout detected for: " + playerName);
         stopHeartBeat(socketClient);
         this.clients.remove(socketClient);
-        clients.remove(socketClient);
         PlayerRecord record = socketClient.getPlayerRecord();
         if (record != null) {
             serverController.handleDisconnection(record);

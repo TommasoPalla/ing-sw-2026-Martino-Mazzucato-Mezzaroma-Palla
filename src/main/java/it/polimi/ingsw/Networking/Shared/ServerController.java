@@ -40,9 +40,11 @@ public class ServerController {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
             GameController gameController = activeGames.get(gameID).gameController();
+            System.out.println("[SERVER] Removing player '" + playerName + "' from game " + gameID);
             gameController.removeClient(playerName);
         } catch (IllegalArgumentException e){
-            System.out.println("ERROR: could not remove player from game\n" + e.getMessage());  //da cambiare con exception
+            System.out.println("[SERVER] ERROR: could not remove player from game\n" + e.getMessage());
+            //probabilmente da cambiare con exception
         }
     }
 
@@ -55,10 +57,12 @@ public class ServerController {
         try {
             String playerName = playerRecord.playerName();
             int gameID = playerRecord.gameID();
+            System.out.println("[SERVER] Adding player '" + playerName + "' to game " + gameID);
             GameController gameController = activeGames.get(gameID).gameController();
             gameController.addClient(playerName, notifier);
         }
         catch (NotJoinableGameException e){
+            System.err.println("[SERVER] Join failed: " + e.getMessage());
             throw new NotJoinableGameException(e.getMessage());
         }
     }
@@ -71,6 +75,7 @@ public class ServerController {
      */
     public synchronized int createNewGame(ClientNotifier notifier, String firstPlayerName, int playerNum) {
         int gameID = nextGameID;
+        System.out.println("[SERVER] Creating new game (ID: " + gameID + ") for " + playerNum + " players. Host: " + firstPlayerName);
         Game newGame = new Game(gameID, playerNum);
         GameController gameController = new GameController(newGame);
         activeGames.put(gameID, new GameRecord(newGame, gameController));
@@ -102,8 +107,10 @@ public class ServerController {
 
     public void leaveGame(PlayerRecord leavingPlayer) {
         if (activeGames.containsKey(leavingPlayer.gameID())) {
+            System.out.println("[SERVER] Player '" + leavingPlayer.playerName() + "' leaving the game " + leavingPlayer.gameID());
             removeClientFromGame(leavingPlayer);
             if(activeGames.get(leavingPlayer.gameID()).gameController().getConnectedClients().isEmpty()) {
+                System.out.println("[SERVER] Game " + leavingPlayer.gameID() + " is empty. Deleting game instance.");
                 activeGames.remove(leavingPlayer.gameID());
             }
             notifyAvailableGames();
@@ -112,6 +119,7 @@ public class ServerController {
 
     public void startGame(String requestingPlayer, int gameID) {
         try {
+            System.out.println("[SERVER] Start game " + gameID + " requested by host '" + requestingPlayer + "'");
             activeGames.get(gameID).gameController().startGame(requestingPlayer);
             notifyAvailableGames(); //superfluo probabilmente, quando si aggiunge l'ultimo player il game sarà già unavailable
         } catch (NotTheHostException e){
@@ -154,7 +162,7 @@ public class ServerController {
 
     // logic of methods that modify the model state
     public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
-        System.out.println("Debug Server: Request received from " + playerRecord.playerName() + " for GameID: " + playerRecord.gameID());
+        System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + "' choosing totem color " + totemColor);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         synchronized (currentController){
             try {
@@ -166,6 +174,7 @@ public class ServerController {
     }
 
     public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
+        System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + "' drawing card from " + (fromTopRow ? "TOP" : "BOTTOM") + " row, index " + index);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         try{
             synchronized (currentController){
@@ -177,6 +186,7 @@ public class ServerController {
     }
 
     public void chooseOfferTile(PlayerRecord playerRecord, int index) {
+        System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + "' placing totem on tile " + index);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         try {
             synchronized (currentController) {
@@ -189,6 +199,7 @@ public class ServerController {
 
     public void handleDisconnection(PlayerRecord playerRecord){
         int gameID = playerRecord.gameID();
+        System.out.println("[SERVER] Handling critical disconnection for '" + playerRecord.playerName() + "' in game " + gameID);
         GameRecord gameRecord = activeGames.get(gameID);
         if(gameRecord != null){
             gameRecord.gameController().handleCriticalDisconnection();

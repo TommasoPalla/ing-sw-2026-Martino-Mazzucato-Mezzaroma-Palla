@@ -24,6 +24,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Client-side adapter that implements {@link ServerConnection} using the RMI protocol.
+ * It manages the lookup of the server stub and provides a local implementation
+ * for game actions by forwarding them to the RMI server.
+ */
 public class RMIServerAdapter implements ServerConnection {
     private VirtualRMIClient clientStub;
     private VirtualRMIServer serverStub;
@@ -34,6 +39,12 @@ public class RMIServerAdapter implements ServerConnection {
 
     private ScheduledExecutorService heartbeatScheduler;
 
+    /**
+     * Constructor for the RMI adapter.
+     * @param host the IP address or hostname of the server.
+     * @param port the port where the RMI registry is located.
+     * @param clientController the local controller to be notified of server updates.
+     */
     public RMIServerAdapter(String host, int port, ClientController clientController) {
         this.host = host;
         this.port = port;

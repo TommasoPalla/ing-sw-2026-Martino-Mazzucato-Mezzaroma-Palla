@@ -126,11 +126,10 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
+    //serve davvero? di base non si passa il turno ma si fanno per forza tutte le azioni possibili
+    //e poi il turno viene passato automaticamente
     public void endTurn(String playerName){
-
     }
-
-    //Server updates coming from actions of other players, events, drawing from deck etc
 
     private void startHeartBeat() {
         heartbeatScheduler = Executors.newSingleThreadScheduledExecutor();

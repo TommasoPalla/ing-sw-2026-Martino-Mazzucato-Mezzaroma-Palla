@@ -169,7 +169,7 @@ public class GameController {
             } catch (StubException e) {
                 handleCriticalDisconnection();
             }
-            System.out.println("DEBUG: new current player: " + nextPlayer.getName());
+            System.out.println("[GAME " + gameInstance.getGameID() + "] Turn changed: current player is now '" + nextPlayer.getName() + "'");
             return nextPlayer;
         }
         catch (LastPlayerOfTurnException e) {
@@ -193,6 +193,7 @@ public class GameController {
             throw new IllegalActionPhaseException();
         }
         else {
+            System.out.println("[GAME " + gameInstance.getGameID() + "] Starting game...");
             for(String player: connectedClients.keySet()){
                 gameInstance.addPlayer(player);
             }
@@ -200,7 +201,7 @@ public class GameController {
             List<String> shuffledFirstPlayingOrder = gameInstance.getOfferTrack().getTurnTile().getTurnOrder().stream()
                     .map(Player::getName)
                     .toList();
-            System.out.println("DEBUG: GRR" + shuffledFirstPlayingOrder);
+            System.out.println("[GAME " + gameInstance.getGameID() + "] Turn order: " + shuffledFirstPlayingOrder);
             //TODO: notify game started da fare in socket e chiamare qui
             notifyAll(n -> n.notifyGameStarted(shuffledFirstPlayingOrder, initialFood));
             startRound();
@@ -212,7 +213,9 @@ public class GameController {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
         try {
             int newRound = gameInstance.setNextRound();
+            System.out.println("[GAME " + gameInstance.getGameID() + "] Round " + newRound + " started.");
         } catch (LastRoundException e) {
+            System.out.println("[GAME " + gameInstance.getGameID() + "] Final round reached!");
             // chiama i metodi per il calcolo finale dei punti e notifica i players
         }
         notifyAll(ClientNotifier::notifyStartRound);
@@ -264,7 +267,7 @@ public class GameController {
      */
     //TODO: da fare che se tutti hanno scelto si passa alla fase di pesca delle carte
     public synchronized void handleChooseOfferTile (String playerName, int index) {
-        System.out.println("DEBUG TURNO -> Richiesto da: [" + playerName + "], Turno attuale sul Server: [" + gameInstance.getCurrentPlayer().getName() + "]");
+        System.out.println("[GAME " + gameInstance.getGameID() + "] Action: '" + playerName + "' placing totem on tile " + index);
         //throws to ServerController IllegalActionPhaseException
         checkPhase(GamePhase.START_TURN);
         Player player = gameInstance.getPlayerByName(playerName);
@@ -316,6 +319,7 @@ public class GameController {
     /*TODO: definire la fase di shutdown del game a seguito di un client disconnesso e gestire
        in socket la disconnessione*/
     public void handleCriticalDisconnection(){
+        System.err.println("[GAME " + gameInstance.getGameID() + "] CRITICAL DISCONNECTION detected. Forcing all clients to quit and clearing lobby.");
         notifyAll( n -> {
             try {
                 n.notifyForceQuit();

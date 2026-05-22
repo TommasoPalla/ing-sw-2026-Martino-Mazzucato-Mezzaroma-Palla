@@ -46,7 +46,7 @@ public class RMIServer implements VirtualRMIServer {
             Registry registry = LocateRegistry.createRegistry(ServerConfigs.DEFAULT_RMI_SERVER_PORT);
             registry.rebind(ServerConfigs.DEFAULT_RMI_SERVER_NAME, serverStub);
         } catch (RemoteException e){
-            System.out.println("Error during RMI server initialization\n" + e.getMessage());
+            System.err.println("[RMI] ERROR: an error has occurred during server initialization\n" + e.getMessage());
         }
     }
 
@@ -60,7 +60,7 @@ public class RMIServer implements VirtualRMIServer {
 
         serverController.updateRMIClients(this.clients);
         serverController.notifyAvailableGames();
-        System.out.println(clientStub + "added to RMI server");
+        System.out.println("[RMI] New client connected: " + clientStub);
     }
 
     @Override
@@ -132,15 +132,15 @@ public class RMIServer implements VirtualRMIServer {
     public void disconnect(VirtualRMIClient clientStub) {
         stopHeartBeat(clientStub);
         this.clients.remove(clientStub);
-        serverController.removeClientFromGame(clientRecords.get(clientStub));
+        PlayerRecord record = clientRecords.get(clientStub);
+        serverController.removeClientFromGame(record);
         System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
-        //in realtà in questo caso forse il controller potrebbe capirlo internamente ma è più complicato
+        System.out.println("[RMI] Client disconnected: " + clientStub);
         serverController.updateRMIClients(this.clients);
     }
 
     @Override
     public void ping(VirtualRMIClient client) throws RemoteException {
-        System.out.println("PING received from " + client.toString());
         HeartBeat heartBeat = clientHeartBeats.get(client);
         if(heartBeat != null){
             heartBeat.receivedPing();
@@ -148,10 +148,11 @@ public class RMIServer implements VirtualRMIServer {
     }
 
     private void handleClientTimeout(VirtualRMIClient clientStub){
-        System.out.println("Client timeout: " + clientStub);
+        PlayerRecord record = clientRecords.get(clientStub);
+        System.err.println("[RMI] Client timeout detected for: " + (record != null ? record.playerName() : clientStub));
         stopHeartBeat(clientStub);
         this.clients.remove(clientStub);
-        PlayerRecord record = clientRecords.remove(clientStub);
+        clientRecords.remove(clientStub);
         if (record != null) {
             serverController.handleDisconnection(record);
         }

@@ -151,40 +151,56 @@ public class SocketServerHandler implements Runnable{
             String topRowString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<Card>>(){}.getType();
             ArrayList<Card> newTopRow = gson.fromJson(topRowString, type);
-            client.updateTopRow(newTopRow);
+            try {
+                client.updateTopRow(newTopRow);
+            } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.UPDATED_TOP_BUILDINGS, parameters -> {
             String topBuildingsString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
             ArrayList<BuildingCard> newTopBuildings = gson.fromJson(topBuildingsString, type);
-            client.updateTopBuildings(newTopBuildings);
+            try {
+                client.updateTopBuildings(newTopBuildings);
+            } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_ROW, parameters -> {
             String bottomRowString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<Card>>(){}.getType();
             ArrayList<Card> newBottomRow = gson.fromJson(bottomRowString, type);
-            client.updateBottomRow(newBottomRow);
+            try {
+                client.updateBottomRow(newBottomRow);
+            } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, parameters -> {
             String bottomBuildingsString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
             ArrayList<BuildingCard> newBottomBuildings = gson.fromJson(bottomBuildingsString, type);
-            client.updateBottomBuildings(newBottomBuildings);
+            try {
+                client.updateBottomBuildings(newBottomBuildings);
+            } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.NEXT_PLAYER, parameters -> {
            String playerName = (String) parameters[0];
-           client.updateNextPlayer(playerName);
+           try {
+               client.updateNextPlayer(playerName);
+           } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.CHANGED_GAME_PHASE, parameters -> {
             GamePhase phase = GamePhase.valueOf((String) parameters[0]);
-            client.updateGamePhase(phase);
+            try {
+                client.updateGamePhase(phase);
+            } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.CHANGED_ERA, parameters -> {
            int newEra = ((Double) parameters[0]).intValue();
-           client.updateEra(newEra);
+           try {
+               client.updateEra(newEra);
+           } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.FORCE_QUIT, parameters -> {
-           client.forceQuit();
+            try {
+                client.forceQuit();
+            } catch (IOException e) {}
         });
     }
 
