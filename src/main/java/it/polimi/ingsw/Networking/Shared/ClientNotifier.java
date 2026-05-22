@@ -50,6 +50,7 @@ public interface ClientNotifier {
      * @param playerName the name of the player who left.
      */
     void notifyPlayerLeftGame(String playerName);
+    void notifyNewHost();
 
     /**
      * Updates the client with the list of available games.

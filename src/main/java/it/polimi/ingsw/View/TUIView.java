@@ -46,9 +46,13 @@ public class TUIView implements ViewInterface{
             Scanner scanner = new Scanner(System.in);
             String playerName = scanner.nextLine();
             try {
-                nameVerified = true;
-                clientController.setPlayerName(playerName);
-                this.player = playerName;
+                if (playerName.isEmpty()) {
+                    System.out.println("You have to enter a name!");
+                }
+                else {
+                    nameVerified = true;
+                    clientController.setPlayerName(playerName);
+                }
             } catch(IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
@@ -205,6 +209,37 @@ public class TUIView implements ViewInterface{
     }
 
     private void printOfferTrack() {
+        // COSTRUZIONE TURN TILE ---------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
+        List<String> turnTileLines = new ArrayList<>();
+        String turnBorder = "+-----------------------+";
+        turnTileLines.add(turnBorder);
+        int[] tileModifier = clientController.getLocalModel().getTurnTile().getTileModifier();
+        for (int i = 0; i < tileModifier.length; i++) {
+            String bonus;
+            if (tileModifier[i] != 0 && i < tileModifier.length - 1)
+                bonus = String.valueOf(tileModifier[i]) + "F";
+            else if (i == tileModifier.length - 1)
+                bonus = "-1F/-2PP";
+            else
+                bonus = "";
+            String paddedBonus = String.format("%-10s", bonus);
+            String playerOnSlot = clientController.getLocalModel().getTurnTile().getTurnTileStatus().getOrDefault(i, null);
+            String finalPlayerOnSlot;
+            if (playerOnSlot != null) {
+                Color playerColor = clientController.getLocalModel().getTotemColors().get(playerOnSlot);
+                String displayName = (playerOnSlot.length() > 10) ? playerOnSlot.substring(0, 7) + "..." : playerOnSlot;
+                String paddedName = String.format("%-10s", displayName);
+                finalPlayerOnSlot = playerColor.colorize(paddedName);
+            } else
+                finalPlayerOnSlot = String.format("%-10s", "---");
+            turnTileLines.add(String.format("| %s %s |", paddedBonus, finalPlayerOnSlot));
+        }
+        turnTileLines.add(turnBorder);
+
+        // COSTRUZIONE OFFER TRACK ------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
+        List<String> offerTrackLines = new ArrayList<>();
         StringBuilder topBorder = new StringBuilder();
         StringBuilder actionRow = new StringBuilder();
         StringBuilder playerRow = new StringBuilder();
@@ -225,19 +260,41 @@ public class TUIView implements ViewInterface{
 
             String playerOccupant = tile.getCurrentOccupant();
             if (playerOccupant != null) {
+                Color playerColor = clientController.getLocalModel().getTotemColors().get(playerOccupant);
                 if (playerOccupant.length() > 15) {
                     playerOccupant = playerOccupant.substring(0, 12) + "...";
-                    playerRow.append(String.format("| %-15s | ", playerOccupant));
                 }
+                String paddedOccupant = String.format("%-15s", playerOccupant);
+                String coloredOccupant = playerColor.colorize(paddedOccupant);
+                playerRow.append(String.format("| %s | ", coloredOccupant));
             }
             else playerRow.append(String.format("| %-15s | ", "---"));
 
             bottomBorder.append("+-----------------+ ");
         }
-        System.out.println(topBorder);
-        System.out.println(actionRow);
-        System.out.println(playerRow);
-        System.out.println(bottomBorder);
+
+        offerTrackLines.add(topBorder.toString());
+        offerTrackLines.add(actionRow.toString());
+        offerTrackLines.add(playerRow.toString());
+        offerTrackLines.add(bottomBorder.toString());
+
+        int maxLines = Math.max(turnTileLines.size(), offerTrackLines.size());
+
+        // Spazio vuoto compensativo per quando finiscono le righe della Turn Order tile.
+        // La larghezza è esattamente 25 caratteri (la stessa di turnBorder).
+        String emptyTurnSpace = String.format("%-25s", "");
+
+        for (int i = 0; i < maxLines; i++) {
+            String leftPart = (i < turnTileLines.size()) ? turnTileLines.get(i) : emptyTurnSpace;
+            String rightPart = (i < offerTrackLines.size()) ? offerTrackLines.get(i) : "";
+
+            System.out.println(leftPart + "   " + rightPart);
+        }
+//        System.out.println();
+//        System.out.println(topBorder);
+//        System.out.println(actionRow);
+//        System.out.println(playerRow);
+//        System.out.println(bottomBorder);
         System.out.println();
     }
 
@@ -283,9 +340,10 @@ public class TUIView implements ViewInterface{
 //    }
 
     @Override
-    public void notifyNameModified(String newName) {
+    public void notifyNameSet(String newName) {
         this.player = newName;
-        System.out.println("You successfully modified your name to " + newName + "!");
+        System.out.println("You have successfully set your name to " + newName + "!");
+        System.out.println();
     }
 
     /**
@@ -321,7 +379,7 @@ public class TUIView implements ViewInterface{
     }
 
     @Override
-    public void notifyPlayerLeftLobby(String playerName) {
+    public void notifyPlayerLeftLobby(String playerName, boolean hadColor) {
         if (playerName.equals(player)) {
             tuiState = TUIState.SETUP;
             System.out.println("You have successfully left the lobby!");
@@ -330,13 +388,18 @@ public class TUIView implements ViewInterface{
         }
         if(tuiState == TUIState.IN_LOBBY) {
             System.out.println("Player " + playerName + " left the lobby!");
-            // se il player non ha ancora scelto il totem, ristampa la lista dei colori aggiungendo
-            // il colore del player che è uscito
-            if (!clientController.getLocalModel().getTotemColors().containsKey(this.player)) {
+            // se il player non ha ancora scelto il totem e il player che è uscito lo aveva scelto,
+            // ristampa la lista dei colori aggiungendo il colore del player che è uscito
+            if (!clientController.getLocalModel().getTotemColors().containsKey(this.player) && hadColor) {
                 printAvailableColors();
             }
         }
         else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+    }
+
+    @Override
+    public void notifyNewHost() {
+        System.out.println("You are the new host of this game.");
     }
 
     @Override
@@ -471,8 +534,11 @@ public class TUIView implements ViewInterface{
         for(Map.Entry<Integer, GamePlayers> entry : availableGames.entrySet()) {
             System.out.println("- gameID: " + entry.getKey() + " || Number of players: " + entry.getValue().playersNum());
             System.out.print("  Players in lobby: ");
+            // print dei player presenti in lobby
             for(String player : entry.getValue().playerNames()) {
-                System.out.print(player + ", ");
+                System.out.print(player);
+                if (!player.equals(entry.getValue().playerNames().getLast()))
+                    System.out.print(", ");
             }
             System.out.println(";");
         }
@@ -545,21 +611,21 @@ public class TUIView implements ViewInterface{
             case IN_LOBBY:
                 System.out.println("These are the available actions you can take while in lobby:");
                 System.out.println("- choose_totem_color(color): To choose an available totem color from the list.");
-                System.out.println("- start_game(): To start the game. It only works if you're the host.");
-                System.out.println("- leave_game(): To end the game.");
+                System.out.println("- start_game(): To start the game. It only works if you're the host, if the lobby is full and if all the players have chosen their totem color.");
+                System.out.println("- leave_game(): To leave the lobby.");
                 printAvailableColors();
                 break;
             case NOT_IN_TURN:
                 System.out.println("You can't perform any action, since it's not your turn.");
                 break;
             case PLACE_TOTEM:
-                System.out.println("- place_totem(offer_track_index)");
+                System.out.println("- place_totem(offer_track_index): Place your totem on the offer track's tile indicated by the index. The tile must not be occupied by another player.");
                 break;
             case DRAW_CARD:
                 System.out.println("- draw_card(top/bottom, char/building, offer_track_index): To draw a card from top or bottom row. You have also to specify if the card\nis a character card or a building and the index of the row.");
                 break;
         }
-        if(help) printGeneralCommands();
+        if(help && clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) printGeneralCommands();
     }
     /**
     * This method prints to terminal the commands who can be performed at every game phase during the entire

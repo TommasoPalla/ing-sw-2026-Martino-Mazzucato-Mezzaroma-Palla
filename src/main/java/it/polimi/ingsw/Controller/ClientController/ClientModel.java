@@ -142,6 +142,7 @@ public class ClientModel {
     }
     void chosenOfferTile(String playerName, int index){
         offerTiles.get(index).occupy(playerName);
+        turnTile.leaveTurnTileSlot();
     }
     void updateBuildingDrawn(BuildingCard building, String playerName){
         //players.get(playerName).addToBuildings(building);

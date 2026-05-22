@@ -14,10 +14,7 @@ import it.polimi.ingsw.Model.Users.*;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -38,7 +35,7 @@ public class GameController {
      */
     public GameController(Game gameInstance) {
         this.gameInstance = gameInstance;
-        this.connectedClients = new HashMap<>();
+        this.connectedClients = new LinkedHashMap<>();
     }
 
     public Game getGameModel() {
@@ -116,6 +113,13 @@ public class GameController {
                 });
             } catch (StubException e) {
                 handleCriticalDisconnection();
+            }
+            connectedClients.remove(playerName);
+            // se il player che è stato rimosso era l'host, il secondo a essere entrato diventa il nuovo host
+            if (playerName.equals(hostClient)) {
+                String newHost = connectedClients.keySet().iterator().next();
+                hostClient = newHost;
+                connectedClients.get(newHost).notifyNewHost();
             }
             connectedClients.remove(playerName);
         }

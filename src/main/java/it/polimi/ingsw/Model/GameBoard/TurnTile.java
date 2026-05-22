@@ -4,9 +4,7 @@ import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Users.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**TurnTile class defines food modifiers based on players' positions
@@ -17,25 +15,36 @@ public class TurnTile {
     private int[] tileModifier;
     private ArrayList<Player> turnOrder;
 
+    /**
+     * The status of the turn tile. It's maps from the slot of the turn tile to its occupant (null if it's free).
+     */
+    private Map<Integer, String> turnTileStatus;
+
     public TurnTile(int numPlayers){
+        turnTileStatus = new HashMap<>();
         turnOrder = new ArrayList<>();
         switch (numPlayers){
             case 2:
                 tileModifier = new int[]{1, -1};
+                turnTileStatus.put(0, null);
+                turnTileStatus.put(1, null);
                 break;
             case 3:
                 tileModifier = new int[]{2, 0, -1};
+                turnTileStatus.put(2, null);
                 break;
             case 4:
                 tileModifier = new int[]{2, 1, 0, -1};
+                turnTileStatus.put(3, null);
                 break;
             case 5:
                 tileModifier = new int[]{3, 1, 0, 0, -1};
-
+                turnTileStatus.put(4, null);
         }
     }
 
     public int[] getTileModifier() {return tileModifier;}
+    public Map<Integer, String> getTurnTileStatus() {return turnTileStatus;}
 
     /** initTurnOrder method is called only when the game is started,
      * unlike the TurnTile class constructor which is invoked right after
@@ -51,6 +60,9 @@ public class TurnTile {
         ArrayList<String> playerNames = turnOrder.stream().map(Player::getName).collect(Collectors.toCollection(ArrayList::new));
         System.out.println("Turn Order: " + playerNames);
         //
+        for (int i = 0; i < playerNames.size(); i++) {
+            turnTileStatus.put(i, playerNames.get(i));
+        }
         return turnOrder;
     }
 
@@ -75,6 +87,15 @@ public class TurnTile {
         return turnOrder;
     }
 
+    public void leaveTurnTileSlot(){
+        for (int i = 0; i<tileModifier.length; i++){
+            if (turnTileStatus.getOrDefault(i, null) != null) {
+                turnTileStatus.put(i, null);
+                return;
+            }
+        }
+    }
+
     /**returnToStartingTile method assigns to player which has ended their turn
      * the correct food modifier based on their position in the turn tile,
      * then if the player has any buildings that activate in this phase,
@@ -84,6 +105,7 @@ public class TurnTile {
      * @param buildingManager to apply buildings' effects.
      */
     public void returnToStartingTile(Player returningPlayer, BuildingManager buildingManager){
+        turnTileStatus.put(turnOrder.indexOf(returningPlayer), returningPlayer.getName());
         int foodModifier = tileModifier[turnOrder.indexOf(returningPlayer)];
         if(foodModifier > 0) buildingManager.useBuilding(GamePhase.RETURN_TO_TILE, returningPlayer);
         returningPlayer.freeOfferTile();

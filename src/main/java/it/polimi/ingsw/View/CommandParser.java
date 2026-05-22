@@ -122,7 +122,7 @@ public record CommandParser(ClientController clientController) {
         try {
             clientController.setPlayerName(commandArgs[0]);
         } catch (IllegalClientStateActionException e) {
-            throw new IllegalActionPhaseException();
+            throw new IllegalClientStateActionException(e.getMessage());
         }
     }
 

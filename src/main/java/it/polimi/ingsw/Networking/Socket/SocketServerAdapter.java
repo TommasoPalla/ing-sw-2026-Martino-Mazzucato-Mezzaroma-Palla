@@ -77,12 +77,6 @@ public class SocketServerAdapter implements ServerConnection {
 
 
     @Override
-    public void setPlayerName(String playerName){
-
-    }
-
-
-    @Override
     public void leaveGame(String playerName, int gameID){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.LEAVE_GAME, playerName, gameID);
         outStream.println(gson.toJson(message));

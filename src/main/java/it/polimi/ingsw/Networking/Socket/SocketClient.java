@@ -62,6 +62,11 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
+    public void updateNewHost() throws IOException {
+        controller.updateNewHost();
+    }
+
+    @Override
     public void updateAvailableGames(Map<Integer, GamePlayers> availableGames) {
         controller.updateAvailableGames(availableGames);
     }

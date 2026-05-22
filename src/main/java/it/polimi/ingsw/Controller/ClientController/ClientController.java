@@ -36,6 +36,7 @@ public class ClientController implements ClientViewUpdate {
 
     public ClientController() {
         clientState = ClientState.CONNECTING;
+        playerName = "";
         availableGames = new HashMap<>();
     }
     public String getPlayerName(){  //servirà da qualche parte
@@ -55,7 +56,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     /*no constructor defined, default constructor is used,
-    then setPlayerName, onGameStarted, bindConnection, bindView
+    then modifyPlayerName, onGameStarted, bindConnection, bindView
      methods are invoked to initialize private fields
     * */
     public void bindConnection(ServerConnection connection){
@@ -75,11 +76,13 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void setPlayerName(String playerName) {
+        if(this.playerName.equals(playerName))
+            throw new IllegalArgumentException("This is already your name!");
         if (clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) {
             throw new IllegalClientStateActionException("ERROR: You can no longer change your name!");
         }
         this.playerName = playerName;
-        connection.setPlayerName(playerName);
+        view.notifyNameSet(playerName);
     }
 
     @Override
@@ -193,7 +196,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     /*GESTIONE EXCEPTION ESEMPIO!
-    il drawable può lanciare InsufficientFood o IllegalDraw
+    Il drawable può lanciare InsufficientFood o IllegalDraw
     che viene catchato qui perché lasciarlo arrivare alla view (che è un altro thread)
     causerebbe la morte del thread che si occupa di questa classe.
     Lancia una nuova eccezione già formattata in un formato user-friendly per la view
@@ -257,11 +260,6 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void updateNameModified(String newName) {
-        view.notifyNameModified(newName);
-    }
-
-    @Override
     public void updateGameCreated(int gameID, int numPlayers){
         createLocalModel(gameID, numPlayers);
         this.clientState = ClientState.IN_LOBBY;
@@ -275,6 +273,9 @@ public class ClientController implements ClientViewUpdate {
         localModel.setNextPlayer(firstTurnOrder.getFirst());
         if (firstTurnOrder.getFirst().equals(this.playerName)) clientState = ClientState.PLACE_TOTEM;
         else clientState = ClientState.NOT_IN_TURN;
+        for (int i=0; i<firstTurnOrder.size(); i++){
+            localModel.getTurnTile().getTurnTileStatus().put(i, firstTurnOrder.get(i));
+        }
         localModel.updateGamePhase(GamePhase.START_TURN);
         localModel.addPlayersTribes(firstTurnOrder);
         view.notifyGameStarted();
@@ -306,14 +307,21 @@ public class ClientController implements ClientViewUpdate {
         //TODO da aggiungere controllo del gameID
         if(this.playerName.equals(player)){
             clientState = ClientState.SETUP;
-            view.notifyPlayerLeftLobby(player);
+            view.notifyPlayerLeftLobby(player, false);
             localModel = null;
         }
         else {
             // rimuove il player dalla mappa di colori del model
+            boolean hadColor = false;
+            if(localModel.getTotemColors().containsKey(player)) hadColor = true;
             localModel.updatePlayerLeft(player);
-            view.notifyPlayerLeftLobby(player);
+            view.notifyPlayerLeftLobby(player, hadColor);
         }
+    }
+
+    @Override
+    public void updateNewHost() {
+        view.notifyNewHost();
     }
 
     @Override

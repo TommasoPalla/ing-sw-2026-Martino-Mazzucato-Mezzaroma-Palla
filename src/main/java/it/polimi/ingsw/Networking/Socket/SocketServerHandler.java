@@ -88,6 +88,11 @@ public class SocketServerHandler implements Runnable{
                 client.updatePlayerLeftGame(playerName);
             } catch (IOException e){}
         });
+        commandHandlers.put(SocketHeaderNames.NEW_HOST, parameters -> {
+            try {
+                client.updateNewHost();
+            } catch (IOException e) {}
+        });
         commandHandlers.put(SocketHeaderNames.GET_AVAILABLE_GAMES, parameters -> {
             String gamesString = gson.toJson(parameters[0]);
             Type type = new TypeToken<Map<Integer, GamePlayers>>(){}.getType();

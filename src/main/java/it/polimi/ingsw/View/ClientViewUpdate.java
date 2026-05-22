@@ -12,12 +12,12 @@ import java.util.Map;
 
 public interface ClientViewUpdate {
     void updateCurrentRound(int round);
-    void updateNameModified(String newName);
     void updateGameCreated(int gameID, int numPlayers);
     void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood);
     void updatePlayerConnected(String playerName);
     void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) throws RemoteException;
     void updatePlayerLeftGame(String playerName);
+    void updateNewHost();
     //void updatePlayerDisconnected(String playerName);
     void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
     void updateTotemColor(String playerName, Color totemColor);

@@ -2,9 +2,6 @@ package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
-import it.polimi.ingsw.View.GamePlayers;
-
-import java.util.Map;
 
 /**
  * Interface defining the actions a client can perform to interact with the game server.
@@ -20,12 +17,6 @@ public interface ServerConnection {
      * Closes the connection to the server.
      */
     void disconnect();
-
-    /**
-     * Sets the player's name for the session.
-     * @param playerName the name to set.
-     */
-    void setPlayerName(String playerName);
 
     /**
      * Creates a new game lobby.

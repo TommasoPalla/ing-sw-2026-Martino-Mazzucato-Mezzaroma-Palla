@@ -179,6 +179,13 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         outStream.println(gson.toJson(message));
 
     }
+
+    @Override
+    public void notifyNewHost() {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.NEW_HOST);
+        outStream.println(gson.toJson(message));
+    }
+
     @Override
     public void notifyAvailableGames(Map<Integer, GamePlayers> availableGames){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GET_AVAILABLE_GAMES, availableGames);

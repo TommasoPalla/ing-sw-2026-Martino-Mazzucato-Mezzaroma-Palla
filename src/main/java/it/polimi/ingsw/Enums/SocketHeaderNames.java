@@ -19,6 +19,7 @@ public enum SocketHeaderNames {
     PLAYER_JOINED_GAME,
     SUCCESSFULLY_JOINED,
     LEFT_GAME,
+    NEW_HOST,
     CHOSEN_TOTEM_COLOR,
 
     START_ROUND,

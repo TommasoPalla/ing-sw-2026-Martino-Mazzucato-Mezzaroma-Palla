@@ -68,6 +68,7 @@ public interface VirtualRMIClient extends Remote {
      * @throws RemoteException if RMI communication fails.
      */
     void playerLeftGame(String playerName) throws RemoteException;
+    void updateNewHost() throws RemoteException;
 
     /**
      * Notifies that a player has chosen a totem color.

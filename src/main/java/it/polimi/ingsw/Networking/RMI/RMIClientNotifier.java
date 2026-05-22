@@ -61,6 +61,15 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
+    public void notifyNewHost() {
+        try {
+            clientStub.updateNewHost();
+        } catch (RemoteException e){
+            throw new StubException("could not notify new host");
+        }
+    }
+
+    @Override
     public void notifyAvailableGames(Map<Integer, GamePlayers> availableGames){
         try {
             clientStub.updateAvailableGames(availableGames);

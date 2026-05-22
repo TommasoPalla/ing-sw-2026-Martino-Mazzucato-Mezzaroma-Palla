@@ -5,12 +5,9 @@ import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
-import it.polimi.ingsw.Networking.Shared.PlayerRecord;
-import it.polimi.ingsw.View.GamePlayers;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Map;
 
 /**
  * Remote interface defining the actions a client can perform on the server via RMI.

@@ -66,6 +66,11 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
+    public void updateNewHost() throws RemoteException {
+        controller.updateNewHost();
+    }
+
+    @Override
     public void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException {
         controller.updateAvailableGames(availableGames);
     }

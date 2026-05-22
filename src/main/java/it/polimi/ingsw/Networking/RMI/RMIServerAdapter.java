@@ -85,11 +85,6 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void setPlayerName(String playerName){
-
-    }
-
-    @Override
     public void createGame(String playerName, int numPlayers){
         try {
             serverStub.createGame(clientStub, playerName, numPlayers);

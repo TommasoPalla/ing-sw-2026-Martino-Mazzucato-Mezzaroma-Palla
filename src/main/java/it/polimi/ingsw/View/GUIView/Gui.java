@@ -18,7 +18,6 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 public class Gui implements ViewInterfaceGui, ViewInterface {
 
@@ -93,7 +92,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyNameModified(String newName) {
+    public void notifyNameSet(String newName) {
 
     }
 
@@ -127,10 +126,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyPlayerLeftLobby(String playerName) {
+    public void notifyPlayerLeftLobby(String playerName, boolean hadColor) {
         lobby.notifyPlayerLeft(playerName);
         ChooseId.loadGames(controller.getAvailableGames());
         players.remove(playerName);
+    }
+
+    @Override
+    public void notifyNewHost() {
+
     }
 
     @Override

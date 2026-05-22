@@ -10,13 +10,14 @@ import java.util.Map;
 
 public interface ViewInterface {
     void runView();
-    void notifyNameModified(String newName);
+    void notifyNameSet(String newName);
     void notifyNewAvailableGames();
     void notifyGameCreated(int gameID);
     void notifyGameStarted();
     void notifyPlayerJoinedLobby(String playerName);
     void notifySuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors);
-    void notifyPlayerLeftLobby(String playerName);
+    void notifyPlayerLeftLobby(String playerName, boolean hadColor);
+    void notifyNewHost();
 
     void notifyStartRound(int round);
     void notifyChosenTotemColor(String playerName, Color totemColor);
