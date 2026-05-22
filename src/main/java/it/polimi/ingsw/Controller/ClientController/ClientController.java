@@ -443,6 +443,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void handleServerDisconnection(){
+        System.out.println("FORCE QUIT DUE TO USER DISCONNECTION");     //questa cosa va tolta e messa nella view.notifyForceQuit()
         setClientState(ClientState.SETUP);
         localModel = null;
         //view.notifyForceQuit(); TODO: deve printare che e' uscito

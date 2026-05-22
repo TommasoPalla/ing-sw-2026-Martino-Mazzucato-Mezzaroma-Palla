@@ -15,6 +15,7 @@ import java.util.Map;
 public interface VirtualRMIClient extends Remote {
     void showUpdate() throws RemoteException;
     void reportError(String errorMessage) throws RemoteException;
+
     void updateGameCreated(int gameID, int numPlayers) throws RemoteException;
     void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood) throws RemoteException;
     void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException;

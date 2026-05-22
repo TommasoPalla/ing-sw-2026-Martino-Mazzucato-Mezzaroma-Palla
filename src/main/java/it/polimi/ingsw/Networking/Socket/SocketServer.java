@@ -6,6 +6,7 @@ import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
+import it.polimi.ingsw.Networking.Shared.HeartBeat;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
@@ -14,12 +15,21 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SocketServer implements VirtualSocketServer{
     private final ArrayList<SocketClientHandler> clients = new ArrayList<>();
     private final ServerController serverController;
 
     public SocketServer(ServerController serverController){this.serverController = serverController;}
+
+    private final Map<SocketClientHandler, HeartBeat> clientHeartBeats = new ConcurrentHashMap<>();
+
+    //getters
+    public ArrayList<SocketClientHandler> getClients(){
+        return clients;
+    }
 
     public void startServer(int port){
         new Thread( () -> {
@@ -39,17 +49,14 @@ public class SocketServer implements VirtualSocketServer{
     @Override
     public void connect(SocketClientHandler handler) {
         this.clients.add(handler);
+
+        HeartBeat heartBeat = new HeartBeat( () -> handleClientTimeout(handler));
+        clientHeartBeats.put(handler, heartBeat);
+        heartBeat.start();
+
         System.out.println("New TCP client connected");
         serverController.updateSocketClients(this.clients);
         serverController.notifyAvailableGames();
-    }
-
-    @Override
-    public void disconnect(SocketClientHandler handler) {
-        this.clients.remove(handler);
-        serverController.updateSocketClients(this.clients);
-        serverController.notifyAvailableGames();
-        System.out.println("TCP client removed");   //magari usare un handler.toString() per includerlo nel log
     }
 
     @Override
@@ -80,8 +87,6 @@ public class SocketServer implements VirtualSocketServer{
     public void joinGame(SocketClientHandler handler){
         PlayerRecord record = handler.getPlayerRecord();
         this.clients.add(handler);
-        //serverController.addPlayerToGame(record);
-        //serverController.addNotifierToGame(record, handler);
         serverController.joinGame(handler, record);
     }
 
@@ -95,17 +100,39 @@ public class SocketServer implements VirtualSocketServer{
         serverController.leaveGame(leavingPlayer);
     }
 
-    public ArrayList<SocketClientHandler> getClients(){
-        return clients;
+    @Override
+    public void disconnect(SocketClientHandler handler) {
+        this.clients.remove(handler);
+        serverController.updateSocketClients(this.clients);
+        serverController.notifyAvailableGames();
+        System.out.println("TCP client removed");
     }
 
-    /*che cazzo è sta roba Lorenzo? è già implementato sopra
     @Override
-    public void chooseOfferTile(PlayerRecord playerRecord, int index) {
-        try {
-            //serverController.chooseOfferTile(playerRecord, index);
-        }catch(OccupiedTileException e){
-            throw new OccupiedTileException();
+    public void ping(SocketClientHandler client) {
+        System.out.println("PING received from " + client);
+        HeartBeat heartBeat = clientHeartBeats.get(client);
+        if(heartBeat != null){
+            heartBeat.receivedPing();
         }
-    }*/
+    }
+
+    private void handleClientTimeout(SocketClientHandler socketClient){
+        System.out.println("Client timeout: " + socketClient.getPlayerRecord().playerName());
+        stopHeartBeat(socketClient);
+        this.clients.remove(socketClient);
+        clients.remove(socketClient);
+        PlayerRecord record = socketClient.getPlayerRecord();
+        if (record != null) {
+            serverController.handleDisconnection(record);
+        }
+        serverController.updateSocketClients(this.clients);
+    }
+
+    private void stopHeartBeat(SocketClientHandler socketClient){
+        HeartBeat heartBeat = clientHeartBeats.get(socketClient);
+        if(heartBeat != null)
+            heartBeat.stop();
+    }
+
 }

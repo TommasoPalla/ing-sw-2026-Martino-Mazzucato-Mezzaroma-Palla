@@ -23,6 +23,7 @@ public class SocketClient implements VirtualSocketClient {
         this.controller = controller;
     }
 
+    public ClientController getController(){ return this.controller; }
 
     @Override
     public void showUpdate() throws IOException {
@@ -134,5 +135,10 @@ public class SocketClient implements VirtualSocketClient {
     @Override
     public void updateEra(int era) {
         controller.updateCurrentEra(era);
+    }
+
+    @Override
+    public void forceQuit() {
+        controller.handleServerDisconnection();
     }
 }

@@ -33,5 +33,8 @@ public enum SocketHeaderNames {
     UPDATED_BOTTOM_BUILDINGS,
     NEXT_PLAYER,
     CHANGED_GAME_PHASE,
-    CHANGED_ERA
+    CHANGED_ERA,
+
+    PING,
+    FORCE_QUIT
 }

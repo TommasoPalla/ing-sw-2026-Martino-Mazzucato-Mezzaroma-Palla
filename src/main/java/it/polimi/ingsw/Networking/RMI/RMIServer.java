@@ -31,9 +31,13 @@ public class RMIServer implements VirtualRMIServer {
     //Mappa che associa ad ogni client il proprio gestore dell'heartbeat
     private final Map<VirtualRMIClient, HeartBeat> clientHeartBeats = new ConcurrentHashMap<>();
 
-
     public RMIServer(ServerController serverController){
         this.serverController = serverController;
+    }
+
+    //getters
+    public ArrayList<VirtualRMIClient> getClients(){
+        return clients;
     }
 
     public void startServer(){
@@ -124,22 +128,6 @@ public class RMIServer implements VirtualRMIServer {
         }
     }
 
-    /*
-    @Override
-    public void chooseOfferTile(VirtualRMIClient client, PlayerRecord playerRecord, int index) throws RemoteException {
-        try{
-            PlayerRecord callerRecord = clientRecords.get(client);
-            serverController.chooseOfferTile(playerRecord, index);
-        }catch(OccupiedTileException e){
-            throw new OccupiedTileException();
-        }
-    }
-     */
-
-    public ArrayList<VirtualRMIClient> getClients(){
-        return clients;
-    }
-
     @Override
     public void disconnect(VirtualRMIClient clientStub) {
         stopHeartBeat(clientStub);
@@ -159,7 +147,7 @@ public class RMIServer implements VirtualRMIServer {
         }
     }
 
-    public void handleClientTimeout(VirtualRMIClient clientStub){
+    private void handleClientTimeout(VirtualRMIClient clientStub){
         System.out.println("Client timeout: " + clientStub);
         stopHeartBeat(clientStub);
         this.clients.remove(clientStub);
@@ -170,7 +158,7 @@ public class RMIServer implements VirtualRMIServer {
         serverController.updateRMIClients(this.clients);
     }
 
-    public void stopHeartBeat(VirtualRMIClient clientStub){
+    private void stopHeartBeat(VirtualRMIClient clientStub){
         HeartBeat heartBeat = clientHeartBeats.get(clientStub);
         if(heartBeat != null)
             heartBeat.stop();

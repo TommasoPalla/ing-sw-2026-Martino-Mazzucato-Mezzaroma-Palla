@@ -37,6 +37,8 @@ public class SocketServerAdapter implements ServerConnection {
     private final int port;
     private final String host;
 
+    private ScheduledExecutorService heartbeatScheduler;
+
     public SocketServerAdapter(String host, int port, ClientController clientController) {
         this.host = host;
         this.port = port;
@@ -56,8 +58,8 @@ public class SocketServerAdapter implements ServerConnection {
             listenerThread.setDaemon(true);
             listenerThread.start();
 
+            startHeartBeat();
             System.out.println("Connected to TCP server");
-
         } catch (Exception e){
             System.out.println("Error during connection to TCP server: " + e.getMessage());
         }
@@ -65,7 +67,6 @@ public class SocketServerAdapter implements ServerConnection {
 
     @Override
     public void disconnect() {
-        //qui si invia un messaggio che dice al server che si vuole chiudere la connessione
         try {
             socket.close();
             listenerThread.interrupt();
@@ -73,6 +74,7 @@ public class SocketServerAdapter implements ServerConnection {
             System.out.println("[ERROR]: " + e.getMessage());
         }
     }
+
 
     @Override
     public void setPlayerName(String playerName){
@@ -85,7 +87,6 @@ public class SocketServerAdapter implements ServerConnection {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.LEAVE_GAME, playerName, gameID);
         outStream.println(gson.toJson(message));
     }
-
 
     @Override
     public void createGame(String playerName, int numPlayers){
@@ -131,4 +132,22 @@ public class SocketServerAdapter implements ServerConnection {
 
     //Server updates coming from actions of other players, events, drawing from deck etc
 
+    private void startHeartBeat() {
+        heartbeatScheduler = Executors.newSingleThreadScheduledExecutor();
+        heartbeatScheduler.scheduleAtFixedRate(() -> {
+            try {
+                SocketMessageDTO ping = new SocketMessageDTO(SocketHeaderNames.PING);
+                outStream.println(gson.toJson(ping));
+            } catch (Exception e) {
+                stopHeartbeat();
+                client.getController().handleServerDisconnection();
+            }
+        }, 0, ServerConfigs.DEFAULT_PING_INTERVAL, TimeUnit.SECONDS);
+    }
+
+    private void stopHeartbeat() {
+        if (heartbeatScheduler != null) {
+            heartbeatScheduler.shutdownNow();
+        }
+    }
 }

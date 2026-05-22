@@ -183,6 +183,9 @@ public class SocketServerHandler implements Runnable{
            int newEra = ((Double) parameters[0]).intValue();
            client.updateEra(newEra);
         });
+        commandHandlers.put(SocketHeaderNames.FORCE_QUIT, parameters -> {
+           client.forceQuit();
+        });
     }
 
     @Override

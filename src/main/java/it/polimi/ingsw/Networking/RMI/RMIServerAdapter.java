@@ -63,6 +63,15 @@ public class RMIServerAdapter implements ServerConnection {
         }
     }
 
+    @Override
+    public void disconnect() {
+        stopHeartbeat();
+        try{
+            serverStub.disconnect(clientStub);
+        } catch (RemoteException e){
+            System.out.println("Error during server disconnection: " + e.getMessage());
+        }
+    }
 
     @Override
     public void setPlayerName(String playerName){
@@ -163,16 +172,6 @@ public class RMIServerAdapter implements ServerConnection {
                 client.getController().handleServerDisconnection();
             }
         }, 0, ServerConfigs.DEFAULT_PING_INTERVAL, TimeUnit.SECONDS);
-    }
-
-    @Override
-    public void disconnect() {
-        stopHeartbeat();
-        try{
-            serverStub.disconnect(clientStub);
-        } catch (RemoteException e){
-            System.out.println("Error during server disconnection: " + e.getMessage());
-        }
     }
 
     private void stopHeartbeat() {

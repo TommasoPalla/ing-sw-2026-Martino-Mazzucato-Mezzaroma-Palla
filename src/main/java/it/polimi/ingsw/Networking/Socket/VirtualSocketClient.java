@@ -36,4 +36,6 @@ public interface VirtualSocketClient {
     void updateNextPlayer(String playerName);
     void updateGamePhase(GamePhase phase);
     void updateEra(int era);
+
+    void forceQuit();
 }

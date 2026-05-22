@@ -21,4 +21,6 @@ public interface VirtualSocketServer {
     void leaveGame(PlayerRecord leavingPlayer);
     void createGame(ClientNotifier notifier, String playerName, int numPlayers);
     void startGame(String requestingPlayerName, int gameID);
+
+    void ping(SocketClientHandler client);
 }

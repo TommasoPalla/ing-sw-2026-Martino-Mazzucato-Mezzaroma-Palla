@@ -114,6 +114,9 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                 throw new OccupiedTileException();
             }
         });
+        commandHandlers.put(SocketHeaderNames.PING, parameters -> {
+            server.ping(this);
+        });
     }
 
     /**
@@ -269,6 +272,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifyForceQuit() {
-
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.FORCE_QUIT);
+        outStream.println(gson.toJson(message));
     }
 }
