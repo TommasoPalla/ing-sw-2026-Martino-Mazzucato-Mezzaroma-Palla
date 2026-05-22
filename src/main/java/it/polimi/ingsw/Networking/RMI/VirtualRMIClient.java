@@ -37,4 +37,5 @@ public interface VirtualRMIClient extends Remote {
     void updateGamePhase(GamePhase phase) throws RemoteException;
     void updateEra(int era) throws RemoteException;
 
+    void forceQuit() throws RemoteException;
 }

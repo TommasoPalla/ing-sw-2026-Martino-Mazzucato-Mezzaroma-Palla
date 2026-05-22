@@ -18,4 +18,7 @@ public class ServerConfigs {
 
     public static String SOCKET_SERVER_IP_ADDR = DEFAULT_SOCKET_SERVER_IP_ADDR;
     public static int SOCKET_SERVER_PORT = DEFAULT_SOCKET_SERVER_PORT;
+
+    public static final int DEFAULT_TIMEOUT_TIME = 10;
+    public static final int DEFAULT_PING_INTERVAL = 5;
 }

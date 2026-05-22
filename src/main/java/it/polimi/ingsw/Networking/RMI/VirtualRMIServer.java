@@ -28,4 +28,6 @@ public interface VirtualRMIServer extends Remote {
     void leaveGame(String playerName, int gameID) throws RemoteException;
     void startGame(String playerName, int gameID) throws NotTheHostException, NotEnoughPlayersException, RemoteException;
     void createGame(VirtualRMIClient client, String playerName, int numPlayers) throws RemoteException;
+
+    void ping(VirtualRMIClient client) throws RemoteException;
 }

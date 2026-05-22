@@ -35,4 +35,6 @@ public interface ClientNotifier {
     void notifyNextPlayer(String playerName);
     void notifyGamePhase(GamePhase newPhase);
     void notifyEra(int era);
+
+    void notifyForceQuit();
 }

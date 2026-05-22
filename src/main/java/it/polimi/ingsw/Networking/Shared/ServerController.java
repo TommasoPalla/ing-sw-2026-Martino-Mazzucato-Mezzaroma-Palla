@@ -187,6 +187,16 @@ public class ServerController {
         }
     }
 
+    public void handleDisconnection(PlayerRecord playerRecord){
+        int gameID = playerRecord.gameID();
+        GameRecord gameRecord = activeGames.get(gameID);
+        if(gameRecord != null){
+            gameRecord.gameController().handleCriticalDisconnection();
+            activeGames.remove(gameID);
+            notifyAvailableGames();
+        }
+    }
+
     public void updateRMIClients(ArrayList<VirtualRMIClient> clients){
         RMIClients = clients;
     }

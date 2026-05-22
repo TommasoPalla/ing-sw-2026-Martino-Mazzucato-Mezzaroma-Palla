@@ -317,9 +317,10 @@ public class GameController {
        in socket la disconnessione*/
     public void handleCriticalDisconnection(){
         notifyAll( n -> {
-            //n.notifyCriticalDisconnection
-            //removeClient();
-            //come dico a serverController di togliere il game dalla lista di activeGames?
+            try {
+                n.notifyForceQuit();
+            } catch (Exception e){}
         });
+        connectedClients.clear();
     }
 }

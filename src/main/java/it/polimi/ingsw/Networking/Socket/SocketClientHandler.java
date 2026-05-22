@@ -266,4 +266,9 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHANGED_ERA, era);
         outStream.println(gson.toJson(message));
     }
+
+    @Override
+    public void notifyForceQuit() {
+
+    }
 }

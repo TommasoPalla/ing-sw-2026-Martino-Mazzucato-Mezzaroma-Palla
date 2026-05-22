@@ -21,6 +21,8 @@ public class RMIClient implements VirtualRMIClient {
         this.controller = controller;
     }
 
+    public ClientController getController(){ return this.controller;}
+
     public void run() throws RemoteException{}
     public void runCli() throws RemoteException{}
     public void runGUI() throws RemoteException{}
@@ -146,5 +148,10 @@ public class RMIClient implements VirtualRMIClient {
     @Override
     public void updateEra(int era) throws RemoteException {
         controller.updateCurrentEra(era);
+    }
+
+    @Override
+    public void forceQuit() {
+        controller.handleServerDisconnection();
     }
 }

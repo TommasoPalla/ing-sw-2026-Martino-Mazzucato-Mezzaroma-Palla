@@ -196,4 +196,11 @@ public class RMIClientNotifier implements ClientNotifier {
             //throw new StubException("could not notify");
         }
     }
+
+    @Override
+    public void notifyForceQuit() {
+        try {
+            clientStub.forceQuit();
+        } catch (RemoteException e){}
+    }
 }

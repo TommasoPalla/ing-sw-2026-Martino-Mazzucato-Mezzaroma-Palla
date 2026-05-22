@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 public class ClientController implements ClientViewUpdate {
@@ -128,6 +131,7 @@ public class ClientController implements ClientViewUpdate {
             throw new IllegalClientStateActionException("ERROR: You can't leave the game now!");
         }
         connection.leaveGame(playerName, localModel.getGameId());
+        setClientState(ClientState.SETUP);
     }
 
     /**
@@ -156,7 +160,7 @@ public class ClientController implements ClientViewUpdate {
     ClientController checks if localModel allows them and then send to server,
     identified by connection field (RMI/socket)*/
     public void chooseTotemColor(Color color){
-        if (clientState != ClientState.IN_LOBBY) {
+        if (this.clientState != ClientState.IN_LOBBY) { //non sembra funzionare dopo una forceQuit non so perche'
             throw new IllegalClientStateActionException("ERROR: You cannot choose a totem right now.");
         }
         if (localModel.getTotemColors().containsKey(playerName)) {
@@ -436,5 +440,11 @@ public class ClientController implements ClientViewUpdate {
                 setClientState(ClientState.DRAW_CARD);
                 break;
         }
+    }
+
+    public void handleServerDisconnection(){
+        setClientState(ClientState.SETUP);
+        localModel = null;
+        //view.notifyForceQuit(); TODO: deve printare che e' uscito
     }
 }

@@ -9,6 +9,7 @@ import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
+import it.polimi.ingsw.Networking.Shared.HeartBeat;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 
@@ -27,6 +28,10 @@ public class RMIServer implements VirtualRMIServer {
     //Mappa che associa ad ogni client il proprio player record (nome e gameID) DOPO che ha joinato un game
     private Map<VirtualRMIClient, PlayerRecord> clientRecords = new ConcurrentHashMap<>();
 
+    //Mappa che associa ad ogni client il proprio gestore dell'heartbeat
+    private final Map<VirtualRMIClient, HeartBeat> clientHeartBeats = new ConcurrentHashMap<>();
+
+
     public RMIServer(ServerController serverController){
         this.serverController = serverController;
     }
@@ -44,9 +49,14 @@ public class RMIServer implements VirtualRMIServer {
     @Override
     public void connect(VirtualRMIClient clientStub) {
         this.clients.add(clientStub);
-        System.out.println(clientStub + "added to RMI server");
+
+        HeartBeat heartBeat = new HeartBeat( () -> handleClientTimeout(clientStub));
+        clientHeartBeats.put(clientStub, heartBeat);
+        heartBeat.start();
+
         serverController.updateRMIClients(this.clients);
         serverController.notifyAvailableGames();
+        System.out.println(clientStub + "added to RMI server");
     }
 
     @Override
@@ -86,16 +96,6 @@ public class RMIServer implements VirtualRMIServer {
         } catch (NotEnoughPlayersException e) {
             throw new NotEnoughPlayersException();
         }
-    }
-
-    @Override
-    public void disconnect(VirtualRMIClient clientStub) {
-        this.clients.remove(clientStub);
-        serverController.removeClientFromGame(clientRecords.get(clientStub));
-        //serverController.removeNotifierFromGame(clientRecords.get(clientStub));
-        System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
-        //in realtà in questo caso forse il controller potrebbe capirlo internamente ma è più complicato
-        serverController.updateRMIClients(this.clients);
     }
 
     @Override
@@ -140,4 +140,39 @@ public class RMIServer implements VirtualRMIServer {
         return clients;
     }
 
+    @Override
+    public void disconnect(VirtualRMIClient clientStub) {
+        stopHeartBeat(clientStub);
+        this.clients.remove(clientStub);
+        serverController.removeClientFromGame(clientRecords.get(clientStub));
+        System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
+        //in realtà in questo caso forse il controller potrebbe capirlo internamente ma è più complicato
+        serverController.updateRMIClients(this.clients);
+    }
+
+    @Override
+    public void ping(VirtualRMIClient client) throws RemoteException {
+        System.out.println("PING received from " + client.toString());
+        HeartBeat heartBeat = clientHeartBeats.get(client);
+        if(heartBeat != null){
+            heartBeat.receivedPing();
+        }
+    }
+
+    public void handleClientTimeout(VirtualRMIClient clientStub){
+        System.out.println("Client timeout: " + clientStub);
+        stopHeartBeat(clientStub);
+        this.clients.remove(clientStub);
+        PlayerRecord record = clientRecords.remove(clientStub);
+        if (record != null) {
+            serverController.handleDisconnection(record);
+        }
+        serverController.updateRMIClients(this.clients);
+    }
+
+    public void stopHeartBeat(VirtualRMIClient clientStub){
+        HeartBeat heartBeat = clientHeartBeats.get(clientStub);
+        if(heartBeat != null)
+            heartBeat.stop();
+    }
 }

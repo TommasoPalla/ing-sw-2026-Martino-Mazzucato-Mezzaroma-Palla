@@ -20,6 +20,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class RMIServerAdapter implements ServerConnection {
     private VirtualRMIClient clientStub;
@@ -28,6 +31,8 @@ public class RMIServerAdapter implements ServerConnection {
 
     private final String host;
     private final int port;
+
+    private ScheduledExecutorService heartbeatScheduler;
 
     public RMIServerAdapter(String host, int port, ClientController clientController) {
         this.host = host;
@@ -38,23 +43,19 @@ public class RMIServerAdapter implements ServerConnection {
     @Override
     public void connect() {
         try {
-            //System.setProperty("java.rmi.server.hostname", ServerConfigs.DEFAULT_RMI_IP_ADDR);    //forces the server to use 127.0.0.1 as localhost
-            //String clientIp = java.net.InetAddress.getLocalHost().getHostAddress();
-            //System.setProperty("java.rmi.server.hostname", clientIp);
-            //System.setProperty("java.rmi.server.hostname", java.net.InetAddress.getLocalHost().getHostAddress());
-
             String clientIp = "127.0.0.1";
             try (java.net.DatagramSocket socket = new java.net.DatagramSocket()) {
                 socket.connect(java.net.InetAddress.getByName("8.8.8.8"), 10002);
                 clientIp = socket.getLocalAddress().getHostAddress();
             } catch (Exception e) {}
+
             System.setProperty("java.rmi.server.hostname", clientIp);
-
-
             Registry registry = LocateRegistry.getRegistry(host, port);
             serverStub = (VirtualRMIServer) registry.lookup(ServerConfigs.DEFAULT_RMI_SERVER_NAME);
             clientStub = (VirtualRMIClient) UnicastRemoteObject.exportObject(client, 0);
             serverStub.connect(clientStub);
+
+            startHeartBeat();
         } catch (RemoteException e){
             System.out.println("Error during connection to RMI server\n" + e.getMessage());
         } catch (NotBoundException e){
@@ -62,14 +63,6 @@ public class RMIServerAdapter implements ServerConnection {
         }
     }
 
-    @Override
-    public void disconnect() {
-        try{
-            serverStub.disconnect(clientStub);
-        } catch (RemoteException e){
-            System.out.println("Error during server disconnection: " + e.getMessage());
-        }
-    }
 
     @Override
     public void setPlayerName(String playerName){
@@ -157,5 +150,34 @@ public class RMIServerAdapter implements ServerConnection {
     @Override
     public void endTurn(String playerName){
 
+    }
+
+    private void startHeartBeat() {
+        heartbeatScheduler = Executors.newSingleThreadScheduledExecutor();
+        heartbeatScheduler.scheduleAtFixedRate(() -> {
+            try {
+                serverStub.ping(clientStub);
+            } catch (RemoteException e) {
+                // server irraggiungibile
+                stopHeartbeat();
+                client.getController().handleServerDisconnection();
+            }
+        }, 0, ServerConfigs.DEFAULT_PING_INTERVAL, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void disconnect() {
+        stopHeartbeat();
+        try{
+            serverStub.disconnect(clientStub);
+        } catch (RemoteException e){
+            System.out.println("Error during server disconnection: " + e.getMessage());
+        }
+    }
+
+    private void stopHeartbeat() {
+        if (heartbeatScheduler != null) {
+            heartbeatScheduler.shutdownNow();
+        }
     }
 }
