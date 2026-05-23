@@ -214,7 +214,7 @@ public class TUIView implements ViewInterface{
         List<String> turnTileLines = new ArrayList<>();
         String turnBorder = "+-----------------------+";
         turnTileLines.add(turnBorder);
-        int[] tileModifier = clientController.getLocalModel().getTurnTile().getTileModifier();
+        int[] tileModifier = clientController.getLocalModel().getTileModifier();
         for (int i = 0; i < tileModifier.length; i++) {
             String bonus;
             if (tileModifier[i] != 0 && i < tileModifier.length - 1)
@@ -224,9 +224,9 @@ public class TUIView implements ViewInterface{
             else
                 bonus = "";
             String paddedBonus = String.format("%-10s", bonus);
-            String playerOnSlot = clientController.getLocalModel().getTurnTile().getTurnTileStatus().getOrDefault(i, null);
+            String playerOnSlot = clientController.getLocalModel().getTurnTileStatus().getOrDefault(i, "");
             String finalPlayerOnSlot;
-            if (playerOnSlot != null) {
+            if (!playerOnSlot.isEmpty()) {
                 Color playerColor = clientController.getLocalModel().getTotemColors().get(playerOnSlot);
                 String displayName = (playerOnSlot.length() > 10) ? playerOnSlot.substring(0, 7) + "..." : playerOnSlot;
                 String paddedName = String.format("%-10s", displayName);
@@ -405,10 +405,10 @@ public class TUIView implements ViewInterface{
     @Override
     public void notifyChosenTotemColor(String playerName, Color totemColor) {
         if (this.player.equals(playerName)) {
-            System.out.println("You have successfully chosen totem color: " + totemColor + "!");
+            System.out.println("You have successfully chosen the " + totemColor.colorize(String.valueOf(totemColor).toLowerCase()) + " totem!");
         }
         else if (tuiState == TUIState.IN_LOBBY) {
-            System.out.println(playerName + " has chosen the " + totemColor.toString().toLowerCase() + " totem!");
+            System.out.println(playerName + " has chosen the " + totemColor.colorize(String.valueOf(totemColor).toLowerCase()) + " totem!");
             // se il player non ha ancora scelto il totem, ristampa la lista dei colori rimuovendo
             // il colore del player che ha appena scelto il totem
             if (!clientController.getLocalModel().getTotemColors().containsKey(this.player)) {
@@ -419,11 +419,11 @@ public class TUIView implements ViewInterface{
 
     @Override
     public void notifyGameStarted() {
-        System.out.println("                  ----------------------------------------------------                ");
-        System.out.println("        ------------------------------------------------------------------------      ");
-        System.out.println("  ----------------------------- THE GAME HAS STARTED -------------------------------- ");
-        System.out.println("----------------------------------------- GLHF! ----------------------------------------");
-        System.out.println("        ------------------------------------------------------------------------      ");
+        System.out.println("                  ---------------------------------------------------                 ");
+        System.out.println("       -------------------------------------------------------------------------      ");
+        System.out.println("-------------------------------- THE GAME HAS STARTED --------------------------------");
+        System.out.println("--------------------------------------- GLHF! ----------------------------------------");
+        System.out.println("       --------------------------------------------------------------------------     ");
         System.out.println("                  ----------------------------------------------------                ");
         System.out.println();
     }
@@ -485,12 +485,12 @@ public class TUIView implements ViewInterface{
 
     @Override
     public void notifyNewCurrentPlayer(String currentPlayerName, ClientState clientState) {
-        //TODO: da togliere questa sleep e fare una queue sia lato client che lato server
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+//        //TODO: da togliere questa sleep e fare una queue sia lato client che lato server
+//        try {
+//            Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
         if(currentPlayerName.equals(this.player)) {
             System.out.println("\nIt's your turn!");
             printAvailableActions(clientController.getClientState(), false);
@@ -520,7 +520,7 @@ public class TUIView implements ViewInterface{
             availableColors.remove(color);
         }
         for(Color color : availableColors) {
-            System.out.println("- " + color);
+            System.out.println("- " + color.colorize(String.valueOf(color)));
         }
     }
 
@@ -617,15 +617,21 @@ public class TUIView implements ViewInterface{
                 break;
             case NOT_IN_TURN:
                 System.out.println("You can't perform any action, since it's not your turn.");
+                System.out.println("- help(): to know the available actions.");
                 break;
             case PLACE_TOTEM:
+                System.out.println("These are the available actions:");
                 System.out.println("- place_totem(offer_track_index): Place your totem on the offer track's tile indicated by the index. The tile must not be occupied by another player.");
+                System.out.println("- help(): to know the available actions.");
                 break;
             case DRAW_CARD:
+                System.out.println("These are the available actions:");
                 System.out.println("- draw_card(top/bottom, char/building, offer_track_index): To draw a card from top or bottom row. You have also to specify if the card\nis a character card or a building and the index of the row.");
+                System.out.println("- help(): to know the available actions.");
                 break;
         }
         if(help && clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) printGeneralCommands();
+        System.out.println();
     }
     /**
     * This method prints to terminal the commands who can be performed at every game phase during the entire

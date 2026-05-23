@@ -28,7 +28,7 @@ public interface ClientNotifier {
      * @param shuffledFirstPlayingOrder the turn order of players.
      * @param initialFood the initial food assigned to each player.
      */
-    void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood);
+    void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow);
 
     /**
      * Notifies that a new player has connected to the lobby.
@@ -131,11 +131,11 @@ public interface ClientNotifier {
      */
     void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings);
 
-    /**
-     * Notifies whose turn is next.
-     * @param playerName the name of the next player.
-     */
-    void notifyNextPlayer(String playerName);
+//    /**
+//     * Notifies whose turn is next.
+//     * @param playerName the name of the next player.
+//     */
+//    void notifyNextPlayer(String playerName);
 
     /**
      * Notifies a change in game phase.

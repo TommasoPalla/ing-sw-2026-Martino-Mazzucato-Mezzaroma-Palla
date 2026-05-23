@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class ClientController implements ClientViewUpdate {
@@ -269,14 +266,14 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood){
-        localModel.setNextPlayer(firstTurnOrder.getFirst());
-        if (firstTurnOrder.getFirst().equals(this.playerName)) clientState = ClientState.PLACE_TOTEM;
-        else clientState = ClientState.NOT_IN_TURN;
-        for (int i=0; i<firstTurnOrder.size(); i++){
-            localModel.getTurnTile().getTurnTileStatus().put(i, firstTurnOrder.get(i));
-        }
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) {
         localModel.updateGamePhase(GamePhase.START_TURN);
+        localModel.updateTopRow(firstTopRow);
+        localModel.updateBottomRow(firstBottomRow);
+        localModel.getTurnOrder().addAll(firstTurnOrder);
+        for (int i=0; i<firstTurnOrder.size(); i++){
+            localModel.getTurnTileStatus().put(i, firstTurnOrder.get(i));
+        }
         localModel.addPlayersTribes(firstTurnOrder);
         view.notifyGameStarted();
         updateInitialFood(initialFood);
@@ -363,18 +360,26 @@ public class ClientController implements ClientViewUpdate {
             localModel.getPlayerTribe(player).addFood(initialFood.get(player));
         }
         view.notifyGiveInitialFood(initialFood);
+        updateStartRound();
     }
 
     public void updateStartRound() {
-        localModel.setNextRound();
         localModel.updateGamePhase(GamePhase.START_TURN);
+        localModel.setNextRound();
         view.notifyStartRound(localModel.getCurrentRound());
+        updateCurrentPlayer();
     }
 
     @Override
     public void updateCurrentOfferTile(String playerName, int index) {
         localModel.chosenOfferTile(playerName, index);
         view.notifyTileChosen(playerName, index);
+        try {
+            updateCurrentPlayer();
+        } catch (LastPlayerOfTurnException e) {
+            view.notifyNewGamePhase(localModel.getCurrentPhase());
+            updateCurrentPlayer();
+        }
     }
 
     @Override
@@ -412,12 +417,16 @@ public class ClientController implements ClientViewUpdate {
         localModel.updateBottomRowBuildings(newBottomBuildings);
     }
 
-    @Override
-    public void updateCurrentPlayer(String playerName) {
-        localModel.setNextPlayer(playerName);
-        System.out.println("DEBUG: ricevuto nuovo giocatore attuale: " + playerName);
+    public void updateCurrentPlayer() {
+        String currentPlayer;
+        try {
+            currentPlayer = localModel.setNextPlayer();
+        } catch (LastPlayerOfTurnException e) {
+            throw new LastPlayerOfTurnException();
+        }
+        System.out.println("DEBUG: ricevuto nuovo giocatore attuale: " + currentPlayer);
         syncClientState();
-        view.notifyNewCurrentPlayer(playerName, this.clientState);
+        view.notifyNewCurrentPlayer(currentPlayer, this.clientState);
     }
 
     @Override

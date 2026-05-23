@@ -115,8 +115,8 @@ public class GameController {
                 handleCriticalDisconnection();
             }
             connectedClients.remove(playerName);
-            // se il player che è stato rimosso era l'host, il secondo a essere entrato diventa il nuovo host
-            if (playerName.equals(hostClient)) {
+            // se il player che è stato rimosso era l'host, il secondo a essere entrato (se esiste) diventa il nuovo host
+            if (playerName.equals(hostClient) && !connectedClients.isEmpty()) {
                 String newHost = connectedClients.keySet().iterator().next();
                 hostClient = newHost;
                 connectedClients.get(newHost).notifyNewHost();
@@ -166,13 +166,13 @@ public class GameController {
     public synchronized Player setNextPlayer() {
         try {
             Player nextPlayer =  gameInstance.setNextPlayer();
-            try {
-                notifyAll( n -> {
-                    n.notifyNextPlayer(nextPlayer.getName());
-                });
-            } catch (StubException e) {
-                handleCriticalDisconnection();
-            }
+//            try {
+//                notifyAll( n -> {
+//                    n.notifyNextPlayer(nextPlayer.getName());
+//                });
+//            } catch (StubException e) {
+//                handleCriticalDisconnection();
+//            }
             System.out.println("[GAME " + gameInstance.getGameID() + "] Turn changed: current player is now '" + nextPlayer.getName() + "'");
             return nextPlayer;
         }
@@ -206,9 +206,13 @@ public class GameController {
                     .map(Player::getName)
                     .toList();
             System.out.println("[GAME " + gameInstance.getGameID() + "] Turn order: " + shuffledFirstPlayingOrder);
+            gameInstance.setCurrentPhase(GamePhase.START_TURN);
+            gameInstance.setNextRound();
+            setNextPlayer();
+            gameInstance.initOfferTrack();
             //TODO: notify game started da fare in socket e chiamare qui
-            notifyAll(n -> n.notifyGameStarted(shuffledFirstPlayingOrder, initialFood));
-            startRound();
+            notifyAll(n -> n.notifyGameStarted(shuffledFirstPlayingOrder, initialFood, gameInstance.getOfferTrack().getTopRow(), gameInstance.getOfferTrack().getBottomRow()));
+            //startRound();
         }
     }
 
@@ -236,9 +240,9 @@ public class GameController {
 
         String firstPlayer = gameInstance.setFirstPlayer();
         try {
-            notifyAll(n -> {
-                    n.notifyNextPlayer(firstPlayer);
-            });
+//            notifyAll(n -> {
+//                    n.notifyNextPlayer(firstPlayer);
+//            });
             // ????? che roba e' questa qua sotto?
             /*
             for (ClientNotifier client : connectedClients.values()) {
@@ -296,9 +300,9 @@ public class GameController {
             setNextPlayer();
         } catch (LastPlayerOfTurnException e) {
             gameInstance.setCurrentPhase(GamePhase.ON_DRAW);
-            notifyAll(n -> {
-                n.notifyGamePhase(gameInstance.getGamePhase());
-            });
+//            notifyAll(n -> {
+//                n.notifyGamePhase(gameInstance.getGamePhase());
+//            });
             setNextPlayer();
         }
     }

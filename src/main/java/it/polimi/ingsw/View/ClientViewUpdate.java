@@ -13,7 +13,7 @@ import java.util.Map;
 public interface ClientViewUpdate {
     void updateCurrentRound(int round);
     void updateGameCreated(int gameID, int numPlayers);
-    void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood);
+    void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow);
     void updatePlayerConnected(String playerName);
     void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) throws RemoteException;
     void updatePlayerLeftGame(String playerName);
@@ -30,7 +30,6 @@ public interface ClientViewUpdate {
     void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings);
     void updateBottomRow(ArrayList<Card> newBottomRow);
     void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings);
-    void updateCurrentPlayer(String playerName);
     void updateGamePhase(GamePhase phase);
     void updateCurrentEra(int era);
 }

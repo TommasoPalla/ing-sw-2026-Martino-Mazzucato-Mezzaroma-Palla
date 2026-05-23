@@ -46,8 +46,8 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood) {
-        controller.updateGameStarted(firstTurnOrder, initialFood);
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) {
+        controller.updateGameStarted(firstTurnOrder, initialFood, firstTopRow, firstBottomRow);
     }
 
     @Override
@@ -140,10 +140,10 @@ public class RMIClient implements VirtualRMIClient {
         controller.updateBottomBuildings(newBottomBuildings);
     }
 
-    @Override
-    public void updateNextPlayer(String playerName) throws RemoteException {
-        controller.updateCurrentPlayer(playerName);
-    }
+//    @Override
+//    public void updateNextPlayer(String playerName) throws RemoteException {
+//        controller.updateCurrentPlayer(playerName);
+//    }
 
     @Override
     public void updateGamePhase(GamePhase phase) throws RemoteException {

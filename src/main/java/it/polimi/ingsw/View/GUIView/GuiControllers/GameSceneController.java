@@ -140,7 +140,7 @@ public class GameSceneController {
 
     public void initOfferTrack(){
         ArrayList<OfferTile> tiles = gui.getClientController().getLocalModel().getOfferTiles();
-        TurnTile turnTile = gui.getClientController().getLocalModel().getTurnTile();
+//        TurnTile turnTile = gui.getClientController().getLocalModel().getTurnTile();
         offerTrack.getChildren().clear();
         //capire se per turnTile serve component diverso, si getta NumPlayers e dentro il component si fa swtich per
         //selezionare l'immagine giusta. Esempio if(numP == 2) then getNode("tile_2.png")

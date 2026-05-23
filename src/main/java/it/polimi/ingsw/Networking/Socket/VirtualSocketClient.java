@@ -30,11 +30,14 @@ public interface VirtualSocketClient {
 
     /**
      * Notifies the client that the game has started.
+     *
      * @param firstTurnOrder the list of player names in their playing order.
-     * @param initialFood the initial food resources assigned to each player.
+     * @param initialFood    the initial food resources assigned to each player.
+     * @param firstTopRow
+     * @param firstBottomRow
      * @throws IOException if TCP communication fails.
      */
-    void updateGameStarted(List<String> firstTurnOrder, Map<String, Integer> initialFood) throws  IOException;
+    void updateGameStarted(List<String> firstTurnOrder, Map<String, Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) throws  IOException;
 
     /**
      * Updates the list of currently joinable games.
@@ -151,12 +154,12 @@ public interface VirtualSocketClient {
      */
     void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) throws IOException;
 
-    /**
-     * Notifies the name of the player whose turn is next.
-     * @param playerName the name of the next player.
-     * @throws IOException if TCP communication fails.
-     */
-    void updateNextPlayer(String playerName) throws IOException;
+//    /**
+//     * Notifies the name of the player whose turn is next.
+//     * @param playerName the name of the next player.
+//     * @throws IOException if TCP communication fails.
+//     */
+//    void updateNextPlayer(String playerName) throws IOException;
 
     /**
      * Notifies a change in the game phase.

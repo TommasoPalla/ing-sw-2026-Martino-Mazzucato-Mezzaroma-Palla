@@ -18,7 +18,7 @@ class TUIViewTest {
         controller.setPlayerName("ciao");
         controller.updatePlayerConnected("ciao");
         controller.updatePlayerConnected("pippo");
-        controller.updateCurrentPlayer("ciao");
+//        controller.updateCurrentPlayer("ciao");
         //parseCOmmand is private view.parseCommand("draw_card(top, building, 1)");
     }
 

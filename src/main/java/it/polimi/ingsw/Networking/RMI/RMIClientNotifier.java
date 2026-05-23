@@ -27,9 +27,10 @@ public class RMIClientNotifier implements ClientNotifier {
         }
     }
     @Override
-    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood) {
+    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) {
         try {
-            clientStub.updateGameStarted(shuffledFirstPlayingOrder, initialFood);
+            System.out.println("game started");
+            clientStub.updateGameStarted(shuffledFirstPlayingOrder, initialFood, firstTopRow, firstBottomRow);
         } catch (RemoteException e){}
     }
 
@@ -90,6 +91,7 @@ public class RMIClientNotifier implements ClientNotifier {
     @Override
     public void notifyStartRound() {
         try {
+            System.out.println("round started");
             clientStub.startRound();
         } catch (RemoteException e) {
             throw new StubException("could not notify start of new round");
@@ -178,14 +180,14 @@ public class RMIClientNotifier implements ClientNotifier {
         }
     }
 
-    @Override
-    public void notifyNextPlayer(String playerName) {
-        try {
-            clientStub.updateNextPlayer(playerName);
-        } catch (RemoteException e) {
-            //throw new StubException("could not notify");
-        }
-    }
+//    @Override
+//    public void notifyNextPlayer(String playerName) {
+//        try {
+//            clientStub.updateNextPlayer(playerName);
+//        } catch (RemoteException e) {
+//            //throw new StubException("could not notify");
+//        }
+//    }
 
     @Override
     public void notifyGamePhase(GamePhase newPhase) {

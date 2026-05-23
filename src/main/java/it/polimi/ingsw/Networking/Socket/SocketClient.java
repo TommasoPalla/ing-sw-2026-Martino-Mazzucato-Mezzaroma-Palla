@@ -42,8 +42,8 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder, Map<String, Integer> initialFood) {
-        controller.updateGameStarted(firstTurnOrder, initialFood);
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String, Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) {
+        controller.updateGameStarted(firstTurnOrder, initialFood, firstTopRow, firstBottomRow);
     }
 
     @Override
@@ -127,10 +127,10 @@ public class SocketClient implements VirtualSocketClient {
         controller.updateBottomBuildings(newBottomBuildings);
     }
 
-    @Override
-    public void updateNextPlayer(String playerName) {
-        controller.updateCurrentPlayer(playerName);
-    }
+//    @Override
+//    public void updateNextPlayer(String playerName) {
+//        controller.updateCurrentPlayer(playerName);
+//    }
 
     @Override
     public void updateGamePhase(GamePhase phase) {

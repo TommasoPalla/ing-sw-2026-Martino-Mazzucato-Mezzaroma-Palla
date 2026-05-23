@@ -57,8 +57,16 @@ public class SocketServerHandler implements Runnable{
             String foodString = gson.toJson(parameters[1]);
             Type foodMapType = new TypeToken<Map<String, Integer>>(){}.getType();
             Map<String, Integer> initialFood = gson.fromJson(foodString, foodMapType);
+
+            String topRowString = gson.toJson(parameters[2]);
+            Type topRowType = new TypeToken<ArrayList<Card>>(){}.getType();
+            ArrayList<Card> newTopRow = gson.fromJson(topRowString, topRowType);
+
+            String bottomRowString = gson.toJson(parameters[3]);
+            Type bottomRowType = new TypeToken<ArrayList<Card>>(){}.getType();
+            ArrayList<Card> newBottomRow = gson.fromJson(bottomRowString, bottomRowType);
             try {
-                client.updateGameStarted(firstTurnOrder, initialFood);
+                client.updateGameStarted(firstTurnOrder, initialFood, newTopRow, newBottomRow);
             } catch (Exception e) {}
         });
         commandHandlers.put(SocketHeaderNames.PLAYER_JOINED_GAME, parameters -> {
@@ -184,12 +192,12 @@ public class SocketServerHandler implements Runnable{
                 client.updateBottomBuildings(newBottomBuildings);
             } catch (IOException e) {}
         });
-        commandHandlers.put(SocketHeaderNames.NEXT_PLAYER, parameters -> {
-           String playerName = (String) parameters[0];
-           try {
-               client.updateNextPlayer(playerName);
-           } catch (IOException e) {}
-        });
+//        commandHandlers.put(SocketHeaderNames.NEXT_PLAYER, parameters -> {
+//           String playerName = (String) parameters[0];
+//           try {
+//               client.updateNextPlayer(playerName);
+//           } catch (IOException e) {}
+//        });
         commandHandlers.put(SocketHeaderNames.CHANGED_GAME_PHASE, parameters -> {
             GamePhase phase = GamePhase.valueOf((String) parameters[0]);
             try {

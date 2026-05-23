@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.ClientController;
 
+import it.polimi.ingsw.CustomException.LastPlayerOfTurnException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
@@ -28,7 +29,10 @@ public class ClientModel {
     private ArrayList<BuildingCard> topBuildings;
     private ArrayList<BuildingCard> bottomBuildings;
     private final Map<String, Color> totemColors;
-    private TurnTile turnTile;
+    //private TurnTile turnTile;
+    List<String> turnOrder;
+    Map<Integer,String> turnTileStatus;
+    private int[] tileModifier;
     private ArrayList<OfferTile> offerTiles;
     //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
 
@@ -38,12 +42,34 @@ public class ClientModel {
         this.players = new HashMap<>();
         this.currentPhase = GamePhase.START_GAME;
         this.currentRound = 0;
+        this.currentPlayer = null;
+        this.turnOrder = new ArrayList<>();
         this.topRow = new ArrayList<>();
         this.bottomRow = new ArrayList<>();
         this.topBuildings = new ArrayList<>();
         this.bottomBuildings = new ArrayList<>();
         this.totemColors = new HashMap<>();
-        this.turnTile = new TurnTile(numPlayers);
+        //this.turnTile = new TurnTile(numPlayers);
+        turnTileStatus = new HashMap<>();
+        turnOrder = new ArrayList<>();
+        switch (numPlayers){
+            case 2:
+                tileModifier = new int[]{1, -1};
+                turnTileStatus.put(0, null);
+                turnTileStatus.put(1, null);
+                break;
+            case 3:
+                tileModifier = new int[]{2, 0, -1};
+                turnTileStatus.put(2, null);
+                break;
+            case 4:
+                tileModifier = new int[]{2, 1, 0, -1};
+                turnTileStatus.put(3, null);
+                break;
+            case 5:
+                tileModifier = new int[]{3, 1, 0, 0, -1};
+                turnTileStatus.put(4, null);
+        }
         this.offerTiles = new ArrayList<>();
         if(numPlayers == 5) offerTiles.add(new OfferTile('A'));
         offerTiles.add(new OfferTile('B'));
@@ -77,9 +103,35 @@ public class ClientModel {
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
 
     //update methods
-    void setNextPlayer(String playerName) {
-        currentPlayer = playerName;
+
+    public void setNewTurnOrder() {
+        this.turnOrder.clear();
+        for (OfferTile offerTile : offerTiles) {
+            if(offerTile.isOccupied())  this.turnOrder.add(offerTile.getCurrentOccupant());
+        }
     }
+
+    public String setNextPlayer() {
+        if (currentPlayer == null) {
+            this.currentPlayer = turnOrder.getFirst();
+            return this.currentPlayer;
+        }
+        int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
+        if  (currentPlayerIndex < turnOrder.size()-1){
+            this.currentPlayer =  turnOrder.get(currentPlayerIndex+1);
+            return this.currentPlayer;
+        }
+        // se il player è l'ultimo
+        else {
+            if (currentPhase == GamePhase.START_TURN) {
+                setNewTurnOrder();
+                this.currentPhase = GamePhase.ON_DRAW;
+            }
+            currentPlayer = null;
+            throw new LastPlayerOfTurnException();
+        }
+    }
+
     void setNextRound() {
         currentRound++;
     }
@@ -116,9 +168,9 @@ public class ClientModel {
         currentOfferTiles.put(playerName, index);
     }
      */
-    void updateTurnTile(TurnTile remoteTurnTile){
-        turnTile = remoteTurnTile;
-    }
+//    void updateTurnTile(TurnTile remoteTurnTile){
+//        turnTile = remoteTurnTile;
+//    }
     void updateOfferTiles(ArrayList<OfferTile> remoteOfferTile){
         offerTiles = remoteOfferTile;
     }
@@ -142,7 +194,7 @@ public class ClientModel {
     }
     void chosenOfferTile(String playerName, int index){
         offerTiles.get(index).occupy(playerName);
-        turnTile.leaveTurnTileSlot();
+        turnTileStatus.put(this.turnOrder.indexOf(playerName), "");
     }
     void updateBuildingDrawn(BuildingCard building, String playerName){
         //players.get(playerName).addToBuildings(building);
@@ -169,6 +221,9 @@ public class ClientModel {
     public boolean checkNameAvailable(String name){
         return players.containsKey(name);
     }
+    public List<String> getTurnOrder(){
+        return turnOrder;
+    }
     public GamePhase getCurrentPhase(){
         return currentPhase;
     }
@@ -184,7 +239,9 @@ public class ClientModel {
         return !totemColors.containsValue(color);
     }
     public Map<String,Color> getTotemColors(){return totemColors;}
+    public int[] getTileModifier() {return tileModifier;}
+    public Map<Integer, String> getTurnTileStatus() {return turnTileStatus;}
     public ArrayList<OfferTile> getOfferTiles(){return offerTiles;}
-    public TurnTile getTurnTile(){return turnTile;}
+//    public TurnTile getTurnTile(){return turnTile;}
     public ArrayList<OfferTile> getOfferTilesNumber(){return offerTiles;}
 }
