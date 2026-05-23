@@ -4,10 +4,10 @@ import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Visitor;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Map;
 
 public abstract class CharacterCard extends Card {
     private final int numPlayersFlag;//3 stands for 3+, 4 for 4+. How many players are required to use the card
@@ -32,12 +32,26 @@ public abstract class CharacterCard extends Card {
     public InventorType getInventorType(){ return null; }
     public int getShamansStars(){ return 0; }
     public int getBuildingDiscount(){ return 0; }
+    public int getGathererDiscount(){ return 0; }
     public boolean isAlphaHunter() { return false; }
 
     public ArrayList<Object> getUsefulStats() {return null;}
 
     @Override
+    public Map<String, String> getDisplayStats() {
+        Map<String, String> stats = super.getDisplayStats();
+        stats.put("👥", role.toString());
+        if (getPrestigePoints() > 0) stats.put("⭐", String.valueOf(getPrestigePoints()));
+        if (getShamansStars() > 0) stats.put("✨", String.valueOf(getShamansStars()));
+        if (getBuildingDiscount() > 0) stats.put("🔨🏷️", String.valueOf(getBuildingDiscount()));
+        if (getGathererDiscount() > 0) stats.put("🧺🏷️", String.valueOf(getGathererDiscount()));
+        if (isAlphaHunter()) stats.put("🏹+", "");
+        if (getInventorType() != null && getInventorType() != InventorType.NONE) stats.put("💡", getInventorType().toString());
+        return stats;
+    }
+
+    @Override
     public void accept(Visitor visitor){visitor.visitCard(this);}
 
-    public void applyEffect(Player player){}
+    public void applyEffect(TribeInterface tribe){}
 }

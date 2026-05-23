@@ -326,18 +326,18 @@ public class ClientController implements ClientViewUpdate {
         if(fromTopRow){
             if(fromBuilding){
                 BuildingCard drawn = localModel.getTopBuildings().remove(index);
-                localModel.getPlayerTribe(playerName).addToBuildings(drawn);
+                localModel.getPlayerTribe(playerName).addBuilding(drawn);
             }else{
                 CharacterCard drawn = (CharacterCard) localModel.getTopRow().remove(index);
-                localModel.getPlayerTribe(playerName).addToPopulation(drawn);
+                localModel.getPlayerTribe(playerName).addCharacter(drawn);
             }
         }else{
             if(fromBuilding){
                 BuildingCard drawn = localModel.getBottomBuildings().remove(index);
-                localModel.getPlayerTribe(playerName).addToBuildings(drawn);
+                localModel.getPlayerTribe(playerName).addBuilding(drawn);
             }else{
                 CharacterCard drawn = (CharacterCard) localModel.getBottomRow().remove(index);
-                localModel.getPlayerTribe(playerName).addToPopulation(drawn);
+                localModel.getPlayerTribe(playerName).addCharacter(drawn);
             }
         }
     }

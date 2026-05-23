@@ -27,8 +27,8 @@ public class TribeTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
-        player1 = new Player(game, "pippo");
-        player2 = new Player(game, "pippo");
+        player1 = new Player(game, "pippo", Color.RED);
+        player2 = new Player(game, "pippo", Color.BLUE);
         players = new ArrayList<>(Arrays.asList(player1, player2));
         for(Player player : players)
             game.addPlayer(player.getName());

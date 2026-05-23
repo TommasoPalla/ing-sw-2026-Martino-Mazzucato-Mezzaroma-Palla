@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
 
+import java.util.Map;
 
 
 public abstract class EventCard extends Card{
@@ -46,6 +47,17 @@ public abstract class EventCard extends Card{
     }
     public int getFoodMalus(){
         return 0;
+    }
+
+    @Override
+    public Map<String, String> getDisplayStats() {
+        Map<String, String> stats = super.getDisplayStats();
+        stats.put("🚩", eventType.toString());
+        if (getFoodBonus() > 0) stats.put("🍖+", String.valueOf(getFoodBonus()));
+        if (getFoodMalus() > 0) stats.put("🍖-", String.valueOf(getFoodMalus()));
+        if (getPrestigeBonus() > 0) stats.put("⭐+", String.valueOf(getPrestigeBonus()));
+        if (getPrestigeMalus() > 0) stats.put("⭐-", String.valueOf(getPrestigeMalus()));
+        return stats;
     }
 
     @Override

@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.Cards.Characters;
 
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 public class Shaman extends CharacterCard {
     private final int shamansStars;
@@ -22,5 +22,5 @@ public class Shaman extends CharacterCard {
     }
 
     @Override
-    public void applyEffect(Player player) { player.getTribe().addShamansStars(shamansStars); }
+    public void applyEffect(TribeInterface tribe) { tribe.addShamanStars(shamansStars); }
 }

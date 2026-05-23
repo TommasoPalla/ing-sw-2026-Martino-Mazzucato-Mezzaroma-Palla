@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.EventManagement;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
@@ -31,10 +32,10 @@ public class CavePaintingsTest {
     @BeforeEach
     void setUp() {
         Game game = new Game(0, 4);
-        player1 = new Player(game, "pippo");
-        player2 = new Player(game, "pluto");
-        player3 = new Player(game, "paperino");
-        player4 = new Player(game, "topolino");
+        player1 = new Player(game, "pippo", Color.RED);
+        player2 = new Player(game, "pluto", Color.BLUE);
+        player3 = new Player(game, "paperino", Color.BLACK);
+        player4 = new Player(game, "topolino", Color.WHITE);
         players = new ArrayList<>(Arrays.asList(player1, player2, player3, player4));
         for(Player player : players)
             game.addPlayer(player.getName());

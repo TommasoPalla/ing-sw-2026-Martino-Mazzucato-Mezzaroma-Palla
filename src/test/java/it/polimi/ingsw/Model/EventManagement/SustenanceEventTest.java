@@ -1,9 +1,6 @@
 package it.polimi.ingsw.Model.EventManagement;
 
-import it.polimi.ingsw.Enums.CharacterRole;
-import it.polimi.ingsw.Enums.Effect;
-import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Enums.InventorType;
+import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.SustenanceDiscount;
 import it.polimi.ingsw.Model.Cards.Characters.Artist;
 import it.polimi.ingsw.Model.Cards.Characters.Gatherer;
@@ -32,10 +29,10 @@ class SustenanceEventTest {
     @BeforeEach
     void setUp() {
         Game game = new Game(0, 4);
-        player1 = new Player(game, "pippo");
-        player2 = new Player(game, "pluto");
-        player3 = new Player(game, "paperino");
-        player4 = new Player(game, "topolino");
+        player1 = new Player(game, "pippo", Color.BLUE);
+        player2 = new Player(game, "pluto", Color.BLACK);
+        player3 = new Player(game, "paperino", Color.RED);
+        player4 = new Player(game, "topolino", Color.WHITE);
         players = new ArrayList<>(Arrays.asList(player1, player2, player3, player4));
         for(Player player : players)
             game.addPlayer(player.getName());

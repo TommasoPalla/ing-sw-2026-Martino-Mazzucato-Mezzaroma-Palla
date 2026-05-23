@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.GameBoard;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Game.Game;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,9 +65,9 @@ public class TurnTileTest {
         public void setup(){
             game = new Game(5, 3);
 
-            player1 = new Player(game, "1");
-            player2 = new Player(game,"2");
-            player3 = new Player(game,"3");
+            player1 = new Player(game, "1", Color.BLUE);
+            player2 = new Player(game,"2", Color.RED);
+            player3 = new Player(game,"3", Color.BLACK);
 
             turnOrder = new ArrayList<>();
             turnOrder.add(player3);
@@ -83,9 +84,9 @@ public class TurnTileTest {
 
             turnTile.initTurnOrderUnshuffled(turnOrder);
 
-            player1.chooseOfferTile(2, offerTrack);
-            player2.chooseOfferTile(1, offerTrack);
-            player3.chooseOfferTile(3, offerTrack);
+            game.chooseOfferTile(player1, 2);
+            game.chooseOfferTile(player2, 1);
+            game.chooseOfferTile(player3, 3);
 
             //in this scenario player1 chose to go on tile 2 and then player2 chose to go on tile 1
             //meaning that the next turn player 2 will play before player 1
@@ -104,7 +105,7 @@ public class TurnTileTest {
             correctTurnOrder.add(player1);
             correctTurnOrder.add(player3);
             for(int i = 0; i < turnOrder.size(); i++){
-                assertEquals(correctTurnOrder.get(i), newTurnOrder.get(i));
+                assertEquals(correctTurnOrder.get(i).getName(), newTurnOrder.get(i).getName());
             }
         }
 

@@ -6,6 +6,8 @@ import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
 
+import java.util.Map;
+
 public abstract class BuildingCard extends Card {
     private final int cost; // food cost of the building card
     private final GamePhase activatedAt; // game phase during which this building card is activated
@@ -49,6 +51,18 @@ public abstract class BuildingCard extends Card {
     public CharacterRole getRoleEffect(){return CharacterRole.NONE;}
     public int getFoodDiscount(){return 0;}
 
+    @Override
+    public Map<String, String> getDisplayStats() {
+        Map<String, String> stats = super.getDisplayStats();
+        stats.put("🍖", String.valueOf(cost));
+        stats.put("⭐", String.valueOf(prestige));
+        if (activatedAt == GamePhase.END_TURN) stats.put(">|", "");
+        if (getFoodBonus() > 0) stats.put("🍖+", String.valueOf(getFoodBonus()));
+        if (getPrestigeBonus() > 0) stats.put("⭐+", String.valueOf(getPrestigeBonus()));
+        if (getStarBonus() > 0) stats.put("✨+", String.valueOf(getStarBonus()));
+        return stats;
+    }
+
     // actual functions
     /**
      * checkIP whether player has sufficient food to purchase this buildingCard
@@ -66,7 +80,7 @@ public abstract class BuildingCard extends Card {
 
     // Called in Tribe when the building is purchased. Used for buildings
     // "ComboFood","InventorsFood" and "BonusStars".
-    public void effectOnPurchase(){}
+    public void effectOnPurchase(TribeInterface tribe){}
 
     // The method is overridden in all buildings, the second one is used
     // by buildings related to events

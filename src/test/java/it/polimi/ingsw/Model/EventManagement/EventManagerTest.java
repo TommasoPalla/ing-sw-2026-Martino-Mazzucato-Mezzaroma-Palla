@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Model.EventManagement;
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.ArtistsFood;
@@ -30,8 +31,8 @@ public class EventManagerTest {
         Game game = new Game(0, 2);
         eventManager = game.getEventManager();
 
-        player1 = new Player(game, "pippo");
-        player2 = new Player(game, "pluto");
+        player1 = new Player(game, "pippo", Color.BLACK);
+        player2 = new Player(game, "pluto", Color.BLUE);
         players = new ArrayList<>(Arrays.asList(player1, player2));
         for(Player player : players){
             game.addPlayer(player.getName());

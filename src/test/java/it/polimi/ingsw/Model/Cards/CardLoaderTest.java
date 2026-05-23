@@ -14,7 +14,7 @@ class CardLoaderTest {
     @Test
     void loadBuildings() {
         List<BuildingCard> allBuildings = loader.loadBuildings("json/test_card.json");
-        assertEquals("E1_B_2", allBuildings.get(1).getCardID());
+        assertEquals("E2_B_7", allBuildings.get(1).getCardID());
     }
     @Test
     void loadCharacters() {

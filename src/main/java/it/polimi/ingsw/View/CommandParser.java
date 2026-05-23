@@ -154,4 +154,20 @@ public record CommandParser(ClientController clientController) {
             throw new IllegalActionPhaseException();
         }*/
     }
+
+    /**
+     * Parsing the request to show another player's tribe
+     * @param argsString the argument(s) passed via terminal input
+     * @return the name of the player in input, cleaned
+     */
+    //TODO: da fixare (?)
+    public String parseOtherTribe(String argsString){
+        if(argsString.trim().isEmpty())
+            throw new IllegalArgumentException("ERROR: this command requires arguments.");
+        String[] commandArgs = parseArguments(CommandType.SHOW_OTHER_TRIBE, argsString);
+
+        if(commandArgs[0] != null)
+            return commandArgs[0];
+        else return "";
+    }
 }

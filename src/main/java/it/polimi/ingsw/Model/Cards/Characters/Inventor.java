@@ -3,7 +3,7 @@ package it.polimi.ingsw.Model.Cards.Characters;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 public class Inventor extends CharacterCard {
     private final InventorType type;
@@ -22,8 +22,7 @@ public class Inventor extends CharacterCard {
     public InventorType getInventorType() { return type; }
 
     @Override
-    public void applyEffect(Player player) {
-        player.getTribe().getInventorsPerType().putIfAbsent(type, 0);
-        player.getTribe().getInventorsPerType().put(type, player.getTribe().getInventorsPerType().get(type) + 1);
+    public void applyEffect(TribeInterface tribe) {
+        tribe.addInventor(type);
     }
 }

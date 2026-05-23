@@ -9,16 +9,17 @@ import it.polimi.ingsw.Model.Game.Game;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.Map;
 
-public class  Tribe {
+public class  Tribe implements TribeInterface{
     private final Game game;
-    private Player tribeOwner;
+    private final Player tribeOwner;
     private int prestigePoints;
     private int foodReserve;
     private int populationSize = 0;
-    private EnumMap<CharacterRole, ArrayList<CharacterCard>> population;
-    private ArrayList<BuildingCard> buildings;
-    private EnumMap<InventorType, Integer> inventorsPerType;
+    private final EnumMap<CharacterRole, ArrayList<CharacterCard>> population;
+    private final ArrayList<BuildingCard> buildings;
+    private final EnumMap<InventorType, Integer> inventorsPerType;
 
     private int builderDiscount = 0;
     private int gatherersDiscount = 0;
@@ -48,12 +49,10 @@ public class  Tribe {
     public int getFoodReserve() {
         return foodReserve;
     }
-    public EnumMap<CharacterRole, ArrayList<CharacterCard>> getPopulation() {
-        return population;
-    }
     public ArrayList<BuildingCard> getBuildings() {
         return buildings;
     }
+    @Override
     public int getHuntersNumber() {
         return population.get(CharacterRole.HUNTER).size();
     }
@@ -63,14 +62,23 @@ public class  Tribe {
     public int getGatherersDiscount() {
         return gatherersDiscount;
     }
+    @Override
     public int getArtistsNumber() {
         return population.get(CharacterRole.ARTIST).size();
     }
+
+    @Override
+    public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() {
+        return population;
+    }
+
+    @Override
+    public Map<InventorType, Integer> getInventorsPerType() {
+        return inventorsPerType;
+    }
+
     public int getShamansStars() {
         return shamansStars;
-    }
-    public EnumMap<InventorType, Integer> getInventorsPerType() {
-        return inventorsPerType;
     }
     public int getPopulationSize(){return populationSize;}
 
@@ -89,13 +97,39 @@ public class  Tribe {
     }
 
     public void addShamansStars(int stars) {shamansStars += stars;}
+    @Override
+    public void addShamanStars(int stars) {
+        shamansStars += stars;
+    }
+    @Override
+    public void addBuilderDiscount(int discount) {
+        this.builderDiscount += discount;
+    }
+    @Override
+    public void addGathererDiscount(int discount) {
+        this.gatherersDiscount += discount;
+    }
+    @Override
+    public void addInventor(InventorType type) {
+        inventorsPerType.putIfAbsent(type, 0);
+        inventorsPerType.put(type, inventorsPerType.get(type) + 1);
+    }
+    @Override
+    public void addFood(int food) {
+        modifyFood(food);
+    }
+    @Override
+    public void addPrestigePoints(int pp) {
+        modifyPrestigePoints(pp);
+    }
+
     public void modifyGatherersDiscount(int discount){ gatherersDiscount += discount; }
     public void addHunterFood(int food) { foodReserve += food; }
     // Character is added to the player's list
     // Called in Player
     public void addCharacterToTribe(CharacterCard character) {
         population.get(character.getRole()).add(character);
-        character.applyEffect(tribeOwner);
+        character.applyEffect(this);
         populationSize += 1;
         game.getBuildingManager().useBuilding(GamePhase.ON_DRAW, this.tribeOwner);
     }
@@ -111,7 +145,7 @@ public class  Tribe {
         building.assignOwner(tribeOwner);
         game.getBuildingManager().addBuilding(building, tribeOwner);
         // Calls effectOnPurchase for the building. It only works with the buildings who override it
-        building.effectOnPurchase();
+        building.effectOnPurchase(this);
         this.foodReserve -= building.getCost();
         this.prestigePoints += building.getPrestige();
     }

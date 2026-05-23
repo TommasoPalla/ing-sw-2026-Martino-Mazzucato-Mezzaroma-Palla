@@ -159,7 +159,7 @@ public class ClientModel {
         players.get(playerName).addPrestigePoints(pp);
     }
     void updateShamansStars(String playerName, int stars) {
-        players.get(playerName).addShamansStars(stars);
+        players.get(playerName).addShamanStars(stars);
     }
 
     //aggiungere metodo clearOfferTile(), in player c'è freeOfferTile e in OfferTile c'è free, decidere cosa fare
@@ -190,14 +190,14 @@ public class ClientModel {
         totemColors.put(playerName, color);
     }
     void updateCharacterDrawn(CharacterCard character, String playerName) {
-        players.get(playerName).addToPopulation(character);
+        players.get(playerName).addCharacter(character);
     }
     void chosenOfferTile(String playerName, int index){
         offerTiles.get(index).occupy(playerName);
         turnTileStatus.put(this.turnOrder.indexOf(playerName), "");
     }
     void updateBuildingDrawn(BuildingCard building, String playerName){
-        //players.get(playerName).addToBuildings(building);
+        players.get(playerName).addBuilding(building);
     }
     void updateCurrentRound(int newCurrentRound){
         currentRound = newCurrentRound;

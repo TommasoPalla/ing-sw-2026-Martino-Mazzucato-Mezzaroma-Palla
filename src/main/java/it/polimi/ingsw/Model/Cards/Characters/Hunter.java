@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.Cards.Characters;
 
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 import java.util.ArrayList;
 
@@ -24,8 +24,8 @@ public class Hunter extends CharacterCard {
     }
 
     @Override
-    public void applyEffect(Player player) {
-        if(hunterIcon) player.getTribe().addHunterFood(player.getTribe().getHuntersNumber());
+    public void applyEffect(TribeInterface tribe) {
+        if(hunterIcon) tribe.addFood(tribe.getHuntersNumber());
     }
 
     @Override

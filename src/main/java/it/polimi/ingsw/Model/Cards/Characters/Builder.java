@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.Cards.Characters;
 
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 public class Builder extends CharacterCard {
     private final int prestigePoints;
@@ -30,5 +30,5 @@ public class Builder extends CharacterCard {
     }
 
     @Override
-    public void applyEffect(Player player) { player.getTribe().modifyBuildingDiscount(buildingDiscount); }
+    public void applyEffect(TribeInterface tribe) { tribe.addBuilderDiscount(buildingDiscount); }
 }

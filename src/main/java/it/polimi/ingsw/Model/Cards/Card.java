@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Model.Cards;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public abstract class Card implements Serializable {
@@ -18,5 +20,12 @@ public abstract class Card implements Serializable {
     public int getEra(){
         return this.era;
     }
+
+    public Map<String, String> getDisplayStats() {
+        Map<String, String> stats = new LinkedHashMap<>();
+        stats.put("⌛", String.valueOf(era));
+        return stats;
+    }
+
     public abstract void accept(Visitor visitor);
 }

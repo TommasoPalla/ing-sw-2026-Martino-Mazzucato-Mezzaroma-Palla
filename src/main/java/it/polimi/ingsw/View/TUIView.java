@@ -17,6 +17,7 @@ import java.util.EnumSet;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class TUIView implements ViewInterface{
     final private ClientController clientController;
@@ -139,7 +140,7 @@ public class TUIView implements ViewInterface{
             case SHOW_TOP_ROW           -> printTopRow();
             case SHOW_BOTTOM_ROW        -> printBottomRow();
             case SHOW_MY_TRIBE          -> printTribe(player);
-            //case SHOW_OTHER_TRIBE       -> parsePrintTribe();
+            case SHOW_OTHER_TRIBE       -> printTribe(commandParser.parseOtherTribe(argsString));
             case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
             case PLACE_TOTEM            -> commandParser.parseChooseOfferTile(argsString);
             case HELP                   -> printAvailableActions(clientController.getClientState(), true);
@@ -151,41 +152,76 @@ public class TUIView implements ViewInterface{
      * Prints to terminal the tribe of the player
      */
     private void printTribe(String playerName) {
-        System.out.println("This is your tribe:\n");
-        LightTribe localTribe = clientController.getLocalModel().getPlayerTribe(player);
+        LightTribe localTribe = clientController.getLocalModel().getPlayerTribe(playerName);
         if(localTribe != null) {
-            System.out.println("Food Reserve: " + localTribe.getFoodReserve());
-            System.out.println("Prestige Points: " + localTribe.getPrestigePoints());
-            for(CharacterRole role : CharacterRole.values()) {
-                if(localTribe.getPopulation().get(role).isEmpty()) continue;
-                System.out.print(role + ": ");
-                printRoleCardsInPopulation(clientController.getLocalModel().getPlayerTribe(playerName), role );
-                System.out.println();
-            }
+            if(playerName.equals(this.player))
+                System.out.println("\n === YOUR TRIBE ===");
+            else
+                System.out.println("\n=== " + playerName.toUpperCase() + "'S TRIBE ===");
+            System.out.printf("🍖: %d  🏅: %d  👥: %d  🔮: %d\n",
+                    localTribe.getFoodReserve(), localTribe.getPrestigePoints(),
+                    localTribe.getPopulationSize(), localTribe.getShamansStars());
+            System.out.printf("DISCOUNTS: 🔨🏷️ -%d  🧺🏷️ -%d\n",
+                    localTribe.getBuilderDiscount(), localTribe.getGatherersDiscount());
+
+            System.out.println("\nPOPULATION:");
+            List<CharacterCard> allCharacters = localTribe.getPopulation().values().stream()
+                    .flatMap(List::stream).collect(Collectors.toList());
+            printHorizontal(allCharacters.stream().map(this::renderCardBox).collect(Collectors.toList()));
+
+            System.out.println("\nBUILDING:");
+            printHorizontal(localTribe.getBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
+            System.out.println();
+        } else {
+            System.out.println(playerName + "'s tribe not found.");
         }
     }
 
-    /**
-     * Prints to terminal a list of cards of a specific role present in a player's tribe.
-     * @param playerTribe the reference to the player's tribe whose cards want to be visualised.
-     * @param role the role of the character cards which want to be visualised.
-     */
-    private void printRoleCardsInPopulation(LightTribe playerTribe, CharacterRole role) {
-        ArrayList<CharacterCard> cards = playerTribe.getPopulation().get(role);
-        ArrayList<Object> cardStats;
-        int i = 0;
-        System.out.print(role.toString() + ": ");
-        for(CharacterCard card : cards) {
-            cardStats = card.getUsefulStats();
-            System.out.print(card.getCardID());
-            while ( i <= cardStats.size()) {
-                System.out.println(cardStats.get(i).toString() + ": " + cardStats.get(i+1).toString());
-                i = i + 2;
-            }
-            // bisogna trovare un modo per stampare le carte anche in base al loro ruolo, possibilmente senza switch
-            System.out.println();
+    private List<String> renderCardBox(Card card) {
+        List<String> lines = new ArrayList<>();
+        int width = 20;
+        String border = "+" + "-".repeat(width - 2) + "+";
+
+        lines.add(border);
+        String id = card.getCardID();
+        if (id.length() > width - 4) id = id.substring(0, width - 7) + "...";
+        lines.add(String.format("| %-" + (width - 4) + "s |", id));
+
+        Map<String, String> stats = card.getDisplayStats();
+        List<String> statStrings = new ArrayList<>();
+        for (Map.Entry<String, String> entry : stats.entrySet()) {
+            if (entry.getValue().isEmpty()) statStrings.add(entry.getKey());
+            else statStrings.add(entry.getKey() + " " + entry.getValue());
         }
-        System.out.println();
+
+        for (int i = 0; i < statStrings.size(); i += 2) {
+            String s1 = statStrings.get(i);
+            String s2 = (i + 1 < statStrings.size()) ? statStrings.get(i + 1) : "";
+            lines.add(String.format("| %-7s %-8s |", s1, s2));
+        }
+
+        while (lines.size() < 6) {
+            lines.add(String.format("| %-" + (width - 4) + "s |", ""));
+        }
+
+        lines.add(border);
+        return lines;
+    }
+
+    private void printHorizontal(List<List<String>> allBoxes) {
+        if (allBoxes.isEmpty()) {
+            System.out.println(" (NONE)");
+            return;
+        }
+        int maxLines = allBoxes.stream().mapToInt(List::size).max().orElse(0);
+        for (int i = 0; i < maxLines; i++) {
+            StringBuilder row = new StringBuilder();
+            for (List<String> box : allBoxes) {
+                if (i < box.size()) row.append(box.get(i)).append("  ");
+                else row.append(" ".repeat(20)).append("  ");
+            }
+            System.out.println(row);
+        }
     }
 
     /**
@@ -193,8 +229,7 @@ public class TUIView implements ViewInterface{
      */
     private void printTopRow() {
         if(clientController.getLocalModel().getTopRow().isEmpty()) {
-            System.out.println("La fila superiore è vuota");
-            return;
+            System.out.println("TOP ROW IS EMPTY");
         }
     }
 
@@ -203,8 +238,7 @@ public class TUIView implements ViewInterface{
      */
     private void printBottomRow() {
         if(clientController.getLocalModel().getBottomRow().isEmpty()) {
-            System.out.println("La fila inferiore è vuota");
-            return;
+            System.out.println("BOTTOM ROW IS EMPTY");
         }
     }
 
@@ -603,7 +637,7 @@ public class TUIView implements ViewInterface{
         System.out.println();
         switch(clientState) {
             case SETUP:
-                System.out.println("These are the available actions in the setup state::");
+                System.out.println("These are the available actions in the setup state:");
                 System.out.println("- create_game(number_of_players): To create a new game with a specific number of players.");
                 System.out.println("- join_game(): To join an existing game.");
                 System.out.println("- modify_name(new_name): To modify your name.");

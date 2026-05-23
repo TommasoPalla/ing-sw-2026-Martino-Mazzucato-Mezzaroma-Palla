@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 // During the Shamanic Ritual event, the owner's tribe has 3 additional stars
 public class BonusStars extends BuildingCard {
@@ -26,7 +27,7 @@ public class BonusStars extends BuildingCard {
     }
 
     @Override
-    public void effectOnPurchase() {
-        this.getOwner().getTribe().addShamansStars(this.starBonus);
+    public void effectOnPurchase(TribeInterface tribe) {
+        tribe.addShamanStars(this.starBonus);
     }
 }

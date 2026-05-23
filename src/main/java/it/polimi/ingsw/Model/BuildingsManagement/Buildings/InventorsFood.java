@@ -6,6 +6,7 @@ import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 public class InventorsFood extends BuildingCard {
     private int inventorsNumber;
@@ -31,8 +32,8 @@ public class InventorsFood extends BuildingCard {
     }
 
     @Override
-    public void effectOnPurchase() {
-        this.inventorsNumber = this.getOwner().getTribe().getPopulation().get(CharacterRole.INVENTOR).size();
+    public void effectOnPurchase(TribeInterface tribe) {
+        this.inventorsNumber = tribe.getPopulation().get(CharacterRole.INVENTOR).size();
     }
 
     @Override

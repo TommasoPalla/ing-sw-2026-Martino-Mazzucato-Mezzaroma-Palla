@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.Cards.Characters;
 
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 public class Gatherer extends CharacterCard {
     private final int gathererDiscount;
@@ -17,5 +17,10 @@ public class Gatherer extends CharacterCard {
     }
 
     @Override
-    public void applyEffect(Player player) { player.getTribe().modifyGatherersDiscount(gathererDiscount); }
+    public int getGathererDiscount() {
+        return gathererDiscount;
+    }
+
+    @Override
+    public void applyEffect(TribeInterface tribe) { tribe.addGathererDiscount(gathererDiscount); }
 }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
+import it.polimi.ingsw.Model.Users.TribeInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +39,8 @@ public class ComboFood extends BuildingCard {
      * with the number of sets already completed in their tribe
      */
     @Override
-    public void effectOnPurchase() {
-        this.currentSetsNumber = this.getOwner().getTribe().getPopulation().entrySet().stream()
+    public void effectOnPurchase(TribeInterface tribe) {
+        this.currentSetsNumber = tribe.getPopulation().entrySet().stream()
                 .filter(entry -> entry.getKey() != CharacterRole.NONE)
                 .mapToInt(entry -> entry.getValue().size())
                 .min()
