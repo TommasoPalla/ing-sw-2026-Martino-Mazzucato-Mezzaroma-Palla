@@ -50,20 +50,47 @@ public class LightTribe implements TribeInterface {
 
     //getters
     public String getPlayerName() { return playerName; }
+
+    @Override
     public int getPrestigePoints() { return prestigePoints; }
+
+    @Override
     public int getFoodReserve() { return foodReserve; }
+
+    @Override
     public int getPopulationSize() { return populationSize; }
+
+    @Override
     public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() { return population; }
+
+    @Override
     public ArrayList<BuildingCard> getBuildings() { return buildings; }
+
+    @Override
     public Map<InventorType, Integer> getInventorsPerType() { return inventorsPerType; }
-    public int getBuilderDiscount() { return builderDiscount; }
+
+    @Override
+    public int getBuildersDiscount() { return builderDiscount; }
+
+    @Override
     public int getGatherersDiscount() { return gatherersDiscount; }
+
+    @Override
     public int getShamansStars() { return shamansStars; }
+
+    @Override
+    public int getHuntersNumber() { return population.get(CharacterRole.HUNTER).size(); }
+
+    @Override
+    public int getArtistsNumber() { return population.get(CharacterRole.ARTIST).size(); }
+
 
     //setters
     public void setFood(int food) { this.foodReserve = food; }
+    public void setPrestigePoints(int pp) { this.prestigePoints = pp; }
+
     @Override
-    public void addFood(int food) {
+    public void modifyFood(int food) {
         if ((foodReserve + food) < 0) {
             prestigePoints += (food + foodReserve);
             foodReserve = 0;
@@ -72,24 +99,13 @@ public class LightTribe implements TribeInterface {
         }
     }
     @Override
-    public void addPrestigePoints(int pp) { this.prestigePoints += pp; }
-    public void setPrestigePoints(int pp) { this.prestigePoints = pp; }
+    public void modifyPrestigePoints(int pp) { this.prestigePoints += pp; }
     @Override
-    public void addShamanStars(int stars) { this.shamansStars += stars; }
+    public void addShamansStars(int stars) { this.shamansStars += stars; }
     @Override
-    public void addBuilderDiscount(int discount) { this.builderDiscount += discount; }
+    public void addBuildersDiscount(int discount) { this.builderDiscount += discount; }
     @Override
     public void addGathererDiscount(int discount) { this.gatherersDiscount += discount; }
-
-    @Override
-    public int getHuntersNumber() {
-        return population.get(CharacterRole.HUNTER).size();
-    }
-
-    @Override
-    public int getArtistsNumber() {
-        return population.get(CharacterRole.ARTIST).size();
-    }
 
     /**
      * Adds a character to the tribe and applies its immediate effects (resource bonuses/discounts).

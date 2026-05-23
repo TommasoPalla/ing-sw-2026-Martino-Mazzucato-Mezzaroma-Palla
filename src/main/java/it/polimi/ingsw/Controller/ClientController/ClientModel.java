@@ -7,7 +7,6 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
-import it.polimi.ingsw.Model.GameBoard.TurnTile;
 import it.polimi.ingsw.Model.Users.DrawableCardVisitor;
 
 import java.util.*;
@@ -153,13 +152,13 @@ public class ClientModel {
 
 
     void updateFoodReserve(String playerName, int food) {
-        players.get(playerName).addFood(food);
+        players.get(playerName).modifyFood(food);
     }
     void updatePrestigePoints(String playerName, int pp) {
-        players.get(playerName).addPrestigePoints(pp);
+        players.get(playerName).modifyPrestigePoints(pp);
     }
     void updateShamansStars(String playerName, int stars) {
-        players.get(playerName).addShamanStars(stars);
+        players.get(playerName).addShamansStars(stars);
     }
 
     //aggiungere metodo clearOfferTile(), in player c'è freeOfferTile e in OfferTile c'è free, decidere cosa fare

@@ -3,8 +3,8 @@ package it.polimi.ingsw.Model.Cards;
 import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
-import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
+import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.util.Map;
 
@@ -54,12 +54,12 @@ public abstract class BuildingCard extends Card {
     @Override
     public Map<String, String> getDisplayStats() {
         Map<String, String> stats = super.getDisplayStats();
-        stats.put("🍖", String.valueOf(cost));
-        stats.put("⭐", String.valueOf(prestige));
-        if (activatedAt == GamePhase.END_TURN) stats.put(">|", "");
-        if (getFoodBonus() > 0) stats.put("🍖+", String.valueOf(getFoodBonus()));
-        if (getPrestigeBonus() > 0) stats.put("⭐+", String.valueOf(getPrestigeBonus()));
-        if (getStarBonus() > 0) stats.put("✨+", String.valueOf(getStarBonus()));
+        stats.put(TuiIcons.FOOD, String.valueOf(cost));
+        stats.put(TuiIcons.PRESTIGE_POINTS, String.valueOf(prestige));
+        if (activatedAt == GamePhase.END_TURN) stats.put(TuiIcons.END_PHASE, "");
+        if (getFoodBonus() > 0) stats.put(TuiIcons.FOOD_BONUS, String.valueOf(getFoodBonus()));
+        if (getPrestigeBonus() > 0) stats.put(TuiIcons.PRESTIGE_POINTS + "+", String.valueOf(getPrestigeBonus()));
+        if (getStarBonus() > 0) stats.put(TuiIcons.SHAMANS_STARS + "+", String.valueOf(getStarBonus()));
         return stats;
     }
 

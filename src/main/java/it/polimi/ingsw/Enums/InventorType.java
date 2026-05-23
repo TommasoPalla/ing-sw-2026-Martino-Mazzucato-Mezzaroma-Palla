@@ -1,38 +1,50 @@
 package it.polimi.ingsw.Enums;
 
 import com.google.gson.annotations.SerializedName;
+import it.polimi.ingsw.View.TUIView.TuiIcons;
+
 /*
 this enum represents all the possible types related to the inventor character*/
 public enum InventorType {
   @SerializedName("B")
-  BOAT,
+  BOAT(TuiIcons.BOAT_INVENTOR),
 
   @SerializedName("A")
-  ARROW,
+  ARROW(TuiIcons.ARROW_INVENTOR),
 
   @SerializedName("H")
-  HOOK,
+  HOOK(TuiIcons.HOOK_INVENTOR),
 
   @SerializedName("N")
-  NECKLACE,
+  NECKLACE(TuiIcons.NECKLACE_INVENTOR),
 
   @SerializedName("W")
-  BOWL,
+  BOWL(TuiIcons.BOWL_INVENTOR),
 
   @SerializedName("R")
-  ROPE,
+  ROPE(TuiIcons.ROPE_INVENTOR),
 
   @SerializedName("D")
-  DOLL,
+  DOLL(TuiIcons.DOLL_INVENTOR),
 
   @SerializedName("F")
-  FLUTE,
+  FLUTE(TuiIcons.FLUTE_INVENTOR),
 
   @SerializedName("L")
-  LEATHER,
+  LEATHER(TuiIcons.LEATHER_INVENTOR),
 
   @SerializedName("E")
-  BREAD,
+  BREAD(TuiIcons.BREAD_INVENTOR),
 
-  NONE
+  NONE("");
+
+  private final String icon;
+
+  InventorType(String icon){
+    this.icon = icon;
+  }
+
+  public String toIcon(){
+    return this.icon;
+  }
 }

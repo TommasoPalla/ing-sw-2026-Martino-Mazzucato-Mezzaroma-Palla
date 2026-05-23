@@ -44,7 +44,7 @@ public class TribeTest {
         assertEquals(0, tribe1.getFoodReserve());
         assertEquals(0, tribe1.getShamansStars());
         assertEquals(0, tribe1.getBuildings().size());
-        assertEquals(0, tribe1.getBuilderDiscount());
+        assertEquals(0, tribe1.getBuildersDiscount());
         assertEquals(0, tribe1.getGatherersDiscount());
 
         for(CharacterRole role : CharacterRole.values()){

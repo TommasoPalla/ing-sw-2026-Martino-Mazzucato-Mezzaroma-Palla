@@ -3,6 +3,7 @@ package it.polimi.ingsw.Model.Cards;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.util.Map;
 
@@ -52,11 +53,7 @@ public abstract class EventCard extends Card{
     @Override
     public Map<String, String> getDisplayStats() {
         Map<String, String> stats = super.getDisplayStats();
-        stats.put("🚩", eventType.toString());
-        if (getFoodBonus() > 0) stats.put("🍖+", String.valueOf(getFoodBonus()));
-        if (getFoodMalus() > 0) stats.put("🍖-", String.valueOf(getFoodMalus()));
-        if (getPrestigeBonus() > 0) stats.put("⭐+", String.valueOf(getPrestigeBonus()));
-        if (getPrestigeMalus() > 0) stats.put("⭐-", String.valueOf(getPrestigeMalus()));
+        stats.put("EVENT " + TuiIcons.EVENT + ":", eventType.toIcon());
         return stats;
     }
 

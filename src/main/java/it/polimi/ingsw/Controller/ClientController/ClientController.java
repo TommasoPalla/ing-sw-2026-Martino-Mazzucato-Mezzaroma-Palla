@@ -357,7 +357,7 @@ public class ClientController implements ClientViewUpdate {
 
     private void updateInitialFood(Map<String, Integer> initialFood) {
         for(String player : initialFood.keySet()) {
-            localModel.getPlayerTribe(player).addFood(initialFood.get(player));
+            localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
         }
         view.notifyGiveInitialFood(initialFood);
         updateStartRound();

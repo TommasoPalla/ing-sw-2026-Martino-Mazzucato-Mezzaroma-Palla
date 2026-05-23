@@ -8,8 +8,10 @@ import it.polimi.ingsw.Enums.Parameters;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Parser.EventCardDTO;
 import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,14 @@ public class ShamanicRitualEvent extends EventCard implements EventStrategy{
     @Override
     public int getPrestigeMalus(){
         return this.prestigeMalus;
+    }
+
+    @Override
+    public Map<String, String> getDisplayStats() {
+        Map<String, String> stats = super.getDisplayStats();
+        stats.put(TuiIcons.WIN_SHAMAN_EVENT, " -> +" + this.prestigeBonus + TuiIcons.PRESTIGE_BONUS);
+        stats.put(TuiIcons.LOSE_SHAMAN_EVENT, " -> -" + this.prestigeMalus + TuiIcons.PRESTIGE_MALUS);
+        return stats;
     }
 
     @Override

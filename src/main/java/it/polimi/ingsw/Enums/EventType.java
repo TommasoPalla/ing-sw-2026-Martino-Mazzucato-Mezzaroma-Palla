@@ -1,19 +1,30 @@
 package it.polimi.ingsw.Enums;
 
 import com.google.gson.annotations.SerializedName;
+import it.polimi.ingsw.View.TUIView.TuiIcons;
 /*
 this enum represents all the possible types of event*/
 
 public enum EventType {
   @SerializedName("S")
-  SUSTENANCE,
+  SUSTENANCE(TuiIcons.GATHERER),
 
   @SerializedName("H")
-  HUNT,
+  HUNT(TuiIcons.HUNTER),
 
   @SerializedName("R")
-  SHAMANIC_RITUAL,
+  SHAMANIC_RITUAL(TuiIcons.SHAMAN),
 
   @SerializedName("C")
-  CAVE_PAINTINGS
+  CAVE_PAINTINGS(TuiIcons.ARTIST);
+
+  private final String icon;
+
+  EventType(String icon){
+    this.icon = icon;
+  }
+
+  public String toIcon(){
+    return this.icon;
+  }
 }

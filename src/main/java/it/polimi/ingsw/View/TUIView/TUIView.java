@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View;
+package it.polimi.ingsw.View.TUIView;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
@@ -10,6 +10,8 @@ import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
+import it.polimi.ingsw.View.GamePlayers;
+import it.polimi.ingsw.View.ViewInterface;
 
 import java.util.*;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class TUIView implements ViewInterface{
+public class TUIView implements ViewInterface {
     final private ClientController clientController;
     final private CommandParser commandParser;
     private String player;
@@ -40,8 +42,8 @@ public class TUIView implements ViewInterface{
 
     @Override
     public void runView() {
-        System.out.println("Benvenuto su Mesos!");
-        System.out.println("Scegli il tuo nome:");
+        System.out.println("Welcome to MESOS!");
+        System.out.println("Choose your nickname:");
         boolean nameVerified = false;
         do {
             Scanner scanner = new Scanner(System.in);
@@ -158,11 +160,15 @@ public class TUIView implements ViewInterface{
                 System.out.println("\n === YOUR TRIBE ===");
             else
                 System.out.println("\n=== " + playerName.toUpperCase() + "'S TRIBE ===");
-            System.out.printf("🍖: %d  🏅: %d  👥: %d  🔮: %d\n",
-                    localTribe.getFoodReserve(), localTribe.getPrestigePoints(),
-                    localTribe.getPopulationSize(), localTribe.getShamansStars());
-            System.out.printf("DISCOUNTS: 🔨🏷️ -%d  🧺🏷️ -%d\n",
-                    localTribe.getBuilderDiscount(), localTribe.getGatherersDiscount());
+            System.out.printf("%s: %d  %s: %d  %s: %d  %s: %d\n",
+                    TuiIcons.FOOD, localTribe.getFoodReserve(),
+                    TuiIcons.PRESTIGE_POINTS, localTribe.getPrestigePoints(),
+                    TuiIcons.POPULATION, localTribe.getPopulationSize(),
+                    TuiIcons.SHAMANS_STARS, localTribe.getShamansStars());
+
+            System.out.printf("DISCOUNTS: %s: %d  %s: %d\n",
+                    TuiIcons.BUILDERS_DISCOUNT, localTribe.getBuildersDiscount(),
+                    TuiIcons.GATHERERS_DISCOUNT, localTribe.getGatherersDiscount());
 
             System.out.println("\nPOPULATION:");
             List<CharacterCard> allCharacters = localTribe.getPopulation().values().stream()
@@ -177,32 +183,51 @@ public class TUIView implements ViewInterface{
         }
     }
 
+    private int getVisualLen(String input){
+        //Removes ANSI encoding from input string
+        String noAnsiString = input.replaceAll("\u001B\\[[;\\d]*m", "");
+        int visualLen = 0;
+        for(int i = 0; i < noAnsiString.length(); i++){
+            int codePoint = noAnsiString.codePointAt(i);
+
+            if(Character.isSupplementaryCodePoint(codePoint)){
+                visualLen += 2;
+                i++;
+            }
+            else
+                visualLen += 1;
+        }
+        return visualLen;
+    }
+
     private List<String> renderCardBox(Card card) {
         List<String> lines = new ArrayList<>();
-        int width = 20;
+        int width = 22;
         String border = "+" + "-".repeat(width - 2) + "+";
 
         lines.add(border);
-        String id = card.getCardID();
-        if (id.length() > width - 4) id = id.substring(0, width - 7) + "...";
-        lines.add(String.format("| %-" + (width - 4) + "s |", id));
 
         Map<String, String> stats = card.getDisplayStats();
-        List<String> statStrings = new ArrayList<>();
         for (Map.Entry<String, String> entry : stats.entrySet()) {
-            if (entry.getValue().isEmpty()) statStrings.add(entry.getKey());
-            else statStrings.add(entry.getKey() + " " + entry.getValue());
+            String statLine;
+            if (entry.getValue().isEmpty())
+                statLine = entry.getKey();
+            else
+                statLine = entry.getKey() + " " + entry.getValue();
+
+            int visualLen = getVisualLen(statLine);
+            int padding = (width - 4) - visualLen;
+
+            lines.add("| " + statLine + " ".repeat(Math.max(0, padding)) + " |");
         }
 
-        for (int i = 0; i < statStrings.size(); i += 2) {
-            String s1 = statStrings.get(i);
-            String s2 = (i + 1 < statStrings.size()) ? statStrings.get(i + 1) : "";
-            lines.add(String.format("| %-7s %-8s |", s1, s2));
-        }
-
-        while (lines.size() < 6) {
+        while (lines.size() < 7) {
             lines.add(String.format("| %-" + (width - 4) + "s |", ""));
         }
+
+        String cardID = card.getCardID();
+        if (cardID.length() > width - 4) cardID = cardID.substring(0, width - 7) + "...";
+        lines.add(String.format("| %-" + (width - 4) + "s |", cardID));
 
         lines.add(border);
         return lines;
@@ -210,7 +235,7 @@ public class TUIView implements ViewInterface{
 
     private void printHorizontal(List<List<String>> allBoxes) {
         if (allBoxes.isEmpty()) {
-            System.out.println(" (NONE)");
+            System.out.println(" (NONE) ");
             return;
         }
         int maxLines = allBoxes.stream().mapToInt(List::size).max().orElse(0);
@@ -230,7 +255,9 @@ public class TUIView implements ViewInterface{
     private void printTopRow() {
         if(clientController.getLocalModel().getTopRow().isEmpty()) {
             System.out.println("TOP ROW IS EMPTY");
+            return;
         }
+        printHorizontal(clientController.getLocalModel().getTopRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
     }
 
     /**
@@ -239,7 +266,9 @@ public class TUIView implements ViewInterface{
     private void printBottomRow() {
         if(clientController.getLocalModel().getBottomRow().isEmpty()) {
             System.out.println("BOTTOM ROW IS EMPTY");
+            return;
         }
+        printHorizontal(clientController.getLocalModel().getBottomRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
     }
 
     private void printOfferTrack() {
@@ -252,9 +281,9 @@ public class TUIView implements ViewInterface{
         for (int i = 0; i < tileModifier.length; i++) {
             String bonus;
             if (tileModifier[i] != 0 && i < tileModifier.length - 1)
-                bonus = String.valueOf(tileModifier[i]) + "F";
+                bonus = String.valueOf(tileModifier[i]) + TuiIcons.FOOD;
             else if (i == tileModifier.length - 1)
-                bonus = "-1F/-2PP";
+                bonus = "-1" + TuiIcons.FOOD_MALUS + "/-2" + TuiIcons.PRESTIGE_BONUS;
             else
                 bonus = "";
             String paddedBonus = String.format("%-10s", bonus);
@@ -285,12 +314,12 @@ public class TUIView implements ViewInterface{
         for (OfferTile tile : clientController.getLocalModel().getOfferTiles()) {
             topBorder.append("+-----------------+ ");
 
-            if (tile.getFoodBonus() != 0) actionRow.append(String.format("| %-15s | ", tile.getFoodBonus() + "F"));
+            if (tile.getFoodBonus() != 0) actionRow.append(String.format("| %-15s | ", tile.getFoodBonus() + TuiIcons.FOOD_BONUS));
             else if (tile.getCardsFromAbove() != 0 && tile.getCardsFromBelow() != 0) {
-                actionRow.append(String.format("| %-15s | ", "^ " + tile.getCardsFromAbove() + " v " + tile.getCardsFromBelow()));
+                actionRow.append(String.format("| %-15s | ", " " + TuiIcons.UP_ARROW + " " + tile.getCardsFromAbove() + " " + TuiIcons.DOWN_ARROW + " " + tile.getCardsFromBelow()));
             } else if (tile.getCardsFromAbove() != 0) {
-                actionRow.append(String.format("| %-15s | ", "^ " + tile.getCardsFromAbove()));
-            } else actionRow.append(String.format("| %-15s | ", "v " + tile.getCardsFromBelow()));
+                actionRow.append(String.format("| %-15s | ", " " + TuiIcons.UP_ARROW + " " + tile.getCardsFromAbove()));
+            } else actionRow.append(String.format("| %-15s | ", " " + TuiIcons.DOWN_ARROW + " " + tile.getCardsFromBelow()));
 
             String playerOccupant = tile.getCurrentOccupant();
             if (playerOccupant != null) {

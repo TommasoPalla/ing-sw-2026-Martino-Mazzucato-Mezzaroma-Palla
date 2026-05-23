@@ -8,8 +8,10 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Enums.Parameters;
 import it.polimi.ingsw.Model.Parser.EventCardDTO;
 import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class CavePaintingsEvent extends EventCard implements EventStrategy{
     private final int artistThreshold;  //under(<) this threshold prestigeMalus is applied
@@ -43,6 +45,14 @@ public class CavePaintingsEvent extends EventCard implements EventStrategy{
     @Override
     public int getPrestigeBonus(){
         return this.prestigeBonus;
+    }
+
+    @Override
+    public Map<String, String> getDisplayStats() {
+        Map<String, String> stats = super.getDisplayStats();
+        stats.put(TuiIcons.ARTIST + ">=" + artistThreshold, " -> +" + this.prestigeBonus + TuiIcons.PRESTIGE_BONUS + "*" + TuiIcons.ARTIST);
+        stats.put(TuiIcons.ARTIST + " <" + artistThreshold, " -> -" + this.prestigeMalus + TuiIcons.PRESTIGE_MALUS);
+        return stats;
     }
 
     @Override

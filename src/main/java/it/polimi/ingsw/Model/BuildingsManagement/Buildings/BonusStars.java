@@ -28,6 +28,6 @@ public class BonusStars extends BuildingCard {
 
     @Override
     public void effectOnPurchase(TribeInterface tribe) {
-        tribe.addShamanStars(this.starBonus);
+        tribe.addShamansStars(this.starBonus);
     }
 }

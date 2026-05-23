@@ -24,19 +24,19 @@ public class ServerApp {
             System.out.println("You are offline");
         }
         System.setProperty("java.rmi.server.hostname", realIp);
-        System.out.println("Server RMI avviato automaticamente su IP LAN: " + realIp);
+        System.out.println("[SERVER] Server IP address is: " + realIp);
 
         try{
             RMIServer rmiServer = new RMIServer(mainController);
             rmiServer.startServer();
-            System.out.println("RMI server ready");
+            System.out.println("[RMI] Server ready");
         } catch (Exception e){
             System.out.println("[ERROR]  an error occurred during RMI server initialization:\n" + e.getMessage());
         }
         try{
             SocketServer socketServer = new SocketServer(mainController);
             socketServer.startServer(ServerConfigs.DEFAULT_SOCKET_SERVER_PORT);
-            System.out.println("TCP server ready");
+            System.out.println("[TCP] Server ready");
         } catch (Exception e){
             System.out.println("[ERROR]  an error occurred during TCP server initialization:\n" + e.getMessage());
         }

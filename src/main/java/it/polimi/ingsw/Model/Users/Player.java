@@ -101,7 +101,7 @@ public class Player {
                 } else {
                     drawnBuilding = offerTrack.getBottomBuildingCard().remove(index);
                 }
-                int discountedCost = drawnBuilding.getCost() - getTribe().getBuilderDiscount();
+                int discountedCost = drawnBuilding.getCost() - getTribe().getBuildersDiscount();
                 if(discountedCost < 0) discountedCost = 0;
                 getTribe().modifyFood(-discountedCost);
 

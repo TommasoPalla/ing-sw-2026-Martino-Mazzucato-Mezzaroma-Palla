@@ -25,7 +25,7 @@ public class Hunter extends CharacterCard {
 
     @Override
     public void applyEffect(TribeInterface tribe) {
-        if(hunterIcon) tribe.addFood(tribe.getHuntersNumber());
+        if(hunterIcon) tribe.modifyFood(tribe.getHuntersNumber());
     }
 
     @Override

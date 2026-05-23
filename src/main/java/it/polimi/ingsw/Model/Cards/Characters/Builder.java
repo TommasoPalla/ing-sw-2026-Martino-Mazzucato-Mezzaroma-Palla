@@ -30,5 +30,5 @@ public class Builder extends CharacterCard {
     }
 
     @Override
-    public void applyEffect(TribeInterface tribe) { tribe.addBuilderDiscount(buildingDiscount); }
+    public void applyEffect(TribeInterface tribe) { tribe.addBuildersDiscount(buildingDiscount); }
 }

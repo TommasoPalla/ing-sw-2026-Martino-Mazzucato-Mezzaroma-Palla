@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model.Cards;
 
+import it.polimi.ingsw.View.TUIView.TuiIcons;
+
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,7 +25,7 @@ public abstract class Card implements Serializable {
 
     public Map<String, String> getDisplayStats() {
         Map<String, String> stats = new LinkedHashMap<>();
-        stats.put("⌛", String.valueOf(era));
+        stats.put("ERA " + TuiIcons.ERA + ":", String.valueOf(era));
         return stats;
     }
 

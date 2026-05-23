@@ -37,10 +37,10 @@ public class DrawableCardVisitor extends VisitorAdapter {
             //non super safe, ma questo visitor è chiamato in ClientModel solo se è verificato
             //che il giocatore a pescare è il current
             String currPlayer = model.getCurrentPlayer();
-            discountedCost -= model.getPlayerTribe(currPlayer).getBuilderDiscount();
+            discountedCost -= model.getPlayerTribe(currPlayer).getBuildersDiscount();
             foodReserve = model.getPlayerTribe(currPlayer).getFoodReserve();
         } else {
-            discountedCost -= player.getTribe().getBuilderDiscount();
+            discountedCost -= player.getTribe().getBuildersDiscount();
             foodReserve = player.getTribe().getFoodReserve();
         }
         if (foodReserve < discountedCost) {

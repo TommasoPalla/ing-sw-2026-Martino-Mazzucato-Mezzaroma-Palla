@@ -6,10 +6,9 @@ import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.Networking.Socket.SocketServerAdapter;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Utils.ConnectionValidator;
-import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.GuiStart;
 import it.polimi.ingsw.View.ViewInterface;
-import it.polimi.ingsw.View.TUIView;
+import it.polimi.ingsw.View.TUIView.TUIView;
 import javafx.application.Application;
 
 import java.util.Scanner;

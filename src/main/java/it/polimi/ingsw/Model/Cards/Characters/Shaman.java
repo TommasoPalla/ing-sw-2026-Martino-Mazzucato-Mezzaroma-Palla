@@ -22,5 +22,5 @@ public class Shaman extends CharacterCard {
     }
 
     @Override
-    public void applyEffect(TribeInterface tribe) { tribe.addShamanStars(shamansStars); }
+    public void applyEffect(TribeInterface tribe) { tribe.addShamansStars(shamansStars); }
 }

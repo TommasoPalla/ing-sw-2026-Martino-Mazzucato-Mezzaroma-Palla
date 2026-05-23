@@ -8,8 +8,10 @@ import it.polimi.ingsw.Enums.Parameters;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Parser.EventCardDTO;
 import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class HuntEvent extends EventCard implements EventStrategy{
     private final int prestigeBonus;
@@ -33,6 +35,13 @@ public class HuntEvent extends EventCard implements EventStrategy{
     }
     public int getPrestigeBonus(){
         return this.prestigeBonus;
+    }
+
+    @Override
+    public Map<String, String> getDisplayStats() {
+        Map<String, String> stats = super.getDisplayStats();
+        stats.put(TuiIcons.HUNTER, "-> +" +this.prestigeBonus + TuiIcons.PRESTIGE_BONUS + " +" + this.foodBonus + TuiIcons.FOOD_BONUS);
+        return stats;
     }
 
     @Override

@@ -43,51 +43,43 @@ public class  Tribe implements TribeInterface{
     public Player getTribeOwner() {
         return tribeOwner;
     }
-    public int getPrestigePoints() {
-        return prestigePoints;
-    }
-    public int getFoodReserve() {
-        return foodReserve;
-    }
-    public ArrayList<BuildingCard> getBuildings() {
-        return buildings;
-    }
     @Override
-    public int getHuntersNumber() {
-        return population.get(CharacterRole.HUNTER).size();
-    }
-    public int getBuilderDiscount() {
-        return builderDiscount;
-    }
-    public int getGatherersDiscount() {
-        return gatherersDiscount;
-    }
-    @Override
-    public int getArtistsNumber() {
-        return population.get(CharacterRole.ARTIST).size();
-    }
+    public int getPrestigePoints() { return prestigePoints; }
 
     @Override
-    public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() {
-        return population;
-    }
+    public int getFoodReserve() { return foodReserve; }
 
     @Override
-    public Map<InventorType, Integer> getInventorsPerType() {
-        return inventorsPerType;
-    }
+    public ArrayList<BuildingCard> getBuildings() { return buildings; }
 
-    public int getShamansStars() {
-        return shamansStars;
-    }
-    public int getPopulationSize(){return populationSize;}
+    @Override
+    public int getHuntersNumber() { return population.get(CharacterRole.HUNTER).size(); }
 
-    //actual methods
-    public void modifyPrestigePoints(int pp) {
-        prestigePoints += pp;
-    }
-    public void modifyBuildingDiscount(int discount){ this.builderDiscount += discount; }
+    @Override
+    public int getBuildersDiscount() { return builderDiscount; }
 
+    @Override
+    public int getGatherersDiscount() { return gatherersDiscount; }
+
+    @Override
+    public int getArtistsNumber() { return population.get(CharacterRole.ARTIST).size(); }
+
+    @Override
+    public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() { return population; }
+
+    @Override
+    public Map<InventorType, Integer> getInventorsPerType() { return inventorsPerType; }
+
+    @Override
+    public int getShamansStars() { return shamansStars; }
+
+    @Override
+    public int getPopulationSize(){ return populationSize; }
+
+    @Override
+    public void modifyPrestigePoints(int pp) { prestigePoints += pp; }
+
+    @Override
     public void modifyFood(int food) {
         if((foodReserve + food) < 0){
             modifyPrestigePoints(food + foodReserve);
@@ -96,13 +88,12 @@ public class  Tribe implements TribeInterface{
         else foodReserve += food;
     }
 
-    public void addShamansStars(int stars) {shamansStars += stars;}
     @Override
-    public void addShamanStars(int stars) {
+    public void addShamansStars(int stars) {
         shamansStars += stars;
     }
     @Override
-    public void addBuilderDiscount(int discount) {
+    public void addBuildersDiscount(int discount) {
         this.builderDiscount += discount;
     }
     @Override
@@ -114,19 +105,11 @@ public class  Tribe implements TribeInterface{
         inventorsPerType.putIfAbsent(type, 0);
         inventorsPerType.put(type, inventorsPerType.get(type) + 1);
     }
-    @Override
-    public void addFood(int food) {
-        modifyFood(food);
-    }
-    @Override
-    public void addPrestigePoints(int pp) {
-        modifyPrestigePoints(pp);
-    }
 
-    public void modifyGatherersDiscount(int discount){ gatherersDiscount += discount; }
-    public void addHunterFood(int food) { foodReserve += food; }
-    // Character is added to the player's list
-    // Called in Player
+    /**
+     * Adds a character to this tribe
+     * @param character the specific character to add
+     */
     public void addCharacterToTribe(CharacterCard character) {
         population.get(character.getRole()).add(character);
         character.applyEffect(this);
@@ -134,17 +117,15 @@ public class  Tribe implements TribeInterface{
         game.getBuildingManager().useBuilding(GamePhase.ON_DRAW, this.tribeOwner);
     }
 
-    // The owner of the building card is assigned and the building is added to the player's list
-    // of buildings in his tribe, and to the player's list of the buildings activated at that specific
-    // game phase, in BuildingManager.
-    //
-    // Called in Player.
+    /** The owner of the building card is assigned and the building is added to the player's list
+     * of buildings. The building is also registered in BuildingManager, for the specific player at
+     * the specific activation phase (GamePhase)
+     * @param building the building to add to the tribe
+     */
     public void addBuildingToTribe(BuildingCard building) {
-        //if(building.getCost() > foodReserve) return;
         buildings.add(building);
         building.assignOwner(tribeOwner);
         game.getBuildingManager().addBuilding(building, tribeOwner);
-        // Calls effectOnPurchase for the building. It only works with the buildings who override it
         building.effectOnPurchase(this);
         this.foodReserve -= building.getCost();
         this.prestigePoints += building.getPrestige();
@@ -153,22 +134,18 @@ public class  Tribe implements TribeInterface{
 
     public int calculateFinalPoints() {
 
-        // Points from builders
         int populationPoints = 0;
         for (CharacterCard character : population.get(CharacterRole.BUILDER)) {
-            populationPoints = populationPoints + character.getPrestigePoints(); //prima c'era .orElse(0)
+            populationPoints = populationPoints + character.getPrestigePoints();
         }
 
-        // Points from buildings
         int buildingPoints = 0;
         for (BuildingCard building : buildings) {
             buildingPoints += building.getPrestige();
         }
 
-        // Points from artists
         int artistsPoints = (population.get(CharacterRole.ARTIST).size() / 2) * 10;
 
-        // Points from inventors
         int numInventors = 0;
         for (InventorType invention : inventorsPerType.keySet()) {
             numInventors += inventorsPerType.get(invention);
