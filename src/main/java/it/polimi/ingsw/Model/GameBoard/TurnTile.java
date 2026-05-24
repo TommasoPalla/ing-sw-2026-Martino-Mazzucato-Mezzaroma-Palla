@@ -47,10 +47,6 @@ public class TurnTile {
     public ArrayList<Player> initTurnOrder(ArrayList<Player> players){
         this.turnOrder = new ArrayList<>(players);
         Collections.shuffle(turnOrder);
-        //
-        ArrayList<String> playerNames = turnOrder.stream().map(Player::getName).collect(Collectors.toCollection(ArrayList::new));
-        System.out.println("Turn Order: " + playerNames);
-        //
         return turnOrder;
     }
 
@@ -72,9 +68,10 @@ public class TurnTile {
         turnOrder = turnOrder.stream().sorted(Comparator.comparing(
                         p -> p.getCurrentOfferTile().getTileCode()))
                 .collect(Collectors.toCollection(ArrayList::new));
-        for (Player p : turnOrder) {
-            System.out.println("nuovo turnoo: " + p.getName());
-        }
+        ArrayList<String> playerNames = new ArrayList<>();
+        for(Player p : turnOrder)
+            playerNames.add(p.getName());
+        System.out.println("[GAME " + turnOrder.getFirst().getGame().getGameID() + "] New turn order is: " + playerNames);
         return turnOrder;
     }
 

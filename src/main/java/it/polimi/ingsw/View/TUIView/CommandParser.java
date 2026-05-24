@@ -41,8 +41,8 @@ public record CommandParser(ClientController clientController) {
     }
 
     private boolean parseCardBoolean(String argument){
-        if (argument.equalsIgnoreCase("char")) return true;
-        else if (argument.equalsIgnoreCase("building")) return false;
+        if (argument.equalsIgnoreCase("char")) return false;
+        else if (argument.equalsIgnoreCase("building")) return true;
         else throw new IllegalArgumentException("Card argument is invalid");
     }
 

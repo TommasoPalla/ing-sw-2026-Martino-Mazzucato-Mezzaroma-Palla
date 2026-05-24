@@ -203,11 +203,12 @@ public class ClientController implements ClientViewUpdate {
     * */
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
         if(clientState != ClientState.DRAW_CARD) {
+            System.out.println("you cant do that right now");
+            return;
             //throw new IllegalActionPhaseException();
-            //TODO:forse temrina il thread, controllo dopo
-
         }
-        if(localModel.getCurrentPlayer().equals(playerName)){
+        String currentPlayer = localModel.getCurrentPlayer();
+        if(!currentPlayer.isEmpty() && currentPlayer.equals(playerName)){
             try {
                 localModel.drawable(fromTopRow, fromBuildings, index);
                 connection.drawCard(fromTopRow, fromBuildings, index);
@@ -230,7 +231,8 @@ public class ClientController implements ClientViewUpdate {
 
     //stessa discussione di connection.endTurn(). serve davvero?
     public void endTurn(){
-        if(localModel.getCurrentPlayer().equals(playerName)) {
+        String currentPlayer = localModel.getCurrentPlayer();
+        if(!currentPlayer.isEmpty() && currentPlayer.equals(playerName)) {
             connection.endTurn(playerName);
         } else {
             throw new IllegalActionPhaseException();
@@ -270,7 +272,7 @@ public class ClientController implements ClientViewUpdate {
         localModel.updateGamePhase(GamePhase.START_TURN);
         localModel.updateTopRow(firstTopRow);
         localModel.updateBottomRow(firstBottomRow);
-        localModel.getTurnOrder().addAll(firstTurnOrder);
+        localModel.setTurnOrder(firstTurnOrder);
         for (int i=0; i<firstTurnOrder.size(); i++){
             localModel.getTurnTileStatus().put(i, firstTurnOrder.get(i));
         }
@@ -323,7 +325,9 @@ public class ClientController implements ClientViewUpdate {
 
     @Override
     public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
+        LightTribe tribe = localModel.getPlayerTribe(playerName);
         if(fromTopRow){
+            tribe.decrementRemainingAbove();
             if(fromBuilding){
                 BuildingCard drawn = localModel.getTopBuildings().remove(index);
                 localModel.getPlayerTribe(playerName).addBuilding(drawn);
@@ -332,12 +336,23 @@ public class ClientController implements ClientViewUpdate {
                 localModel.getPlayerTribe(playerName).addCharacter(drawn);
             }
         }else{
+            tribe.decrementRemainingBelow();
             if(fromBuilding){
                 BuildingCard drawn = localModel.getBottomBuildings().remove(index);
                 localModel.getPlayerTribe(playerName).addBuilding(drawn);
             }else{
                 CharacterCard drawn = (CharacterCard) localModel.getBottomRow().remove(index);
                 localModel.getPlayerTribe(playerName).addCharacter(drawn);
+            }
+        }
+        
+        if (playerName.equals(localModel.getCurrentPlayer()) &&
+            tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
+            localModel.freeOfferTile(playerName);
+            try {
+                updateCurrentPlayer();
+            } catch (LastPlayerOfTurnException e) {
+                localModel.setCurrentPlayer("");
             }
         }
     }
@@ -356,7 +371,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     private void updateInitialFood(Map<String, Integer> initialFood) {
-        for(String player : initialFood.keySet()) {
+        for (String player : initialFood.keySet()) {
             localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
         }
         view.notifyGiveInitialFood(initialFood);
@@ -365,7 +380,14 @@ public class ClientController implements ClientViewUpdate {
 
     public void updateStartRound() {
         localModel.updateGamePhase(GamePhase.START_TURN);
-        localModel.setNextRound();
+        localModel.updateCurrentRound(localModel.getCurrentRound() + 1);
+        localModel.setCurrentPlayer("");
+
+        //ensures all players are on the turn tile at the start of the round
+        for (int i = 0; i < localModel.getTurnOrder().size(); i++) {
+            localModel.getTurnTileStatus().put(i, localModel.getTurnOrder().get(i));
+        }
+
         view.notifyStartRound(localModel.getCurrentRound());
         updateCurrentPlayer();
     }
@@ -377,8 +399,16 @@ public class ClientController implements ClientViewUpdate {
         try {
             updateCurrentPlayer();
         } catch (LastPlayerOfTurnException e) {
+            localModel.computeNewTurnOrder();
+            localModel.updateGamePhase(GamePhase.ON_DRAW);
             view.notifyNewGamePhase(localModel.getCurrentPhase());
-            updateCurrentPlayer();
+
+            localModel.setCurrentPlayer(""); //reset
+            try {
+                updateCurrentPlayer(); //skip tile A
+            } catch (LastPlayerOfTurnException e1) {
+                localModel.setCurrentPlayer("");
+            }
         }
     }
 
@@ -418,15 +448,33 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void updateCurrentPlayer() {
-        String currentPlayer;
-        try {
-            currentPlayer = localModel.setNextPlayer();
-        } catch (LastPlayerOfTurnException e) {
-            throw new LastPlayerOfTurnException();
+        String nextPlayer = "";
+        boolean playerFound = false;
+
+        while (!playerFound) {
+            try {
+                nextPlayer = localModel.setNextPlayer();
+
+                //skip for ON_DRAW
+                if (localModel.getCurrentPhase() == GamePhase.ON_DRAW) {
+                    LightTribe tribe = localModel.getPlayerTribe(nextPlayer);
+                    if (tribe != null && tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
+                        System.out.println("DEBUG [Controller]: Skipping " + nextPlayer + " (0 draws), freeing tile.");
+                        localModel.freeOfferTile(nextPlayer);
+                        continue; //find NEXT player
+                    }
+                }
+                playerFound = true;
+            } catch (LastPlayerOfTurnException e) {
+                localModel.setCurrentPlayer("");
+                throw new LastPlayerOfTurnException();
+            }
         }
-        System.out.println("DEBUG: ricevuto nuovo giocatore attuale: " + currentPlayer);
+
+        System.out.println("DEBUG: New current player calculated: " + nextPlayer);
         syncClientState();
-        view.notifyNewCurrentPlayer(currentPlayer, this.clientState);
+        if (!nextPlayer.isEmpty())
+            view.notifyNewCurrentPlayer(nextPlayer, this.clientState);
     }
 
     @Override
@@ -443,7 +491,8 @@ public class ClientController implements ClientViewUpdate {
 
     private void syncClientState() {
         System.out.println("DEBUG: current phase: " +  localModel.getCurrentPhase());
-        if (!this.playerName.equals(localModel.getCurrentPlayer())) {
+        String currentPlayer = localModel.getCurrentPlayer();
+        if (currentPlayer == null || currentPlayer.isEmpty() || !this.playerName.equals(currentPlayer)) {
             setClientState(ClientState.NOT_IN_TURN);
             return;
         }

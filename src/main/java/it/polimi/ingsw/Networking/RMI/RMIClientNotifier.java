@@ -29,7 +29,6 @@ public class RMIClientNotifier implements ClientNotifier {
     @Override
     public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) {
         try {
-            System.out.println("game started");
             clientStub.updateGameStarted(shuffledFirstPlayingOrder, initialFood, firstTopRow, firstBottomRow);
         } catch (RemoteException e){}
     }
@@ -91,7 +90,6 @@ public class RMIClientNotifier implements ClientNotifier {
     @Override
     public void notifyStartRound() {
         try {
-            System.out.println("round started");
             clientStub.startRound();
         } catch (RemoteException e) {
             throw new StubException("could not notify start of new round");

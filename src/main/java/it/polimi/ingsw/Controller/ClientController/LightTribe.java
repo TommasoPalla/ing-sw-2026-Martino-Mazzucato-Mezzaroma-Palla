@@ -27,6 +27,9 @@ public class LightTribe implements TribeInterface {
     private int gatherersDiscount;
     private int shamansStars;
 
+    private int remainingAbove;
+    private int remainingBelow;
+
     public LightTribe(String playerName) {
         this.playerName = playerName;
         this.prestigePoints = 0;
@@ -46,6 +49,8 @@ public class LightTribe implements TribeInterface {
         this.builderDiscount = 0;
         this.gatherersDiscount = 0;
         this.shamansStars = 0;
+        this.remainingAbove = 0;
+        this.remainingBelow = 0;
     }
 
     //getters
@@ -84,10 +89,26 @@ public class LightTribe implements TribeInterface {
     @Override
     public int getArtistsNumber() { return population.get(CharacterRole.ARTIST).size(); }
 
+    public int getRemainingAbove() { return remainingAbove; }
+
+    public int getRemainingBelow() { return remainingBelow; }
 
     //setters
     public void setFood(int food) { this.foodReserve = food; }
     public void setPrestigePoints(int pp) { this.prestigePoints = pp; }
+
+    public void setRemainingDraws(int above, int below) {
+        this.remainingAbove = above;
+        this.remainingBelow = below;
+    }
+
+    public void decrementRemainingAbove() {
+        if (remainingAbove > 0) remainingAbove--;
+    }
+
+    public void decrementRemainingBelow() {
+        if (remainingBelow > 0) remainingBelow--;
+    }
 
     @Override
     public void modifyFood(int food) {

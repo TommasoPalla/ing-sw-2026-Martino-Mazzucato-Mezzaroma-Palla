@@ -221,7 +221,7 @@ public class TUIView implements ViewInterface {
             lines.add("| " + statLine + " ".repeat(Math.max(0, padding)) + " |");
         }
 
-        while (lines.size() < 7) {
+        while (lines.size() < 6) {
             lines.add(String.format("| %-" + (width - 4) + "s |", ""));
         }
 
@@ -548,12 +548,7 @@ public class TUIView implements ViewInterface {
 
     @Override
     public void notifyNewCurrentPlayer(String currentPlayerName, ClientState clientState) {
-//        //TODO: da togliere questa sleep e fare una queue sia lato client che lato server
-//        try {
-//            Thread.sleep(100);
-//        } catch (InterruptedException e) {
-//            Thread.currentThread().interrupt();
-//        }
+        if(currentPlayerName == null || currentPlayerName.isEmpty()) return;
         if(currentPlayerName.equals(this.player)) {
             System.out.println("\nIt's your turn!");
             printAvailableActions(clientController.getClientState(), false);

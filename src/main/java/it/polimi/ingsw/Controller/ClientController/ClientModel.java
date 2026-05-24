@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller.ClientController;
 
+import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.LastPlayerOfTurnException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
@@ -41,7 +42,7 @@ public class ClientModel {
         this.players = new HashMap<>();
         this.currentPhase = GamePhase.START_GAME;
         this.currentRound = 0;
-        this.currentPlayer = null;
+        this.currentPlayer = "";
         this.turnOrder = new ArrayList<>();
         this.topRow = new ArrayList<>();
         this.bottomRow = new ArrayList<>();
@@ -86,49 +87,87 @@ public class ClientModel {
     drawCard di clientController può procedere senza problemi.
      */
     public void drawable(boolean fromTopRow, boolean fromBuildings, int index) {
+        LightTribe tribe = players.get(currentPlayer);
+        if (fromTopRow && tribe.getRemainingAbove() <= 0) {
+            throw new IllegalDrawException("No more draws allowed from top row for " + currentPlayer);
+        }
+        if (!fromTopRow && tribe.getRemainingBelow() <= 0) {
+            throw new IllegalDrawException("No more draws allowed from bottom row for " + currentPlayer);
+        }
+
         Card card;
         DrawableCardVisitor visitor = new DrawableCardVisitor(this);
-        if(fromBuildings){
-            card = fromTopRow ? getTopBuildings().get(index)
-                    : getBottomBuildings().get(index);
-        }
-        else {
-            card = fromTopRow ? getTopRow().get(index)
-                    : getBottomRow().get(index);
+        try {
+            if(fromBuildings){
+                card = fromTopRow ? getTopBuildings().get(index)
+                        : getBottomBuildings().get(index);
+            }
+            else {
+                card = fromTopRow ? getTopRow().get(index)
+                        : getBottomRow().get(index);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalDrawException("Index " + index + " is out of bounds for the selected row.");
         }
         card.accept(visitor);   //throws IllegalDraw and InsufficientFood
     }
 
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
 
-    //update methods
-
-    public void setNewTurnOrder() {
-        this.turnOrder.clear();
-        for (OfferTile offerTile : offerTiles) {
-            if(offerTile.isOccupied())  this.turnOrder.add(offerTile.getCurrentOccupant());
+    public void freeOfferTile(String playerName) {
+        for (OfferTile tile : offerTiles) {
+            if (playerName.equals(tile.getCurrentOccupant())) {
+                tile.free();
+                break;
+            }
+        }
+        //also put them back on the turn tile
+        int playerIdx = turnOrder.indexOf(playerName);
+        if (playerIdx != -1) {
+            turnTileStatus.put(playerIdx, playerName);
         }
     }
 
-    public String setNextPlayer() {
-        if (currentPlayer == null) {
-            this.currentPlayer = turnOrder.getFirst();
-            return this.currentPlayer;
-        }
-        int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
-        if  (currentPlayerIndex < turnOrder.size()-1){
-            this.currentPlayer =  turnOrder.get(currentPlayerIndex+1);
-            return this.currentPlayer;
-        }
-        // se il player è l'ultimo
-        else {
-            if (currentPhase == GamePhase.START_TURN) {
-                setNewTurnOrder();
-                this.currentPhase = GamePhase.ON_DRAW;
+    public void computeNewTurnOrder() {
+        this.turnOrder.clear();
+        for (OfferTile offerTile : offerTiles) {
+            if(offerTile.isOccupied())  {
+                String occupant = offerTile.getCurrentOccupant();
+                this.turnOrder.add(occupant);
+                players.get(occupant).setRemainingDraws(offerTile.getCardsFromAbove(), offerTile.getCardsFromBelow());
             }
-            currentPlayer = null;
+        }
+    }
+
+    public void setTurnOrder(List<String> turnOrder) {
+        this.turnOrder.clear();
+        this.turnOrder.addAll(turnOrder);
+    }
+
+    public void setCurrentPlayer(String playerName) {
+        this.currentPlayer = (playerName == null) ? "" : playerName;
+    }
+
+    public String setNextPlayer() {
+        if (turnOrder == null || turnOrder.isEmpty()) {
+            this.currentPlayer = "";
             throw new LastPlayerOfTurnException();
         }
+
+        int nextIndex;
+        if (currentPlayer == null || currentPlayer.isEmpty()) {
+            nextIndex = 0;
+        } else {
+            int currentIndex = turnOrder.indexOf(currentPlayer);
+            if (currentIndex == -1 || currentIndex >= turnOrder.size() - 1) {
+                this.currentPlayer = "";
+                throw new LastPlayerOfTurnException();
+            }
+            nextIndex = currentIndex + 1;
+        }
+
+        this.currentPlayer = turnOrder.get(nextIndex);
+        return this.currentPlayer;
     }
 
     void setNextRound() {
@@ -193,7 +232,10 @@ public class ClientModel {
     }
     void chosenOfferTile(String playerName, int index){
         offerTiles.get(index).occupy(playerName);
-        turnTileStatus.put(this.turnOrder.indexOf(playerName), "");
+        int playerIdx = this.turnOrder.indexOf(playerName);
+        if (playerIdx != -1) {
+            turnTileStatus.put(playerIdx, "");
+        }
     }
     void updateBuildingDrawn(BuildingCard building, String playerName){
         players.get(playerName).addBuilding(building);

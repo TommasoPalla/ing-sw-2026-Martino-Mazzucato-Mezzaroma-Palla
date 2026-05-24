@@ -8,6 +8,7 @@ import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
@@ -166,13 +167,18 @@ public class GameController {
     public synchronized Player setNextPlayer() {
         try {
             Player nextPlayer =  gameInstance.setNextPlayer();
-//            try {
-//                notifyAll( n -> {
-//                    n.notifyNextPlayer(nextPlayer.getName());
-//                });
-//            } catch (StubException e) {
-//                handleCriticalDisconnection();
-//            }
+
+            //skip players with 0 draws if in ON_DRAW phase (tile A)
+            if (gameInstance.getGamePhase() == GamePhase.ON_DRAW) {
+                if (nextPlayer.getRemainingAbove() == 0 && nextPlayer.getRemainingBelow() == 0) {
+                    System.out.println("[GAME " + gameInstance.getGameID() + "] Player '" + nextPlayer.getName() + "' has 0 draws, returning to tile.");
+                    gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(nextPlayer, gameInstance.getBuildingManager());
+                    //still need to notify food bonus
+                    notifyAll(n -> n.notifyFoodToAdd(nextPlayer.getName(), gameInstance.getOfferTrack().getTurnTile().getTileModifier()[gameInstance.getOfferTrack().getTurnTile().getTurnOrder().indexOf(nextPlayer)]));
+                    return setNextPlayer();
+                }
+            }
+
             System.out.println("[GAME " + gameInstance.getGameID() + "] Turn changed: current player is now '" + nextPlayer.getName() + "'");
             return nextPlayer;
         }
@@ -233,6 +239,8 @@ public class GameController {
             notifyAll( n -> {
                 n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
                 n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
+                n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
+                n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
             });
         } catch(ChangeEraException e){
             gameInstance.changeEra();
@@ -300,10 +308,31 @@ public class GameController {
             setNextPlayer();
         } catch (LastPlayerOfTurnException e) {
             gameInstance.setCurrentPhase(GamePhase.ON_DRAW);
-//            notifyAll(n -> {
-//                n.notifyGamePhase(gameInstance.getGamePhase());
-//            });
-            setNextPlayer();
+            
+            // Notify phase change and all card rows
+            notifyAll(n -> {
+                n.notifyGamePhase(GamePhase.ON_DRAW);
+                n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
+                n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
+                n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
+                n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
+            });
+
+            //distribution of food bonuses from offer tiles (tile A)
+            for (Player p : gameInstance.getPlayers()) {
+                int bonus = p.getCurrentOfferTile().getFoodBonus();
+                if (bonus > 0) {
+                    p.getTribe().modifyFood(bonus);
+                    notifyAll(n -> n.notifyFoodToAdd(p.getName(), bonus));
+                }
+            }
+
+            try {
+                setNextPlayer();
+            } catch (LastPlayerOfTurnException e1) {
+                // If all players have 0 draws (unlikely but theoretically possible with Tile A), end round
+                startRound();
+            }
         }
     }
 
@@ -311,13 +340,31 @@ public class GameController {
             String playerName = playerRecord.playerName();
             Player currPlayer = gameInstance.getPlayerByName(playerName);
             OfferTrack offerTrack = gameInstance.getOfferTrack();
-            boolean cardIsDrawable = currPlayer.drawable(fromTopRow, fromBuilding, index, offerTrack);
 
-            if(cardIsDrawable){
+            Card drawn = currPlayer.drawCard(fromTopRow, fromBuilding, index, offerTrack);
+
+            if(drawn != null){
                 try{
                     notifyAll( n -> {
                         n.notifyDrawnCard(playerName, fromTopRow, fromBuilding, index);
                     });
+                    
+                    if (currPlayer.getRemainingAbove() == 0 && currPlayer.getRemainingBelow() == 0) {
+                        // Return to tile food bonus
+                        int foodModifier = gameInstance.getOfferTrack().getTurnTile().getTileModifier()[gameInstance.getOfferTrack().getTurnTile().getTurnOrder().indexOf(currPlayer)];
+                        gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
+                        notifyAll(n -> n.notifyFoodToAdd(playerName, foodModifier));
+                        
+                        try {
+                            setNextPlayer();
+                        } catch (LastPlayerOfTurnException e) {
+                            //phase ends => resolve events and start next round
+
+                            //non funziona non so perche' TODO fixare
+                            gameInstance.getEventManager().resolve(gameInstance.getOfferTrack().getBottomEvents(), this.gameInstance.getPlayers(), gameInstance.getBuildingManager());
+                            startRound();
+                        }
+                    }
                 } catch (StubException e) {
                     handleCriticalDisconnection();
                 }

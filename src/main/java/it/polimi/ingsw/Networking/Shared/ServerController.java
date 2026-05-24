@@ -174,7 +174,7 @@ public class ServerController {
     }
 
     public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
-        System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + "' drawing card from " + (fromTopRow ? "TOP" : "BOTTOM") + " row, index " + index);
+        System.out.println("[GAME " + playerRecord.gameID() + "] Player '" + playerRecord.playerName() + "' drawing card from " + (fromTopRow ? "TOP" : "BOTTOM") + " row, index " + index);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         try{
             synchronized (currentController){

@@ -188,17 +188,25 @@ public class Game {
             throw new GameNotStartedException();
         }
         ArrayList<Player> turnOrder = offerTrack.getTurnTile().getTurnOrder();
+
+        if (currentPlayer == null) {
+            this.currentPlayer = turnOrder.getFirst();
+            return this.currentPlayer;
+        }
+
         int currentPlayerIndex = turnOrder.indexOf(currentPlayer);
         if  (currentPlayerIndex < turnOrder.size()-1){
             this.currentPlayer =  turnOrder.get(currentPlayerIndex+1);
             return this.currentPlayer;
         }
         // se è finita la fase di piazzamento dei totem, si passa a pescare le carte
-        else if (currentPhase == GamePhase.START_TURN) {
-            offerTrack.getTurnTile().updateTurnOrder();
-            this.currentPlayer = offerTrack.getTurnTile().getTurnOrder().getFirst();
+        else {
+            if (currentPhase == GamePhase.START_TURN) {
+                offerTrack.getTurnTile().updateTurnOrder();
+            }
+            this.currentPlayer = null;
+            throw new LastPlayerOfTurnException();
         }
-        throw new LastPlayerOfTurnException();
     }
 
     public void initOfferTrack() {
