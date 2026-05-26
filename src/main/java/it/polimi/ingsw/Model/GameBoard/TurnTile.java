@@ -85,8 +85,16 @@ public class TurnTile {
      */
     public void returnToStartingTile(Player returningPlayer, BuildingManager buildingManager){
         int foodModifier = tileModifier[turnOrder.indexOf(returningPlayer)];
-        if(foodModifier > 0) buildingManager.useBuilding(GamePhase.RETURN_TO_TILE, returningPlayer);
+        if(foodModifier > 0) {
+            buildingManager.useBuilding(GamePhase.RETURN_TO_TILE, returningPlayer);
+            returningPlayer.getTribe().modifyFood(foodModifier);
+        }
+        else if (foodModifier < 0) {
+            if (returningPlayer.getTribe().getFoodReserve() - foodModifier < 0)
+                returningPlayer.getTribe().modifyPrestigePoints(-2);
+            else
+                returningPlayer.getTribe().modifyFood(foodModifier);
+        }
         returningPlayer.freeOfferTile();
-        returningPlayer.getTribe().modifyFood(foodModifier);
     }
 }

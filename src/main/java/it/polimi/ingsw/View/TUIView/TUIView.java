@@ -154,6 +154,7 @@ public class TUIView implements ViewInterface {
      * Prints to terminal the tribe of the player
      */
     private void printTribe(String playerName) {
+        tuiState = TUIState.SHOW_TRIBE;
         LightTribe localTribe = clientController.getLocalModel().getPlayerTribe(playerName);
         if(localTribe != null) {
             if(playerName.equals(this.player))
@@ -490,6 +491,31 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
+    public void notifyPlayerDisconnected(String playerName, boolean hadColor) {
+        // IF IT'S A NETWORK ISSUE
+        if (this.player.equals(playerName)) {
+            tuiState = TUIState.SETUP;
+            System.out.println("ERROR: problems with connection. The game will be terminated and you will be taken to the setup.");
+            printAvailableActions(clientController.getClientState(), false);
+        }
+        // IF A PLAYER DISCONNECTED WHILE IN LOBBY
+        else if(tuiState == TUIState.IN_LOBBY) {
+            System.out.println("Player " + playerName + " disconnected from server.");
+            // se il player non ha ancora scelto il totem e il player che si è disconnesso lo aveva scelto,
+            // ristampa la lista dei colori aggiungendo il colore del player che è uscito
+            if (!clientController.getLocalModel().getTotemColors().containsKey(this.player) && hadColor) {
+                printAvailableColors();
+            }
+        }
+        // IF A PLAYER DISCONNECTED WHILE IN GAME
+        else {
+            tuiState = TUIState.SETUP;
+            System.out.println("Player " + playerName + " disconnected. The game will be terminated and you will be taken to the setup.");
+            printAvailableActions(clientController.getClientState(), false);
+        }
+    }
+
+    @Override
     public void notifyGameStarted() {
         System.out.println("                  ---------------------------------------------------                 ");
         System.out.println("       -------------------------------------------------------------------------      ");
@@ -531,10 +557,18 @@ public class TUIView implements ViewInterface {
 
     @Override
     public void notifyCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
-        if(this.player.equals(player)) {
-            System.out.println();
-            System.out.println(player + " has drawn " + card.getCardID() + "!");
-        }
+        String row;
+        String cardType;
+        if (topRow) row = "top row!";
+        else row = "bottom row!";
+        if (fromBuildings) cardType = "building";
+        else cardType = "character card";
+
+        System.out.println();
+        if(this.player.equals(player))
+            System.out.println("You have successfully drawn the " + cardType + " " + card.getCardID() + " from the " + row);
+        else
+            System.out.println(clientController.getLocalModel().getTotemColors().get(player).colorize(player) + " has drawn the " + cardType + " " + card.getCardID() + " from the " + row);
         if(tuiState == TUIState.SHOW_TOP_ROW && topRow) printTopRow();
         else if(tuiState == TUIState.SHOW_BOTTOM_ROW && !topRow) printBottomRow();
     }
@@ -574,6 +608,21 @@ public class TUIView implements ViewInterface {
         }
         else
             System.out.println("New game phase: It's time to draw the cards!");
+    }
+
+    @Override
+    public void notifyFood(String playerName, int food) {
+        System.out.println();
+        System.out.println("You got " + food + " food!");
+    }
+
+    @Override
+    public void notifyPrestigePoints(String playerName, int pp) {
+        System.out.println();
+        if (pp > 0)
+            System.out.println("You gained " + pp + " prestige points!");
+        else
+            System.out.println("You lost " + pp + " prestige points!");
     }
 
     /**
@@ -684,17 +733,14 @@ public class TUIView implements ViewInterface {
                 break;
             case NOT_IN_TURN:
                 System.out.println("You can't perform any action, since it's not your turn.");
-                System.out.println("- help(): to know the available actions.");
                 break;
             case PLACE_TOTEM:
                 System.out.println("These are the available actions:");
                 System.out.println("- place_totem(offer_track_index): Place your totem on the offer track's tile indicated by the index. The tile must not be occupied by another player.");
-                System.out.println("- help(): to know the available actions.");
                 break;
             case DRAW_CARD:
                 System.out.println("These are the available actions:");
                 System.out.println("- draw_card(top/bottom, char/building, offer_track_index): To draw a card from top or bottom row. You have also to specify if the card\nis a character card or a building and the index of the row.");
-                System.out.println("- help(): to know the available actions.");
                 break;
         }
         if(help && clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) printGeneralCommands();

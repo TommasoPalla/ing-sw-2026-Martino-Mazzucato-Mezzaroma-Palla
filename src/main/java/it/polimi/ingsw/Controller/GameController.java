@@ -354,10 +354,16 @@ public class GameController {
                     
                     if (currPlayer.getRemainingAbove() == 0 && currPlayer.getRemainingBelow() == 0) {
                         // Return to tile food bonus
+                        int playersFood = currPlayer.getTribe().getFoodReserve();
                         int foodModifier = gameInstance.getOfferTrack().getTurnTile().getTileModifier()[gameInstance.getOfferTrack().getTurnTile().getTurnOrder().indexOf(currPlayer)];
                         gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
-                        notifyAll(n -> n.notifyFoodToAdd(playerName, foodModifier));
-                        
+                        if (foodModifier > 0)
+                            notifyAll(n -> n.notifyFoodToAdd(playerName, foodModifier));
+                        else if (foodModifier < 0) {
+                            if (playersFood == 0)
+                                notifyAll(n -> n.notifyPrestigePointsToAdd(playerName, -2));
+                        }
+
                         try {
                             setNextPlayer();
                         } catch (LastPlayerOfTurnException e) {

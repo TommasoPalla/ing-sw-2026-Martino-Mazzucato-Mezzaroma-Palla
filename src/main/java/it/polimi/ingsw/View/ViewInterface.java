@@ -17,6 +17,7 @@ public interface ViewInterface {
     void notifyPlayerJoinedLobby(String playerName);
     void notifySuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors);
     void notifyPlayerLeftLobby(String playerName, boolean hadColor);
+    void notifyPlayerDisconnected(String playerName,  boolean hadColor);
     void notifyNewHost();
 
     void notifyStartRound(int round);
@@ -26,4 +27,6 @@ public interface ViewInterface {
     void notifyTileChosen(String playerName, int index);
     void notifyNewCurrentPlayer(String playerName, ClientState clientState);
     void notifyNewGamePhase(GamePhase newGamePhase);
+    void notifyFood(String playerName, int food);
+    void notifyPrestigePoints(String playerName, int pp);
 }
