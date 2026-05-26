@@ -61,23 +61,34 @@ public class GsonFactory {
                 .registerSubtype(CharacterCard.class, "characterCard")
                 .registerSubtype(BuildingCard.class, "buildingCard");
 
+        RuntimeTypeAdapterFactory<BuildingCard> buildingAdapter = RuntimeTypeAdapterFactory.of(BuildingCard.class, "cardType");
+        RuntimeTypeAdapterFactory<CharacterCard> characterAdapter = RuntimeTypeAdapterFactory.of(CharacterCard.class, "cardType");
+        RuntimeTypeAdapterFactory<EventCard> eventAdapter = RuntimeTypeAdapterFactory.of(EventCard.class, "cardType");
+
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapterFactory(cardAdapter);
 
         for (Class<? extends BuildingCard> buildingType : buildingTypes) {
-            cardAdapter.registerSubtype(buildingType, buildingType.getSimpleName().toUpperCase());
-            builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of((Class<BuildingCard>) buildingType, "cardType").registerSubtype(buildingType, buildingType.getSimpleName().toUpperCase()));
+            String label = buildingType.getSimpleName().toUpperCase();
+            cardAdapter.registerSubtype(buildingType, label);
+            buildingAdapter.registerSubtype(buildingType, label);
         }
 
         for (Class<? extends CharacterCard> characterType : characterTypes){
-            cardAdapter.registerSubtype(characterType, characterType.getSimpleName().toUpperCase());
-        builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of((Class<CharacterCard>) characterType, "cardType").registerSubtype(characterType, characterType.getSimpleName().toUpperCase()));
+            String label = characterType.getSimpleName().toUpperCase();
+            cardAdapter.registerSubtype(characterType, label);
+            characterAdapter.registerSubtype(characterType, label);
         }
 
         for(Class<? extends EventCard> eventType : eventTypes){
-            cardAdapter.registerSubtype(eventType, eventType.getSimpleName().toUpperCase());
-            builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of((Class<EventCard>)eventType, "cardType").registerSubtype(eventType, eventType.getSimpleName().toUpperCase()));
+            String label = eventType.getSimpleName().toUpperCase();
+            cardAdapter.registerSubtype(eventType, label);
+            eventAdapter.registerSubtype(eventType, label);
         }
+
+        builder.registerTypeAdapterFactory(cardAdapter);
+        builder.registerTypeAdapterFactory(buildingAdapter);
+        builder.registerTypeAdapterFactory(characterAdapter);
+        builder.registerTypeAdapterFactory(eventAdapter);
 
         return builder.create();
     }

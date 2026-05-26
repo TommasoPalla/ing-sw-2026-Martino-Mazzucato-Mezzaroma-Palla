@@ -349,7 +349,7 @@ public class ClientController implements ClientViewUpdate {
                 localModel.getPlayerTribe(playerName).addCharacter((CharacterCard) drawn);
             }
         }
-        view.notifyCardDrawn(playerName, drawn, fromTopRow);
+        view.notifyCardDrawn(playerName, drawn, fromTopRow, fromBuilding);
 
         if (playerName.equals(localModel.getCurrentPlayer()) &&
             tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {

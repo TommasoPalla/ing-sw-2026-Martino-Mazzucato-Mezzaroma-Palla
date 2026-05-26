@@ -317,6 +317,7 @@ public class TUIView implements ViewInterface {
         StringBuilder playerRow = new StringBuilder();
         StringBuilder bottomBorder = new StringBuilder();
 
+        tuiState = TUIState.SHOW_OFFER_TRACK;
         System.out.print("This is the current offer track:");
         System.out.println();
         for (OfferTile tile : clientController.getLocalModel().getOfferTiles()) {

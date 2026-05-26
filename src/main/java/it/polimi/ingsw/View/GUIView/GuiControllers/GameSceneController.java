@@ -164,4 +164,9 @@ public class GameSceneController {
         //try
         gui.getClientController().chooseOfferTile(index);
     }
+
+    public void showCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings){
+
+    }
+
 }

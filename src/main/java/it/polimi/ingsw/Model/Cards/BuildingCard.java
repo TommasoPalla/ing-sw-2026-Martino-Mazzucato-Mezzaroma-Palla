@@ -54,10 +54,10 @@ public abstract class BuildingCard extends Card {
     @Override
     public Map<String, String> getDisplayStats() {
         Map<String, String> stats = super.getDisplayStats();
-        stats.put(TuiIcons.FOOD, String.valueOf(cost));
+        stats.put(TuiIcons.FOOD, String.valueOf(this.cost));
         stats.put(TuiIcons.PRESTIGE_POINTS, String.valueOf(prestige));
         if (activatedAt == GamePhase.END_TURN) stats.put(TuiIcons.END_PHASE, "");
-        if (getFoodBonus() > 0) stats.put(TuiIcons.FOOD_BONUS, String.valueOf(getFoodBonus()));
+        if (getFoodBonus() > 0) stats.put(TuiIcons.FOOD_BONUS + "+", String.valueOf(getFoodBonus()));
         if (getPrestigeBonus() > 0) stats.put(TuiIcons.PRESTIGE_POINTS + "+", String.valueOf(getPrestigeBonus()));
         if (getStarBonus() > 0) stats.put(TuiIcons.SHAMANS_STARS + "+", String.valueOf(getStarBonus()));
         return stats;
@@ -69,7 +69,7 @@ public abstract class BuildingCard extends Card {
      */
     // chiamata all'interno dei metodi di draw
     public boolean isPurchasable(Player player){
-        int discountedCost = cost - player.getTribe().getGatherersDiscount();
+        int discountedCost = cost - player.getTribe().getBuildersDiscount();
         int foodReserve = player.getTribe().getFoodReserve();
         return foodReserve >= discountedCost;
     }

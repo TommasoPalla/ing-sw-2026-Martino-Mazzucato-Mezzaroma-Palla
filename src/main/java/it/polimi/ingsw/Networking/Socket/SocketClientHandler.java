@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
@@ -18,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,7 +160,19 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String, Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_STARTED, shuffledFirstPlayingOrder, initialFood, firstTopRow, firstBottomRow, buildingsTopRow, buildingsBottomRow);
+        Type orderType = new TypeToken<List<String>>(){}.getType();
+        Type foodType = new TypeToken<Map<String, Integer>>(){}.getType();
+        Type cardListType = new TypeToken<ArrayList<Card>>(){}.getType();
+        Type buildingListType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+
+        JsonElement orderJE = gson.toJsonTree(shuffledFirstPlayingOrder, orderType);
+        JsonElement foodJE = gson.toJsonTree(initialFood, foodType);
+        JsonElement topRowJE = gson.toJsonTree(firstTopRow, cardListType);
+        JsonElement bottomRowJE = gson.toJsonTree(firstBottomRow, cardListType);
+        JsonElement topBuildingsJE = gson.toJsonTree(buildingsTopRow, buildingListType);
+        JsonElement bottomBuildingsJE = gson.toJsonTree(buildingsBottomRow, buildingListType);
+
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_STARTED, orderJE, foodJE, topRowJE, bottomRowJE, topBuildingsJE, bottomBuildingsJE);
         outStream.println(gson.toJson(message));
     }
 
@@ -169,7 +184,13 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifySuccessfullyJoinedGame(int gameID, int playerNum, ArrayList<String> players, Map<String, Color> totemColors) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.SUCCESSFULLY_JOINED, gameID, playerNum, players,  totemColors);
+        Type playersType = new TypeToken<ArrayList<String>>(){}.getType();
+        Type totemMapType = new TypeToken<Map<String, Color>>(){}.getType();
+
+        JsonElement playersJE = gson.toJsonTree(players, playersType);
+        JsonElement totemJE = gson.toJsonTree(totemColors, totemMapType);
+
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.SUCCESSFULLY_JOINED, gameID, playerNum, playersJE,  totemJE);
         outStream.println(gson.toJson(message));
     }
 
@@ -188,7 +209,9 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifyAvailableGames(Map<Integer, GamePlayers> availableGames){
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GET_AVAILABLE_GAMES, availableGames);
+        Type type = new TypeToken<Map<Integer, GamePlayers>>(){}.getType();
+        JsonElement serializedGames = gson.toJsonTree(availableGames, type);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GET_AVAILABLE_GAMES, serializedGames);
         outStream.println(gson.toJson(message));
     }
 
@@ -225,57 +248,68 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifyShamansStarsToAdd(String playerName, int stars) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_SHAMAN_STARS, stars);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_SHAMAN_STARS, playerName, stars);
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void notifyPrestigePointsToAdd(String playerName, int points) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_PRESTIGE_POINTS, points);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_PRESTIGE_POINTS, playerName, points);
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void notifyTopRow(ArrayList<Card> newTopRow) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_TOP_ROW, newTopRow);
+        Type type = new TypeToken<ArrayList<Card>>(){}.getType();
+        JsonElement serializedMessage = gson.toJsonTree(newTopRow, type);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_TOP_ROW, serializedMessage);
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void notifyTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_TOP_BUILDINGS, newTopBuildings);
+        Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+        JsonElement serializedMessage = gson.toJsonTree(newTopBuildings, type);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_TOP_BUILDINGS, serializedMessage);
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void notifyBottomRow(ArrayList<Card> newBottomRow) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_ROW, newBottomRow);
+        Type type = new TypeToken<ArrayList<Card>>(){}.getType();
+        JsonElement serializedMessage = gson.toJsonTree(newBottomRow, type);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_ROW, serializedMessage);
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, newBottomBuildings);
+        Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+        JsonElement serializedMessage = gson.toJsonTree(newBottomBuildings, type);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, serializedMessage);
         outStream.println(gson.toJson(message));
     }
 
-//    @Override
-//    public void notifyNextPlayer(String playerName) {
-//        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.NEXT_PLAYER, playerName);
-//        outStream.println(gson.toJson(message));
-//    }
+    //    @Override
+    //    public void notifyNextPlayer(String playerName) {
+    //        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.NEXT_PLAYER, playerName);
+    //        outStream.println(gson.toJson(message));
+    //    }
 
     @Override
     public void notifyGamePhase(GamePhase newPhase) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHANGED_GAME_PHASE, newPhase.toString());
+        JsonElement serializedPhase = gson.toJsonTree(newPhase, GamePhase.class);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHANGED_GAME_PHASE, serializedPhase);
         outStream.println(gson.toJson(message));
     }
 
     @Override
     public void notifyEra(int era) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHANGED_ERA, era);
+        JsonElement serializedEra = gson.toJsonTree(era);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHANGED_ERA, serializedEra);
         outStream.println(gson.toJson(message));
     }
+
 
     @Override
     public void notifyForceQuit() {

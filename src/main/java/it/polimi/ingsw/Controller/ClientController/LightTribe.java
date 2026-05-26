@@ -160,7 +160,7 @@ public class LightTribe implements TribeInterface {
     public void addBuilding(BuildingCard building) {
         buildings.add(building);
         
-        int cost = Math.max(0, building.getCost() - gatherersDiscount);
+        int cost = Math.max(0, building.getCost() - builderDiscount);
         this.foodReserve -= cost;
         this.prestigePoints += building.getPrestige();
 

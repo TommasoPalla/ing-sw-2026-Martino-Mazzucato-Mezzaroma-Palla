@@ -142,7 +142,6 @@ public class  Tribe implements TribeInterface{
         building.assignOwner(tribeOwner);
         game.getBuildingManager().addBuilding(building, tribeOwner);
         building.effectOnPurchase(this);
-        this.foodReserve -= building.getCost();
         this.prestigePoints += building.getPrestige();
     }
 
