@@ -31,13 +31,15 @@ public interface VirtualSocketClient {
     /**
      * Notifies the client that the game has started.
      *
-     * @param firstTurnOrder the list of player names in their playing order.
-     * @param initialFood    the initial food resources assigned to each player.
+     * @param firstTurnOrder     the list of player names in their playing order.
+     * @param initialFood        the initial food resources assigned to each player.
      * @param firstTopRow
      * @param firstBottomRow
+     * @param buildingsTopRow
+     * @param buildingsBottomRow
      * @throws IOException if TCP communication fails.
      */
-    void updateGameStarted(List<String> firstTurnOrder, Map<String, Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) throws  IOException;
+    void updateGameStarted(List<String> firstTurnOrder, Map<String, Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) throws  IOException;
 
     /**
      * Updates the list of currently joinable games.

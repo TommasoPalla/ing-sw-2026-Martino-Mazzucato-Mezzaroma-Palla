@@ -33,13 +33,17 @@ public interface VirtualRMIClient extends Remote {
     /**
      * Notifies the client that the game has started.
      *
-     * @param firstTurnOrder the list of player names in their playing order.
-     * @param initialFood    the initial food resources assigned to each player.
+     * @param firstTurnOrder     the list of player names in their playing order.
+     * @param initialFood        the initial food resources assigned to each player.
      * @param firstTopRow
      * @param firstBottomRow
+     * @param buildingsTopRow
+     * @param buildingsBottomRow
      * @throws RemoteException if RMI communication fails.
      */
-    void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) throws RemoteException;
+    void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow,
+                           ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow,
+                           ArrayList<BuildingCard> buildingsBottomRow) throws RemoteException;
 
     /**
      * Updates the list of currently joinable games.

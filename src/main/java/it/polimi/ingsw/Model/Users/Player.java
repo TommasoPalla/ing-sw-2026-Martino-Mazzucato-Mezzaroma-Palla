@@ -95,7 +95,7 @@ public class Player {
             }
             card.accept(visitor);
         } catch (Exception e){
-            System.err.println("Can't draw this card: " + e.getMessage());
+            System.err.println("Can't draw this building: " + e.getMessage());
             return false;
         }
         return true;

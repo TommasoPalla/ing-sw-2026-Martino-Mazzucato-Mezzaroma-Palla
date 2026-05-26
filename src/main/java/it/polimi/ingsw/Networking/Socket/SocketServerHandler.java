@@ -65,8 +65,16 @@ public class SocketServerHandler implements Runnable{
             String bottomRowString = gson.toJson(parameters[3]);
             Type bottomRowType = new TypeToken<ArrayList<Card>>(){}.getType();
             ArrayList<Card> newBottomRow = gson.fromJson(bottomRowString, bottomRowType);
+
+            String buildingsBottomRowString = gson.toJson(parameters[4]);
+            Type buildingsBottomRowType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+            ArrayList<BuildingCard> newBuildingBottomRow = gson.fromJson(buildingsBottomRowString, buildingsBottomRowType);
+
+            String buildingsTopRowString = gson.toJson(parameters[5]);
+            Type buildingsTopRowType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+            ArrayList<BuildingCard> newBuildingTopRow = gson.fromJson(buildingsTopRowString, buildingsTopRowType);
             try {
-                client.updateGameStarted(firstTurnOrder, initialFood, newTopRow, newBottomRow);
+                client.updateGameStarted(firstTurnOrder, initialFood, newTopRow, newBottomRow, newBuildingTopRow, newBuildingBottomRow);
             } catch (Exception e) {}
         });
         commandHandlers.put(SocketHeaderNames.PLAYER_JOINED_GAME, parameters -> {

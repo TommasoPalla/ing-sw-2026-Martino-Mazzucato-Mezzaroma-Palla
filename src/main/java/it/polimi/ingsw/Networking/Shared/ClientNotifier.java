@@ -25,10 +25,15 @@ public interface ClientNotifier {
 
     /**
      * Notifies that the game has started.
+     *
      * @param shuffledFirstPlayingOrder the turn order of players.
-     * @param initialFood the initial food assigned to each player.
+     * @param initialFood               the initial food assigned to each player.
+     * @param buildingsTopRow
+     * @param buildingsBottomRow
      */
-    void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow);
+    void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood,
+                           ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow,
+                           ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow);
 
     /**
      * Notifies that a new player has connected to the lobby.

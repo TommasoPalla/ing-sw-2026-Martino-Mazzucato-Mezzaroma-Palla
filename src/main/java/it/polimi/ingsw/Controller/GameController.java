@@ -217,12 +217,15 @@ public class GameController {
             setNextPlayer();
             gameInstance.initOfferTrack();
             //TODO: notify game started da fare in socket e chiamare qui
-            notifyAll(n -> n.notifyGameStarted(shuffledFirstPlayingOrder, initialFood, gameInstance.getOfferTrack().getTopRow(), gameInstance.getOfferTrack().getBottomRow()));
-            //startRound();
+            notifyAll(n -> n.notifyGameStarted(shuffledFirstPlayingOrder, initialFood, gameInstance.getOfferTrack().getTopRow(),
+                    gameInstance.getOfferTrack().getBottomRow(), gameInstance.getOfferTrack().getTopBuildingCard(),
+                    gameInstance.getOfferTrack().getBottomBuildingCard()));
         }
     }
 
-    /** * When a new round starts, after all the events are resolved and the rows are repopulated */
+    /**
+     * When a new round starts, after all the events are resolved and the rows are repopulated
+     */
     public void startRound() {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
         try {
@@ -309,14 +312,14 @@ public class GameController {
         } catch (LastPlayerOfTurnException e) {
             gameInstance.setCurrentPhase(GamePhase.ON_DRAW);
             
-            // Notify phase change and all card rows
-            notifyAll(n -> {
-                n.notifyGamePhase(GamePhase.ON_DRAW);
-                n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
-                n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
-                n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
-                n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
-            });
+//            // Notify phase change and all card rows
+//            notifyAll(n -> {
+//                n.notifyGamePhase(GamePhase.ON_DRAW);
+//                n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
+//                n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
+//                n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
+//                n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
+//            });
 
             //distribution of food bonuses from offer tiles (tile A)
             for (Player p : gameInstance.getPlayers()) {

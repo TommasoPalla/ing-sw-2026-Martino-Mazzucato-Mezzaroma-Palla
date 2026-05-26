@@ -27,9 +27,9 @@ public class RMIClientNotifier implements ClientNotifier {
         }
     }
     @Override
-    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) {
+    public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) {
         try {
-            clientStub.updateGameStarted(shuffledFirstPlayingOrder, initialFood, firstTopRow, firstBottomRow);
+            clientStub.updateGameStarted(shuffledFirstPlayingOrder, initialFood, firstTopRow, firstBottomRow, buildingsTopRow, buildingsBottomRow);
         } catch (RemoteException e){}
     }
 

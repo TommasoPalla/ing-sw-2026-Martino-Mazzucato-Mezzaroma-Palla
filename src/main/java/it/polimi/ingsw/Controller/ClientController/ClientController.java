@@ -268,10 +268,12 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) {
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) {
         localModel.updateGamePhase(GamePhase.START_TURN);
         localModel.updateTopRow(firstTopRow);
         localModel.updateBottomRow(firstBottomRow);
+        localModel.updateTopRowBuildings(buildingsTopRow);
+        localModel.updateBottomRowBuildings(buildingsBottomRow);
         localModel.setTurnOrder(firstTurnOrder);
         for (int i=0; i<firstTurnOrder.size(); i++){
             localModel.getTurnTileStatus().put(i, firstTurnOrder.get(i));
@@ -325,27 +327,30 @@ public class ClientController implements ClientViewUpdate {
 
     @Override
     public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
+        //String cardID = local
+        Card drawn;
         LightTribe tribe = localModel.getPlayerTribe(playerName);
         if(fromTopRow){
             tribe.decrementRemainingAbove();
             if(fromBuilding){
-                BuildingCard drawn = localModel.getTopBuildings().remove(index);
-                localModel.getPlayerTribe(playerName).addBuilding(drawn);
+                drawn = localModel.getTopBuildings().remove(index);
+                localModel.getPlayerTribe(playerName).addBuilding((BuildingCard) drawn);
             }else{
-                CharacterCard drawn = (CharacterCard) localModel.getTopRow().remove(index);
-                localModel.getPlayerTribe(playerName).addCharacter(drawn);
+                drawn = localModel.getTopRow().remove(index);
+                localModel.getPlayerTribe(playerName).addCharacter((CharacterCard) drawn);
             }
         }else{
             tribe.decrementRemainingBelow();
             if(fromBuilding){
-                BuildingCard drawn = localModel.getBottomBuildings().remove(index);
-                localModel.getPlayerTribe(playerName).addBuilding(drawn);
+                drawn = localModel.getBottomBuildings().remove(index);
+                localModel.getPlayerTribe(playerName).addBuilding((BuildingCard) drawn);
             }else{
-                CharacterCard drawn = (CharacterCard) localModel.getBottomRow().remove(index);
-                localModel.getPlayerTribe(playerName).addCharacter(drawn);
+                drawn = localModel.getBottomRow().remove(index);
+                localModel.getPlayerTribe(playerName).addCharacter((CharacterCard) drawn);
             }
         }
-        
+        view.notifyCardDrawn(playerName, drawn, fromTopRow);
+
         if (playerName.equals(localModel.getCurrentPlayer()) &&
             tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
             localModel.freeOfferTile(playerName);

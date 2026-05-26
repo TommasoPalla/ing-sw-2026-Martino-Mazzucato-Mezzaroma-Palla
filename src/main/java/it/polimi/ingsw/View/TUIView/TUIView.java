@@ -257,7 +257,11 @@ public class TUIView implements ViewInterface {
             System.out.println("TOP ROW IS EMPTY");
             return;
         }
+        tuiState = TUIState.SHOW_TOP_ROW;
         printHorizontal(clientController.getLocalModel().getTopRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
+        System.out.println();
+        printHorizontal(clientController.getLocalModel().getTopBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
+
     }
 
     /**
@@ -268,10 +272,15 @@ public class TUIView implements ViewInterface {
             System.out.println("BOTTOM ROW IS EMPTY");
             return;
         }
+        tuiState = TUIState.SHOW_BOTTOM_ROW;
         printHorizontal(clientController.getLocalModel().getBottomRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
+        System.out.println();
+        printHorizontal(clientController.getLocalModel().getBottomBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
+
     }
 
     private void printOfferTrack() {
+        tuiState = TUIState.SHOW_OFFER_TRACK;
         // COSTRUZIONE TURN TILE ---------------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------
         List<String> turnTileLines = new ArrayList<>();
@@ -308,7 +317,6 @@ public class TUIView implements ViewInterface {
         StringBuilder playerRow = new StringBuilder();
         StringBuilder bottomBorder = new StringBuilder();
 
-        tuiState = TUIState.SHOW_OFFER_TRACK;
         System.out.print("This is the current offer track:");
         System.out.println();
         for (OfferTile tile : clientController.getLocalModel().getOfferTiles()) {

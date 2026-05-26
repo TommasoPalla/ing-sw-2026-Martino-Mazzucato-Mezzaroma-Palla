@@ -89,10 +89,10 @@ public class ClientModel {
     public void drawable(boolean fromTopRow, boolean fromBuildings, int index) {
         LightTribe tribe = players.get(currentPlayer);
         if (fromTopRow && tribe.getRemainingAbove() <= 0) {
-            throw new IllegalDrawException("No more draws allowed from top row for " + currentPlayer);
+            throw new IllegalDrawException("No more draws allowed from top row for " + totemColors.get(currentPlayer).colorize(currentPlayer));
         }
         if (!fromTopRow && tribe.getRemainingBelow() <= 0) {
-            throw new IllegalDrawException("No more draws allowed from bottom row for " + currentPlayer);
+            throw new IllegalDrawException("No more draws allowed from bottom row for " + totemColors.get(currentPlayer).colorize(currentPlayer));
         }
 
         Card card;

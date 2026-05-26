@@ -13,7 +13,9 @@ import java.util.Map;
 public interface ClientViewUpdate {
     void updateCurrentRound(int round);
     void updateGameCreated(int gameID, int numPlayers);
-    void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow);
+    void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow,
+                           ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow,
+                           ArrayList<BuildingCard> buildingsBottomRow);
     void updatePlayerConnected(String playerName);
     void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) throws RemoteException;
     void updatePlayerLeftGame(String playerName);

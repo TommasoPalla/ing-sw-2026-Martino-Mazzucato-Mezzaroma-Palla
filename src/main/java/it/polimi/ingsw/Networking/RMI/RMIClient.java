@@ -46,8 +46,8 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow) {
-        controller.updateGameStarted(firstTurnOrder, initialFood, firstTopRow, firstBottomRow);
+    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) {
+        controller.updateGameStarted(firstTurnOrder, initialFood, firstTopRow, firstBottomRow, buildingsTopRow, buildingsBottomRow);
     }
 
     @Override
