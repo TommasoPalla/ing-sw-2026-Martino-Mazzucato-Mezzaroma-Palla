@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View.GUIView.Utils;
 
+import it.polimi.ingsw.Model.Cards.Card;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -21,8 +22,8 @@ public class ImageManager {
     // Path inside the src/main/resources folder
     private static final String RESOURCE_PATH_PREFIX = "/Images/";
 
-    private static final double CARD_WIDTH = 103;   //da cambiare
-    private static final double CARD_HEIGHT = 153;  //da cambiare
+    private static final double CARD_WIDTH = 103;
+    private static final double CARD_HEIGHT = 152;
     private static final double TILE_WIDTH = 103;
     private static final double TILE_HEIGHT = 153;
 
@@ -49,10 +50,10 @@ public class ImageManager {
                 cardNode = imageView;
             } catch (Exception e) {
                 System.err.println("Error rendering internal image resource for ID " + cardId + ". Using fallback.");
-                cardNode = createPlaceholder(cardId);
+                cardNode = createPlaceholder(cardId, 'Z', 0);
             }
         } else {
-            cardNode = createPlaceholder(cardId);
+            cardNode = createPlaceholder(cardId, 'Z', 0);
         }
         return cardNode;
     }
@@ -67,48 +68,47 @@ public class ImageManager {
             try {
                 Image image = new Image(imageStream, TILE_WIDTH, TILE_HEIGHT, true, true);
                 ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(CARD_WIDTH);
-                imageView.setFitHeight(CARD_HEIGHT);
+                imageView.setFitWidth(TILE_WIDTH);
+                imageView.setFitHeight(TILE_HEIGHT);
                 tileNode = imageView;
             } catch (Exception e) {
-                System.err.println("Error rendering internal image resource for ID " + id + ". Using fallback.");
-                tileNode = createPlaceholderTile(id);   //da adattare il placeholder anche pr tiles
+                System.err.println("Error rendering internal image resource offer tile for ID " + id + ". Using fallback.");
+                tileNode = createPlaceholder(null, id, 0);
             }
         } else {
-            tileNode = createPlaceholderTile(id);
+            tileNode = createPlaceholder(null, id, 0);
         }
         return tileNode;
     }
 
-    //è uguale, ma da sstemare
-    private static Node createPlaceholderTile(char id){
-        StackPane pane = new StackPane();
-        pane.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
-
-        // Placeholder background (Rectangle with border)
-        Rectangle background = new Rectangle(CARD_WIDTH, CARD_HEIGHT);
-        background.setFill(Color.LIGHTGRAY);
-        background.setStroke(Color.DARKGRAY);
-        background.setStrokeWidth(2);
-        background.setArcWidth(10);
-        background.setArcHeight(10);
-
-        // Descriptive label
-        Label textLabel = new Label("TILE\nID: " + id);
-        textLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        textLabel.setTextFill(Color.BLACK);
-        textLabel.setAlignment(Pos.CENTER);
-        textLabel.setStyle("-fx-text-alignment: center;");
-
-        pane.getChildren().addAll(background, textLabel);
-        return pane;
+    public static Node getTurnTile(int numPlayers){
+        Node tileNode;
+        String fullPath = RESOURCE_PATH_PREFIX + "Tiles/Turn" + numPlayers /*va castato?*/ + ".png";
+        InputStream imageStream = ImageManager.class.getResourceAsStream(fullPath);
+        if(imageStream != null) {
+            try {
+                Image image = new Image(imageStream, TILE_WIDTH, TILE_HEIGHT, true, true);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(TILE_WIDTH);
+                imageView.setFitHeight(TILE_HEIGHT);
+                tileNode = imageView;
+            } catch (Exception e) {
+                System.err.println("Error rendering internal image resource for " + numPlayers + "players. Using fallback.");
+                tileNode = createPlaceholder(null, 'Z', numPlayers);
+            }
+        } else {
+            tileNode = createPlaceholder(null, 'Z', numPlayers);
+        }
+        return tileNode;
     }
 
-    private static Node createPlaceholder(String cardId) {
+    private static Node createPlaceholder(String cardID, char offerTileID, int numPlayers){
         StackPane pane = new StackPane();
-        pane.setPrefSize(CARD_WIDTH, CARD_HEIGHT);
+        pane.setPrefSize(
+                cardID != null ? CARD_WIDTH : TILE_WIDTH,
+                cardID != null ? CARD_HEIGHT : TILE_HEIGHT
+        );
 
-        // Placeholder background (Rectangle with border)
         Rectangle background = new Rectangle(CARD_WIDTH, CARD_HEIGHT);
         background.setFill(Color.LIGHTGRAY);
         background.setStroke(Color.DARKGRAY);
@@ -116,8 +116,14 @@ public class ImageManager {
         background.setArcWidth(10);
         background.setArcHeight(10);
 
-        // Descriptive label
-        Label textLabel = new Label("CARD\nID: " + cardId);
+        Label textLabel;
+        if(cardID != null){
+            textLabel = new Label("CARD\nID: " + cardID);
+        } else if (numPlayers > 1){
+            textLabel = new Label("TURN TILE FOR\n: " + numPlayers + "players");
+        } else {
+            textLabel = new Label("OFFER TILE\nID: " + offerTileID);
+        }
         textLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         textLabel.setTextFill(Color.BLACK);
         textLabel.setAlignment(Pos.CENTER);

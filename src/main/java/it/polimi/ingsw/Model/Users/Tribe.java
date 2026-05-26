@@ -65,10 +65,25 @@ public class  Tribe implements TribeInterface{
     public int getArtistsNumber() { return population.get(CharacterRole.ARTIST).size(); }
 
     @Override
+    public int getBuildersNumber() {
+        return population.get(CharacterRole.BUILDER).size();
+    }
+
+    @Override
+    public int getGatherersNumber() {
+        return population.get(CharacterRole.GATHERER).size();
+    }
+
+    @Override
     public Map<CharacterRole, ArrayList<CharacterCard>> getPopulation() { return population; }
 
     @Override
     public Map<InventorType, Integer> getInventorsPerType() { return inventorsPerType; }
+
+    @Override
+    public int getShamansNumber() {
+        return population.get(CharacterRole.SHAMAN).size();
+    }
 
     @Override
     public int getShamansStars() { return shamansStars; }

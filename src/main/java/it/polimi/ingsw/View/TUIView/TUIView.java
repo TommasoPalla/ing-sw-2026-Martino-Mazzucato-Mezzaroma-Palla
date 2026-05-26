@@ -529,7 +529,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyCardDrawn(String player, Card card, boolean topRow) {
+    public void notifyCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
         if(this.player.equals(player)) {
             System.out.println();
             System.out.println(player + " has drawn " + card.getCardID() + "!");

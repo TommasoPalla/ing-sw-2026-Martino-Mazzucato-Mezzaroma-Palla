@@ -21,8 +21,11 @@ public interface TribeInterface {
     int getPopulationSize();
     int getHuntersNumber();
     int getArtistsNumber();
+    int getBuildersNumber();
     int getBuildersDiscount();
+    int getGatherersNumber();
     int getGatherersDiscount();
+    int getShamansNumber();
     int getShamansStars();
     Map<InventorType, Integer> getInventorsPerType();
     Map<CharacterRole, ArrayList<CharacterCard>> getPopulation();

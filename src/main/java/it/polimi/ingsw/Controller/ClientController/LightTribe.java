@@ -89,6 +89,21 @@ public class LightTribe implements TribeInterface {
     @Override
     public int getArtistsNumber() { return population.get(CharacterRole.ARTIST).size(); }
 
+    @Override
+    public int getBuildersNumber() {
+        return population.get(CharacterRole.BUILDER).size();
+    }
+
+    @Override
+    public int getGatherersNumber() {
+        return population.get(CharacterRole.GATHERER).size();
+    }
+
+    @Override
+    public int getShamansNumber() {
+        return population.get(CharacterRole.SHAMAN).size();
+    }
+
     public int getRemainingAbove() { return remainingAbove; }
 
     public int getRemainingBelow() { return remainingBelow; }

@@ -6,10 +6,35 @@
     -fx-border-width: 2.0;
 }
 
+.game-card {
+    -fx-background-color: grey;
+    -fx-opacity: 0.4;
+    -fx-border-radius: 10.0;
+}
+
+.tile-style {
+    -fx-border-radius: 10.0;
+}
+
 .cards-Box {
     -fx-background-color: green;
     -fx-background-radius: 15.0;
     -fx-border-color: green;
     -fx-border-radius: 15.0;
     -fx-border-width: 2.0;
+}
+
+.main-background {
+    -fx-background-image: url("/Images/Background.png");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.banner-label {
+    -fx-background-color: #B5978D;
+    -fx-text-fill: black;
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5;
 }

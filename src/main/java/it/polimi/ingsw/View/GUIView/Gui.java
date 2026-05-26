@@ -27,8 +27,9 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     private ChooseGameIdController ChooseId;
     private LobbySceneController lobby;
     private ArrayList<String> players;
+    private GameSceneController gameScene;
 
-    private ClientState guiState = ClientState.SETUP;
+    private ClientState guiState = ClientState.SETUP;       //va capito come sfruttare sta cosa e gestirla bene
 
     public Gui(Stage stage){
 
@@ -179,8 +180,12 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyCardDrawn(String player, Card card, boolean topRow) {
-
+    public void notifyCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
+        if(gameScene != null){
+            Platform.runLater(() -> {
+                gameScene.showCardDrawn(player, card, topRow, fromBuildings);
+            });
+        }
     }
 
     @Override
@@ -267,6 +272,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             Parent root = loader.load();
             GameSceneController controller = loader.getController();
             controller.setGUI(this);
+            gameScene = controller;
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.show();

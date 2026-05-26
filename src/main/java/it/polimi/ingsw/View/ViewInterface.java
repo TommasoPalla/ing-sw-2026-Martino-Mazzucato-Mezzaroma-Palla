@@ -21,7 +21,7 @@ public interface ViewInterface {
 
     void notifyStartRound(int round);
     void notifyChosenTotemColor(String playerName, Color totemColor);
-    void notifyCardDrawn(String player, Card card, boolean topRow);
+    void notifyCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings);
     void notifyGiveInitialFood(Map<String,Integer> initialFood);
     void notifyTileChosen(String playerName, int index);
     void notifyNewCurrentPlayer(String playerName, ClientState clientState);
