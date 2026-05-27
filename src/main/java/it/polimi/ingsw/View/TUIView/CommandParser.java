@@ -8,6 +8,8 @@ import it.polimi.ingsw.CustomException.UIException.AlreadyChosenTotemException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.CommandType;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Utils.CardIDValidator;
 
 
 /**
@@ -169,5 +171,36 @@ public record CommandParser(ClientController clientController) {
         if(commandArgs[0] != null)
             return commandArgs[0];
         else return "";
+    }
+
+    /**
+     * Parsing the request to show a specific card info
+     * @param argsString the argument passed via terminal input, the cardID of the card we want to know info of
+     * @return the description of the card
+     */
+    public BuildingCard parseCardInfo(String argsString){
+        if(argsString.trim().isEmpty()) {
+            throw new IllegalArgumentException("ERROR: this command requires arguments.");
+        }
+        String cardID = argsString.replace("\"", "").replace("'", "").trim();
+        CardIDValidator validator = new CardIDValidator(clientController);
+
+        if(!validator.checkCardID(cardID))
+            throw new IllegalArgumentException("ERROR: CardID '" + cardID + "' is not valid cardID or the card is not currently visible." +
+                    " Please enter a valid cardID.");
+
+        // if the cardID is valid we iterate through top and bottom buildings to find the correct description associated with the cardID
+        for(BuildingCard building : clientController.getLocalModel().getTopBuildings()){
+            if(building != null && cardID.equalsIgnoreCase(building.getCardID()))
+                return building;
+        }
+
+        for(BuildingCard building : clientController.getLocalModel().getBottomBuildings()){
+            if(building != null && cardID.equalsIgnoreCase(building.getCardID()))
+                return building;
+        }
+
+        // otherwise we default to error (should never happen, but it's safe to do)
+        throw new RuntimeException("ERROR: The cardID '" + cardID + "' does not correspond to any available buildings.");
     }
 }

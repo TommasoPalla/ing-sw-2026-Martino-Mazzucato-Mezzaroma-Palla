@@ -7,6 +7,7 @@ import it.polimi.ingsw.CustomException.UIException.*;
 
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Controller.ClientController.LightTribe;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
@@ -146,6 +147,7 @@ public class TUIView implements ViewInterface {
             case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
             case PLACE_TOTEM            -> commandParser.parseChooseOfferTile(argsString);
             case HELP                   -> printAvailableActions(clientController.getClientState(), true);
+            case SHOW_BUILDING_INFO     -> printCardInfo(argsString);
             default                     -> throw new IllegalArgumentException("ERROR: Invalid command, please try again or enter \"help()\" to know the available commands.");
         }
     }
@@ -767,8 +769,19 @@ public class TUIView implements ViewInterface {
         if(help && clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) printGeneralCommands();
         System.out.println();
     }
+
+    private void printCardInfo(String argsString){
+        BuildingCard requestedBuilding = null;
+        try {
+            requestedBuilding =  commandParser.parseCardInfo(argsString);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("\nThe building '" + requestedBuilding.getCardID() + "' has the following effect:\n\n" + requestedBuilding.getEffectDescription());
+    }
     /**
-    * This method prints to terminal the commands who can be performed at every game phase during the entire
+     * This method prints to terminal the commands who can be performed at every game phase during the entire
      * course of the game.
      */
     private void printGeneralCommands() {
@@ -777,7 +790,7 @@ public class TUIView implements ViewInterface {
         System.out.println("- show_offer_track(): to visualize the current state of the offer track.");
         System.out.println("- show_top_row(): to visualize the current state of the top row.");
         System.out.println("- show_bottom_row(): to visualize the current state of the bottom row.");
-        System.out.println("- show_card_info(cardID): to see all the information about the card.");
+        System.out.println("- show_building_info(cardID): to see all the information about the card.");
         System.out.println("- show_my_tribe(): to visualize your own tribe.");
         System.out.println("- show_other_tribe(player_name): to visualize the tribe of another player.");
         System.out.println();

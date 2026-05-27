@@ -186,7 +186,6 @@ public class ServerController {
     }
 
     public void chooseOfferTile(PlayerRecord playerRecord, int index) {
-        System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + "' placing totem on tile " + index);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         try {
             synchronized (currentController) {

@@ -689,7 +689,7 @@
       "cost": 4,
       "activatedAt": "ON_DRAW",
       "effect": "CF",
-      "effectDescription": "Starting from when you have this Building, every time you complete a set of 6 different Character cards, you take 5 Food tokens. You do not receive Food tokens for sets already completed at the time of acquiring the Building.",
+      "effectDescription": "Starting from when you have this Building, every\ntime you complete a set of 6 different\nCharacter cards, you take 5 Food tokens.\nYou do not receive Food tokens for sets already completed\nat the time of acquiring the Building.",
       "prestige": 3,
       "foodBonus": 5
     },
@@ -699,7 +699,7 @@
       "cost": 3,
       "activatedAt": "ON_DRAW",
       "effect": "IF",
-      "effectDescription": "Starting from when you have this Building, every time you obtain a pair of identical Inventors (with the same Invention icon), you take 3 Food tokens. You do not take Food for pairs already owned at the time of acquiring the Building",
+      "effectDescription": "Starting from when you have this Building, every\ntime you obtain a pair of identical\nInventors (with the same Invention icon), you\ntake 3 Food tokens. You do not take Food for pairs\nalready owned at the time of acquiring the Building",
       "prestige": 4,
       "foodBonus": 3
     },
@@ -719,7 +719,7 @@
       "cost": 4,
       "activatedAt": "ON_EVENT",
       "effect": "SD",
-      "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each gatherer\n in your tribe.",
+      "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each gatherer\nin your tribe.",
       "prestige": 4,
       "roleEffect": "G",
       "foodDiscount": 1
@@ -730,7 +730,7 @@
       "cost": 5,
       "activatedAt": "ON_EVENT",
       "effect": "SD",
-      "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each artist\n in your tribe.",
+      "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each artist\nin your tribe.",
       "prestige": 3,
       "roleEffect": "A",
       "foodDiscount": 1
@@ -761,7 +761,7 @@
       "cost": 7,
       "activatedAt": "ON_EVENT",
       "effect": "SD",
-      "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each Inventor\n in your tribe.",
+      "effectDescription": "During the Sustenance Event, you have a\ndiscount of 1 Food token on the total you\nwould have to pay, for each Inventor\nin your tribe.",
       "prestige": 4,
       "roleEffect": "I",
       "foodDiscount": 1
@@ -824,7 +824,7 @@
       "cost": 8,
       "activatedAt": "END_GAME",
       "effect": "PR",
-      "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Hunter\n in your tribe.",
+      "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Hunter\nin your tribe.",
       "prestige": 8,
       "roleEffect": "H",
       "prestigeBonus": 3
@@ -857,7 +857,7 @@
       "cost": 7,
       "activatedAt": "END_GAME",
       "effect": "PR",
-      "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Artist\n in your tribe.",
+      "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Artist\nin your tribe.",
       "prestige": 4,
       "roleEffect": "A",
       "prestigeBonus": 4
@@ -868,7 +868,7 @@
       "cost": 6,
       "activatedAt": "END_GAME",
       "effect": "PR",
-      "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Inventor\n in your tribe.",
+      "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Inventor\nin your tribe.",
       "prestige": 6,
       "roleEffect": "I",
       "prestigeBonus": 2
@@ -879,7 +879,7 @@
       "cost": 7,
       "activatedAt": "END_GAME",
       "effect": "PR",
-      "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Shaman\n in your tribe.",
+      "effectDescription": "At the end of the game, you gain the indicated\namount of Prestige Points for each Shaman\nin your tribe.",
       "prestige": 4,
       "roleEffect": "S",
       "prestigeBonus": 4

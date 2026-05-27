@@ -17,14 +17,15 @@ public enum CommandType {
     SHOW_BOTTOM_ROW("show_bottom_row", 0),
     PLACE_TOTEM("place_totem", 1),
     DRAW_CARD("draw_card", 3),
+    SHOW_BUILDING_INFO("show_building_info", 1),
     HELP("help", 0);
 
     /*
-    * Name of the command.
+     * Name of the command.
      */
     private String commandName;
     /*
-    * Number of arguments required by the command.
+     * Number of arguments required by the command.
      */
     private int argsNum;
 
@@ -34,7 +35,7 @@ public enum CommandType {
     }
 
     /*
-    * Getters for commands.
+     * Getters for commands.
      */
     public String getCommandName() {
         return this.commandName;

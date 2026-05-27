@@ -286,7 +286,7 @@ public class GameController {
      */
     //TODO: da fare che se tutti hanno scelto si passa alla fase di pesca delle carte
     public synchronized void handleChooseOfferTile (String playerName, int index) {
-        System.out.println("[GAME " + gameInstance.getGameID() + "] Action: '" + playerName + "' placing totem on tile " + index);
+        System.out.println("[GAME " + gameInstance.getGameID() + "] ACTION: '" + playerName + "' placing totem on tile " + index);
         //throws to ServerController IllegalActionPhaseException
         checkPhase(GamePhase.START_TURN);
         Player player = gameInstance.getPlayerByName(playerName);
