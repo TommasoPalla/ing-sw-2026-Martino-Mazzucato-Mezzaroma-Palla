@@ -88,7 +88,7 @@ public class GameController {
 
         connectedClients.put(playerName, newNotifier);
         if (connectedClients.size() == gameInstance.getNumPlayer()){
-            gameInstance.setReadyToStart();
+            gameInstance.setReadyToStart(true);
         }
         // se è il primo player, vuol dire che ha creato il game, quindi non entra qui
         if (connectedClients.size() > 1) {
@@ -122,7 +122,7 @@ public class GameController {
                 hostClient = newHost;
                 connectedClients.get(newHost).notifyNewHost();
             }
-            connectedClients.remove(playerName);
+            gameInstance.setReadyToStart(false);
         }
     }
 

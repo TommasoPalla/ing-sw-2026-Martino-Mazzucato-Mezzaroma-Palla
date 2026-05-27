@@ -308,15 +308,14 @@ public class ClientController implements ClientViewUpdate {
         //TODO da aggiungere controllo del gameID
         if(this.playerName.equals(player)){
             clientState = ClientState.SETUP;
-            view.notifyPlayerLeftLobby(player, false);
+            view.notifyPlayerLeftLobby(player,null);
             localModel = null;
         }
         else {
             // rimuove il player dalla mappa di colori del model
-            boolean hadColor = false;
-            if(localModel.getTotemColors().containsKey(player)) hadColor = true;
+            Color oldColor = localModel.getTotemColors().get(player);
+            view.notifyPlayerLeftLobby(player, oldColor);
             localModel.updatePlayerLeft(player);
-            view.notifyPlayerLeftLobby(player, hadColor);
         }
     }
 

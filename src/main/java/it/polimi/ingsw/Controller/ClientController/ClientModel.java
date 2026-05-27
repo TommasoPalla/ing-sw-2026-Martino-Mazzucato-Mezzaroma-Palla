@@ -187,6 +187,7 @@ public class ClientModel {
     }
     void updatePlayerLeft(String playerName){
         totemColors.remove(playerName);
+        players.remove(playerName);
     }
 
 

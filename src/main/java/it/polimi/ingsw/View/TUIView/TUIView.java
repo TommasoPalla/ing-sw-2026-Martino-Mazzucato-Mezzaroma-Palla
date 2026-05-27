@@ -432,8 +432,8 @@ public class TUIView implements ViewInterface {
     @Override
     public void notifyGameCreated(int gameID) {
         tuiState = TUIState.IN_LOBBY;
-        System.out.println("The game was successfully created with ID: " +  gameID + "!");
-        System.out.println("You are the host of this game.");
+        System.out.println("\nThe game was successfully created with ID: " +  gameID + "!");
+        System.out.println("\nYou are the host of this game.");
         printAvailableActions(clientController.getClientState(), false);
     }
 
@@ -453,22 +453,23 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyPlayerLeftLobby(String playerName, boolean hadColor) {
+    public void notifyPlayerLeftLobby(String playerName, Color oldColor) {
+        boolean hadColor = oldColor != null;
         if (playerName.equals(player)) {
             tuiState = TUIState.SETUP;
             System.out.println("You have successfully left the lobby!");
             printAvailableActions(clientController.getClientState(), false);
             return;
         }
-        if(tuiState == TUIState.IN_LOBBY) {
-            System.out.println("Player " + playerName + " left the lobby!");
+        if(tuiState.equals(TUIState.IN_LOBBY)) {
+            System.out.println("Player " + (hadColor ? clientController.getLocalModel().getColors(playerName).colorize(playerName) : playerName) + " left the lobby!");
             // se il player non ha ancora scelto il totem e il player che è uscito lo aveva scelto,
             // ristampa la lista dei colori aggiungendo il colore del player che è uscito
             if (!clientController.getLocalModel().getTotemColors().containsKey(this.player) && hadColor) {
                 printAvailableColors();
             }
         }
-        else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+        else if (tuiState.equals(TUIState.JOIN_GAME)) printAvailableGames();
     }
 
     @Override
@@ -492,7 +493,7 @@ public class TUIView implements ViewInterface {
 
     @Override
     public void notifyNewHost() {
-        System.out.println("You are the new host of this game.");
+        System.out.println("\nYou are the new host of this game.");
     }
 
     @Override

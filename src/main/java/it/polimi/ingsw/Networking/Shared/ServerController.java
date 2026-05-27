@@ -199,11 +199,17 @@ public class ServerController {
 
     public void handleDisconnection(PlayerRecord playerRecord){
         int gameID = playerRecord.gameID();
-        System.out.println("[SERVER] Handling critical disconnection for '" + playerRecord.playerName() + "' in game " + gameID);
         GameRecord gameRecord = activeGames.get(gameID);
         if(gameRecord != null){
-            gameRecord.gameController().handleCriticalDisconnection(playerRecord.playerName());
-            activeGames.remove(gameID);
+            if(gameRecord.game().isStarted()){
+                System.err.println("[SERVER] Handling critical disconnection for '" + playerRecord.playerName() + "' in game " + gameID);
+                gameRecord.gameController().handleCriticalDisconnection(playerRecord.playerName());
+                activeGames.remove(gameID);
+            }
+            else{
+                System.out.println("[SERVER] Handling lobby disconnection for '" + playerRecord.playerName() + "' in game " + gameID);
+                leaveGame(playerRecord);
+            }
             notifyAvailableGames();
         }
     }

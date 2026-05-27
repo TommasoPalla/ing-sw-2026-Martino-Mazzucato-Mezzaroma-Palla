@@ -127,8 +127,8 @@ public class Game {
         this.era = era;
     }
 
-    public void setReadyToStart(){
-        readyToStart = true;
+    public void setReadyToStart(boolean readyToStart){
+        this.readyToStart = readyToStart;
     }
 
     public void setCurrentPhase(GamePhase phase){

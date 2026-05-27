@@ -127,7 +127,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyPlayerLeftLobby(String playerName, boolean hadColor) {
+    public void notifyPlayerLeftLobby(String playerName, Color oldColor) {
         lobby.notifyPlayerLeft(playerName);
         ChooseId.loadGames(controller.getAvailableGames());
         players.remove(playerName);
