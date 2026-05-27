@@ -202,7 +202,7 @@ public class ServerController {
         System.out.println("[SERVER] Handling critical disconnection for '" + playerRecord.playerName() + "' in game " + gameID);
         GameRecord gameRecord = activeGames.get(gameID);
         if(gameRecord != null){
-            gameRecord.gameController().handleCriticalDisconnection();
+            gameRecord.gameController().handleCriticalDisconnection(playerRecord.playerName());
             activeGames.remove(gameID);
             notifyAvailableGames();
         }

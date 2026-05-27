@@ -65,9 +65,9 @@ public class RMIServerAdapter implements ServerConnection {
 
             startHeartBeat();
         } catch (RemoteException e){
-            System.out.println("Error during connection to RMI server\n" + e.getMessage());
+            System.err.println("Error during connection to RMI server\n" + e.getMessage());
         } catch (NotBoundException e){
-            System.out.println("Error during RMI server lookup\n" + e.getMessage());
+            System.err.println("Error during RMI server lookup\n" + e.getMessage());
         }
     }
 
@@ -172,7 +172,7 @@ public class RMIServerAdapter implements ServerConnection {
             } catch (RemoteException e) {
                 // server irraggiungibile
                 stopHeartbeat();
-                client.getController().handleServerDisconnection();
+                client.getController().handleServerDisconnection(client.getController().getPlayerName());
             }
         }, 0, ServerConfigs.DEFAULT_PING_INTERVAL, TimeUnit.SECONDS);
     }

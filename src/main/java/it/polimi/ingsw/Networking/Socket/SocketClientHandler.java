@@ -312,8 +312,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
 
     @Override
-    public void notifyForceQuit() {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.FORCE_QUIT);
+    public void notifyForceQuit(String disconnectedPlayer) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.FORCE_QUIT, disconnectedPlayer);
         outStream.println(gson.toJson(message));
     }
 }

@@ -188,5 +188,5 @@ public interface VirtualRMIClient extends Remote {
      * Forces the client to terminate the session, usually due to a server-side disconnection.
      * @throws RemoteException if RMI communication fails.
      */
-    void forceQuit() throws RemoteException;
+    void forceQuit(String disconnectedPlayer) throws RemoteException;
 }

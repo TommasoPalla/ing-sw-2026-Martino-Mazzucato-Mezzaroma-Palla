@@ -143,7 +143,7 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void forceQuit() {
-        controller.handleServerDisconnection();
+    public void forceQuit(String disconnectedPlayer) {
+        controller.handleServerDisconnection(disconnectedPlayer);
     }
 }

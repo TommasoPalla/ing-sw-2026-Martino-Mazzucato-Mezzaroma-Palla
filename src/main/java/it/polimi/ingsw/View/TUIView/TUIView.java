@@ -259,8 +259,9 @@ public class TUIView implements ViewInterface {
             return;
         }
         tuiState = TUIState.SHOW_TOP_ROW;
+        System.out.println("\nCHARACTERS:");
         printHorizontal(clientController.getLocalModel().getTopRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
-        System.out.println();
+        System.out.println("\nBUILDINGS:");
         printHorizontal(clientController.getLocalModel().getTopBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
 
     }
@@ -468,6 +469,25 @@ public class TUIView implements ViewInterface {
             }
         }
         else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
+    }
+
+    @Override
+    public void notifyForceQuit(String disconnectedPlayerName, Color totemColor) {
+        if(disconnectedPlayerName.equals(this.player)){
+            System.err.println("You disconnected from the server." +
+                    "The game will be interrupted and you will be brought back to setup.");
+        }
+
+        else{
+            System.out.println((totemColor != null ? totemColor.colorize(disconnectedPlayerName) : disconnectedPlayerName) + " has disconnected from the server");
+
+            if(clientController.getClientState().equals(ClientState.IN_LOBBY)){
+                if(!clientController.getLocalModel().getTotemColors().containsKey(this.player))
+                    printAvailableColors();
+            }
+            else
+                System.err.println("The game will be interrupted and you will be brought back to setup.");
+        }
     }
 
     @Override

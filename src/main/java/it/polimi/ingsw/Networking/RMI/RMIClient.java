@@ -156,7 +156,7 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void forceQuit() {
-        controller.handleServerDisconnection();
+    public void forceQuit(String disconnectedPlayer) {
+        controller.handleServerDisconnection(disconnectedPlayer);
     }
 }

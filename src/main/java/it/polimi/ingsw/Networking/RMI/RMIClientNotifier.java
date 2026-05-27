@@ -207,9 +207,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyForceQuit() {
+    public void notifyForceQuit(String disconnectedPlayer) {
         try {
-            clientStub.forceQuit();
+            clientStub.forceQuit(disconnectedPlayer);
         } catch (RemoteException e){}
     }
 }

@@ -219,8 +219,9 @@ public class SocketServerHandler implements Runnable{
            } catch (IOException e) {}
         });
         commandHandlers.put(SocketHeaderNames.FORCE_QUIT, parameters -> {
+            String disconnectedPlayer = (String) parameters[0];
             try {
-                client.forceQuit();
+                client.forceQuit(disconnectedPlayer);
             } catch (IOException e) {}
         });
     }

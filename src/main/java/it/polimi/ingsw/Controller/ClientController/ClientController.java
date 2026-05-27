@@ -514,10 +514,16 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
-    public void handleServerDisconnection(){
-        System.out.println("FORCE QUIT DUE TO USER DISCONNECTION");     //questa cosa va tolta e messa nella view.notifyForceQuit()
-        setClientState(ClientState.SETUP);
-        localModel = null;
-        //view.notifyForceQuit(); TODO: deve printare che e' uscito
+    public void handleServerDisconnection(String disconnectedPlayer){
+        //If still in lobby and player disconnects
+        Color totemColor = localModel.getTotemColors().get(disconnectedPlayer);
+        if(this.clientState == ClientState.IN_LOBBY){
+            localModel.getTotemColors().remove(disconnectedPlayer);
+        }
+        else{
+            setClientState(ClientState.SETUP);
+            localModel = null;
+        }
+        view.notifyForceQuit(disconnectedPlayer, totemColor);
     }
 }

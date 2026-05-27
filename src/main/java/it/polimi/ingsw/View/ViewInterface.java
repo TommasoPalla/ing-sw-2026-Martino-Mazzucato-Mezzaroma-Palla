@@ -17,6 +17,7 @@ public interface ViewInterface {
     void notifyPlayerJoinedLobby(String playerName);
     void notifySuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors);
     void notifyPlayerLeftLobby(String playerName, boolean hadColor);
+    void notifyForceQuit(String disconnectedPlayerName, Color oldColor);
     void notifyPlayerDisconnected(String playerName,  boolean hadColor);
     void notifyNewHost();
 

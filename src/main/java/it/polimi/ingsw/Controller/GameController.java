@@ -83,7 +83,7 @@ public class GameController {
                 n.notifyNewPlayerConnected(playerName);
             });
         } catch (StubException e) {
-            handleCriticalDisconnection();
+            //handleCriticalDisconnection();
         }
 
         connectedClients.put(playerName, newNotifier);
@@ -99,7 +99,7 @@ public class GameController {
                     notifier.notifyGameReady();         da definire
                 }*/
             } catch(StubException e){
-                handleCriticalDisconnection();
+                //handleCriticalDisconnection();
             }
         }
     }
@@ -113,7 +113,7 @@ public class GameController {
                     n.notifyPlayerLeftGame(playerName);
                 });
             } catch (StubException e) {
-                handleCriticalDisconnection();
+                //handleCriticalDisconnection();
             }
             connectedClients.remove(playerName);
             // se il player che è stato rimosso era l'host, il secondo a essere entrato (se esiste) diventa il nuovo host
@@ -140,7 +140,7 @@ public class GameController {
                 n.notifyTotemColor(playerName, totemColor);
             });
         } catch (StubException e) {
-            handleCriticalDisconnection();
+            //handleCriticalDisconnection();
         }
     }
 
@@ -272,7 +272,7 @@ public class GameController {
         catch (LastRoundException e) {
             //throw EndOfGame_Exception();
         } catch (StubException e) {
-            handleCriticalDisconnection();
+            //handleCriticalDisconnection();
         }
         //setNextPlayer();
     }
@@ -305,7 +305,7 @@ public class GameController {
             throw new OccupiedTileException();
         }
         catch(StubException e){
-            handleCriticalDisconnection();
+            //handleCriticalDisconnection();
         }
         try {
             setNextPlayer();
@@ -375,18 +375,18 @@ public class GameController {
                         }
                     }
                 } catch (StubException e) {
-                    handleCriticalDisconnection();
+                   //handleCriticalDisconnection();
                 }
             }
     }
 
     /*TODO: definire la fase di shutdown del game a seguito di un client disconnesso e gestire
        in socket la disconnessione*/
-    public void handleCriticalDisconnection(){
+    public void handleCriticalDisconnection(String disconnectedPlayer){
         System.err.println("[GAME " + gameInstance.getGameID() + "] CRITICAL DISCONNECTION detected. Forcing all clients to quit and clearing lobby.");
         notifyAll( n -> {
             try {
-                n.notifyForceQuit();
+                n.notifyForceQuit(disconnectedPlayer);
             } catch (Exception e){}
         });
         connectedClients.clear();

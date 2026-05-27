@@ -182,5 +182,5 @@ public interface VirtualSocketClient {
      * Forces the client to terminate the session, usually due to a server-side disconnection.
      * @throws IOException if TCP communication fails.
      */
-    void forceQuit() throws IOException;
+    void forceQuit(String disconnectedPlayer) throws IOException;
 }

@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RMIServer implements VirtualRMIServer {
+    private Registry registry;
     final ServerController serverController;
     final ArrayList<VirtualRMIClient> clients = new ArrayList<>();   //lista dei client connessi al server in generale
 
@@ -43,8 +44,8 @@ public class RMIServer implements VirtualRMIServer {
     public void startServer(){
         try{
             VirtualRMIServer serverStub = (VirtualRMIServer) UnicastRemoteObject.exportObject(this, 0);
-            Registry registry = LocateRegistry.createRegistry(ServerConfigs.DEFAULT_RMI_SERVER_PORT);
-            registry.rebind(ServerConfigs.DEFAULT_RMI_SERVER_NAME, serverStub);
+            this.registry = LocateRegistry.createRegistry(ServerConfigs.DEFAULT_RMI_SERVER_PORT);
+            this.registry.rebind(ServerConfigs.DEFAULT_RMI_SERVER_NAME, serverStub);
         } catch (RemoteException e){
             System.err.println("[RMI] ERROR: an error has occurred during server initialization\n" + e.getMessage());
         }

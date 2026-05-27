@@ -2,6 +2,7 @@ package it.polimi.ingsw.Apps;
 
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import it.polimi.ingsw.Networking.RMI.RMIServer;
+import it.polimi.ingsw.Networking.RMI.RMIServerAdapter;
 import it.polimi.ingsw.Networking.Shared.ServerController;
 import it.polimi.ingsw.Networking.Socket.SocketServer;
 
@@ -12,6 +13,8 @@ import it.polimi.ingsw.Networking.Socket.SocketServer;
  */
 
 public class ServerApp {
+    private static RMIServer rmiServer;
+
     public static void main(String[] args) throws Exception {
         //UNICO CONTROLLER CON ASSOCIATO IL MODEL
         ServerController mainController = new ServerController();
@@ -27,7 +30,7 @@ public class ServerApp {
         System.out.println("[SERVER] Server IP address is: " + realIp);
 
         try{
-            RMIServer rmiServer = new RMIServer(mainController);
+            rmiServer = new RMIServer(mainController);
             rmiServer.startServer();
             System.out.println("[RMI] Server ready");
         } catch (Exception e){

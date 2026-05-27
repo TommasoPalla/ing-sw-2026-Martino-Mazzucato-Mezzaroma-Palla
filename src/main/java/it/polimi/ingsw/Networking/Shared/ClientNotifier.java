@@ -157,5 +157,5 @@ public interface ClientNotifier {
     /**
      * Forces the client to quit, usually due to a critical error or disconnection.
      */
-    void notifyForceQuit();
+    void notifyForceQuit(String disconnectedPlayer);
 }

@@ -204,6 +204,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyForceQuit(String disconnectedPlayerName, Color oldColor) {
+
+    }
+
+    @Override
     public void notifyPlayerDisconnected(String playerName, boolean hadColor) {
 
     }
