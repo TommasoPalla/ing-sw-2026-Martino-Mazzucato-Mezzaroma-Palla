@@ -109,7 +109,7 @@ public class LightTribe implements TribeInterface {
     public int getRemainingBelow() { return remainingBelow; }
 
     //setters
-    public void setFood(int food) { this.foodReserve = food; }
+    public void setFoodReserve(int food) { this.foodReserve = food; }
     public void setPrestigePoints(int pp) { this.prestigePoints = pp; }
 
     public void setRemainingDraws(int above, int below) {

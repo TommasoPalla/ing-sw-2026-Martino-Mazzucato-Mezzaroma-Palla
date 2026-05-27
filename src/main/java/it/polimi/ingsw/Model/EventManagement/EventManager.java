@@ -6,6 +6,7 @@ import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.Users.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,11 @@ public class EventManager {
         strategies.put(EventType.SUSTENANCE, new SustenanceEvent(0, "SUSTENANCE_DUMMY", 0, 0));
     }
 
-    public void resolve(ArrayList<EventCard> incomingEvents, ArrayList<Player> players, BuildingManager buildingManager){
+    public Map<EventType, ArrayList<PlayerEventResults>> resolve(ArrayList<EventCard> incomingEvents, ArrayList<Player> players, BuildingManager buildingManager){
+
+        if (incomingEvents.isEmpty()) {
+            return Collections.emptyMap();
+        }
 
         ArrayList<EventCard> sustenanceEvents = new ArrayList<>();
         for(EventCard event : incomingEvents){
@@ -31,9 +36,20 @@ public class EventManager {
         incomingEvents.removeAll(sustenanceEvents);
         incomingEvents.addAll(sustenanceEvents);
 
+        Map<EventType, ArrayList<PlayerEventResults>> eventsResult = new HashMap<>();
+
         for( EventCard event : incomingEvents ){
             EventStrategy eventStrategy = strategies.get(event.getEventType());
-            if (eventStrategy != null ) eventStrategy.apply(event, players, buildingManager);
+            if (eventStrategy != null ) {
+                eventStrategy.apply(event, players, buildingManager);
+                ArrayList<PlayerEventResults> playersResults = new ArrayList<>();
+                for (Player player : players) {
+                    PlayerEventResults playerResults = new PlayerEventResults(player.getName(), new int[]{player.getTribe().getFoodReserve(), player.getTribe().getPrestigePoints()});
+                    playersResults.add(playerResults);
+                }
+                eventsResult.put(event.getEventType(), playersResults);
+            }
         }
+        return eventsResult;
     }
 }

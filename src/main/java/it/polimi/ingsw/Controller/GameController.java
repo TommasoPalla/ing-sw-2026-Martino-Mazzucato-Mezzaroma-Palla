@@ -7,13 +7,14 @@ import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Model.Users.*;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
-import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -226,7 +227,7 @@ public class GameController {
     /**
      * When a new round starts, after all the events are resolved and the rows are repopulated
      */
-    public void startRound() {
+    public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
         try {
             int newRound = gameInstance.setNextRound();
@@ -235,19 +236,26 @@ public class GameController {
             System.out.println("[GAME " + gameInstance.getGameID() + "] Final round reached!");
             // chiama i metodi per il calcolo finale dei punti e notifica i players
         }
-        notifyAll(ClientNotifier::notifyStartRound);
+        notifyAll(n -> {
+            n.notifyStartRound(lastEventsResults);
+        });
         //int oldEra = gameInstance.getEra();
         try {
             gameInstance.initOfferTrack();
-            notifyAll( n -> {
-                n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
-                n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
-                n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
-                n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
-            });
         } catch(ChangeEraException e){
             gameInstance.changeEra();
+            //TODO: verificare che arrivi e che venga mostrato al player. In teoria non serve il parametro perché il player
+            // sa già l'era
+            notifyAll(n -> {
+                n.notifyEra(gameInstance.getEra());
+            });
         }
+        notifyAll( n -> {
+            n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
+            n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
+            n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
+            n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
+        });
 
         String firstPlayer = gameInstance.setFirstPlayer();
         try {
@@ -277,12 +285,12 @@ public class GameController {
         //setNextPlayer();
     }
 
-    /**Handles the player request to place the totem on a specific
+    /** Handles the player request to place the totem on a specific
      * offer tile. It checks whether it is player's turn and the correct phase of the game.
      * The method delegates the update of the model to Game class.
      *
      * @param playerName the player who requests to place the totem
-     * @param index index of the offer tile, starting from 0
+     * @param index index of the offer tile, starting from 0.
      */
     //TODO: da fare che se tutti hanno scelto si passa alla fase di pesca delle carte
     public synchronized void handleChooseOfferTile (String playerName, int index) {
@@ -334,13 +342,22 @@ public class GameController {
                 setNextPlayer();
             } catch (LastPlayerOfTurnException e1) {
                 // If all players have 0 draws (unlikely but theoretically possible with Tile A), end round
-                startRound();
+                //startRound();
             }
         }
     }
 
-    public synchronized void handleDraw(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuilding, int index){
-            String playerName = playerRecord.playerName();
+    /**
+     * This method handles the player requests to draw a card. If the draw is successful all players are notified and
+     * if the player has drawn all his cards the next player is set.
+     * When all the players have finished drawing their cards, the bottom row events are resolved
+     * and the new round is started.
+     * @param playerName the player requesting to draw
+     * @param fromTopRow true if the card drawn comes from the top row, false if it's of the bottom row
+     * @param fromBuilding true if the card drawn is a building, false if not
+     * @param index index of the array of the row.
+     */
+    public synchronized void handleDraw(String playerName, boolean fromTopRow, boolean fromBuilding, int index){
             Player currPlayer = gameInstance.getPlayerByName(playerName);
             OfferTrack offerTrack = gameInstance.getOfferTrack();
 
@@ -362,6 +379,8 @@ public class GameController {
                         else if (foodModifier < 0) {
                             if (playersFood == 0)
                                 notifyAll(n -> n.notifyPrestigePointsToAdd(playerName, -2));
+                            else
+                                notifyAll(n -> n.notifyFoodToAdd(playerName, foodModifier));
                         }
 
                         try {
@@ -369,9 +388,10 @@ public class GameController {
                         } catch (LastPlayerOfTurnException e) {
                             //phase ends => resolve events and start next round
 
+                            // EVENT RESOLUTION
                             //non funziona non so perche' TODO fixare
-                            gameInstance.getEventManager().resolve(gameInstance.getOfferTrack().getBottomEvents(), this.gameInstance.getPlayers(), gameInstance.getBuildingManager());
-                            startRound();
+                            Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(gameInstance.getOfferTrack().getBottomEvents(), this.gameInstance.getPlayers(), gameInstance.getBuildingManager());
+                            startRound(eventsResults);
                         }
                     }
                 } catch (StubException e) {

@@ -2,9 +2,11 @@ package it.polimi.ingsw.Networking.RMI;
 
 import it.polimi.ingsw.CustomException.StubException;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.View.GamePlayers;
 
@@ -88,9 +90,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyStartRound() {
+    public void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
         try {
-            clientStub.startRound();
+            clientStub.startRound(lastEventsResults);
         } catch (RemoteException e) {
             throw new StubException("could not notify start of new round");
         }

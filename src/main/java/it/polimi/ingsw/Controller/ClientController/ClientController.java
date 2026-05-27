@@ -4,19 +4,18 @@ import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.CustomException.UIException.*;
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
 import it.polimi.ingsw.View.ViewInterface;
 import it.polimi.ingsw.View.GamePlayers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class ClientController implements ClientViewUpdate {
@@ -379,13 +378,32 @@ public class ClientController implements ClientViewUpdate {
             localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
         }
         view.notifyGiveInitialFood(initialFood);
-        updateStartRound();
+        updateStartRound(Collections.emptyMap());
     }
 
-    public void updateStartRound() {
+    @Override
+    public void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
         localModel.updateGamePhase(GamePhase.START_TURN);
         localModel.updateCurrentRound(localModel.getCurrentRound() + 1);
         localModel.setCurrentPlayer("");
+
+        // UPDATING EVENTS RESULTS
+        if (!lastEventsResults.isEmpty()) {
+            for (EventType eventType : lastEventsResults.keySet()) {
+                for(PlayerEventResults playerResults : lastEventsResults.get(eventType)){
+                    LightTribe playersTribe = localModel.getPlayerTribe(playerResults.player());
+                    // player's notification
+                    if (playerResults.player().equals(this.playerName)) {
+                        int foodModified = playerResults.foodAndPP()[0] - playersTribe.getFoodReserve();
+                        int ppModified = playerResults.foodAndPP()[1] - playersTribe.getPrestigePoints();
+                        view.notifyEvent(eventType, foodModified, ppModified);
+                    }
+                    // tribe's updating
+                    playersTribe.setFoodReserve(playerResults.foodAndPP()[0]);
+                    playersTribe.setPrestigePoints(playerResults.foodAndPP()[1]);
+                }
+            }
+        }
 
         //ensures all players are on the turn tile at the start of the round
         for (int i = 0; i < localModel.getTurnOrder().size(); i++) {

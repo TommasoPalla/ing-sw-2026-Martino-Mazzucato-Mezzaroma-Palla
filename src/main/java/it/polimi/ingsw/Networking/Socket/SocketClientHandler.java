@@ -7,9 +7,11 @@ import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.PlayerRecord;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
@@ -222,8 +224,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifyStartRound() {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_ROUND);
+    public void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_ROUND, lastEventsResults);
         outStream.println(gson.toJson(message));
     }
 

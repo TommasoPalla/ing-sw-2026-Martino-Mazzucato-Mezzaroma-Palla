@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
@@ -83,9 +85,10 @@ public interface VirtualSocketClient {
 
     /**
      * Signals the start of a new game round.
+     * @param lastEventsResults the results of all the events resolved at the end of the last round.
      * @throws IOException if TCP communication fails.
      */
-    void updateStartRound() throws IOException;
+    void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws IOException;
 
     /**
      * Notifies that a player has drawn a card.

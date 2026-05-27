@@ -2,6 +2,7 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
 
@@ -30,4 +31,5 @@ public interface ViewInterface {
     void notifyNewGamePhase(GamePhase newGamePhase);
     void notifyFood(String playerName, int food);
     void notifyPrestigePoints(String playerName, int pp);
+    void notifyEvent(EventType eventType, int foodModified, int ppModified);
 }

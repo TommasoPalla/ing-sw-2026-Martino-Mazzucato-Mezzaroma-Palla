@@ -90,7 +90,7 @@ public class TurnTile {
             returningPlayer.getTribe().modifyFood(foodModifier);
         }
         else if (foodModifier < 0) {
-            if (returningPlayer.getTribe().getFoodReserve() - foodModifier < 0)
+            if (returningPlayer.getTribe().getFoodReserve() + foodModifier < 0)
                 returningPlayer.getTribe().modifyPrestigePoints(-2);
             else
                 returningPlayer.getTribe().modifyFood(foodModifier);

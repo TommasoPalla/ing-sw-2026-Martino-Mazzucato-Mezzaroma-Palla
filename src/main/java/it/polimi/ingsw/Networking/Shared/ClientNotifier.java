@@ -1,9 +1,11 @@
 package it.polimi.ingsw.Networking.Shared;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.ArrayList;
@@ -72,8 +74,9 @@ public interface ClientNotifier {
 
     /**
      * Signals the start of a new round.
+     * @param lastEventsResults the results of all the events resolved at the end of the last round.
      */
-    void notifyStartRound();
+    void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults);
 
     /**
      * Notifies that a card has been drawn by a player.

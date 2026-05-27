@@ -4,9 +4,11 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.rmi.RemoteException;
@@ -76,8 +78,8 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void startRound() throws RemoteException {
-        controller.updateStartRound();
+    public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws RemoteException {
+        controller.updateStartRound(lastEventsResults);
     }
 
     @Override

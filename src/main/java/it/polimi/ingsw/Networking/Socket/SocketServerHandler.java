@@ -2,6 +2,7 @@ package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
 
@@ -17,6 +18,7 @@ import java.util.function.Consumer;
 import com.google.gson.Gson;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Utils.GsonFactory;
 import it.polimi.ingsw.View.GamePlayers;
 
@@ -118,8 +120,11 @@ public class SocketServerHandler implements Runnable{
             } catch(IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.START_ROUND, parameters -> {
+            String eventResultsString = gson.toJson(parameters[0]);
+            Type eventResultsType = new TypeToken<Map<EventType, ArrayList<PlayerEventResults>>>(){}.getType();
+            Map<EventType, ArrayList<PlayerEventResults>> eventResults = gson.fromJson(eventResultsString, eventResultsType);
             try {
-                client.updateStartRound();
+                client.updateStartRound(eventResults);
             } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.CHOSEN_TOTEM_COLOR, parameters -> {

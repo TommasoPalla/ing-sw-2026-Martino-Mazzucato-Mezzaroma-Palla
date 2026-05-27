@@ -3,6 +3,7 @@ package it.polimi.ingsw.View.GUIView;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GUIView.GuiControllers.*;
@@ -200,6 +201,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyPrestigePoints(String playerName, int pp) {
+
+    }
+
+    @Override
+    public void notifyEvent(EventType eventType, int foodModified, int ppModified) {
 
     }
 

@@ -1,9 +1,11 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public interface ClientViewUpdate {
     void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
     void updateTotemColor(String playerName, Color totemColor);
 
+    void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults);
     void updateCurrentOfferTile(String playerName, int index);
     void updateFoodReserve(String playerName, int food);
     void updateShamansStars(String playerName, int stars);

@@ -176,9 +176,10 @@ public class ServerController {
     public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
         System.out.println("[GAME " + playerRecord.gameID() + "] Player '" + playerRecord.playerName() + "' drawing card from " + (fromTopRow ? "TOP" : "BOTTOM") + " row, index " + index);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
+        String playerName = playerRecord.playerName();
         try{
             synchronized (currentController){
-                currentController.handleDraw(playerRecord, fromTopRow, fromBuildings, index);
+                currentController.handleDraw(playerName, fromTopRow, fromBuildings, index);
             }
         } catch (IllegalDrawException e){
             throw new IllegalDrawException();

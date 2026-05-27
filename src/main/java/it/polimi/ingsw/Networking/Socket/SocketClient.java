@@ -2,9 +2,11 @@ package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
@@ -77,8 +79,8 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updateStartRound() {
-        controller.updateStartRound();
+    public void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
+        controller.updateStartRound(lastEventsResults);
     }
 
     @Override

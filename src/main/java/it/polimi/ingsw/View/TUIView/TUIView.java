@@ -485,11 +485,12 @@ public class TUIView implements ViewInterface {
             System.out.println((totemColor != null ? totemColor.colorize(disconnectedPlayerName) : disconnectedPlayerName) + " has disconnected from the server");
 
             if(clientController.getClientState().equals(ClientState.IN_LOBBY)){
-                if(!clientController.getLocalModel().getTotemColors().containsKey(this.player))
+                if(totemColor != null && !clientController.getLocalModel().getTotemColors().containsKey(this.player))
                     printAvailableColors();
             }
             else
                 System.err.println("The game will be interrupted and you will be brought back to setup.");
+                printAvailableActions(clientController.getClientState(), false);
         }
     }
 
@@ -548,11 +549,6 @@ public class TUIView implements ViewInterface {
         System.out.println("                  ----------------------------------------------------                ");
         System.out.println();
     }
-
-//    @Override
-//    public void notifyGameEvent() {
-//
-//    }
 
     @Override
     public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
@@ -646,6 +642,19 @@ public class TUIView implements ViewInterface {
             System.out.println("You gained " + pp + " prestige points!");
         else
             System.out.println("You lost " + pp + " prestige points!");
+    }
+
+    @Override
+    public void notifyEvent(EventType eventType, int foodModified, int ppModified) {
+        System.out.println();
+        String icon;
+        if (eventType == EventType.HUNT) icon = TuiIcons.HUNTER;
+        else if (eventType == EventType.SUSTENANCE) icon = TuiIcons.FOOD;
+        else if (eventType == EventType.CAVE_PAINTINGS) icon = TuiIcons.ARTIST;
+        else icon = TuiIcons.SHAMAN;
+
+        System.out.println(icon + " A " + eventType + " event occurred! " + icon + " These are the results: " + TuiIcons.FOOD + ": " + foodModified + ", " + TuiIcons.PRESTIGE_POINTS + ": " + ppModified + ";");
+        System.out.println();
     }
 
     /**
