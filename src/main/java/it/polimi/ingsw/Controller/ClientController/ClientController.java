@@ -106,9 +106,9 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public Map<Integer, GamePlayers> getAvailableGames(){
-        if(clientState != ClientState.SETUP){
-            throw new IllegalClientStateActionException("You cannot do that right now!");
-        }
+//        if(clientState != ClientState.SETUP){
+//            throw new IllegalClientStateActionException("You cannot do that right now!");
+//        }
         return availableGames;
     }
 
@@ -304,7 +304,6 @@ public class ClientController implements ClientViewUpdate {
 
     @Override
     public void updatePlayerLeftGame(String player) {
-        //TODO da aggiungere controllo del gameID
         if(this.playerName.equals(player)){
             clientState = ClientState.SETUP;
             view.notifyPlayerLeftLobby(player,null);
@@ -313,8 +312,8 @@ public class ClientController implements ClientViewUpdate {
         else {
             // rimuove il player dalla mappa di colori del model
             Color oldColor = localModel.getTotemColors().get(player);
-            view.notifyPlayerLeftLobby(player, oldColor);
             localModel.updatePlayerLeft(player);
+            view.notifyPlayerLeftLobby(player, oldColor);
         }
     }
 

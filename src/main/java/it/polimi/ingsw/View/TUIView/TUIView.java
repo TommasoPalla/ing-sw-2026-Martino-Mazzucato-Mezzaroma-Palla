@@ -70,25 +70,6 @@ public class TUIView implements ViewInterface {
         }
     }
 
-    /**
-     * TUI view of the offerTrack
-     */
-//    private void offerTrackTUIView(String args) {
-//        if (!args.trim().isEmpty()) {
-//            throw new IllegalArgumentException("This method doesn't require arguments.");
-//        }
-//        tuiState = TUIState.SHOW_OFFER_TRACK;
-//        //printOfferTrack();
-//    }
-
-    //  WORK IN PROGRESS
-    private String[] cardTUIView(Card card) {
-        if (card instanceof CharacterCard characterCard) {
-            CharacterRole role = characterCard.getRole();
-        }
-        return null;
-    }
-
     // PARSECOMMAND E COMMANDPARSERSELECTOR NON SONO FINALI E TANTO MENO CORRETTI!!!!
     /**
      * Takes the input command and if it's valid, calls the command router.
@@ -464,7 +445,7 @@ public class TUIView implements ViewInterface {
             return;
         }
         if(tuiState.equals(TUIState.IN_LOBBY)) {
-            System.out.println("Player " + (hadColor ? clientController.getLocalModel().getColors(playerName).colorize(playerName) : playerName) + " left the lobby!");
+            System.out.println("Player " + (hadColor ? oldColor.colorize(playerName) : playerName) + " left the lobby!");
             // se il player non ha ancora scelto il totem e il player che è uscito lo aveva scelto,
             // ristampa la lista dei colori aggiungendo il colore del player che è uscito
             if (!clientController.getLocalModel().getTotemColors().containsKey(this.player) && hadColor) {
@@ -789,6 +770,7 @@ public class TUIView implements ViewInterface {
         }
         System.out.println("\nThe building '" + requestedBuilding.getCardID() + "' has the following effect:\n\n" + requestedBuilding.getEffectDescription());
     }
+
     /**
      * This method prints to terminal the commands who can be performed at every game phase during the entire
      * course of the game.

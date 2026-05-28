@@ -51,7 +51,6 @@ public class GameController {
     /**
      * This method calls the respective method in Game to add a player while in Lobby State
      */
-
     public synchronized void notifyAll(Consumer<ClientNotifier> action){
         for(ClientNotifier notifier : connectedClients.values()){
             notificationThreads.submit( () -> {
@@ -188,8 +187,6 @@ public class GameController {
         }
     }
 
-    // chiamata da parte client quando il player vuole startare il game.
-    // throwa l'eccezione se cerca di far partire il game senza che tutti i giocatori siano entrati
     public void startGame(String requestingPlayer) {
         if(!requestingPlayer.equals(hostClient)) {
             throw new NotTheHostException("ERROR: you can't start the game if you're not the host!");

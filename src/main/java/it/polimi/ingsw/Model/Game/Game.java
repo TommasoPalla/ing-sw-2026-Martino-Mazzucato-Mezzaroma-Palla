@@ -161,6 +161,7 @@ public class Game {
     public Map<String,Integer> startGame(){
         isStarted = true;
         this.era = 1;
+        this.era = 1;
         this.currentRound = 0;
         this.currentPhase = GamePhase.START_GAME;
         this.deck = new Deck(this, jsonCardsPath);
