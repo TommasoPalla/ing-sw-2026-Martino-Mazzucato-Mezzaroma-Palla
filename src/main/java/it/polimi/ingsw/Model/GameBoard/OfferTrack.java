@@ -136,7 +136,6 @@ public class OfferTrack{
      * therefore no checkIP is needed other than cards' era.
      */
     public void repopulateTopBuildingCards(){
-        //topBuildingCard = new ArrayList<>();
         int era = game.getEra();
         while(game.getDeck().getBuildingsDeck().peek().getEra() == era){
             // getEra potrebbe lanciare eccezione, come gestirlo?
@@ -154,5 +153,9 @@ public class OfferTrack{
         topRow = new ArrayList<>();
     }
 
-    public void moveBuildings(){bottomBuildingCard = new ArrayList<>(topBuildingCard);}
+    public void moveBuildings(){
+        bottomBuildingCard.clear();
+        bottomBuildingCard.addAll(topBuildingCard);
+        topBuildingCard = new ArrayList<>();
+    }
 }
