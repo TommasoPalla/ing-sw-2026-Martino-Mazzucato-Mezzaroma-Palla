@@ -117,7 +117,7 @@ public class TUIView implements ViewInterface {
             case CREATE_GAME            -> commandParser.parseCreateGame(argsString);
             case JOIN_GAME              -> joinAvailableGames();
             case LEAVE_GAME             -> clientController.leaveGame();
-            case START_GAME             -> clientController.startGame(player);
+            case START_GAME             -> clientController.startGame();
             case MODIFY_NAME            -> commandParser.parseModifyName(argsString);
             case CHOOSE_TOTEM_COLOR     -> commandParser.parseChooseTotemColor(argsString);
             case SHOW_OFFER_TRACK       -> printOfferTrack();
@@ -126,6 +126,7 @@ public class TUIView implements ViewInterface {
             case SHOW_MY_TRIBE          -> printTribe(player);
             case SHOW_OTHER_TRIBE       -> printTribe(commandParser.parseOtherTribe(argsString));
             case DRAW_CARD              -> commandParser.parseDrawCard(argsString);
+            case PASS_TURN              -> clientController.passTurn();
             case PLACE_TOTEM            -> commandParser.parseChooseOfferTile(argsString);
             case HELP                   -> printAvailableActions(clientController.getClientState(), true);
             case SHOW_BUILDING_INFO     -> printCardInfo(argsString);
@@ -638,6 +639,27 @@ public class TUIView implements ViewInterface {
         System.out.println();
     }
 
+    @Override
+    public void notifyEndGame(Map<String, Integer> finalRanking) {
+        System.out.println();
+        System.out.println(TuiIcons.SHAMANS_STARS + Color.YELLOW.colorize("The game has ended!") + TuiIcons.SHAMANS_STARS);
+        System.out.println();
+        System.out.println("This is the final ranking:");
+        boolean winner = true;
+        for(Map.Entry<String, Integer> entry : finalRanking.entrySet()) {
+            player = entry.getKey();
+            System.out.print("- " + clientController.getLocalModel().getTotemColors().get(player).colorize(player) + ": " + entry.getValue());
+            if(winner) {
+                System.out.println(" " + TuiIcons.PRESTIGE_BONUS);
+                winner = false;
+            }
+            else System.out.println();
+        }
+        System.out.println("Congratulations to everyone! You will be now redirected to setup...");
+    }
+
+    // METHODS FOR PRINTING INFORMATION LIKE CARDS, OFFER TRACK, AVAILABLE COMMANDS AND ACTIONS
+
     /**
      * Prints to terminal the available colors the players can choose while in the lobby.
      */
@@ -706,7 +728,7 @@ public class TUIView implements ViewInterface {
                     gameJoined = true;
                     // prova a joinare il game
                     try {
-                        clientController.joinGame(player, gameID);
+                        clientController.joinGame(gameID);
                     }
                     catch (NotJoinableGameException e) {
                         System.out.println(e.getMessage());
@@ -754,6 +776,7 @@ public class TUIView implements ViewInterface {
             case DRAW_CARD:
                 System.out.println("These are the available actions:");
                 System.out.println("- draw_card(top/bottom, char/building, offer_track_index): To draw a card from top or bottom row. You have also to specify if the card\nis a character card or a building and the index of the row.");
+                System.out.println("- pass_turn(): To pass your turn to the next player. Available only if there are no characters cards left to draw");
                 break;
         }
         if(help && clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) printGeneralCommands();

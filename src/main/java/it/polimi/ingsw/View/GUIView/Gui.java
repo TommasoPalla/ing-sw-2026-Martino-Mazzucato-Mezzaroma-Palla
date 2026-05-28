@@ -220,6 +220,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyEndGame(Map<String, Integer> finalRanking) {
+
+    }
+
+    @Override
     public void showCreationChoiceScene() throws IOException {
 
         Platform.runLater(() -> {//serve a thread, carica la scena appena possibile, lambda e esempio di uso gui con thread
@@ -356,7 +361,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     public void handleGameID(int ID) throws IOException{
         lobbyScene();
-        controller.joinGame(nickname, ID);
+        controller.joinGame(ID);
     }
 
     public void handleNickname(String Nickname) throws IOException{

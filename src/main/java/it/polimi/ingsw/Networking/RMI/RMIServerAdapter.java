@@ -144,7 +144,15 @@ public class RMIServerAdapter implements ServerConnection {
         } catch (RemoteException e) {
             System.out.println("ERROR: remote error, could not draw card" + e.getMessage());
         }
+    }
 
+    @Override
+    public void passTurn() {
+        try {
+            serverStub.passTurn(clientStub);
+        } catch (RemoteException e) {
+            System.out.println("ERROR: remote error, could not draw card" + e.getMessage());
+        }
     }
 
     @Override

@@ -32,4 +32,5 @@ public interface ViewInterface {
     void notifyFood(String playerName, int food);
     void notifyPrestigePoints(String playerName, int pp);
     void notifyEvent(EventType eventType, int foodModified, int ppModified);
+    void notifyEndGame(Map<String, Integer> finalRanking);
 }

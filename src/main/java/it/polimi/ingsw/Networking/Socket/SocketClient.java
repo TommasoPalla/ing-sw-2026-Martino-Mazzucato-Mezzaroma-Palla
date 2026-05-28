@@ -145,6 +145,11 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
+    public void updateEndGame(Map<String, Integer> finalRanking) {
+        controller.updateEndGame(finalRanking);
+    }
+
+    @Override
     public void forceQuit(String disconnectedPlayer) {
         controller.handleServerDisconnection(disconnectedPlayer);
     }

@@ -68,6 +68,11 @@ public interface ServerConnection {
     void drawCard(boolean fromTopRow, boolean fromBuildings, int index);
 
     /**
+     * When the player in turn still has remaining draws but has no more character cards to draw, and he doesn't want
+     * to draw a building card, he can decide to skip his turn to the next player.
+     */
+    void passTurn();
+    /**
      * Ends the player's current turn.
      * @param playerName the name of the player ending the turn.
      */

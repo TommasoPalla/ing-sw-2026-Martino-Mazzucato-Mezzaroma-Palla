@@ -158,6 +158,11 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
+    public void updateEndGame(Map<String, Integer> finalRanking) throws RemoteException {
+        controller.updateEndGame(finalRanking);
+    }
+
+    @Override
     public void forceQuit(String disconnectedPlayer) {
         controller.handleServerDisconnection(disconnectedPlayer);
     }

@@ -114,6 +114,12 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
+    public void passTurn() {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.PASS_TURN);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
     //serve davvero? di base non si passa il turno ma si fanno per forza tutte le azioni possibili
     //e poi il turno viene passato automaticamente
     public void endTurn(String playerName){

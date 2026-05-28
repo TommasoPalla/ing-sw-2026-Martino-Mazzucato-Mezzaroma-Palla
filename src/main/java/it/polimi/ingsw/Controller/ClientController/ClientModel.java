@@ -192,10 +192,10 @@ public class ClientModel {
 
 
     void updateFoodReserve(String playerName, int food) {
-        players.get(playerName).modifyFood(food);
+        players.get(playerName).setFoodReserve(food);
     }
     void updatePrestigePoints(String playerName, int pp) {
-        players.get(playerName).modifyPrestigePoints(pp);
+        players.get(playerName).setPrestigePoints(pp);
     }
     void updateShamansStars(String playerName, int stars) {
         players.get(playerName).addShamansStars(stars);

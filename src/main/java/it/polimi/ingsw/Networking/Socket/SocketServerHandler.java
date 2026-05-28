@@ -223,6 +223,14 @@ public class SocketServerHandler implements Runnable{
                client.updateEra(newEra);
            } catch (IOException e) {}
         });
+        commandHandlers.put(SocketHeaderNames.END_GAME, parameters -> {
+            String finalRankingString = gson.toJson(parameters[0]);
+            Type finalRankingType = new TypeToken<Map<String, Integer>>(){}.getType();
+            Map<String, Integer> finalRanking = gson.fromJson(finalRankingString, finalRankingType);
+            try {
+                client.updateEndGame(finalRanking);
+            } catch (IOException e){}
+        });
         commandHandlers.put(SocketHeaderNames.FORCE_QUIT, parameters -> {
             String disconnectedPlayer = (String) parameters[0];
             try {

@@ -118,9 +118,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyFoodToAdd(String playerName, int food) {
+    public void notifyNewFoodReserve(String playerName, int newFoodReserve) {
         try {
-            clientStub.updateFood(playerName, food);
+            clientStub.updateFood(playerName, newFoodReserve);
         } catch (RemoteException e) {
             //throw new StubException("could not notify");
         }
@@ -136,9 +136,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyPrestigePointsToAdd(String playerName, int points) {
+    public void notifyNewPrestigePoints(String playerName, int newPP) {
         try {
-            clientStub.updatePrestigePoints(playerName, points);
+            clientStub.updatePrestigePoints(playerName, newPP);
         } catch (RemoteException e) {
             //throw new StubException("could not notify");
         }
@@ -203,6 +203,15 @@ public class RMIClientNotifier implements ClientNotifier {
     public void notifyEra(int era) {
         try {
             clientStub.updateEra(era);
+        } catch (RemoteException e){
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyEndGame(Map<String, Integer> finalRanking) {
+        try {
+            clientStub.updateEndGame(finalRanking);
         } catch (RemoteException e){
             //throw new StubException("could not notify");
         }

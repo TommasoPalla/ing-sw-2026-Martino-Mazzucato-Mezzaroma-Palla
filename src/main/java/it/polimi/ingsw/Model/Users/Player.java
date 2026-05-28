@@ -46,16 +46,18 @@ public class Player {
     public OfferTile getCurrentOfferTile() {
         return currentOfferTile;
     }
-    public int getFinalPoints() {
-        return tribe.calculateFinalPoints();
-    }
-
     public int getRemainingAbove() {
         return remainingAbove;
     }
-
     public int getRemainingBelow() {
         return remainingBelow;
+    }
+
+    //setters
+
+    public void setRemainingDraws(int above, int below) {
+        this.remainingAbove = above;
+        this.remainingBelow = below;
     }
 
     //functions

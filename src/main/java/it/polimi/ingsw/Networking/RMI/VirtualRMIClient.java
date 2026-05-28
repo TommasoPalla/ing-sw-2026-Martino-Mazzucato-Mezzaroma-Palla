@@ -186,6 +186,11 @@ public interface VirtualRMIClient extends Remote {
      */
     void updateEra(int era) throws RemoteException;
 
+    /**
+     * Notifies all players that the game is ended and sends them the final ranking.
+     * @param finalRanking the ranking based on final points.
+     */
+    void updateEndGame(Map<String, Integer> finalRanking) throws RemoteException;
 
     /**
      * Forces the client to terminate the session, usually due to a server-side disconnection.

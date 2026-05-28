@@ -180,6 +180,12 @@ public interface VirtualSocketClient {
      */
     void updateEra(int era) throws IOException;
 
+    /**
+     * Notifies the end of the game.
+     * @param finalRanking the final ranking of players.
+     * @throws IOException if TCP communication fails.
+     */
+    void updateEndGame(Map<String,Integer> finalRanking) throws IOException;
 
     /**
      * Forces the client to terminate the session, usually due to a server-side disconnection.

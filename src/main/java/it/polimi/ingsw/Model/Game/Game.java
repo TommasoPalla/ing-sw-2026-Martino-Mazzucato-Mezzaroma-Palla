@@ -385,7 +385,7 @@ public class Game {
 //
 //        for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del gioco
 //            buildingManager.useBuilding(currentPhase, currentPlayer);
-//            currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculateFinalPoints());
+//            currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculatePlayerFinalPoints());
 //            setNextPlayer();
 //        }
 //        ArrayList<Player> ranking = new ArrayList<>(players);

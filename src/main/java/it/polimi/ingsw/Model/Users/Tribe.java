@@ -146,7 +146,7 @@ public class  Tribe implements TribeInterface{
     }
 
 
-    public int calculateFinalPoints() {
+    public int calculatePlayerFinalPoints() {
 
         int populationPoints = 0;
         for (CharacterCard character : population.get(CharacterRole.BUILDER)) {
@@ -166,6 +166,6 @@ public class  Tribe implements TribeInterface{
         }
         int inventorsPoints = numInventors * inventorsPerType.size();
 
-        return (artistsPoints + populationPoints + buildingPoints + inventorsPoints);
+        return this.prestigePoints + artistsPoints + populationPoints + buildingPoints + inventorsPoints;
     }
 }

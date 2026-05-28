@@ -81,26 +81,26 @@ public class TribeTest {
         tribe1.addCharacterToTribe(inventor1);
         tribe1.addCharacterToTribe(inventor1);
         assertEquals(2, tribe1.getInventorsPerType().get(inventor1.getInventorType()));
-        assertEquals(2, tribe1.calculateFinalPoints());
+        assertEquals(2, tribe1.calculatePlayerFinalPoints());
 
         tribe1.addCharacterToTribe(inventor2);
         tribe1.addCharacterToTribe(inventor2);
-        assertEquals(8, tribe1.calculateFinalPoints());
+        assertEquals(8, tribe1.calculatePlayerFinalPoints());
 
         tribe1.addCharacterToTribe(inventor3);
         tribe1.addCharacterToTribe(inventor4);
-        assertEquals(24, tribe1.calculateFinalPoints());
+        assertEquals(24, tribe1.calculatePlayerFinalPoints());
 
         Builder builder = new Builder(1, "hello", 2, 1, 4);
         tribe1.addCharacterToTribe(builder);
         assertEquals(1, tribe1.getPopulation().get(builder.getRole()).size());
-        assertEquals(25, tribe1.calculateFinalPoints());
+        assertEquals(25, tribe1.calculatePlayerFinalPoints());
 
         Artist artist = new Artist(3, "A5", 5);
         tribe1.addCharacterToTribe(artist);
         tribe1.addCharacterToTribe(artist);
         assertEquals(2, tribe1.getPopulation().get(artist.getRole()).size());
-        assertEquals(35, tribe1.calculateFinalPoints());
+        assertEquals(35, tribe1.calculatePlayerFinalPoints());
     }
     @Test
     void buildingsPoints(){

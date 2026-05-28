@@ -10,6 +10,7 @@ public enum SocketHeaderNames {
     LEAVE_GAME,
     CHOOSE_TOTEM_COLOR,
     DRAW_CARD,
+    PASS_TURN,
     CHOOSE_OFFER_TILE,
 
     //conseguenze che il server manda come aggiornamento ai player
@@ -35,6 +36,7 @@ public enum SocketHeaderNames {
     NEXT_PLAYER,
     CHANGED_GAME_PHASE,
     CHANGED_ERA,
+    END_GAME,
 
     PING,
     FORCE_QUIT

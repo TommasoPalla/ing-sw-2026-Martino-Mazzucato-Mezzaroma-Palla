@@ -120,6 +120,12 @@ public class RMIServer implements VirtualRMIServer {
     }
 
     @Override
+    public void passTurn(VirtualRMIClient client) throws RemoteException {
+        PlayerRecord callerRecord = clientRecords.get(client);
+        serverController.passTurn(callerRecord);
+    }
+
+    @Override
     public void chooseTotemColor(VirtualRMIClient client, Color totemColor) throws RemoteException {
         try{
             PlayerRecord callerRecord = clientRecords.get(client);

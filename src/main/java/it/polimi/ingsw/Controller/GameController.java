@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Controller;
 
+import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.CustomException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
@@ -9,7 +10,9 @@ import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
@@ -20,6 +23,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Game controller of a single game instance, used to extract
@@ -174,7 +178,7 @@ public class GameController {
                     System.out.println("[GAME " + gameInstance.getGameID() + "] Player '" + nextPlayer.getName() + "' has 0 draws, returning to tile.");
                     gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(nextPlayer, gameInstance.getBuildingManager());
                     //still need to notify food bonus
-                    notifyAll(n -> n.notifyFoodToAdd(nextPlayer.getName(), gameInstance.getOfferTrack().getTurnTile().getTileModifier()[gameInstance.getOfferTrack().getTurnTile().getTurnOrder().indexOf(nextPlayer)]));
+                    notifyAll(n -> n.notifyNewFoodReserve(nextPlayer.getName(), nextPlayer.getTribe().getFoodReserve()));
                     return setNextPlayer();
                 }
             }
@@ -231,7 +235,8 @@ public class GameController {
             System.out.println("[GAME " + gameInstance.getGameID() + "] Round " + newRound + " started.");
         } catch (LastRoundException e) {
             System.out.println("[GAME " + gameInstance.getGameID() + "] Final round reached!");
-            // chiama i metodi per il calcolo finale dei punti e notifica i players
+            calculateFinalPoints();
+            throw new EndOfGameException();
         }
         notifyAll(n -> {
             n.notifyStartRound(lastEventsResults);
@@ -255,31 +260,6 @@ public class GameController {
         });
 
         String firstPlayer = gameInstance.setFirstPlayer();
-        try {
-//            notifyAll(n -> {
-//                    n.notifyNextPlayer(firstPlayer);
-//            });
-            // ????? che roba e' questa qua sotto?
-            /*
-            for (ClientNotifier client : connectedClients.values()) {
-                //notifyAll(showUpdateOfferTrack();
-
-                //if(oldEra != gameInstance.getEra()){
-                //    notifyAll(changedEra); per farlo fancy si potrebbe mandare la carta della nuova era
-                //changedEra dovrebbe mostrare interruzione di repopulateTopRow e cambio di edifici: più complicato
-                //ma scritto nelle regole
-
-                //inoltra chiamata a server controller per update round a tutti i player
-                //client.updateCurrentPlayer(turnOrder.getFirst().getName()); @Deprecated
-                //client.notifyNewCurrentPlayer();
-            }*/
-        }
-        catch (LastRoundException e) {
-            //throw EndOfGame_Exception();
-        } catch (StubException e) {
-            //handleCriticalDisconnection();
-        }
-        //setNextPlayer();
     }
 
     /** Handles the player request to place the totem on a specific
@@ -331,7 +311,7 @@ public class GameController {
                 int bonus = p.getCurrentOfferTile().getFoodBonus();
                 if (bonus > 0) {
                     p.getTribe().modifyFood(bonus);
-                    notifyAll(n -> n.notifyFoodToAdd(p.getName(), bonus));
+                    notifyAll(n -> n.notifyNewFoodReserve(p.getName(), p.getTribe().getFoodReserve()));
                 }
             }
 
@@ -365,28 +345,68 @@ public class GameController {
                     notifyAll( n -> {
                         n.notifyDrawnCard(playerName, fromTopRow, fromBuilding, index);
                     });
+
+                    // If the player still has cards to draw from the top row, but the row is empty, and he cannot buy any
+                    // building from it, then it sets its remaining draws from above to 0
+                    boolean found = false;
+                    Tribe tribe = currPlayer.getTribe();
+                    if (currPlayer.getRemainingAbove() > 0) {
+                        for (Card card : gameInstance.getOfferTrack().getTopRow()) {
+                            if (!(card instanceof EventCard)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            int minCost = 0;
+                            for (BuildingCard buildingCard : gameInstance.getOfferTrack().getTopBuildingCard()) {
+                                if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
+                            }
+                            if (minCost == 0 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
+                                currPlayer.setRemainingDraws(0, currPlayer.getRemainingBelow());
+                        }
+                    }
+
+                    // If the player still has cards to draw from the bottom row, but the row is empty, and he cannot buy any
+                    // building from it, then it sets its remaining draws from below to 0
+                    if (currPlayer.getRemainingBelow() > 0) {
+                        found = false;
+                        for (Card card : gameInstance.getOfferTrack().getBottomRow()) {
+                            if (!(card instanceof EventCard)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            int minCost = 0;
+                            for (BuildingCard buildingCard : gameInstance.getOfferTrack().getBottomBuildingCard()) {
+                                if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
+                            }
+                            if (minCost == 0 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
+                                currPlayer.setRemainingDraws(currPlayer.getRemainingAbove(), 0);
+                        }
+                    }
                     
                     if (currPlayer.getRemainingAbove() == 0 && currPlayer.getRemainingBelow() == 0) {
                         // Return to tile food bonus
-                        int playersFood = currPlayer.getTribe().getFoodReserve();
-                        int foodModifier = gameInstance.getOfferTrack().getTurnTile().getTileModifier()[gameInstance.getOfferTrack().getTurnTile().getTurnOrder().indexOf(currPlayer)];
                         gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
-                        if (foodModifier > 0)
-                            notifyAll(n -> n.notifyFoodToAdd(playerName, foodModifier));
-                        else if (foodModifier < 0) {
-                            if (playersFood == 0)
-                                notifyAll(n -> n.notifyPrestigePointsToAdd(playerName, -2));
-                            else
-                                notifyAll(n -> n.notifyFoodToAdd(playerName, foodModifier));
-                        }
+//                        if (foodModifier > 0)
+//                            notifyAll(n -> n.notifyNewFoodReserve(playerName, currPlayer.getTribe().getFoodReserve()));
+//                        else if (foodModifier < 0) {
+//                            if (playersFood == 0)
+//                                notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()));
+//                            else
+//                                notifyAll(n -> n.notifyNewFoodReserve(playerName, currPlayer.getTribe().getFoodReserve()));
+//                        }
+                        notifyAll(n -> n.notifyNewFoodReserve(playerName, currPlayer.getTribe().getFoodReserve()));
+                        notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()));
 
                         try {
                             setNextPlayer();
                         } catch (LastPlayerOfTurnException e) {
-                            //phase ends => resolve events and start next round
-
                             // EVENT RESOLUTION
                             //non funziona non so perche' TODO fixare
+                            gameInstance.setCurrentPhase(GamePhase.ON_EVENT);
                             Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(gameInstance.getOfferTrack().getBottomEvents(), this.gameInstance.getPlayers(), gameInstance.getBuildingManager());
                             startRound(eventsResults);
                         }
@@ -395,6 +415,70 @@ public class GameController {
                    //handleCriticalDisconnection();
                 }
             }
+    }
+
+    public void handlePassTurn(String playerName) {
+        Player currPlayer = gameInstance.getPlayerByName(playerName);
+        OfferTrack offerTrack = gameInstance.getOfferTrack();
+
+        try {
+            if (currPlayer.getRemainingAbove() > 0) {
+                for (Card card : offerTrack.getTopRow()) {
+                    if (!(card instanceof EventCard)) {
+                        throw new IllegalClientStateActionException("ERROR: You still have to draw cards!");
+                    }
+                }
+            }
+
+            if (currPlayer.getRemainingBelow() > 0) {
+                for (Card card : offerTrack.getBottomRow()) {
+                    if (!(card instanceof EventCard)) {
+                        throw new IllegalClientStateActionException("ERROR: You still have to draw cards!");
+                    }
+                }
+            }
+            currPlayer.setRemainingDraws(0,0);
+            //TODO: da fare chiamata a notifyTurnPassed
+
+
+            // Return to tile food bonus
+            gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
+            notifyAll(n -> n.notifyNewFoodReserve(playerName, currPlayer.getTribe().getFoodReserve()));
+            notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()));
+
+            try {
+                setNextPlayer();
+            } catch (LastPlayerOfTurnException e) {
+                // EVENT RESOLUTION
+                //non funziona non so perche' TODO fixare
+                gameInstance.setCurrentPhase(GamePhase.ON_EVENT);
+                Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(gameInstance.getOfferTrack().getBottomEvents(), this.gameInstance.getPlayers(), gameInstance.getBuildingManager());
+                startRound(eventsResults);
+            }
+        } catch (StubException e) {
+        //handleCriticalDisconnection();
+        }
+    }
+
+    public void calculateFinalPoints() {
+        Map<String,Integer> finalPoints = new LinkedHashMap<>();
+        for (Player player : gameInstance.getPlayers()) {
+            gameInstance.getBuildingManager().useBuilding(GamePhase.END_GAME, player);
+            finalPoints.put(player.getName(), player.getTribe().calculatePlayerFinalPoints());
+        }
+        Map<String, Integer> finalRanking = finalPoints.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new
+                ));
+
+        notifyAll(n -> {
+            n.notifyEndGame(finalRanking);
+        });
     }
 
     /*TODO: definire la fase di shutdown del game a seguito di un client disconnesso e gestire

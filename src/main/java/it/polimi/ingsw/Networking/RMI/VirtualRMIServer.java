@@ -49,6 +49,14 @@ public interface VirtualRMIServer extends Remote {
     void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException;
 
     /**
+     * When the player in turn still has remaining draws but has no more character cards to draw, and he doesn't want
+     * to draw a building card, he can decide to skip his turn to the next player.
+     * @param client the stub of the client performing the action.
+     * @throws RemoteException if RMI communication fails.
+     */
+    void passTurn(VirtualRMIClient client) throws RemoteException;
+
+    /**
      * Chooses a totem color for the current game.
      * @param client the stub of the client performing the action.
      * @param totemColor the selected Color.

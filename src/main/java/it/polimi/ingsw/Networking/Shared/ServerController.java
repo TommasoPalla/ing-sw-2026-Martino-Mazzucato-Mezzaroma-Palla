@@ -183,6 +183,17 @@ public class ServerController {
             }
         } catch (IllegalDrawException e){
             throw new IllegalDrawException();
+        } catch (EndOfGameException e) {
+            activeGames.remove(playerRecord.gameID());
+        }
+    }
+
+    public void passTurn(PlayerRecord playerRecord){
+        System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + " passing turn");
+        GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
+        String playerName = playerRecord.playerName();
+        synchronized (currentController){
+            currentController.handlePassTurn(playerName);
         }
     }
 

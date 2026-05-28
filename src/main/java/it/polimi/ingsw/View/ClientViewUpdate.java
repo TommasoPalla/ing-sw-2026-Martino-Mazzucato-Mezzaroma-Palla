@@ -37,4 +37,5 @@ public interface ClientViewUpdate {
     void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings);
     void updateGamePhase(GamePhase phase);
     void updateCurrentEra(int era);
+    void updateEndGame(Map<String, Integer> finalRanking);
 }

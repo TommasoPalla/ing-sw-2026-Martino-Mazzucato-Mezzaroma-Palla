@@ -17,6 +17,7 @@ public enum CommandType {
     SHOW_BOTTOM_ROW("show_bottom_row", 0),
     PLACE_TOTEM("place_totem", 1),
     DRAW_CARD("draw_card", 3),
+    PASS_TURN("pass_turn", 0),
     SHOW_BUILDING_INFO("show_building_info", 1),
     HELP("help", 0);
 

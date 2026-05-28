@@ -225,7 +225,9 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     @Override
     public void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_ROUND, lastEventsResults);
+        Type type = new TypeToken<Map<EventType, ArrayList<PlayerEventResults>>>(){}.getType();
+        JsonElement serializedEvents = gson.toJsonTree(lastEventsResults, type);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_ROUND, serializedEvents);
         outStream.println(gson.toJson(message));
     }
 
@@ -243,8 +245,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     //CALLBACKS updates from server
     @Override
-    public void notifyFoodToAdd(String playerName, int food) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_FOOD, playerName, food);
+    public void notifyNewFoodReserve(String playerName, int newFoodReserve) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_FOOD, playerName, newFoodReserve);
         outStream.println(gson.toJson(message));
     }
 
@@ -255,8 +257,8 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifyPrestigePointsToAdd(String playerName, int points) {
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_PRESTIGE_POINTS, playerName, points);
+    public void notifyNewPrestigePoints(String playerName, int newPP) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_PRESTIGE_POINTS, playerName, newPP);
         outStream.println(gson.toJson(message));
     }
 
@@ -292,12 +294,6 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         outStream.println(gson.toJson(message));
     }
 
-    //    @Override
-    //    public void notifyNextPlayer(String playerName) {
-    //        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.NEXT_PLAYER, playerName);
-    //        outStream.println(gson.toJson(message));
-    //    }
-
     @Override
     public void notifyGamePhase(GamePhase newPhase) {
         JsonElement serializedPhase = gson.toJsonTree(newPhase, GamePhase.class);
@@ -312,6 +308,13 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         outStream.println(gson.toJson(message));
     }
 
+    @Override
+    public void notifyEndGame(Map<String, Integer> finalRanking) {
+        Type type = new TypeToken<Map<String, Integer>>(){}.getType();
+        JsonElement serializedRanking = gson.toJsonTree(finalRanking, type);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.END_GAME, serializedRanking);
+        outStream.println(gson.toJson(message));
+    }
 
     @Override
     public void notifyForceQuit(String disconnectedPlayer) {

@@ -9,6 +9,7 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Networking.Shared.ServerConnection;
 import it.polimi.ingsw.View.ClientViewUpdate;
@@ -112,9 +113,9 @@ public class ClientController implements ClientViewUpdate {
         return availableGames;
     }
 
-    public void joinGame(String playerName, int gameID){
+    public void joinGame(int gameID){
         try {
-            connection.joinGame(playerName, gameID);
+            connection.joinGame(this.playerName, gameID);
         } catch (NotJoinableGameException e) {
             throw new NotJoinableGameException(e.getMessage());
         }
@@ -135,17 +136,16 @@ public class ClientController implements ClientViewUpdate {
 
     /**
      * This method asks the server to start an existing game. It must be run by the host player.
-     * @param player the player host.
      * @throws NotTheHostException Throw an exception if the player is not the host.
      * @throws NotEnoughPlayersException Throws an exception if tried to start the game with
      * an insufficient number of players.
      */
-    public void startGame(String player) throws NotTheHostException, NotEnoughPlayersException{
+    public void startGame() throws NotTheHostException, NotEnoughPlayersException{
         if(clientState != ClientState.IN_LOBBY){
             throw new IllegalClientStateActionException("ERROR: You cannot start a game if you're not in one!");
         }
         try {
-            connection.startGame(player, localModel.getGameId());
+            connection.startGame(this.playerName, localModel.getGameId());
         } catch (NotTheHostException e) {
             throw new NotTheHostException(e.getMessage());
         } catch (TotemColorNotChosen e) {
@@ -202,9 +202,7 @@ public class ClientController implements ClientViewUpdate {
     * */
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
         if(clientState != ClientState.DRAW_CARD) {
-            System.out.println("you cant do that right now");
-            return;
-            //throw new IllegalActionPhaseException();
+            throw new IllegalClientStateActionException("You cannot draw a card right now!");
         }
         String currentPlayer = localModel.getCurrentPlayer();
         if(!currentPlayer.isEmpty() && currentPlayer.equals(playerName)){
@@ -238,6 +236,31 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
+    public void passTurn() {
+        if (clientState != ClientState.DRAW_CARD) {
+            throw new IllegalClientStateActionException("ERROR: You cannot do that right now!");
+        }
+
+        LightTribe tribe = localModel.getPlayerTribe(this.playerName);
+        if (tribe.getRemainingAbove() > 0) {
+            for (Card card : localModel.getTopRow()) {
+                if (!(card instanceof EventCard)) {
+                    throw new IllegalClientStateActionException("ERROR: You still have to draw cards!");
+                }
+            }
+        }
+
+        if (tribe.getRemainingBelow() > 0) {
+            for (Card card : localModel.getBottomRow()) {
+                if (!(card instanceof EventCard)) {
+                    throw new IllegalClientStateActionException("ERROR: You still have to draw cards!");
+                }
+            }
+        }
+
+        tribe.setRemainingDraws(0,0);
+        connection.passTurn();
+    }
     /*ClientViewUpdate interface override: update methods called by RMI/socket Client
     when an update is sent by the server.
     Valutare se aggiungere per ogni metodo lo show() di TUI o GUI (secondo me si),
@@ -348,6 +371,46 @@ public class ClientController implements ClientViewUpdate {
         }
         view.notifyCardDrawn(playerName, drawn, fromTopRow, fromBuilding);
 
+        // If the player still has cards to draw from the top row, but the row is empty, and he cannot buy any
+        // building from it, then it sets its remaining draws from above to 0
+        boolean found = false;
+        if (tribe.getRemainingAbove() > 0) {
+            for (Card card : localModel.getTopRow()) {
+                if (!(card instanceof EventCard)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                int minCost = 0;
+                for (BuildingCard buildingCard : localModel.getTopBuildings()){
+                    if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
+                }
+                if (minCost == 0 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
+                    tribe.setRemainingDraws(0, tribe.getRemainingBelow());
+            }
+        }
+
+        // If the player still has cards to draw from the bottom row, but the row is empty, and he cannot buy any
+        // building from it, then it sets its remaining draws from below to 0
+        if (tribe.getRemainingBelow() > 0) {
+            found = false;
+            for (Card card : localModel.getBottomRow()) {
+                if (!(card instanceof EventCard)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                int minCost = 0;
+                for (BuildingCard buildingCard : localModel.getBottomBuildings()){
+                    if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
+                }
+                if (minCost == 0 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
+                    tribe.setRemainingDraws(tribe.getRemainingAbove(), 0);
+            }
+        }
+
         if (playerName.equals(localModel.getCurrentPlayer()) &&
             tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
             localModel.freeOfferTile(playerName);
@@ -374,7 +437,7 @@ public class ClientController implements ClientViewUpdate {
 
     private void updateInitialFood(Map<String, Integer> initialFood) {
         for (String player : initialFood.keySet()) {
-            localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
+            localModel.getPlayerTribe(player).setFoodReserve(initialFood.get(player));
         }
         view.notifyGiveInitialFood(initialFood);
         updateStartRound(Collections.emptyMap());
@@ -508,6 +571,15 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentEra(int era) {
         localModel.updateEra(era);
+    }
+
+    @Override
+    public void updateEndGame(Map<String, Integer> finalRanking) {
+        for (String playerName : finalRanking.keySet()) {
+            localModel.updatePrestigePoints(playerName, finalRanking.get(playerName));
+        }
+        clientState = ClientState.SETUP;
+        view.notifyEndGame(finalRanking);
     }
 
     private void syncClientState() {

@@ -96,10 +96,11 @@ public interface ClientNotifier {
 
     /**
      * Updates a player's food reserve.
-     * @param playerName the name of the player.
-     * @param food the amount of food to add or the new total (depending on implementation).
+     *
+     * @param playerName     the name of the player.
+     * @param newFoodReserve the new food reserve of the player.
      */
-    void notifyFoodToAdd(String playerName, int food);
+    void notifyNewFoodReserve(String playerName, int newFoodReserve);
 
     /**
      * Updates a player's Shaman Stars.
@@ -110,10 +111,11 @@ public interface ClientNotifier {
 
     /**
      * Updates a player's Prestige Points.
+     *
      * @param playerName the name of the player.
-     * @param points the points to add.
+     * @param newPP      the new prestige points of the player.
      */
-    void notifyPrestigePointsToAdd(String playerName, int points);
+    void notifyNewPrestigePoints(String playerName, int newPP);
 
     /**
      * Updates the top row character cards.
@@ -156,6 +158,12 @@ public interface ClientNotifier {
      * @param era the new era.
      */
     void notifyEra(int era);
+
+    /**
+     * Notifies all players that the game is ended and sends them the final ranking.
+     * @param finalRanking the ranking based on final points.
+     */
+    void notifyEndGame(Map<String, Integer> finalRanking);
 
     /**
      * Forces the client to quit, usually due to a critical error or disconnection.
