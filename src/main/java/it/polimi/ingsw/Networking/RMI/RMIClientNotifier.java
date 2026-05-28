@@ -107,6 +107,14 @@ public class RMIClientNotifier implements ClientNotifier {
         }
     }
 
+    @Override
+    public void notifyPassedTurn(String playerName) {
+        try {
+            clientStub.turnPassed(playerName);
+        } catch (RemoteException e){
+
+        }
+    }
 
     @Override
     public void notifyChosenTile(String playerName, int index) {
@@ -127,9 +135,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyShamansStarsToAdd(String playerName, int food) {
+    public void notifyShamansStarsToAdd(String playerName, int stars) {
         try {
-            clientStub.updateShamansStars(playerName, food);
+            clientStub.updateShamansStars(playerName, stars);
         } catch (RemoteException e) {
             //throw new StubException("could not notify");
         }

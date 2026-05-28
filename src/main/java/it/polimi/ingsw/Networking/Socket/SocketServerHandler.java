@@ -143,6 +143,12 @@ public class SocketServerHandler implements Runnable{
                 client.updateDrawnCard(playerName, fromTopRow, fromBuildings, index);
             } catch (IOException e){}
         });
+        commandHandlers.put(SocketHeaderNames.TURN_PASSED, parameters -> {
+           String playerName = (String) parameters[0];
+           try {
+                client.updateTurnPassed(playerName);
+           } catch (IOException e){}
+        });
         commandHandlers.put(SocketHeaderNames.CHOSEN_OFFER_TILE, parameters -> {
             String playerName = (String) parameters[0];
             int index = ((Double) parameters[1]).intValue();
@@ -223,7 +229,7 @@ public class SocketServerHandler implements Runnable{
                client.updateEra(newEra);
            } catch (IOException e) {}
         });
-        commandHandlers.put(SocketHeaderNames.END_GAME, parameters -> {
+        commandHandlers.put(SocketHeaderNames.GAME_ENDED, parameters -> {
             String finalRankingString = gson.toJson(parameters[0]);
             Type finalRankingType = new TypeToken<Map<String, Integer>>(){}.getType();
             Map<String, Integer> finalRanking = gson.fromJson(finalRankingString, finalRankingType);
@@ -249,9 +255,7 @@ public class SocketServerHandler implements Runnable{
 
                 Consumer<Object[]> handler = commandHandlers.get(socketHeader);
                 if(handler != null){
-                    new Thread( () -> {
-                        handler.accept(socketDTO.getParameters());
-                    }).start();
+                    handler.accept(socketDTO.getParameters());
                 } else {
                     System.out.println("ERROR: " + socketHeader + " is not a valid command"); //chiaramente un placeholder, va messo qualcosa di meglio
                 }

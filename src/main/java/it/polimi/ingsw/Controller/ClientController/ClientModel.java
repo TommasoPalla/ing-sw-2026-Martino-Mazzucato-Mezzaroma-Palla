@@ -114,7 +114,7 @@ public class ClientModel {
 
     public boolean isOccupied(int index) { return offerTiles.get(index).isOccupied(); }
 
-    public void freeOfferTile(String playerName) {
+    public void moveTotemToTurnTile(String playerName) {
         for (OfferTile tile : offerTiles) {
             if (playerName.equals(tile.getCurrentOccupant())) {
                 tile.free();
@@ -201,7 +201,7 @@ public class ClientModel {
         players.get(playerName).addShamansStars(stars);
     }
 
-    //aggiungere metodo clearOfferTile(), in player c'è freeOfferTile e in OfferTile c'è free, decidere cosa fare
+    //aggiungere metodo clearOfferTile(), in player c'è moveTotemToTurnTile e in OfferTile c'è free, decidere cosa fare
     /*
     void updateOfferTile(String playerName, Character index) {
         currentOfferTiles.put(playerName, index);

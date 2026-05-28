@@ -137,8 +137,7 @@ public class OfferTrack{
      */
     public void repopulateTopBuildingCards(){
         int era = game.getEra();
-        while(game.getDeck().getBuildingsDeck().peek().getEra() == era){
-            // getEra potrebbe lanciare eccezione, come gestirlo?
+        while(!game.getDeck().getBuildingsDeck().isEmpty() && game.getDeck().getBuildingsDeck().peek().getEra() == era){
             topBuildingCard.add(game.getDeck().getBuildingsDeck().pop());
         }
     }

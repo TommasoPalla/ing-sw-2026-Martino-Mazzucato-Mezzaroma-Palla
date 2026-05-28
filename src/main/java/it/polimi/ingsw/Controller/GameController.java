@@ -425,7 +425,7 @@ public class GameController {
             if (currPlayer.getRemainingAbove() > 0) {
                 for (Card card : offerTrack.getTopRow()) {
                     if (!(card instanceof EventCard)) {
-                        throw new IllegalClientStateActionException("ERROR: You still have to draw cards!");
+                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
                     }
                 }
             }
@@ -433,13 +433,13 @@ public class GameController {
             if (currPlayer.getRemainingBelow() > 0) {
                 for (Card card : offerTrack.getBottomRow()) {
                     if (!(card instanceof EventCard)) {
-                        throw new IllegalClientStateActionException("ERROR: You still have to draw cards!");
+                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
                     }
                 }
             }
             currPlayer.setRemainingDraws(0,0);
-            //TODO: da fare chiamata a notifyTurnPassed
 
+            notifyAll( n -> n.notifyPassedTurn(playerName));
 
             // Return to tile food bonus
             gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
@@ -450,7 +450,6 @@ public class GameController {
                 setNextPlayer();
             } catch (LastPlayerOfTurnException e) {
                 // EVENT RESOLUTION
-                //non funziona non so perche' TODO fixare
                 gameInstance.setCurrentPhase(GamePhase.ON_EVENT);
                 Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(gameInstance.getOfferTrack().getBottomEvents(), this.gameInstance.getPlayers(), gameInstance.getBuildingManager());
                 startRound(eventsResults);

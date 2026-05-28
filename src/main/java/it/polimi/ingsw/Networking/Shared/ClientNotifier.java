@@ -95,6 +95,12 @@ public interface ClientNotifier {
     void notifyChosenTile(String playerName, int index);
 
     /**
+     * Notifies that a player passed their turn.
+     * @param playerName the name of the player passing its turn
+     */
+    void notifyPassedTurn(String playerName);
+
+    /**
      * Updates a player's food reserve.
      *
      * @param playerName     the name of the player.
@@ -105,9 +111,9 @@ public interface ClientNotifier {
     /**
      * Updates a player's Shaman Stars.
      * @param playerName the name of the player.
-     * @param food the number of stars.
+     * @param stars the number of stars.
      */
-    void notifyShamansStarsToAdd(String playerName, int food);
+    void notifyShamansStarsToAdd(String playerName, int stars);
 
     /**
      * Updates a player's Prestige Points.

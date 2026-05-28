@@ -190,6 +190,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyTurnPassed(String playerThatPassed, String newCurrentPlayer) {
+
+    }
+
+    @Override
     public void notifyNewGamePhase(GamePhase newGamePhase) {
 
     }

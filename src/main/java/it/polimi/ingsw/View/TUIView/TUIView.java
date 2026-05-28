@@ -574,6 +574,11 @@ public class TUIView implements ViewInterface {
         else if(tuiState == TUIState.SHOW_BOTTOM_ROW && !topRow) printBottomRow();
     }
 
+    @Override
+    public void notifyTurnPassed(String playerThatPassed, String newCurrentPlayer) {
+        System.out.println("\n" + playerThatPassed + " passed his turn! It's now " + newCurrentPlayer + "'s turn!");
+    }
+
     /**
      * The player is notified when a player has placed his totem. If the player was visualizing the offer track
      * before this notification, the offer track view is reloaded.

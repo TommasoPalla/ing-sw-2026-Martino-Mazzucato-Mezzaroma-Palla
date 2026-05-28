@@ -73,7 +73,9 @@ public interface VirtualSocketClient {
      * @throws IOException if TCP communication fails.
      */
     void updatePlayerLeftGame(String playerName) throws IOException;
+
     void updateNewHost() throws IOException;
+
     /**
      * Notifies that a player has chosen a totem color.
      * @param playerName the name of the player.
@@ -99,6 +101,8 @@ public interface VirtualSocketClient {
      * @throws IOException if TCP communication fails.
      */
     void updateDrawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws  IOException;
+
+    void updateTurnPassed(String playerName) throws IOException;
 
     /**
      * Notifies that a player has chosen a specific tile on the offer track.

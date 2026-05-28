@@ -245,7 +245,7 @@ public class ClientController implements ClientViewUpdate {
         if (tribe.getRemainingAbove() > 0) {
             for (Card card : localModel.getTopRow()) {
                 if (!(card instanceof EventCard)) {
-                    throw new IllegalClientStateActionException("ERROR: You still have to draw cards!");
+                    throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
                 }
             }
         }
@@ -253,12 +253,12 @@ public class ClientController implements ClientViewUpdate {
         if (tribe.getRemainingBelow() > 0) {
             for (Card card : localModel.getBottomRow()) {
                 if (!(card instanceof EventCard)) {
-                    throw new IllegalClientStateActionException("ERROR: You still have to draw cards!");
+                    throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
                 }
             }
         }
 
-        tribe.setRemainingDraws(0,0);
+        //tribe.setRemainingDraws(0,0);
         connection.passTurn();
     }
     /*ClientViewUpdate interface override: update methods called by RMI/socket Client
@@ -285,8 +285,6 @@ public class ClientController implements ClientViewUpdate {
         createLocalModel(gameID, numPlayers);
         this.clientState = ClientState.IN_LOBBY;
         view.notifyGameCreated(gameID);
-        //TODO: !!!! capire cosa ci va qui, questo e' il metodo che viene chiamato dal server per dire
-        // "oh fra guarda che ho creato il game che mi hai chiesto di creare" !!!!
     }
 
     @Override
@@ -411,15 +409,36 @@ public class ClientController implements ClientViewUpdate {
             }
         }
 
-        if (playerName.equals(localModel.getCurrentPlayer()) &&
-            tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
-            localModel.freeOfferTile(playerName);
-            try {
-                updateCurrentPlayer();
-            } catch (LastPlayerOfTurnException e) {
-                localModel.setCurrentPlayer("");
+        System.out.println("DEBUG: Card drawn by " + playerName + ". Remaining draws: " + tribe.getRemainingAbove() + "/" + tribe.getRemainingBelow());
+        if (tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
+            System.out.println("DEBUG: Player " + playerName + " finished draws. Moving to turn tile.");
+            localModel.moveTotemToTurnTile(playerName);
+            
+            // If the player who finished was the current one, we trigger update
+            if (playerName.equals(localModel.getCurrentPlayer())) {
+                try {
+                    updateCurrentPlayer();
+                } catch (LastPlayerOfTurnException e) {
+                    localModel.setCurrentPlayer("");
+                }
             }
         }
+    }
+
+    @Override
+    public void updateTurnPassed(String playerName){
+        System.out.println("DEBUG: " + playerName + " has passed his turn");
+
+        localModel.getPlayerTribe(playerName).setRemainingDraws(0, 0);
+        localModel.moveTotemToTurnTile(playerName);
+
+        try {
+            updateCurrentPlayer();
+        } catch (LastPlayerOfTurnException e){
+            localModel.setCurrentPlayer("");
+        }
+
+        view.notifyTurnPassed(playerName, localModel.getCurrentPlayer());
     }
 
     /**
@@ -544,13 +563,13 @@ public class ClientController implements ClientViewUpdate {
                     LightTribe tribe = localModel.getPlayerTribe(nextPlayer);
                     if (tribe != null && tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
                         System.out.println("DEBUG [Controller]: Skipping " + nextPlayer + " (0 draws), freeing tile.");
-                        localModel.freeOfferTile(nextPlayer);
+                        localModel.moveTotemToTurnTile(nextPlayer);
                         continue; //find NEXT player
                     }
                 }
                 playerFound = true;
             } catch (LastPlayerOfTurnException e) {
-                localModel.setCurrentPlayer("");
+                //localModel.setCurrentPlayer("");
                 throw new LastPlayerOfTurnException();
             }
         }

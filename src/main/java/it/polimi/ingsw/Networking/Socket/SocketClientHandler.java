@@ -101,6 +101,11 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
                 throw new UnavailableColorException(totemColor);
             }
         });
+        commandHandlers.put(SocketHeaderNames.PASS_TURN, parameters -> {
+            try {
+                server.passTurn(this);
+            } catch (Exception e) {}
+        });
         commandHandlers.put(SocketHeaderNames.DRAW_CARD, parameters -> {
             boolean fromTopRow = (boolean) parameters[0];
             boolean fromBuildings = (boolean) parameters[1];
@@ -133,24 +138,30 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     @Override
     public void run() {
         server.connect(this);
-        try{
-            String incomingMessage;
-            while((incomingMessage = inStream.readLine()) != null){
-                SocketMessageDTO socketDTO = gson.fromJson(incomingMessage, SocketMessageDTO.class);
-                SocketHeaderNames socketHeader = socketDTO.getCommandName();
+        String incomingMessage;
+        try {
+            while ((incomingMessage = inStream.readLine()) != null) {
+                try {
+                    SocketMessageDTO socketDTO = gson.fromJson(incomingMessage, SocketMessageDTO.class);
+                    SocketHeaderNames socketHeader = socketDTO.getCommandName();
 
-                Consumer<Object[]> handler = commandHandlers.get(socketHeader);
-                if(handler != null){
-                    handler.accept(socketDTO.getParameters());
-                } else {
-                    System.out.println("ERROR: " + socketHeader + " is not a valid command"); //chiaramente un placeholder, va messo qualcosa di meglio
+                    Consumer<Object[]> handler = commandHandlers.get(socketHeader);
+                    if (handler != null) {
+                        handler.accept(socketDTO.getParameters());
+                    } else {
+                        System.err.println("ERROR: " + socketHeader + " is not a valid command");
+                    }
+                } catch (Exception e) {
+                    System.err.println("ERROR during message processing: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
-
-        } catch (Exception e){
-            System.out.println("ERROR: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("TCP Connection lost for handler " + this + ": " + e.getMessage());
+        } finally {
+            server.disconnect(this);
         }
-}
+    }
 
     //CALLBACKS actions from clients
     @Override
@@ -251,6 +262,12 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
+    public void notifyPassedTurn(String playerName) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.TURN_PASSED, playerName);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
     public void notifyShamansStarsToAdd(String playerName, int stars) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_SHAMAN_STARS, playerName, stars);
         outStream.println(gson.toJson(message));
@@ -312,7 +329,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     public void notifyEndGame(Map<String, Integer> finalRanking) {
         Type type = new TypeToken<Map<String, Integer>>(){}.getType();
         JsonElement serializedRanking = gson.toJsonTree(finalRanking, type);
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.END_GAME, serializedRanking);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.GAME_ENDED, serializedRanking);
         outStream.println(gson.toJson(message));
     }
 

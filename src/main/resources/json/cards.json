@@ -689,7 +689,7 @@
       "cost": 4,
       "activatedAt": "ON_DRAW",
       "effect": "CF",
-      "effectDescription": "Starting from when you have this Building, every\ntime you complete a set of 6 different\nCharacter cards, you take 5 Food tokens.\nYou do not receive Food tokens for sets already completed\nat the time of acquiring the Building.",
+      "effectDescription": "Starting from when you have this Building, every\ntime you complete a set of 6 different\nCharacter cards, you get 5 Food tokens.\nYou do not receive Food tokens for sets already completed\nat the time of acquiring the Building.",
       "prestige": 3,
       "foodBonus": 5
     },
@@ -699,7 +699,7 @@
       "cost": 3,
       "activatedAt": "ON_DRAW",
       "effect": "IF",
-      "effectDescription": "Starting from when you have this Building, every\ntime you obtain a pair of identical\nInventors (with the same Invention icon), you\ntake 3 Food tokens. You do not take Food for pairs\nalready owned at the time of acquiring the Building",
+      "effectDescription": "Starting from when you have this Building, every\ntime you obtain a pair of identical\nInventors (with the same Invention icon), you\nget 3 Food tokens. You do not get Food for pairs\nalready owned at the time of acquiring the Building",
       "prestige": 4,
       "foodBonus": 3
     },
@@ -709,7 +709,7 @@
       "cost": 3,
       "activatedAt": "RETURN_TO_TILE",
       "effect": "TF",
-      "effectDescription": "If at the end of your turn (also during the last\nround), when you move your Totem back to\nthe Turn Order tile, you place it in a space that\nprovides a bonus in Food, you immediately\ntake 1 additional Food token. If you place the\nTotem in the last space, you pay 1 Food token\nnormally, and the building has no effect.",
+      "effectDescription": "If at the end of your turn (also during the last\nround), when you move your Totem back to\nthe Turn Order tile, you place it in a space that\nprovides a bonus in Food, you immediately\nget 1 additional Food token. If you place the\nTotem in the last space, you pay 1 Food token\nnormally, and the building has no effect.",
       "prestige": 3,
       "foodBonus": 1
     },
@@ -772,7 +772,7 @@
       "cost": 7,
       "activatedAt": "ON_EVENT",
       "effect": "CH",
-      "effectDescription": "During the Hunt Event, you take 1 Food token\nand gain 1 additional Prestige Point for each\nHunter in your tribe.",
+      "effectDescription": "During the Hunt Event, you get 1 Food token\nand gain 1 additional Prestige Point for each\nHunter in your tribe.",
       "prestige": 2,
       "foodBonus": 1,
       "prestigeBonus": 1
@@ -783,7 +783,7 @@
       "cost": 5,
       "activatedAt": "ON_EVENT",
       "effect": "AF",
-      "effectDescription": "During the Cave Paintings Event, you take\n1 Food token for each Artist in your tribe.",
+      "effectDescription": "During the Cave Paintings Event, you get\n1 Food token for each Artist in your tribe.",
       "prestige": 6,
       "foodBonus": 1
     },

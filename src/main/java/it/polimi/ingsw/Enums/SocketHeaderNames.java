@@ -16,16 +16,17 @@ public enum SocketHeaderNames {
     //conseguenze che il server manda come aggiornamento ai player
     GAME_CREATED,
     GAME_STARTED,
+    NEW_HOST,
     RECEIVED_AVAILABLE_GAMES,
     PLAYER_JOINED_GAME,
     SUCCESSFULLY_JOINED,
     LEFT_GAME,
-    NEW_HOST,
     CHOSEN_TOTEM_COLOR,
+    DRAWN_CARD,
+    TURN_PASSED,
+    CHOSEN_OFFER_TILE,
 
     START_ROUND,
-    DRAWN_CARD,
-    CHOSEN_OFFER_TILE,
     ADDED_FOOD,
     ADDED_SHAMAN_STARS,
     ADDED_PRESTIGE_POINTS,
@@ -36,7 +37,7 @@ public enum SocketHeaderNames {
     NEXT_PLAYER,
     CHANGED_GAME_PHASE,
     CHANGED_ERA,
-    END_GAME,
+    GAME_ENDED,
 
     PING,
     FORCE_QUIT

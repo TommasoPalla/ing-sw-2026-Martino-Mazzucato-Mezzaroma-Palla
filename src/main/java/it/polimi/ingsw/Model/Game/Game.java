@@ -297,7 +297,7 @@ public class Game {
 //                player.getTribe().modifyFood(player.getCurrentOfferTile().getFoodBonus());
 //            }
 //
-//            this.setCurrentPhase(GamePhase.END_GAME);//fase draw
+//            this.setCurrentPhase(GamePhase.GAME_ENDED);//fase draw
 //            //aggiornare turnorder qui
 //            //return turnTile
 //            offerTrack.getTurnTile().updateTurnOrder();
@@ -353,7 +353,7 @@ public class Game {
 //                setNextPlayer();
 //            }
 //
-//            this.setCurrentPhase(GamePhase.END_GAME);//fase eventi
+//            this.setCurrentPhase(GamePhase.GAME_ENDED);//fase eventi
 //            // If round is 10 then resolves both top and bottom rows' events.
 //            if(currentRound<10){
 //                eventManager.resolve(offerTrack.getBottomEvents(), players, buildingManager);
@@ -365,7 +365,7 @@ public class Game {
 //            }
 //
 //
-//            this.setCurrentPhase(GamePhase.END_GAME);//fase finale
+//            this.setCurrentPhase(GamePhase.GAME_ENDED);//fase finale
 //
 //            for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del round
 //                buildingManager.useBuilding(currentPhase, currentPlayer);
@@ -374,14 +374,14 @@ public class Game {
 //
 //
 //            //fase inizializzata
-//            this.setCurrentPhase(GamePhase.END_GAME);
+//            this.setCurrentPhase(GamePhase.GAME_ENDED);
 //
 //            //track inizializzata
 //            offerTrack.moveCardsToBottom();
 //            offerTrack.repopulateTopRow();
 //            currentRound++;
 //        }
-//        currentPhase = GamePhase.END_GAME;
+//        currentPhase = GamePhase.GAME_ENDED;
 //
 //        for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del gioco
 //            buildingManager.useBuilding(currentPhase, currentPlayer);

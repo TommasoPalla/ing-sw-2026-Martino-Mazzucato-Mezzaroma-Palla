@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Networking.Socket;
 
+import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
@@ -84,6 +85,13 @@ public class SocketServer implements VirtualSocketServer{
         }catch(UnavailableColorException e){
             throw new UnavailableColorException(totemColor);
         }
+    }
+
+    @Override
+    public void passTurn(SocketClientHandler handler) {
+        try {
+            serverController.passTurn(handler.getPlayerRecord());
+        } catch (IllegalClientStateActionException e) {/*???*/}
     }
 
     @Override

@@ -77,6 +77,7 @@ public interface VirtualRMIClient extends Remote {
      * @throws RemoteException if RMI communication fails.
      */
     void playerLeftGame(String playerName) throws RemoteException;
+
     void updateNewHost() throws RemoteException;
 
     /**
@@ -104,6 +105,8 @@ public interface VirtualRMIClient extends Remote {
      * @throws RemoteException if RMI communication fails.
      */
     void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws RemoteException;
+
+    void turnPassed(String playerName) throws RemoteException;
 
     /**
      * Notifies that a player has chosen a specific tile on the offer track.

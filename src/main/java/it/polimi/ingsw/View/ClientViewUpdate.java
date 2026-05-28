@@ -24,6 +24,7 @@ public interface ClientViewUpdate {
     void updateNewHost();
     //void updatePlayerDisconnected(String playerName);
     void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
+    void updateTurnPassed(String playerName);
     void updateTotemColor(String playerName, Color totemColor);
 
     void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults);

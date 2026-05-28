@@ -43,47 +43,47 @@ public class RMIClient implements VirtualRMIClient {
 
     //CALLBACKS from players' actions
     @Override
-    public void updateGameCreated(int gameID, int numPlayers){
+    public synchronized void updateGameCreated(int gameID, int numPlayers){
         controller.updateGameCreated(gameID, numPlayers);
     }
 
     @Override
-    public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) {
+    public synchronized void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) {
         controller.updateGameStarted(firstTurnOrder, initialFood, firstTopRow, firstBottomRow, buildingsTopRow, buildingsBottomRow);
     }
 
     @Override
-    public void playerJoinedGame(String playerName) throws RemoteException {
+    public synchronized void playerJoinedGame(String playerName) throws RemoteException {
         controller.updatePlayerConnected(playerName);
     }
 
     @Override
-    public void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) throws RemoteException {
+    public synchronized void successfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) throws RemoteException {
         controller.updateSuccessfullyJoinedGame(gameID, numPlayers, players, totemColors);
     }
 
     @Override
-    public void playerLeftGame(String playerName) throws RemoteException {
+    public synchronized void playerLeftGame(String playerName) throws RemoteException {
         controller.updatePlayerLeftGame(playerName);
     }
 
     @Override
-    public void updateNewHost() throws RemoteException {
+    public synchronized void updateNewHost() throws RemoteException {
         controller.updateNewHost();
     }
 
     @Override
-    public void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException {
+    public synchronized void updateAvailableGames(Map<Integer, GamePlayers> availableGames) throws RemoteException {
         controller.updateAvailableGames(availableGames);
     }
 
     @Override
-    public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws RemoteException {
+    public synchronized void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws RemoteException {
         controller.updateStartRound(lastEventsResults);
     }
 
     @Override
-    public void chosenTotem(String playerName, Color totemColor){
+    public synchronized void chosenTotem(String playerName, Color totemColor){
         try{
             controller.updateTotemColor(playerName, totemColor);
         }catch(UnavailableColorException e){
@@ -92,12 +92,17 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index){
+    public synchronized void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index){
         controller.updateCardDrawn(fromTopRow, fromBuildings, index, playerName);
     }
 
     @Override
-    public void chosenTile(String playerName, int index){
+    public synchronized void turnPassed(String playerName) throws RemoteException {
+        controller.updateTurnPassed(playerName);
+    }
+
+    @Override
+    public synchronized void chosenTile(String playerName, int index){
         try{
             controller.updateCurrentOfferTile(playerName, index);
         }catch(OccupiedTileException e){
@@ -108,37 +113,37 @@ public class RMIClient implements VirtualRMIClient {
     //Callbacks from game state (server) updates
 
     @Override
-    public void updateFood(String playerName, int food) throws RemoteException {
+    public synchronized void updateFood(String playerName, int food) throws RemoteException {
         controller.updateFoodReserve(playerName, food);
     }
 
     @Override
-    public void updateShamansStars(String playerName, int stars) throws RemoteException {
+    public synchronized void updateShamansStars(String playerName, int stars) throws RemoteException {
         controller.updateShamansStars(playerName, stars);
     }
 
     @Override
-    public void updatePrestigePoints(String playerName, int points) throws RemoteException {
+    public synchronized void updatePrestigePoints(String playerName, int points) throws RemoteException {
         controller.updatePrestigePoints(playerName, points);
     }
 
     @Override
-    public void updateTopRow(ArrayList<Card> newTopRow) throws RemoteException {
+    public synchronized void updateTopRow(ArrayList<Card> newTopRow) throws RemoteException {
         controller.updateTopRow(newTopRow);
     }
 
     @Override
-    public void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) throws RemoteException {
+    public synchronized void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) throws RemoteException {
         controller.updateTopBuildings(newTopBuildings);
     }
 
     @Override
-    public void updateBottomRow(ArrayList<Card> newBottomRow) throws RemoteException {
+    public synchronized void updateBottomRow(ArrayList<Card> newBottomRow) throws RemoteException {
         controller.updateBottomRow(newBottomRow);
     }
 
     @Override
-    public void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) throws RemoteException {
+    public synchronized void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) throws RemoteException {
         controller.updateBottomBuildings(newBottomBuildings);
     }
 
@@ -148,22 +153,22 @@ public class RMIClient implements VirtualRMIClient {
 //    }
 
     @Override
-    public void updateGamePhase(GamePhase phase) throws RemoteException {
+    public synchronized void updateGamePhase(GamePhase phase) throws RemoteException {
         controller.updateGamePhase(phase);
     }
 
     @Override
-    public void updateEra(int era) throws RemoteException {
+    public synchronized void updateEra(int era) throws RemoteException {
         controller.updateCurrentEra(era);
     }
 
     @Override
-    public void updateEndGame(Map<String, Integer> finalRanking) throws RemoteException {
+    public synchronized void updateEndGame(Map<String, Integer> finalRanking) throws RemoteException {
         controller.updateEndGame(finalRanking);
     }
 
     @Override
-    public void forceQuit(String disconnectedPlayer) {
+    public synchronized void forceQuit(String disconnectedPlayer) {
         controller.handleServerDisconnection(disconnectedPlayer);
     }
 }

@@ -93,6 +93,11 @@ public class SocketClient implements VirtualSocketClient {
         controller.updateCardDrawn(fromTopRow, fromBuildings, index, playerName);
     }
 
+    @Override
+    public void updateTurnPassed(String playerName) throws IOException {
+        controller.updateTurnPassed(playerName);
+    }
+
     //----------------CALLBACKS FROM GAME STATE (SERVER) UPDATES-------------------------
     @Override
     public void updateFood(String playerName, int food) throws IOException {

@@ -50,6 +50,8 @@ public interface VirtualSocketServer {
      */
     void chooseTotemColor(Color totemColor, SocketClientHandler clientHandler);
 
+    void passTurn(SocketClientHandler clientHandler);
+
     /**
      * Joins an existing game lobby.
      * @param clientHandler the stub of the client joining.
