@@ -150,7 +150,7 @@ public class LightTribe implements TribeInterface {
     public void addCharacter(CharacterCard character) {
         population.get(character.getRole()).add(character);
         populationSize++;
-        character.applyEffect(this);
+        //character.applyEffect(this);
     }
 
     /**

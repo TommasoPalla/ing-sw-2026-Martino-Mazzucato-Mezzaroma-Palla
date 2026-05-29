@@ -147,20 +147,27 @@ public class  Tribe implements TribeInterface{
 
 
     public int calculatePlayerFinalPoints() {
-
         int populationPoints = 0;
         for (CharacterCard character : population.get(CharacterRole.BUILDER)) {
-            populationPoints = populationPoints + character.getPrestigePoints();
+            populationPoints += character.getPrestigePoints();
         }
 
-        int artistsPoints = (population.get(CharacterRole.ARTIST).size() / 2) * 10;
+        int artistsPoints = (getArtistsNumber() / 2) * 10;
 
-        int numInventors = 0;
-        for (InventorType invention : inventorsPerType.keySet()) {
-            numInventors += inventorsPerType.get(invention);
+        int uniqueInventions = inventorsPerType.size();
+        int totalInventors = 0;
+        for (int count : inventorsPerType.values()) {
+            totalInventors += count;
         }
-        int inventorsPoints = numInventors * inventorsPerType.size();
+        int inventorsPoints = totalInventors * uniqueInventions;
 
-        return this.prestigePoints + artistsPoints + populationPoints + inventorsPoints;
-        }
-        }
+        modifyPrestigePoints(populationPoints + artistsPoints + inventorsPoints);
+
+        System.out.println("DEBUG:" + tribeOwner.getName() + "'s artists points: " + artistsPoints);
+        System.out.println("DEBUG:" + tribeOwner.getName() + "'s population points: " + populationPoints);
+        System.out.println("DEBUG:" + tribeOwner.getName() + "'s inventors points: " + inventorsPoints);
+        System.out.println();
+
+        return this.prestigePoints;
+    }
+}

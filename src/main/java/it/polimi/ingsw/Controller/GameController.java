@@ -7,11 +7,14 @@ import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
 import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
+import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
+import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Model.Game.Game;
@@ -230,14 +233,44 @@ public class GameController {
      */
     public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
+        boolean isLastRound = false;
         try {
             int newRound = gameInstance.setNextRound();
             System.out.println("[GAME " + gameInstance.getGameID() + "] Round " + newRound + " started.");
         } catch (LastRoundException e) {
             System.out.println("[GAME " + gameInstance.getGameID() + "] Final round reached!");
+            isLastRound = true;
+        }
+
+        if (isLastRound) {
+            // In the last round, we also resolve top row events that were left there
+            ArrayList<EventCard> topEvents = gameInstance.getOfferTrack().getTopEvents();
+            if (!topEvents.isEmpty()) {
+                Map<EventType, ArrayList<PlayerEventResults>> topEventsResults = gameInstance.getEventManager().resolve(topEvents, gameInstance.getPlayers(), gameInstance.getBuildingManager());
+
+                // Combine bottom and top events results
+                Map<EventType, ArrayList<PlayerEventResults>> allEventsResults = new HashMap<>(lastEventsResults);
+                for (EventType type : topEventsResults.keySet()) {
+                    if (allEventsResults.containsKey(type)) {
+                        allEventsResults.get(type).addAll(topEventsResults.get(type));
+                    } else {
+                        allEventsResults.put(type, topEventsResults.get(type));
+                    }
+                }
+
+                notifyAll(n -> {
+                    n.notifyStartRound(allEventsResults);
+                });
+            } else {
+                notifyAll(n -> {
+                    n.notifyStartRound(lastEventsResults);
+                });
+            }
+
             calculateFinalPoints();
             throw new EndOfGameException();
         }
+
         notifyAll(n -> {
             n.notifyStartRound(lastEventsResults);
         });
@@ -462,8 +495,12 @@ public class GameController {
     public void calculateFinalPoints() {
         Map<String,Integer> finalPoints = new LinkedHashMap<>();
         for (Player player : gameInstance.getPlayers()) {
+            Tribe tribe = player.getTribe();
             gameInstance.getBuildingManager().useBuilding(GamePhase.END_GAME, player);
-            finalPoints.put(player.getName(), player.getTribe().calculatePlayerFinalPoints());
+
+            int finalPrestigePoints = tribe.calculatePlayerFinalPoints();
+
+            finalPoints.put(player.getName(), finalPrestigePoints);
         }
         Map<String, Integer> finalRanking = finalPoints.entrySet()
                 .stream()
