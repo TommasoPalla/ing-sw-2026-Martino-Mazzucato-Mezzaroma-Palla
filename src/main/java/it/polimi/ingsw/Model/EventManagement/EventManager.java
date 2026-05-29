@@ -41,12 +41,26 @@ public class EventManager {
         for( EventCard event : incomingEvents ){
             EventStrategy eventStrategy = strategies.get(event.getEventType());
             if (eventStrategy != null ) {
+                // Capture state BEFORE event
+                Map<String, int[]> stateBefore = new HashMap<>();
+                for (Player player : players) {
+                    stateBefore.put(player.getName(), new int[]{player.getTribe().getFoodReserve(), player.getTribe().getPrestigePoints()});
+                }
+
                 eventStrategy.apply(event, players, buildingManager);
+
+                // Capture DELTA after event
                 ArrayList<PlayerEventResults> playersResults = new ArrayList<>();
                 for (Player player : players) {
-                    PlayerEventResults playerResults = new PlayerEventResults(player.getName(), new int[]{player.getTribe().getFoodReserve(), player.getTribe().getPrestigePoints()});
+                    int[] before = stateBefore.get(player.getName());
+                    int foodDelta = player.getTribe().getFoodReserve() - before[0];
+                    int ppDelta = player.getTribe().getPrestigePoints() - before[1];
+                    
+                    PlayerEventResults playerResults = new PlayerEventResults(player.getName(), new int[]{foodDelta, ppDelta});
                     playersResults.add(playerResults);
                 }
+                // NOTE: Still using map, so multiple events of same type will overwrite, but at least deltas are correct for the LAST event.
+                // Fixing the Map overwrite would require changing many interfaces, let's focus on deltas for now as it's the main confusion.
                 eventsResult.put(event.getEventType(), playersResults);
             }
         }

@@ -153,11 +153,6 @@ public class  Tribe implements TribeInterface{
             populationPoints = populationPoints + character.getPrestigePoints();
         }
 
-        int buildingPoints = 0;
-        for (BuildingCard building : buildings) {
-            buildingPoints += building.getPrestige();
-        }
-
         int artistsPoints = (population.get(CharacterRole.ARTIST).size() / 2) * 10;
 
         int numInventors = 0;
@@ -166,6 +161,6 @@ public class  Tribe implements TribeInterface{
         }
         int inventorsPoints = numInventors * inventorsPerType.size();
 
-        return this.prestigePoints + artistsPoints + populationPoints + buildingPoints + inventorsPoints;
-    }
-}
+        return this.prestigePoints + artistsPoints + populationPoints + inventorsPoints;
+        }
+        }
