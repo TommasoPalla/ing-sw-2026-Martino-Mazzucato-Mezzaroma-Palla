@@ -28,7 +28,7 @@ public class ClientController implements ClientViewUpdate {
      * The attribute representing the state of the client, deciding which actions
      * they can perform in that state
      */
-    private ClientState clientState;
+    private volatile ClientState clientState;
     private Map<Integer, GamePlayers> availableGames;
 
     public ClientController() {
@@ -409,9 +409,9 @@ public class ClientController implements ClientViewUpdate {
             }
         }
 
-        System.out.println("DEBUG: Card drawn by " + playerName + ". Remaining draws: " + tribe.getRemainingAbove() + "/" + tribe.getRemainingBelow());
+        //System.out.println("DEBUG: Card drawn by " + playerName + ". Remaining draws: " + tribe.getRemainingAbove() + "/" + tribe.getRemainingBelow());
         if (tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
-            System.out.println("DEBUG: Player " + playerName + " finished draws. Moving to turn tile.");
+            //System.out.println("DEBUG: Player " + playerName + " finished draws. Moving to turn tile.");
             localModel.moveTotemToTurnTile(playerName);
             
             // If the player who finished was the current one, we trigger update
@@ -427,7 +427,7 @@ public class ClientController implements ClientViewUpdate {
 
     @Override
     public void updateTurnPassed(String playerName){
-        System.out.println("DEBUG: " + playerName + " has passed his turn");
+        //System.out.println("DEBUG: " + playerName + " has passed his turn");
 
         localModel.getPlayerTribe(playerName).setRemainingDraws(0, 0);
         localModel.moveTotemToTurnTile(playerName);
@@ -562,7 +562,7 @@ public class ClientController implements ClientViewUpdate {
                 if (localModel.getCurrentPhase() == GamePhase.ON_DRAW) {
                     LightTribe tribe = localModel.getPlayerTribe(nextPlayer);
                     if (tribe != null && tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
-                        System.out.println("DEBUG [Controller]: Skipping " + nextPlayer + " (0 draws), freeing tile.");
+                        //System.out.println("DEBUG [Controller]: Skipping " + nextPlayer + " (0 draws), freeing tile.");
                         localModel.moveTotemToTurnTile(nextPlayer);
                         continue; //find NEXT player
                     }
@@ -574,7 +574,7 @@ public class ClientController implements ClientViewUpdate {
             }
         }
 
-        System.out.println("DEBUG: New current player calculated: " + nextPlayer);
+        //System.out.println("DEBUG: New current player calculated: " + nextPlayer);
         syncClientState();
         if (!nextPlayer.isEmpty())
             view.notifyNewCurrentPlayer(nextPlayer, this.clientState);
@@ -602,7 +602,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     private void syncClientState() {
-        System.out.println("DEBUG: current phase: " +  localModel.getCurrentPhase());
+        //System.out.println("DEBUG: current phase: " +  localModel.getCurrentPhase());
         String currentPlayer = localModel.getCurrentPlayer();
         if (currentPlayer == null || currentPlayer.isEmpty() || !this.playerName.equals(currentPlayer)) {
             setClientState(ClientState.NOT_IN_TURN);

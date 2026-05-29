@@ -20,10 +20,10 @@ public class ClientModel {
     private final int gameId;
     private final int numPlayers;
     private final Map<String, LightTribe> players;
-    private GamePhase currentPhase;
+    private volatile GamePhase currentPhase;
     private int currentRound;
-    private String currentPlayer;
-    private int era;
+    private volatile String currentPlayer;
+    private volatile int era;
     private ArrayList<Card> topRow;
     private ArrayList<Card> bottomRow;
     private ArrayList<BuildingCard> topBuildings;

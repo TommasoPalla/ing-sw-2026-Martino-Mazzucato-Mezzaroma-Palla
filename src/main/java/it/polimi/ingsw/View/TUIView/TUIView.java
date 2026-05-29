@@ -238,31 +238,38 @@ public class TUIView implements ViewInterface {
      * Prints to terminal the top row of the offerTrack
      */
     private void printTopRow() {
-        if(clientController.getLocalModel().getTopRow().isEmpty()) {
-            System.out.println("TOP ROW IS EMPTY");
+        boolean noChars = clientController.getLocalModel().getTopRow().isEmpty();
+        boolean noBuildings = clientController.getLocalModel().getTopBuildings().isEmpty();
+        
+        if(noChars && noBuildings) {
+            System.out.println("--- TOP ROW IS EMPTY ---");
             return;
         }
+        
         tuiState = TUIState.SHOW_TOP_ROW;
-        System.out.println("\nCHARACTERS:");
+        System.out.println("\n[TOP ROW - CHARACTERS/EVENTS]");
         printHorizontal(clientController.getLocalModel().getTopRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
-        System.out.println("\nBUILDINGS:");
+        System.out.println("\n[TOP ROW - BUILDINGS]");
         printHorizontal(clientController.getLocalModel().getTopBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
-
     }
 
     /**
      * Prints to terminal the bottom row of the offerTrack
      */
     private void printBottomRow() {
-        if(clientController.getLocalModel().getBottomRow().isEmpty()) {
-            System.out.println("BOTTOM ROW IS EMPTY");
+        boolean noChars = clientController.getLocalModel().getBottomRow().isEmpty();
+        boolean noBuildings = clientController.getLocalModel().getBottomBuildings().isEmpty();
+
+        if(noChars && noBuildings) {
+            System.out.println("--- BOTTOM ROW IS EMPTY ---");
             return;
         }
+        
         tuiState = TUIState.SHOW_BOTTOM_ROW;
+        System.out.println("\n[BOTTOM ROW - CHARACTERS/EVENTS]");
         printHorizontal(clientController.getLocalModel().getBottomRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
-        System.out.println();
+        System.out.println("\n[BOTTOM ROW - BUILDINGS]");
         printHorizontal(clientController.getLocalModel().getBottomBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
-
     }
 
     private void printOfferTrack() {
@@ -304,7 +311,7 @@ public class TUIView implements ViewInterface {
         StringBuilder bottomBorder = new StringBuilder();
 
         tuiState = TUIState.SHOW_OFFER_TRACK;
-        System.out.print("This is the current offer track:");
+        System.out.print("This is the current offer track:\n");
         System.out.println();
         for (OfferTile tile : clientController.getLocalModel().getOfferTiles()) {
             topBorder.append("+-----------------+ ");
@@ -354,6 +361,10 @@ public class TUIView implements ViewInterface {
 //        System.out.println(playerRow);
 //        System.out.println(bottomBorder);
         System.out.println();
+    }
+
+    private void printRemainingDraws(int remainingFromAbove, int remainingFromBelow){
+        System.out.println("\n--- DRAWS REMAINING: ABOVE " + remainingFromAbove + " | BELOW " + remainingFromBelow + " ---");
     }
 
     public void changeClientState(ClientState clientState) {
@@ -472,7 +483,8 @@ public class TUIView implements ViewInterface {
             }
             else
                 System.err.println("The game will be interrupted and you will be brought back to setup.");
-                printAvailableActions(clientController.getClientState(), false);
+
+            printAvailableActions(clientController.getClientState(), false);
         }
     }
 
@@ -538,8 +550,7 @@ public class TUIView implements ViewInterface {
         System.out.println("Every player gets some initial food based on their first turn order!");
         System.out.println("You get " + initialFood.get(this.player) + "!");
         System.out.println();
-        printOfferTrack();
-        printGeneralCommands();
+        System.out.println("You can see the available action you can perform at any time with the 'help()' command!");
     }
 
     /**
@@ -566,17 +577,33 @@ public class TUIView implements ViewInterface {
         else cardType = "character card";
 
         System.out.println();
-        if(this.player.equals(player))
+        if(this.player.equals(player)) {
             System.out.println("You have successfully drawn the " + cardType + " " + card.getCardID() + " from the " + row);
-        else
+            printTribe(this.player);
+
+            // If I still have cards to draw, show me the rows again to help with the next choice
+            LightTribe tribe = clientController.getLocalModel().getPlayerTribe(this.player);
+            int remainingAboveDraws = tribe.getRemainingAbove();
+            int remainingBelowDraws = tribe.getRemainingBelow();
+
+            if (remainingAboveDraws > 0 || remainingBelowDraws > 0) {
+                printRemainingDraws(remainingAboveDraws, remainingBelowDraws);
+                if (remainingAboveDraws > 0) printTopRow();
+                if (remainingBelowDraws > 0) printBottomRow();
+            }
+        } else {
             System.out.println(clientController.getLocalModel().getTotemColors().get(player).colorize(player) + " has drawn the " + cardType + " " + card.getCardID() + " from the " + row);
-        if(tuiState == TUIState.SHOW_TOP_ROW && topRow) printTopRow();
-        else if(tuiState == TUIState.SHOW_BOTTOM_ROW && !topRow) printBottomRow();
+            // Show offer track to others to see totem movements (e.g. returning to turn tile)
+            printOfferTrack();
+        }
     }
 
     @Override
     public void notifyTurnPassed(String playerThatPassed, String newCurrentPlayer) {
         System.out.println("\n" + playerThatPassed + " passed his turn! It's now " + newCurrentPlayer + "'s turn!");
+        if (!playerThatPassed.equals(this.player)) {
+            printOfferTrack();
+        }
     }
 
     /**
@@ -588,19 +615,34 @@ public class TUIView implements ViewInterface {
     @Override
     public void notifyTileChosen(String playerName, int index) {
         System.out.println();
-        if(!playerName.equals(this.player))
+        if(!playerName.equals(this.player)) {
             System.out.println("\n" + clientController.getLocalModel().getColors(playerName).colorize(playerName) + " placed his totem on tile " + index + "!");
-        else
+        } else {
             System.out.println("\nYou placed your totem on tile " + index + "!");
-        if(tuiState == TUIState.SHOW_OFFER_TRACK) printOfferTrack();
+        }
+        printOfferTrack();
     }
 
     @Override
     public void notifyNewCurrentPlayer(String currentPlayerName, ClientState clientState) {
         if(currentPlayerName == null || currentPlayerName.isEmpty()) return;
         if(currentPlayerName.equals(this.player)) {
-            System.out.println("\nIt's your turn!");
-            printAvailableActions(clientController.getClientState(), false);
+            System.out.println("\n***************************************************");
+            System.out.println("                IT'S YOUR TURN!                    ");
+            System.out.println("***************************************************");
+            
+            // Proactively show relevant info
+            if (clientState == ClientState.DRAW_CARD) {
+                LightTribe tribe = clientController.getLocalModel().getPlayerTribe(this.player);
+                printRemainingDraws(tribe.getRemainingAbove(), tribe.getRemainingBelow());
+                if (tribe.getRemainingAbove() > 0) printTopRow();
+                if (tribe.getRemainingBelow() > 0) printBottomRow();
+            }
+            else if(clientState == ClientState.PLACE_TOTEM) {
+                printOfferTrack();
+            }
+            
+            printAvailableActions(clientState, false);
         }
         else
             System.out.println("\nIt's " + clientController.getLocalModel().getColors(currentPlayerName).colorize(currentPlayerName) + "'s turn, wait patiently!");
@@ -805,7 +847,7 @@ public class TUIView implements ViewInterface {
      */
     private void printGeneralCommands() {
         System.out.println();
-        System.out.println("These are the general commands you can run at any time:");
+        System.out.println("These are the commands you can run at any time:");
         System.out.println("- show_offer_track(): to visualize the current state of the offer track.");
         System.out.println("- show_top_row(): to visualize the current state of the top row.");
         System.out.println("- show_bottom_row(): to visualize the current state of the bottom row.");
