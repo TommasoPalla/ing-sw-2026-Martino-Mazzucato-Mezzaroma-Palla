@@ -579,14 +579,15 @@ public class TUIView implements ViewInterface {
         System.out.println();
         if(this.player.equals(player)) {
             System.out.println("You have successfully drawn the " + cardType + " " + card.getCardID() + " from the " + row);
-            printTribe(this.player);
-
-            // If I still have cards to draw, show me the rows again to help with the next choice
+            
+            // Only show tribe if I still have cards to draw. 
+            // If it's the last draw, I'll wait for the turn-end bonuses (food/PP) to arrive before showing the tribe.
             LightTribe tribe = clientController.getLocalModel().getPlayerTribe(this.player);
             int remainingAboveDraws = tribe.getRemainingAbove();
             int remainingBelowDraws = tribe.getRemainingBelow();
 
             if (remainingAboveDraws > 0 || remainingBelowDraws > 0) {
+                printTribe(this.player);
                 printRemainingDraws(remainingAboveDraws, remainingBelowDraws);
                 if (remainingAboveDraws > 0) printTopRow();
                 if (remainingBelowDraws > 0) printBottomRow();
@@ -631,7 +632,8 @@ public class TUIView implements ViewInterface {
             System.out.println("                IT'S YOUR TURN!                    ");
             System.out.println("***************************************************");
             
-            // Proactively show relevant info
+            printTribe(this.player);
+
             if (clientState == ClientState.DRAW_CARD) {
                 LightTribe tribe = clientController.getLocalModel().getPlayerTribe(this.player);
                 printRemainingDraws(tribe.getRemainingAbove(), tribe.getRemainingBelow());
