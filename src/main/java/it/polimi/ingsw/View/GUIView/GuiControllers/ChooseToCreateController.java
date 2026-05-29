@@ -14,6 +14,9 @@ public class ChooseToCreateController {
     @FXML
     private Button Create;
 
+    @FXML
+    private Button ChangeNick;
+
     public void setGUI(Gui gui) {
         this.gui = gui;
     }
@@ -25,5 +28,9 @@ public class ChooseToCreateController {
     @FXML
     private void handleCreate() {
         gui.handleCreate();
+    }
+    @FXML
+    private void handleNick() {
+        gui.handleNickChange();
     }
 }

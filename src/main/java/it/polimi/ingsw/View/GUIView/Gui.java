@@ -67,6 +67,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+            primaryStage.setMaximized(true);
             primaryStage.show();
             PauseTransition delay = new PauseTransition(Duration.seconds(3));//splash iniziale dura 3 secondi
 
@@ -263,6 +264,9 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.show();
+            Platform.runLater(() -> {
+                primaryStage.setMaximized(true);
+            });
         }catch (Exception e){
             System.out.println("Error: " + e);
         }
@@ -288,7 +292,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     @Override
     public void chooseTotemScene() {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseNickName.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseTotemScene.fxml"));
             Parent root = loader.load();
             ChooseNickNameController controller = loader.getController();
             controller.setGUI(this);
@@ -361,7 +365,9 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     public void handleCreate(){
         chooseNumberOfPlayers();
         players.add(nickname);
-
+    }
+    public void handleNickChange(){
+        nicknameScene();
     }
 
     public void handleGameID(int ID) throws IOException{
@@ -373,7 +379,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         nickname = Nickname;
         controller.setPlayerName(nickname);
         showCreationChoiceScene();
-
     }
     public void handleNumber(int number) throws IOException{
         controller.setClientState(ClientState.SETUP);
