@@ -115,6 +115,16 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
+    public void updateBuildersDiscount(String playerName, int discount) throws IOException {
+        controller.updateBuildersDiscount(playerName, discount);
+    }
+
+    @Override
+    public void updateGatherersDiscount(String playerName, int discount) throws IOException {
+        controller.updateGatherersDiscount(playerName, discount);
+    }
+
+    @Override
     public void updateTopRow(ArrayList<Card> newTopRow) {
         controller.updateTopRow(newTopRow);
     }

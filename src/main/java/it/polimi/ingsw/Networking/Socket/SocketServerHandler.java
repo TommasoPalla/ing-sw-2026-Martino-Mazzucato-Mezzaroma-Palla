@@ -179,6 +179,20 @@ public class SocketServerHandler implements Runnable{
                 client.updatePrestigePoints(playerName, prestigePoints);
             } catch (IOException e) {}
         });
+        commandHandlers.put(SocketHeaderNames.ADDED_BUILDERS_DISCOUNT, parameters -> {
+            String playerName = (String) parameters[0];
+            int discount = ((Double) parameters[1]).intValue();
+            try{
+                client.updateBuildersDiscount(playerName, discount);
+            } catch (IOException e) {}
+        });
+        commandHandlers.put(SocketHeaderNames.ADDED_GATHERERS_DISCOUNT, parameters -> {
+            String playerName = (String) parameters[0];
+            int discount = ((Double) parameters[1]).intValue();
+            try{
+                client.updateGatherersDiscount(playerName, discount);
+            } catch (IOException e) {}
+        });
         commandHandlers.put(SocketHeaderNames.UPDATED_TOP_ROW, parameters -> {
             String topRowString = gson.toJson(parameters[0]);
             Type type = new TypeToken<ArrayList<Card>>(){}.getType();

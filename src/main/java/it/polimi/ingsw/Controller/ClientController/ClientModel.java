@@ -198,7 +198,13 @@ public class ClientModel {
         players.get(playerName).setPrestigePoints(pp);
     }
     void updateShamansStars(String playerName, int stars) {
-        players.get(playerName).addShamansStars(stars);
+        players.get(playerName).setShamansStars(stars);
+    }
+    void updateBuildersDiscount(String playerName, int discount) {
+        players.get(playerName).setBuilderDiscount(discount);
+    }
+    void updateGatherersDiscount(String playerName, int discount) {
+        players.get(playerName).setGathererDiscount(discount);
     }
 
     //aggiungere metodo clearOfferTile(), in player c'è moveTotemToTurnTile e in OfferTile c'è free, decidere cosa fare

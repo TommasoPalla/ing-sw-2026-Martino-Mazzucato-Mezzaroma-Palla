@@ -109,19 +109,23 @@ public interface ClientNotifier {
     void notifyNewFoodReserve(String playerName, int newFoodReserve);
 
     /**
-     * Updates a player's Shaman Stars.
-     * @param playerName the name of the player.
-     * @param stars the number of stars.
-     */
-    void notifyShamansStarsToAdd(String playerName, int stars);
-
-    /**
      * Updates a player's Prestige Points.
      *
      * @param playerName the name of the player.
      * @param newPP      the new prestige points of the player.
      */
     void notifyNewPrestigePoints(String playerName, int newPP);
+
+    /**
+     * Updates a player's Shaman Stars.
+     * @param playerName the name of the player.
+     * @param stars the number of stars.
+     */
+    void notifyNewShamansStars(String playerName, int stars);
+
+    void notifyNewBuildersDiscount(String playerName, int discount);
+
+    void notifyNewGatherersDiscount(String playerName, int discount);
 
     /**
      * Updates the top row character cards.

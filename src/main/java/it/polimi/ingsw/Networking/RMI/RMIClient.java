@@ -128,6 +128,16 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
+    public synchronized void updateBuildersDiscount(String playerName, int discount) throws RemoteException {
+        controller.updateBuildersDiscount(playerName, discount);
+    }
+
+    @Override
+    public synchronized void updateGatherersDiscount(String playerName, int discount) throws RemoteException {
+        controller.updateGatherersDiscount(playerName, discount);
+    }
+
+    @Override
     public synchronized void updateTopRow(ArrayList<Card> newTopRow) throws RemoteException {
         controller.updateTopRow(newTopRow);
     }

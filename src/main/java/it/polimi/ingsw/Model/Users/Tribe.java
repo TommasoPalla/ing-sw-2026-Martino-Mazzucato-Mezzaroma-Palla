@@ -106,14 +106,17 @@ public class  Tribe implements TribeInterface{
     @Override
     public void addShamansStars(int stars) {
         shamansStars += stars;
+        game.getController().notifyAll(n -> n.notifyNewShamansStars(tribeOwner.getName(), shamansStars));
     }
     @Override
     public void addBuildersDiscount(int discount) {
         this.builderDiscount += discount;
+        game.getController().notifyAll(n -> n.notifyNewBuildersDiscount(tribeOwner.getName(), builderDiscount));
     }
     @Override
     public void addGathererDiscount(int discount) {
         this.gatherersDiscount += discount;
+        game.getController().notifyAll(n -> n.notifyNewGatherersDiscount(tribeOwner.getName(), gatherersDiscount));
     }
     @Override
     public void addInventor(InventorType type) {
@@ -163,10 +166,12 @@ public class  Tribe implements TribeInterface{
 
         modifyPrestigePoints(populationPoints + artistsPoints + inventorsPoints);
 
+        /*
         System.out.println("DEBUG:" + tribeOwner.getName() + "'s artists points: " + artistsPoints);
         System.out.println("DEBUG:" + tribeOwner.getName() + "'s population points: " + populationPoints);
         System.out.println("DEBUG:" + tribeOwner.getName() + "'s inventors points: " + inventorsPoints);
         System.out.println();
+         */
 
         return this.prestigePoints;
     }

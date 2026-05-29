@@ -268,8 +268,20 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifyShamansStarsToAdd(String playerName, int stars) {
+    public void notifyNewShamansStars(String playerName, int stars) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_SHAMAN_STARS, playerName, stars);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyNewBuildersDiscount(String playerName, int discount) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_BUILDERS_DISCOUNT, playerName, discount);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
+    public void notifyNewGatherersDiscount(String playerName, int discount) {
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_GATHERERS_DISCOUNT, playerName, discount);
         outStream.println(gson.toJson(message));
     }
 

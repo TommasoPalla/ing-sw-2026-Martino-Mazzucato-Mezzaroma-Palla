@@ -533,6 +533,16 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
+    public void updateBuildersDiscount(String playerName, int discount) {
+        localModel.updateBuildersDiscount(playerName, discount);
+    }
+
+    @Override
+    public void updateGatherersDiscount(String playerName, int discount) {
+        localModel.updateGatherersDiscount(playerName, discount);
+    }
+
+    @Override
     public void updateTopRow(ArrayList<Card> newTopRow) {
         localModel.updateTopRow(newTopRow);
     }

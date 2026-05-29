@@ -135,6 +135,10 @@ public interface VirtualSocketClient {
      */
     void updatePrestigePoints(String playerName, int points) throws IOException;
 
+    void updateBuildersDiscount(String playerName, int discount) throws IOException;
+
+    void updateGatherersDiscount(String playerName, int discount) throws IOException;
+
     /**
      * Updates the cards in the top row of the offer track.
      * @param newTopRow the new list of character cards.

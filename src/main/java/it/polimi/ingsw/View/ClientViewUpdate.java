@@ -32,6 +32,8 @@ public interface ClientViewUpdate {
     void updateFoodReserve(String playerName, int food);
     void updateShamansStars(String playerName, int stars);
     void updatePrestigePoints(String playerName, int pp);
+    void updateBuildersDiscount(String playerName, int discount);
+    void updateGatherersDiscount(String playerName, int discount);
     void updateTopRow(ArrayList<Card> newTopRow);
     void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings);
     void updateBottomRow(ArrayList<Card> newBottomRow);

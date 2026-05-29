@@ -111,6 +111,9 @@ public class LightTribe implements TribeInterface {
     //setters
     public void setFoodReserve(int food) { this.foodReserve = food; }
     public void setPrestigePoints(int pp) { this.prestigePoints = pp; }
+    public void setShamansStars(int stars) { this.shamansStars = stars; }
+    public void setBuilderDiscount(int discount) { this.builderDiscount = discount; }
+    public void setGathererDiscount(int discount) { this.gatherersDiscount = discount; }
 
     public void setRemainingDraws(int above, int below) {
         this.remainingAbove = above;
