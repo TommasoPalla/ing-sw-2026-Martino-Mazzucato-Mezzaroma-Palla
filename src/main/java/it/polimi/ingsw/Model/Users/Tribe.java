@@ -96,11 +96,7 @@ public class  Tribe implements TribeInterface{
 
     @Override
     public void modifyFood(int food) {
-        if((foodReserve + food) < 0){
-            modifyPrestigePoints(food + foodReserve);
-            foodReserve = 0;
-        }
-        else foodReserve += food;
+        this.foodReserve += food;
     }
 
     @Override

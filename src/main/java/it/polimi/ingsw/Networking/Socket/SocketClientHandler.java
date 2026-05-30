@@ -256,7 +256,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
 
     //CALLBACKS updates from server
     @Override
-    public void notifyNewFoodReserve(String playerName, int newFoodReserve) {
+    public void notifyNewFood(String playerName, int newFoodReserve) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_FOOD, playerName, newFoodReserve);
         outStream.println(gson.toJson(message));
     }

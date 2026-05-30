@@ -106,7 +106,7 @@ public interface ClientNotifier {
      * @param playerName     the name of the player.
      * @param newFoodReserve the new food reserve of the player.
      */
-    void notifyNewFoodReserve(String playerName, int newFoodReserve);
+    void notifyNewFood(String playerName, int newFoodReserve);
 
     /**
      * Updates a player's Prestige Points.

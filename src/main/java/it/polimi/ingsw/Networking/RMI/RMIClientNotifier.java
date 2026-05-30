@@ -126,7 +126,7 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyNewFoodReserve(String playerName, int newFoodReserve) {
+    public void notifyNewFood(String playerName, int newFoodReserve) {
         try {
             clientStub.updateFood(playerName, newFoodReserve);
         } catch (RemoteException e) {

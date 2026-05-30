@@ -34,7 +34,6 @@ public class ClientModel {
     Map<Integer,String> turnTileStatus;
     private int[] tileModifier;
     private ArrayList<OfferTile> offerTiles;
-    //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
 
     ClientModel(int gameId, int numPlayers){
         this.gameId = gameId;
@@ -192,10 +191,10 @@ public class ClientModel {
 
 
     void updateFoodReserve(String playerName, int food) {
-        players.get(playerName).setFoodReserve(food);
+        players.get(playerName).modifyFood(food);
     }
     void updatePrestigePoints(String playerName, int pp) {
-        players.get(playerName).setPrestigePoints(pp);
+        players.get(playerName).modifyPrestigePoints(pp);
     }
     void updateShamansStars(String playerName, int stars) {
         players.get(playerName).setShamansStars(stars);

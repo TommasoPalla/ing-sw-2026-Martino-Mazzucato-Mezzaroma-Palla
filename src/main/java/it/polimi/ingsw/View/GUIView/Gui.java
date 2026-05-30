@@ -182,6 +182,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyFoodBonusTile(String playerName, int foodBonus) {
+
+    }
+
+    @Override
     public void notifyCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
         if(gameScene != null){
             Platform.runLater(() -> {

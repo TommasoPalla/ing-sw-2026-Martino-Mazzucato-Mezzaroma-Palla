@@ -345,7 +345,6 @@ public class ClientController implements ClientViewUpdate {
 
     @Override
     public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
-        //String cardID = local
         Card drawn;
         LightTribe tribe = localModel.getPlayerTribe(playerName);
         if(fromTopRow){
@@ -456,7 +455,7 @@ public class ClientController implements ClientViewUpdate {
 
     private void updateInitialFood(Map<String, Integer> initialFood) {
         for (String player : initialFood.keySet()) {
-            localModel.getPlayerTribe(player).setFoodReserve(initialFood.get(player));
+            localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
         }
         view.notifyGiveInitialFood(initialFood);
         updateStartRound(Collections.emptyMap());
@@ -470,6 +469,7 @@ public class ClientController implements ClientViewUpdate {
 
         // UPDATING EVENTS RESULTS using deltas
         if (!lastEventsResults.isEmpty()) {
+            System.out.println(lastEventsResults);
             for (EventType eventType : lastEventsResults.keySet()) {
                 for(PlayerEventResults playerResults : lastEventsResults.get(eventType)){
                     LightTribe playersTribe = localModel.getPlayerTribe(playerResults.player());
@@ -480,7 +480,7 @@ public class ClientController implements ClientViewUpdate {
                     if (playerResults.player().equals(this.playerName)) {
                         view.notifyEvent(eventType, foodDelta, ppDelta);
                     }
-                    
+
                     // tribe's updating by ADDING deltas
                     playersTribe.modifyFood(foodDelta);
                     playersTribe.modifyPrestigePoints(ppDelta);
@@ -493,8 +493,10 @@ public class ClientController implements ClientViewUpdate {
             localModel.getTurnTileStatus().put(i, localModel.getTurnOrder().get(i));
         }
 
-        view.notifyStartRound(localModel.getCurrentRound());
-        updateCurrentPlayer();
+        if (localModel.getCurrentRound() <= 10) {
+            view.notifyStartRound(localModel.getCurrentRound());
+            updateCurrentPlayer();
+        }
     }
 
     @Override
@@ -570,12 +572,13 @@ public class ClientController implements ClientViewUpdate {
             try {
                 nextPlayer = localModel.setNextPlayer();
 
-                //skip for ON_DRAW
+                //skip for TILE A ON_DRAW
                 if (localModel.getCurrentPhase() == GamePhase.ON_DRAW) {
                     LightTribe tribe = localModel.getPlayerTribe(nextPlayer);
                     if (tribe != null && tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
-                        //System.out.println("DEBUG [Controller]: Skipping " + nextPlayer + " (0 draws), freeing tile.");
+                        int foodBonus = localModel.getOfferTiles().get(localModel.getTurnOrder().indexOf(nextPlayer)).getFoodBonus();
                         localModel.moveTotemToTurnTile(nextPlayer);
+                        view.notifyFoodBonusTile(nextPlayer, foodBonus);
                         continue; //find NEXT player
                     }
                 }

@@ -1,20 +1,17 @@
 package it.polimi.ingsw.Controller;
 
-import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.CustomException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
 import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
-import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Enums.InventorType;
+import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Model.Game.Game;
@@ -177,11 +174,17 @@ public class GameController {
 
             //skip players with 0 draws if in ON_DRAW phase (tile A)
             if (gameInstance.getGamePhase() == GamePhase.ON_DRAW) {
+                int oldFoodReserve = nextPlayer.getTribe().getFoodReserve();
+
                 if (nextPlayer.getRemainingAbove() == 0 && nextPlayer.getRemainingBelow() == 0) {
                     System.out.println("[GAME " + gameInstance.getGameID() + "] Player '" + nextPlayer.getName() + "' has 0 draws, returning to tile.");
+                    int bonus = nextPlayer.getCurrentOfferTile().getFoodBonus();
                     gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(nextPlayer, gameInstance.getBuildingManager());
-                    //still need to notify food bonus
-                    notifyAll(n -> n.notifyNewFoodReserve(nextPlayer.getName(), nextPlayer.getTribe().getFoodReserve()));
+                    if (bonus > 0) {
+                        nextPlayer.getTribe().modifyFood(bonus);
+                        notifyAll(n -> n.notifyNewFood(nextPlayer.getName(), nextPlayer.getTribe().getFoodReserve()-oldFoodReserve));
+                    }
+                    System.out.println("[GAME " + gameInstance.getGameID() + "] Turn changed: current player is now '" + nextPlayer.getName() + "'");
                     return setNextPlayer();
                 }
             }
@@ -234,47 +237,48 @@ public class GameController {
     public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
         boolean isLastRound = false;
+        notifyAll(n -> {
+            n.notifyStartRound(lastEventsResults);
+        });
         try {
             int newRound = gameInstance.setNextRound();
             System.out.println("[GAME " + gameInstance.getGameID() + "] Round " + newRound + " started.");
         } catch (LastRoundException e) {
             System.out.println("[GAME " + gameInstance.getGameID() + "] Final round reached!");
             isLastRound = true;
-        }
 
-        if (isLastRound) {
-            // In the last round, we also resolve top row events that were left there
-            ArrayList<EventCard> topEvents = gameInstance.getOfferTrack().getTopEvents();
-            if (!topEvents.isEmpty()) {
-                Map<EventType, ArrayList<PlayerEventResults>> topEventsResults = gameInstance.getEventManager().resolve(topEvents, gameInstance.getPlayers(), gameInstance.getBuildingManager());
-
-                // Combine bottom and top events results
-                Map<EventType, ArrayList<PlayerEventResults>> allEventsResults = new HashMap<>(lastEventsResults);
-                for (EventType type : topEventsResults.keySet()) {
-                    if (allEventsResults.containsKey(type)) {
-                        allEventsResults.get(type).addAll(topEventsResults.get(type));
-                    } else {
-                        allEventsResults.put(type, topEventsResults.get(type));
-                    }
-                }
-
-                notifyAll(n -> {
-                    n.notifyStartRound(allEventsResults);
-                });
-            } else {
-                notifyAll(n -> {
-                    n.notifyStartRound(lastEventsResults);
-                });
-            }
+//        if (isLastRound) {
+//            // In the last round, we also resolve top row events that were left there
+//            ArrayList<EventCard> topEvents = gameInstance.getOfferTrack().getTopEvents();
+//            if (!topEvents.isEmpty()) {
+//                Map<EventType, ArrayList<PlayerEventResults>> topEventsResults = gameInstance.getEventManager().resolve(topEvents, gameInstance.getPlayers(), gameInstance.getBuildingManager());
+//
+//                // Combine bottom and top events results
+//                Map<EventType, ArrayList<PlayerEventResults>> allEventsResults = new HashMap<>(lastEventsResults);
+//                for (EventType type : topEventsResults.keySet()) {
+//                    if (allEventsResults.containsKey(type)) {
+//                        allEventsResults.get(type).addAll(topEventsResults.get(type));
+//                    } else {
+//                        allEventsResults.put(type, topEventsResults.get(type));
+//                    }
+//                }
+//
+//                notifyAll(n -> {
+//                    n.notifyStartRound(allEventsResults);
+//                });
+//            } else {
+//                notifyAll(n -> {
+//                    n.notifyStartRound(lastEventsResults);
+//                });
+//            }
 
             calculateFinalPoints();
             throw new EndOfGameException();
         }
 
-        notifyAll(n -> {
-            n.notifyStartRound(lastEventsResults);
-        });
-        //int oldEra = gameInstance.getEra();
+//        notifyAll(n -> {
+//            n.notifyStartRound(lastEventsResults);
+//        });
         try {
             gameInstance.initOfferTrack();
         } catch(ChangeEraException e){
@@ -329,25 +333,6 @@ public class GameController {
             setNextPlayer();
         } catch (LastPlayerOfTurnException e) {
             gameInstance.setCurrentPhase(GamePhase.ON_DRAW);
-            
-//            // Notify phase change and all card rows
-//            notifyAll(n -> {
-//                n.notifyGamePhase(GamePhase.ON_DRAW);
-//                n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
-//                n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
-//                n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
-//                n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
-//            });
-
-            //distribution of food bonuses from offer tiles (tile A)
-            for (Player p : gameInstance.getPlayers()) {
-                int bonus = p.getCurrentOfferTile().getFoodBonus();
-                if (bonus > 0) {
-                    p.getTribe().modifyFood(bonus);
-                    notifyAll(n -> n.notifyNewFoodReserve(p.getName(), p.getTribe().getFoodReserve()));
-                }
-            }
-
             try {
                 setNextPlayer();
             } catch (LastPlayerOfTurnException e1) {
@@ -370,6 +355,8 @@ public class GameController {
     public synchronized void handleDraw(String playerName, boolean fromTopRow, boolean fromBuilding, int index){
             Player currPlayer = gameInstance.getPlayerByName(playerName);
             OfferTrack offerTrack = gameInstance.getOfferTrack();
+            int oldFoodReserve = currPlayer.getTribe().getFoodReserve();
+            int oldPrestigePoints = currPlayer.getTribe().getPrestigePoints();
 
             Card drawn = currPlayer.drawCard(fromTopRow, fromBuilding, index, offerTrack);
 
@@ -423,24 +410,25 @@ public class GameController {
                     if (currPlayer.getRemainingAbove() == 0 && currPlayer.getRemainingBelow() == 0) {
                         // Return to tile food bonus
                         gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
-//                        if (foodModifier > 0)
-//                            notifyAll(n -> n.notifyNewFoodReserve(playerName, currPlayer.getTribe().getFoodReserve()));
-//                        else if (foodModifier < 0) {
-//                            if (playersFood == 0)
-//                                notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()));
-//                            else
-//                                notifyAll(n -> n.notifyNewFoodReserve(playerName, currPlayer.getTribe().getFoodReserve()));
-//                        }
-                        notifyAll(n -> n.notifyNewFoodReserve(playerName, currPlayer.getTribe().getFoodReserve()));
-                        notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()));
+                        notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));
+                        notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
 
                         try {
                             setNextPlayer();
                         } catch (LastPlayerOfTurnException e) {
                             // EVENT RESOLUTION
-                            //non funziona non so perche' TODO fixare
                             gameInstance.setCurrentPhase(GamePhase.ON_EVENT);
-                            Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(gameInstance.getOfferTrack().getBottomEvents(), this.gameInstance.getPlayers(), gameInstance.getBuildingManager());
+
+                            ArrayList<EventCard> events = gameInstance.getOfferTrack().getBottomEvents();
+                            if (gameInstance.getCurrentRound() == 10)
+                                events.addAll(gameInstance.getOfferTrack().getTopEvents());
+                            Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(events, gameInstance.getPlayers(), gameInstance.getBuildingManager());
+                            System.out.println(eventsResults);
+                            for (EventType eventType : eventsResults.keySet()) {
+                                for (PlayerEventResults playerEventResults : eventsResults.get(eventType)) {
+                                    System.out.println("cibo e pp modificati dall'evento " + eventType + " per " + playerEventResults.player() + " : " + playerEventResults.foodAndPP()[0] + " , " + playerEventResults.foodAndPP()[1]);
+                                }
+                            }
                             startRound(eventsResults);
                         }
                     }
@@ -453,6 +441,8 @@ public class GameController {
     public void handlePassTurn(String playerName) {
         Player currPlayer = gameInstance.getPlayerByName(playerName);
         OfferTrack offerTrack = gameInstance.getOfferTrack();
+        int oldFoodReserve = currPlayer.getTribe().getFoodReserve();
+        int oldPrestigePoints = currPlayer.getTribe().getPrestigePoints();
 
         try {
             if (currPlayer.getRemainingAbove() > 0) {
@@ -476,15 +466,19 @@ public class GameController {
 
             // Return to tile food bonus
             gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
-            notifyAll(n -> n.notifyNewFoodReserve(playerName, currPlayer.getTribe().getFoodReserve()));
-            notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()));
+            notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));
+            notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
 
             try {
                 setNextPlayer();
             } catch (LastPlayerOfTurnException e) {
                 // EVENT RESOLUTION
                 gameInstance.setCurrentPhase(GamePhase.ON_EVENT);
-                Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(gameInstance.getOfferTrack().getBottomEvents(), this.gameInstance.getPlayers(), gameInstance.getBuildingManager());
+
+                ArrayList<EventCard> events = gameInstance.getOfferTrack().getBottomEvents();
+                if (gameInstance.getCurrentRound() == 10)
+                    events.addAll(gameInstance.getOfferTrack().getTopEvents());
+                Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(events, gameInstance.getPlayers(), gameInstance.getBuildingManager());
                 startRound(eventsResults);
             }
         } catch (StubException e) {
