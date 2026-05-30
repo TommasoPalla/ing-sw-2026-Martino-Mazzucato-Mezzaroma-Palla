@@ -9,17 +9,30 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController">
-<children>
-    <Text layoutX="197.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose number of players" textAlignment="CENTER">
-        <font>
-            <Font size="29.0" />
-        </font>
-    </Text>
-    <TextField fx:id="numberField" layoutX="211.0" layoutY="200.0" />
-    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="25.0" layoutX="24.0" layoutY="200.0" stroke="BLACK" strokeType="INSIDE" width="119.0" />
-    <Polygon fill="DODGERBLUE" layoutX="167.0" layoutY="188.0" points="-50.0, 40.0, 50.0, 40.0, 5.500292778015137, 8.999707221984863" rotate="90.0" stroke="BLACK" strokeType="INSIDE" />
-    <Button fx:id="ConfirmButton" layoutX="395.0" layoutY="200.0" mnemonicParsing="false" onAction="#handleConfirm" text="CONFIRM" />
-    <Label fx:id="errorLabel" layoutX="204.0" layoutY="314.0" textFill="#e80707" />
-</children>
-</AnchorPane>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.ImageView?>
+
+<?import javafx.scene.layout.Pane?>
+<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController">
+
+    <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">
+        <children>
+            <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
+                <effect>
+                    <ColorAdjust saturation="-0.3" />
+                </effect>
+            </ImageView>
+            <Text layoutX="197.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose number of players" textAlignment="CENTER">
+                <font>
+                    <Font size="29.0" />
+                </font>
+            </Text>
+            <TextField fx:id="numberField" layoutX="211.0" layoutY="200.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="25.0" layoutX="24.0" layoutY="200.0" stroke="BLACK" strokeType="INSIDE" width="119.0" />
+            <Polygon fill="DODGERBLUE" layoutX="167.0" layoutY="188.0" points="-50.0, 40.0, 50.0, 40.0, 5.500292778015137, 8.999707221984863" rotate="90.0" stroke="BLACK" strokeType="INSIDE" />
+            <Button fx:id="ConfirmButton" layoutX="395.0" layoutY="200.0" mnemonicParsing="false" onAction="#handleConfirm" text="CONFIRM" />
+            <Label fx:id="errorLabel" layoutX="204.0" layoutY="314.0" textFill="#e80707" />
+        </children>
+    </AnchorPane>
+
+</Pane>

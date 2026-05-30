@@ -10,9 +10,9 @@
            fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.introController">
 
     <ImageView fx:id="background"
-               preserveRatio="false"
-               pickOnBounds="true"
-    />
+               preserveRatio="true"
+               pickOnBounds="true"/>
+    <ImageView/>
 
 
 

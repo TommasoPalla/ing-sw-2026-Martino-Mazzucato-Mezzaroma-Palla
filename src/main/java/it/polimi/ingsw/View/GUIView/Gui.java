@@ -77,15 +77,14 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
                     nicknameScene();
 
                 } catch (Exception e) {
-                    System.out.println("Error: " + e);
+                    e.printStackTrace();;
                 }
             });
 
             delay.play();
 
         } catch (Exception e) {
-
-            System.out.println("Error: " + e);
+            e.printStackTrace();;
         }
     }//-> nickname
 
