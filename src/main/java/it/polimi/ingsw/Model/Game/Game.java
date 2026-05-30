@@ -12,6 +12,7 @@ import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.Users.*;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Model.EventManagement.EventManager;
 
 public class Game {
@@ -30,7 +31,7 @@ public class Game {
     private final EventManager eventManager;
     private Deck deck;
     private static final String jsonCardsPath = "json/cards.json";
-
+    private GameController controller;
 
     public Game(int gameID, int numPlayers) {
         readyToStart = false;
@@ -40,6 +41,14 @@ public class Game {
         this.players = new ArrayList<>();
         eventManager = new EventManager();
         totemColors = new HashMap<>();
+    }
+
+    public void setController(GameController controller) {
+        this.controller = controller;
+    }
+
+    public GameController getController() {
+        return controller;
     }
 
     //getters

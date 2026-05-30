@@ -126,18 +126,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyNewFoodReserve(String playerName, int newFoodReserve) {
+    public void notifyNewFood(String playerName, int newFoodReserve) {
         try {
             clientStub.updateFood(playerName, newFoodReserve);
-        } catch (RemoteException e) {
-            //throw new StubException("could not notify");
-        }
-    }
-
-    @Override
-    public void notifyShamansStarsToAdd(String playerName, int stars) {
-        try {
-            clientStub.updateShamansStars(playerName, stars);
         } catch (RemoteException e) {
             //throw new StubException("could not notify");
         }
@@ -147,6 +138,33 @@ public class RMIClientNotifier implements ClientNotifier {
     public void notifyNewPrestigePoints(String playerName, int newPP) {
         try {
             clientStub.updatePrestigePoints(playerName, newPP);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyNewShamansStars(String playerName, int stars) {
+        try {
+            clientStub.updateShamansStars(playerName, stars);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyNewBuildersDiscount(String playerName, int discount) {
+        try {
+            clientStub.updateBuildersDiscount(playerName, discount);
+        } catch (RemoteException e) {
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
+    public void notifyNewGatherersDiscount(String playerName, int discount) {
+        try {
+            clientStub.updateGatherersDiscount(playerName, discount);
         } catch (RemoteException e) {
             //throw new StubException("could not notify");
         }

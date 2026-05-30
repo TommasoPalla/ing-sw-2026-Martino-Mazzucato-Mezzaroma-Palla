@@ -50,25 +50,27 @@ public class SustenanceEvent extends EventCard implements EventStrategy{
     @Override
     public void apply(EventCard eventCard, ArrayList<Player> players, BuildingManager buildingManager) {
         for(Player player : players){
-            int necessaryFood = player.getTribe().getPopulationSize() * eventCard.getFoodMalus();
+            int populationSize = player.getTribe().getPopulationSize();
+            int foodMalusPerPerson = eventCard.getFoodMalus();
+            int totalNecessaryFood = populationSize * foodMalusPerPerson;
+            
             int gatherersDiscount = player.getTribe().getGatherersDiscount();
-            int initialFoodToPay = necessaryFood - gatherersDiscount;
+            int foodToPay = Math.max(0, totalNecessaryFood - gatherersDiscount);
 
             EffectContext context = new EffectContext(player);
-            context.putParam(Parameters.FOOD_MALUS, initialFoodToPay);
+            context.putParam(Parameters.FOOD_MALUS, foodToPay);
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, SustenanceEvent.class);
 
-            int finalFoodToPay = context.getParam(Parameters.FOOD_MALUS);
-            if(finalFoodToPay < 0) finalFoodToPay = 0;
+            int finalFoodToPay = Math.max(0, context.getParam(Parameters.FOOD_MALUS));
+            int currentFood = player.getTribe().getFoodReserve();
 
-            int foodReserve = player.getTribe().getFoodReserve();
-            if(finalFoodToPay > foodReserve){
-                player.getTribe().modifyFood(-foodReserve);
-                player.getTribe().modifyPrestigePoints((foodReserve - finalFoodToPay) * eventCard.getPrestigeMalus());
-                // (foodReserve - finalFoodToPay) is already negative => prestige points reduced
+            if (finalFoodToPay > currentFood) {
+                int missingFood = finalFoodToPay - currentFood;
+                player.getTribe().modifyFood(-currentFood); // pay all available food
+                player.getTribe().modifyPrestigePoints(-(missingFood * eventCard.getPrestigeMalus()));
+            } else {
+                player.getTribe().modifyFood(-finalFoodToPay);
             }
-            else player.getTribe().modifyFood(-finalFoodToPay);
         }
-
     }
 }

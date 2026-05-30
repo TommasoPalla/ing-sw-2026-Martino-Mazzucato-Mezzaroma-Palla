@@ -78,6 +78,8 @@ public class ServerController {
         System.out.println("[SERVER] Creating new game (ID: " + gameID + ") for " + playerNum + " players. Host: " + firstPlayerName);
         Game newGame = new Game(gameID, playerNum);
         GameController gameController = new GameController(newGame);
+        newGame.setController(gameController);
+        
         activeGames.put(gameID, new GameRecord(newGame, gameController));
 
         PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);

@@ -140,6 +140,10 @@ public interface VirtualRMIClient extends Remote {
      */
     void updatePrestigePoints(String playerName, int points) throws RemoteException;
 
+    void updateBuildersDiscount(String playerName, int discount) throws RemoteException;
+
+    void updateGatherersDiscount(String playerName, int discount) throws RemoteException;
+
     /**
      * Updates the cards in the top row of the offer track.
      * @param newTopRow the new list of character cards.

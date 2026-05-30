@@ -34,7 +34,6 @@ public class ClientModel {
     Map<Integer,String> turnTileStatus;
     private int[] tileModifier;
     private ArrayList<OfferTile> offerTiles;
-    //lightTribe, qui non esiste player solo il suo id!!!!!!!!!!
 
     ClientModel(int gameId, int numPlayers){
         this.gameId = gameId;
@@ -192,13 +191,19 @@ public class ClientModel {
 
 
     void updateFoodReserve(String playerName, int food) {
-        players.get(playerName).setFoodReserve(food);
+        players.get(playerName).modifyFood(food);
     }
     void updatePrestigePoints(String playerName, int pp) {
-        players.get(playerName).setPrestigePoints(pp);
+        players.get(playerName).modifyPrestigePoints(pp);
     }
     void updateShamansStars(String playerName, int stars) {
-        players.get(playerName).addShamansStars(stars);
+        players.get(playerName).setShamansStars(stars);
+    }
+    void updateBuildersDiscount(String playerName, int discount) {
+        players.get(playerName).setBuilderDiscount(discount);
+    }
+    void updateGatherersDiscount(String playerName, int discount) {
+        players.get(playerName).setGathererDiscount(discount);
     }
 
     //aggiungere metodo clearOfferTile(), in player c'è moveTotemToTurnTile e in OfferTile c'è free, decidere cosa fare

@@ -28,6 +28,7 @@ public interface ViewInterface {
     void notifyTurnPassed(String playerThatPassed, String newCurrentPlayer);
     void notifyGiveInitialFood(Map<String,Integer> initialFood);
     void notifyTileChosen(String playerName, int index);
+    void notifyFoodBonusTile(String playerName, int foodBonus);
     void notifyNewCurrentPlayer(String playerName, ClientState clientState);
     void notifyNewGamePhase(GamePhase newGamePhase);
     void notifyFood(String playerName, int food);

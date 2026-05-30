@@ -483,9 +483,8 @@ public class TUIView implements ViewInterface {
             }
             else
                 System.err.println("The game will be interrupted and you will be brought back to setup.");
-
-            printAvailableActions(clientController.getClientState(), false);
         }
+        printAvailableActions(clientController.getClientState(), false);
     }
 
     @Override
@@ -579,14 +578,15 @@ public class TUIView implements ViewInterface {
         System.out.println();
         if(this.player.equals(player)) {
             System.out.println("You have successfully drawn the " + cardType + " " + card.getCardID() + " from the " + row);
-            printTribe(this.player);
-
-            // If I still have cards to draw, show me the rows again to help with the next choice
+            
+            // Only show tribe if I still have cards to draw. 
+            // If it's the last draw, I'll wait for the turn-end bonuses (food/PP) to arrive before showing the tribe.
             LightTribe tribe = clientController.getLocalModel().getPlayerTribe(this.player);
             int remainingAboveDraws = tribe.getRemainingAbove();
             int remainingBelowDraws = tribe.getRemainingBelow();
 
             if (remainingAboveDraws > 0 || remainingBelowDraws > 0) {
+                printTribe(this.player);
                 printRemainingDraws(remainingAboveDraws, remainingBelowDraws);
                 if (remainingAboveDraws > 0) printTopRow();
                 if (remainingBelowDraws > 0) printBottomRow();
@@ -624,6 +624,16 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
+    public void notifyFoodBonusTile(String playerName, int foodBonus) {
+        System.out.println();
+        if(playerName.equals(this.player))
+            System.out.println("You take " + foodBonus + " food bonus from your tile! Since you have no draws available, your totem will be moved back to the turn tile.");
+        else
+            System.out.println(clientController.getLocalModel().getTotemColors().get(playerName).colorize(playerName) + " takes " + foodBonus + " food bonus from their tile! Their totem will be moved back to the turn tile.");
+        printOfferTrack();
+    }
+
+    @Override
     public void notifyNewCurrentPlayer(String currentPlayerName, ClientState clientState) {
         if(currentPlayerName == null || currentPlayerName.isEmpty()) return;
         if(currentPlayerName.equals(this.player)) {
@@ -631,7 +641,8 @@ public class TUIView implements ViewInterface {
             System.out.println("                IT'S YOUR TURN!                    ");
             System.out.println("***************************************************");
             
-            // Proactively show relevant info
+            printTribe(this.player);
+
             if (clientState == ClientState.DRAW_CARD) {
                 LightTribe tribe = clientController.getLocalModel().getPlayerTribe(this.player);
                 printRemainingDraws(tribe.getRemainingAbove(), tribe.getRemainingBelow());
@@ -823,7 +834,7 @@ public class TUIView implements ViewInterface {
             case DRAW_CARD:
                 System.out.println("These are the available actions:");
                 System.out.println("- draw_card(top/bottom, char/building, offer_track_index): To draw a card from top or bottom row. You have also to specify if the card\nis a character card or a building and the index of the row.");
-                System.out.println("- pass_turn(): To pass your turn to the next player. Available only if there are no characters cards left to draw");
+                System.out.println("- pass_turn(): To pass your turn to the next player. Available only if there are no characters cards left to draw.");
                 break;
         }
         if(help && clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) printGeneralCommands();

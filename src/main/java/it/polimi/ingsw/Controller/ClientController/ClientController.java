@@ -345,7 +345,6 @@ public class ClientController implements ClientViewUpdate {
 
     @Override
     public void updateCardDrawn(boolean fromTopRow, boolean fromBuilding, int index, String playerName){
-        //String cardID = local
         Card drawn;
         LightTribe tribe = localModel.getPlayerTribe(playerName);
         if(fromTopRow){
@@ -456,7 +455,7 @@ public class ClientController implements ClientViewUpdate {
 
     private void updateInitialFood(Map<String, Integer> initialFood) {
         for (String player : initialFood.keySet()) {
-            localModel.getPlayerTribe(player).setFoodReserve(initialFood.get(player));
+            localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
         }
         view.notifyGiveInitialFood(initialFood);
         updateStartRound(Collections.emptyMap());
@@ -468,20 +467,23 @@ public class ClientController implements ClientViewUpdate {
         localModel.updateCurrentRound(localModel.getCurrentRound() + 1);
         localModel.setCurrentPlayer("");
 
-        // UPDATING EVENTS RESULTS
+        // UPDATING EVENTS RESULTS using deltas
         if (!lastEventsResults.isEmpty()) {
+            System.out.println(lastEventsResults);
             for (EventType eventType : lastEventsResults.keySet()) {
                 for(PlayerEventResults playerResults : lastEventsResults.get(eventType)){
                     LightTribe playersTribe = localModel.getPlayerTribe(playerResults.player());
-                    // player's notification
+                    int foodDelta = playerResults.foodAndPP()[0];
+                    int ppDelta = playerResults.foodAndPP()[1];
+
+                    // player's notification (only for the local player's view)
                     if (playerResults.player().equals(this.playerName)) {
-                        int foodModified = playerResults.foodAndPP()[0] - playersTribe.getFoodReserve();
-                        int ppModified = playerResults.foodAndPP()[1] - playersTribe.getPrestigePoints();
-                        view.notifyEvent(eventType, foodModified, ppModified);
+                        view.notifyEvent(eventType, foodDelta, ppDelta);
                     }
-                    // tribe's updating
-                    playersTribe.setFoodReserve(playerResults.foodAndPP()[0]);
-                    playersTribe.setPrestigePoints(playerResults.foodAndPP()[1]);
+
+                    // tribe's updating by ADDING deltas
+                    playersTribe.modifyFood(foodDelta);
+                    playersTribe.modifyPrestigePoints(ppDelta);
                 }
             }
         }
@@ -491,8 +493,10 @@ public class ClientController implements ClientViewUpdate {
             localModel.getTurnTileStatus().put(i, localModel.getTurnOrder().get(i));
         }
 
-        view.notifyStartRound(localModel.getCurrentRound());
-        updateCurrentPlayer();
+        if (localModel.getCurrentRound() <= 10) {
+            view.notifyStartRound(localModel.getCurrentRound());
+            updateCurrentPlayer();
+        }
     }
 
     @Override
@@ -531,6 +535,16 @@ public class ClientController implements ClientViewUpdate {
     }
 
     @Override
+    public void updateBuildersDiscount(String playerName, int discount) {
+        localModel.updateBuildersDiscount(playerName, discount);
+    }
+
+    @Override
+    public void updateGatherersDiscount(String playerName, int discount) {
+        localModel.updateGatherersDiscount(playerName, discount);
+    }
+
+    @Override
     public void updateTopRow(ArrayList<Card> newTopRow) {
         localModel.updateTopRow(newTopRow);
     }
@@ -558,12 +572,13 @@ public class ClientController implements ClientViewUpdate {
             try {
                 nextPlayer = localModel.setNextPlayer();
 
-                //skip for ON_DRAW
+                //skip for TILE A ON_DRAW
                 if (localModel.getCurrentPhase() == GamePhase.ON_DRAW) {
                     LightTribe tribe = localModel.getPlayerTribe(nextPlayer);
                     if (tribe != null && tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
-                        //System.out.println("DEBUG [Controller]: Skipping " + nextPlayer + " (0 draws), freeing tile.");
+                        int foodBonus = localModel.getOfferTiles().get(localModel.getTurnOrder().indexOf(nextPlayer)).getFoodBonus();
                         localModel.moveTotemToTurnTile(nextPlayer);
+                        view.notifyFoodBonusTile(nextPlayer, foodBonus);
                         continue; //find NEXT player
                     }
                 }
