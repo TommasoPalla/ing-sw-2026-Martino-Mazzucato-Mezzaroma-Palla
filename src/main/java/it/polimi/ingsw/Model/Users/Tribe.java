@@ -141,7 +141,6 @@ public class  Tribe implements TribeInterface{
         building.assignOwner(tribeOwner);
         game.getBuildingManager().addBuilding(building, tribeOwner);
         building.effectOnPurchase(this);
-        this.prestigePoints += building.getPrestige();
     }
 
 
@@ -160,14 +159,20 @@ public class  Tribe implements TribeInterface{
         }
         int inventorsPoints = totalInventors * uniqueInventions;
 
-        modifyPrestigePoints(populationPoints + artistsPoints + inventorsPoints);
+        int buildingsPoints = 0;
+        for (BuildingCard building : buildings) {
+            buildingsPoints += building.getPrestige();
+        }
 
-        /*
+        modifyPrestigePoints(populationPoints + artistsPoints + inventorsPoints + buildingsPoints);
+
+
         System.out.println("DEBUG:" + tribeOwner.getName() + "'s artists points: " + artistsPoints);
         System.out.println("DEBUG:" + tribeOwner.getName() + "'s population points: " + populationPoints);
         System.out.println("DEBUG:" + tribeOwner.getName() + "'s inventors points: " + inventorsPoints);
+        System.out.println("DEBUG:" + tribeOwner.getName() + "'s inventors points: " + buildingsPoints);
+
         System.out.println();
-         */
 
         return this.prestigePoints;
     }

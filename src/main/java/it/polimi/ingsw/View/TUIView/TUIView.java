@@ -450,6 +450,7 @@ public class TUIView implements ViewInterface {
     @Override
     public void notifyPlayerLeftLobby(String playerName, Color oldColor) {
         boolean hadColor = oldColor != null;
+        System.out.println();
         if (playerName.equals(player)) {
             tuiState = TUIState.SETUP;
             System.out.println("You have successfully left the lobby!");

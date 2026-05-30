@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface ClientViewUpdate {
-    void updateCurrentRound(int round);
     void updateGameCreated(int gameID, int numPlayers);
     void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow,
                            ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow,
