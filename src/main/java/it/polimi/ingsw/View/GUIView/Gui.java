@@ -29,13 +29,14 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     private LobbySceneController lobby;
     private ArrayList<String> players;
     private GameSceneController gameScene;
-
+    private boolean isHost;
     private ClientState guiState = ClientState.SETUP;       //va capito come sfruttare sta cosa e gestirla bene
 
     public Gui(Stage stage){
 
         this.primaryStage = stage;
         this.players = new ArrayList<>();
+        this.isHost = false;
     }
 
     public void bindController(ClientController Controller){
@@ -49,8 +50,16 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     public ArrayList<String> getPlayers(){
         return players;
     }
-    public void removeMe(){
-        players.remove(nickname);
+    public void removePlayers(){
+        players.clear();
+    }
+
+    public boolean returnHost(){
+        return this.isHost;
+    }
+
+    public void handleLeave(){
+        this.isHost = false;
     }
 
     @Override
@@ -77,15 +86,14 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
                     nicknameScene();
 
                 } catch (Exception e) {
-                    System.out.println("Error: " + e);
+                    e.printStackTrace();;
                 }
             });
 
             delay.play();
 
         } catch (Exception e) {
-
-            System.out.println("Error: " + e);
+            e.printStackTrace();;
         }
     }//-> nickname
 
@@ -137,7 +145,8 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyNewHost() {
-
+        this.isHost = true;
+        lobby.newHost();
     }
 
     @Override
@@ -150,6 +159,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             non preoccuparci*/
             lobby.notifyPlayerJoined(playerName);
             //TODO: da fare anche la notifica di scelta dei totem in base a totemColors (gia' presi)
+            lobby.joined();
         }
         players=playerNames;
     }
@@ -370,6 +380,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     public void handleCreate(){
         chooseNumberOfPlayers();
         players.add(nickname);
+        this.isHost = true;
     }
     public void handleNickChange(){
         nicknameScene();

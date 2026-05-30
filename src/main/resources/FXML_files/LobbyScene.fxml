@@ -1,30 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.LobbySceneController">
-   <children>
-      <Label layoutX="658.0" layoutY="86.0" prefHeight="433.0" prefWidth="715.0" text="WELCOME TO THE LOBBY, &#10;please wait for other players.." textAlignment="CENTER">
-         <font>
-            <Font size="49.0" />
-         </font>
-      </Label>
-      <Label layoutX="262.0" layoutY="532.0" text="Connected players:">
-         <font>
-            <Font size="29.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="comboDropDownMenu" layoutX="236.0" layoutY="598.0" prefHeight="89.0" prefWidth="301.0" />
-      <Label fx:id="updateLabel" layoutX="1359.0" layoutY="590.0" textFill="#4b1ab5">
-         <font>
-            <Font size="29.0" />
-         </font>
-      </Label>
-      <Button fx:id="chooseTotemButton" layoutX="965.0" layoutY="520.0" mnemonicParsing="false" onAction="#handleTotem" prefHeight="97.0" prefWidth="154.0" text="Choose Totem" />
-      <Button fx:id="leaveLobby" layoutX="965.0" layoutY="687.0" mnemonicParsing="false" onAction="#handleLeave" prefHeight="97.0" prefWidth="154.0" text="Back to Creation Scene" />
-   </children>
-</AnchorPane>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.ImageView?>
+
+
+<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.LobbySceneController">
+    <children>
+
+        <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">
+                <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
+                    <effect>
+                        <ColorAdjust saturation="-0.3" />
+                    </effect>
+                </ImageView>
+                <Label layoutX="658.0" layoutY="86.0" prefHeight="433.0" prefWidth="715.0" text="WELCOME TO THE LOBBY, &#10;please wait for other players.." textAlignment="CENTER">
+                    <font>
+                        <Font size="49.0" />
+                    </font>
+                </Label>
+                <Label layoutX="262.0" layoutY="532.0" text="Connected players:">
+                    <font>
+                        <Font size="29.0" />
+                    </font>
+                </Label>
+                <VBox fx:id="playersContainer" layoutX="260.0" layoutY="579.0" prefHeight="407.0" prefWidth="450.0" spacing="10.0" />
+                <Label fx:id="updateLabel" layoutX="1359.0" layoutY="590.0" textFill="#4b1ab5">
+                <font>
+                    <Font size="29.0" />
+                </font>
+                </Label>
+                <VBox layoutX="992.0" layoutY="480.0" prefHeight="320.0" prefWidth="100.0" spacing="50.0">
+                    <children>
+                        <Button fx:id="chooseTotemButton" mnemonicParsing="false" onAction="#handleTotem" prefHeight="100.0" prefWidth="150.0" text="Choose Totem" />
+                        <Button fx:id="leaveLobby" mnemonicParsing="false" onAction="#handleLeave" prefHeight="100.0" prefWidth="150.0" text="Back to Creation Scene" />
+                        <Button fx:id="startGameButton" mnemonicParsing="false" onAction="#handleStart" prefHeight="100.0" prefWidth="150.0" text="Start Game" />
+                    </children>
+                </VBox>
+
+        </AnchorPane>
+    </children>
+
+
+</Pane>
