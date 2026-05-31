@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Enums;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * This enum represents the possible type of parameters that can be passed by the effect context for an event resolving.
+ */
 public enum Parameters {
     @SerializedName("F+")
     FOOD_BONUS,

@@ -60,6 +60,7 @@ public class ClientController implements ClientViewUpdate {
      */
     private Map<Integer, GamePlayers> availableGames;
 
+
     public ClientController() {
         clientState = ClientState.CONNECTING;
         playerName = "";
@@ -316,15 +317,20 @@ public class ClientController implements ClientViewUpdate {
             }
         }
 
-        //tribe.setRemainingDraws(0,0);
         connection.passTurn();
     }
 
 
     //-----------------CALLBACKS FROM SERVER UPDATES--------------------------------------------------------------------
+    /* Before making a call to the game controller methods, the client controller checks
+     * if the player's action is legal by checking the client light model
+     */
 
-    /** Before making a call to the game controller methods, the client controller checks
-     * if the player's draw is legal by checking the client light model
+    /**
+     * It updates with the new available games. The players in the setup state are updated every time the state of
+     * an existing game is modified.
+     * @param availableGames the map containing the gameID of the game mapped to a record containing the number of
+     *                       players needed to start the game and the players in lobby.
      */
     public void updateAvailableGames(Map<Integer, GamePlayers> availableGames){
       this.availableGames = availableGames;

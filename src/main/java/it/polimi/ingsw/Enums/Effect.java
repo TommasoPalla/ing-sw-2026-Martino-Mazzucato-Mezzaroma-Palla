@@ -1,8 +1,9 @@
 package it.polimi.ingsw.Enums;
 import com.google.gson.annotations.SerializedName;
 
-
-
+/**
+ * This enums contains all the possible type of effect for the buildings.
+ */
 public enum Effect {
     @SerializedName("AF")
     ARTISTS_FOOD,
