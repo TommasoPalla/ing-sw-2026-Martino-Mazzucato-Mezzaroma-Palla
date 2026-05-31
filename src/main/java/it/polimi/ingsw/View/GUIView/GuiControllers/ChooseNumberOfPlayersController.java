@@ -124,6 +124,7 @@ public class ChooseNumberOfPlayersController {
         if(number >= 2 && number <= 5) {
             try {
                 gui.handleNumber(number);
+                gui.setNumPlayers(number);
             }catch (IOException e){
                 showError("Insert a valid number please!");
             }

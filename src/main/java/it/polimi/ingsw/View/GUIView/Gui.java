@@ -31,12 +31,14 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     private GameSceneController gameScene;
     private boolean isHost;
     private ClientState guiState = ClientState.SETUP;       //va capito come sfruttare sta cosa e gestirla bene
+    private int numPlayers;
 
     public Gui(Stage stage){
 
         this.primaryStage = stage;
         this.players = new ArrayList<>();
         this.isHost = false;
+        this.numPlayers = 0;
     }
 
     public void bindController(ClientController Controller){
@@ -45,6 +47,14 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     public ClientController getClientController(){
         return this.controller;
+    }
+
+    public void setNumPlayers(int num){
+        numPlayers=num;
+    }
+
+    public int getNumPlayers(){
+        return(numPlayers);
     }
 
     public ArrayList<String> getPlayers(){
@@ -309,7 +319,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseTotemScene.fxml"));
             Parent root = loader.load();
-            ChooseNickNameController controller = loader.getController();
+            ChooseTotemController controller = loader.getController();
             controller.setGUI(this);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);

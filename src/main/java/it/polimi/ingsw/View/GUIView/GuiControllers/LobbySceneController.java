@@ -134,7 +134,13 @@ public class LobbySceneController {
 
     @FXML
     private void handleStart(){
-
+//        if(playersContainer.getChildren().size() == gui.getNumPlayers()){
+//            try{
+                gui.playGameScene();
+//            }catch (IOException e){
+//
+//            }
+//        }
     }
 
     public void joined(){
