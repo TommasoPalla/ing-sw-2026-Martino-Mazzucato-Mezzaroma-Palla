@@ -18,17 +18,46 @@ import it.polimi.ingsw.View.GamePlayers;
 
 import java.util.*;
 
-
+/**
+ * This class is responsible for managing requests from the client to the server and notifies from the server to the
+ * client. It represents the "thick client", where some logic (like the turn order management) is placed so the server
+ * is not always needed.
+ * It keeps a reference to a local model which is unique for every client and is used to extrapolate information
+ * for the view. It also has an attribute for the view interface which contains the notification methods based on the
+ * kind of UI (TUI or GUI).
+ */
 public class ClientController implements ClientViewUpdate {
+
+    /**
+     * Name of the player.
+     */
     private String playerName;
+
+    /**
+     * The type of connection used by this client (RMI or Socket).
+     */
     private ServerConnection connection;
+
+    /**
+     * A reference to this's client local model.
+     */
     private ClientModel localModel;
+
+    /**
+     * A reference to the type of view the player is using (TUI or GUI).
+     */
     private ViewInterface view;
+
     /**
      * The attribute representing the state of the client, deciding which actions
-     * they can perform in that state
+     * they can perform in that state.
      */
     private volatile ClientState clientState;
+
+    /**
+     * The list of available games, printed when a player wants to join a game. It is updated everytime the state of a
+     * existing lobby is modified or a new game is created.
+     */
     private Map<Integer, GamePlayers> availableGames;
 
     public ClientController() {
@@ -36,10 +65,12 @@ public class ClientController implements ClientViewUpdate {
         playerName = "";
         availableGames = new HashMap<>();
     }
-    public String getPlayerName(){  //servirà da qualche parte
+
+    // GETTERS
+    public String getPlayerName(){
         return playerName;
     }
-    public ServerConnection getConnection(){    //servirà da qualche parte?
+    public ServerConnection getConnection(){
         return connection;
     }
     public ClientModel getLocalModel() {
@@ -52,26 +83,44 @@ public class ClientController implements ClientViewUpdate {
         return clientState;
     }
 
-    /*no constructor defined, default constructor is used,
-    then modifyPlayerName, onGameStarted, bindConnection, bindView
-     methods are invoked to initialize private fields
-    * */
+
+    /**
+     * It's called to set the type of connection the player decides to use (RMI or Socket)
+     * @param connection the interface with the methods used to send requests to the server.
+     */
     public void bindConnection(ServerConnection connection){
         this.connection = connection;
     }
+
+    /**
+     * It's called to set the type of UI the player decides to used (TUI or GUI)
+     * @param view the interface containing the methods of notification to the view.
+     */
     public void bindView(ViewInterface view){
         this.view = view;
     }
-    /*called when server responds with a successful 'startGame' request by first player
-    or next players join the game via 'joinGame' method
-    actually called by onGameStarted()*/
+    /**
+     * called when server responds with a successful 'startGame' request by first player
+     * or next players join the game via 'joinGame' method
+     * actually called by onGameStarted().
+     * */
     public void createLocalModel(int gameId, int numPlayers){
         this.localModel = new ClientModel(gameId, numPlayers);
     }
+
+    /**
+     * Set the client state of this client.
+     * @param clientState the new client state.
+     */
     public void setClientState(ClientState clientState){
         this.clientState = clientState;
     }
 
+    /**
+     * Called when the player inserts his nickname the first time or when he wants to change it while in the setup state.
+     * Can only be performed before joining a game.
+     * @param playerName the new nickname he wants to use.
+     */
     public void setPlayerName(String playerName) {
         if(this.playerName.equals(playerName))
             throw new IllegalArgumentException("This is already your name!");
@@ -80,11 +129,6 @@ public class ClientController implements ClientViewUpdate {
         }
         this.playerName = playerName;
         view.notifyNameSet(playerName);
-    }
-
-    @Override
-    public void updateCurrentRound(int round) {
-        localModel.updateCurrentRound(round);
     }
 
     //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-----------------------------
@@ -114,6 +158,9 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void joinGame(int gameID){
+        if (clientState != ClientState.SETUP) {
+            throw new IllegalClientStateActionException("ERROR: You cannot do that right now!");
+        }
         try {
             connection.joinGame(this.playerName, gameID);
         } catch (NotJoinableGameException e) {
@@ -160,7 +207,7 @@ public class ClientController implements ClientViewUpdate {
     identified by connection field (RMI/socket)*/
     public void chooseTotemColor(Color color){
         if (this.clientState != ClientState.IN_LOBBY) { //non sembra funzionare dopo una forceQuit non so perche'
-            throw new IllegalClientStateActionException("ERROR: You cannot choose a totem right now.");
+            throw new IllegalClientStateActionException("ERROR: You cannot choose a totem color right now.");
         }
         if (localModel.getTotemColors().containsKey(playerName)) {
             throw new AlreadyChosenTotemException();
@@ -174,15 +221,12 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public void chooseOfferTile(int index) {
-        if (clientState == ClientState.DRAW_CARD) {
-            throw new IllegalActionPhaseException();
-        }
-        if (clientState == ClientState.NOT_IN_TURN) {
+        if (clientState == ClientState.DRAW_CARD)
+            throw new IllegalClientStateActionException("ERROR: You have to place your totem right now!");
+        if (clientState == ClientState.NOT_IN_TURN)
             throw new IllegalClientStateActionException("ERROR: Wait for your turn!");
-        }
-        if (clientState != ClientState.PLACE_TOTEM) {
-            throw new IllegalClientStateActionException("Invalid command, please try again...");
-        }
+        if (clientState != ClientState.PLACE_TOTEM)
+            throw new IllegalClientStateActionException("You cannot do that right now!");
         try {
             if (localModel.isOccupied(index)) throw new OccupiedTileException();
             connection.chooseOfferTile(index);
@@ -201,9 +245,12 @@ public class ClientController implements ClientViewUpdate {
     o per mantenere informazioni di log.
     * */
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
-        if(clientState != ClientState.DRAW_CARD) {
-            throw new IllegalClientStateActionException("You cannot draw a card right now!");
-        }
+        if (clientState == ClientState.PLACE_TOTEM)
+            throw new IllegalClientStateActionException("ERROR: You have to draw right now!");
+        if (clientState == ClientState.NOT_IN_TURN)
+            throw new IllegalClientStateActionException("ERROR: Wait for your turn!");
+        if (clientState != ClientState.DRAW_CARD)
+            throw new IllegalClientStateActionException("You cannot do that right now!");
         String currentPlayer = localModel.getCurrentPlayer();
         if(!currentPlayer.isEmpty() && currentPlayer.equals(playerName)){
             try {

@@ -45,7 +45,7 @@ public record CommandParser(ClientController clientController) {
     private boolean parseCardBoolean(String argument){
         if (argument.equalsIgnoreCase("char")) return false;
         else if (argument.equalsIgnoreCase("building")) return true;
-        else throw new IllegalArgumentException("Card argument is invalid");
+        else throw new IllegalArgumentException("ERROR: Card argument is invalid");
     }
 
     public void parseChooseTotemColor(String argsString) {
@@ -148,7 +148,7 @@ public record CommandParser(ClientController clientController) {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("ERROR: the last argument is not a number!");
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+            throw new IllegalArgumentException(e.getMessage());
         }
         //non vanno try e catch perché drawCard lancia eccezioni già "formattate" nel formato che piace alla view
         clientController.drawCard(fromTopRow, fromBuilding,  index);
