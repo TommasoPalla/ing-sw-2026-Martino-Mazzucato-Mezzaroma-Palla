@@ -177,7 +177,9 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     @Override
     public void notifyGameStarted() {
         //try catch da fare meglio
+        Platform.runLater(() -> {
             playGameScene();
+        });
 
     }
 
@@ -351,6 +353,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     @Override
     public void lobbyScene() throws IOException{
         try {
+            guiState = ClientState.IN_LOBBY;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/LobbyScene.fxml"));
             Parent root = loader.load();
             LobbySceneController Controller = loader.getController();
@@ -409,6 +412,5 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     public void handleNumber(int number) throws IOException{
         controller.setClientState(ClientState.SETUP);
         controller.createGame(number);
-
     }
 }

@@ -57,7 +57,7 @@ public class LobbySceneController {
     @FXML
     public void initialize() {
 
-        Image img = new Image(getClass().getResource("/Images/mesosBoxQuality.png").toExternalForm());
+        Image img = new Image(getClass().getResource("/Images/lobbyBackground.jpeg").toExternalForm());
 
         background.setImage(img);
 
@@ -136,7 +136,8 @@ public class LobbySceneController {
     private void handleStart(){
 //        if(playersContainer.getChildren().size() == gui.getNumPlayers()){
 //            try{
-                gui.playGameScene();
+        gui.getClientController().startGame();
+        gui.playGameScene();
 //            }catch (IOException e){
 //
 //            }
@@ -144,8 +145,9 @@ public class LobbySceneController {
     }
 
     public void joined(){
-        updateLabel.setText("You joined the lobby!");
-    }
+        Platform.runLater(() -> {
+            updateLabel.setText("You joined the lobby!");
+        });    }
 
     public void init() {
         for (String name : gui.getPlayers()) {
@@ -158,14 +160,20 @@ public class LobbySceneController {
     }
 
     public void notifyPlayerJoined(String playerName) {
-        boolean alreadyIn = playersContainer.getChildren().stream()
-                .anyMatch(node -> node instanceof Label && ((Label) node).getText().equals(playerName));
+        Platform.runLater(() -> {
+            boolean alreadyIn = playersContainer.getChildren().stream()
+                    .anyMatch(node -> node instanceof Label && ((Label) node).getText().equals(playerName));
 
-        // 2. Se NON è presente, crea la Label e aggiungila alla schermata
-        if (!alreadyIn) {
-            updateLabel.setText(playerName + " joined the lobby");
-            addPlayerToContainer(playerName);
-        }
+
+            if (!alreadyIn) {
+                updateLabel.setText(playerName + " joined the lobby");
+                //addPlayerToContainer(playerName);
+
+                Label playerLabel = new Label(playerName);
+                playerLabel.setStyle("-fx-font-size: 26px; -fx-text-fill: black; -fx-font-weight: bold;");
+                playersContainer.getChildren().add(playerLabel);
+            }
+        });
     }
 
     public void notifyPlayerLeft(String playerName) {
@@ -173,17 +181,14 @@ public class LobbySceneController {
         removePlayerFromContainer(playerName);
     }
 
-    private void addPlayerToContainer(String playerName) {
-        // Platform.runLater assicura che l'aggiunta avvenga sul thread grafico
-        Platform.runLater(() -> {
-            Label playerLabel = new Label(playerName);
-
-            // Se usi fogli di stile o vuoi cambiare font/colore ai nomi, puoi farlo qui:
-            // playerLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white;");
-
-            playersContainer.getChildren().add(playerLabel);
-        });
-    }
+//    private void addPlayerToContainer(String playerName) {
+//        // Platform.runLater assicura che l'aggiunta avvenga sul thread grafico
+//        Platform.runLater(() -> {
+//            Label playerLabel = new Label(playerName);
+//
+//            //playersContainer.getChildren().add(playerLabel);
+//        });
+//    }
 
     private void removePlayerFromContainer(String playerName) {
         // Platform.runLater assicura che la rimozione avvenga sul thread grafico
