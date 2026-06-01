@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Enums;
 
 /**
- * This enum contains all command types a player can send in input to the TUI
+ * This enum contains all command types a player can send in input when he uses the TUI view.
  */
 public enum CommandType {
     CREATE_GAME("create_game", 1),
@@ -21,14 +21,15 @@ public enum CommandType {
     SHOW_BUILDING_INFO("show_building_info", 1),
     HELP("help", 0);
 
-    /*
+    /**
      * Name of the command.
      */
-    private String commandName;
-    /*
+    private final String commandName;
+
+    /**
      * Number of arguments required by the command.
      */
-    private int argsNum;
+    private final int argsNum;
 
     CommandType(String commandName, int argsNum) {
         this.commandName = commandName;

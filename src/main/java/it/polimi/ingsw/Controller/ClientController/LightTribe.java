@@ -53,7 +53,9 @@ public class LightTribe implements TribeInterface {
         this.remainingBelow = 0;
     }
 
-    //getters
+    /*
+    * Getters
+     */
     public String getPlayerName() { return playerName; }
 
     @Override
@@ -108,9 +110,9 @@ public class LightTribe implements TribeInterface {
 
     public int getRemainingBelow() { return remainingBelow; }
 
-    //setters
-//    public void setFoodReserve(int food) { this.foodReserve = food; }
-//    public void setPrestigePoints(int pp) { this.prestigePoints = pp; }
+    /*
+    * Setters
+     */
     public void setShamansStars(int stars) { this.shamansStars = stars; }
     public void setBuilderDiscount(int discount) { this.builderDiscount = discount; }
     public void setGathererDiscount(int discount) { this.gatherersDiscount = discount; }
@@ -148,7 +150,6 @@ public class LightTribe implements TribeInterface {
     public void addCharacter(CharacterCard character) {
         population.get(character.getRole()).add(character);
         populationSize++;
-        //character.applyEffect(this);
     }
 
     /**
@@ -157,7 +158,6 @@ public class LightTribe implements TribeInterface {
      */
     public void addBuilding(BuildingCard building) {
         buildings.add(building);
-        //building.effectOnPurchase(this);
     }
 
     @Override

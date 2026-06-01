@@ -2,9 +2,9 @@ package it.polimi.ingsw.Enums;
 
 import com.google.gson.annotations.SerializedName;
 import it.polimi.ingsw.View.TUIView.TuiIcons;
-/*
-this enum represents all the possible types of event*/
-
+/**
+ * This enum represents all the possible types of event that can occur during the game.
+ */
 public enum EventType {
   @SerializedName("S")
   SUSTENANCE(TuiIcons.GATHERER),

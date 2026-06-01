@@ -2,9 +2,10 @@ package it.polimi.ingsw.Enums;
 
 import com.google.gson.annotations.SerializedName;
 import it.polimi.ingsw.View.TUIView.TuiIcons;
-/*
-this enum represents all the possible roles of a character*/
 
+/**
+ * This enum represents all the possible roles of a character.
+ */
 public enum CharacterRole {
     @SerializedName("H")
     HUNTER(TuiIcons.HUNTER),
@@ -26,6 +27,9 @@ public enum CharacterRole {
 
     NONE("");
 
+    /**
+     * The {@link TuiIcons} icon associated to the role.
+     */
     private final String icon;
 
     CharacterRole(String icon){

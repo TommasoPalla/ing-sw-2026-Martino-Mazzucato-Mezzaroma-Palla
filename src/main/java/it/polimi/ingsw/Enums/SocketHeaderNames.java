@@ -1,7 +1,11 @@
 package it.polimi.ingsw.Enums;
 
+/**
+ * This enum represents all the possible socket header names a socket message can have, divided by context, based on if
+ * it's a player's action, the updates from the server or the connection handling.
+ */
 public enum SocketHeaderNames {
-    //azioni che il player puo' fare
+    // actions that a player can perform
     CREATE_GAME,
     START_GAME,
     SET_NAME,       //TODO: forse fare il corrispettivo NAME_SET
@@ -13,7 +17,7 @@ public enum SocketHeaderNames {
     PASS_TURN,
     CHOOSE_OFFER_TILE,
 
-    //conseguenze che il server manda come aggiornamento ai player
+    // updates that the server sends to players
     GAME_CREATED,
     GAME_STARTED,
     NEW_HOST,

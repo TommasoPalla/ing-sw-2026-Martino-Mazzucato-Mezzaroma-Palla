@@ -3,8 +3,9 @@ package it.polimi.ingsw.Enums;
 import com.google.gson.annotations.SerializedName;
 import it.polimi.ingsw.View.TUIView.TuiIcons;
 
-/*
-this enum represents all the possible types related to the inventor character*/
+/**
+ * This enum represents all the possible types of invention related to the inventor character.
+ */
 public enum InventorType {
   @SerializedName("B")
   BOAT(TuiIcons.BOAT_INVENTOR),
