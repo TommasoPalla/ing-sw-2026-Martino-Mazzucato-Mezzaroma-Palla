@@ -26,18 +26,35 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * Game controller of a single game instance, used to extract
+ * The Game controller manages a single game instance. It's used to extract
  * information from the View, such as player inputs, and
- * to route them to the associated game model by the calls of its methods
+ * to route them to the associated game model by the calls of its methods. The instance of this game controller is
+ * stored in the unique server controller, by which its methods are called.
  */
 public class GameController {
+
+    /**
+     * The {@link Game} instance of the game associated to this controller, used to call its methods.
+     */
     private final Game gameInstance;
+
+    /**
+     * A map containing all the names of the clients connected to this game, mapped to their {@link ClientNotifier}.
+     * It represents the current players in the lobby game and the list of all players playing this game.
+     */
     private final Map<String, ClientNotifier> connectedClients;
+
+    /**
+     * The host client of this game. By default, it's the creator of the lobby. If the host leaves, the player who joined
+     * after him becomes the host. the host is the only player allowed to start the game.
+     */
     private String hostClient;
+
     private final ExecutorService notificationThreads = Executors.newCachedThreadPool();
 
     /**
-     * GameController's constructor is called in the GameManager when a new game is added
+     * GameController's constructor is called in the {@link it.polimi.ingsw.Networking.Shared.ServerController}
+     * when a new game is added.
      */
     public GameController(Game gameInstance) {
         this.gameInstance = gameInstance;
@@ -53,7 +70,9 @@ public class GameController {
     }
 
     /**
-     * This method calls the respective method in Game to add a player while in Lobby State
+     * This method is called when a notification has to be broadcasted to all the players of the game. A new thread is created
+     * for each single notification. It uses a {@link Consumer} pattern to manage the notification forwarding.
+     * @param action the type of notification sent.
      */
     public synchronized void notifyAll(Consumer<ClientNotifier> action){
         for(ClientNotifier notifier : connectedClients.values()){
@@ -70,8 +89,8 @@ public class GameController {
      * to everyone, regardless of what networking protocol they are using.
      * Moreover, connectedClients identifies players waiting in the lobby
      * for hostClient to start the game.
-     * @param playerName a valid name, not already used by a player in this lobby
-     * @param newNotifier relative to this specific playerName, to update them
+     * @param playerName a valid name, not already used by a player in this lobby.
+     * @param newNotifier relative to this specific playerName, to update them.
      */
     public void addClient(String playerName, ClientNotifier newNotifier) {
         if(connectedClients.containsKey(playerName)) {
@@ -99,16 +118,16 @@ public class GameController {
             ArrayList<String> clients = new ArrayList<>(connectedClients.keySet());
             try {
                 newNotifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(), clients, gameInstance.getPlayersTotemColors());
-            /*if(gameInstance.isReadyToStart()){
-                    notifier.notifyGameReady();         da definire
-                }*/
             } catch(StubException e){
                 //handleCriticalDisconnection();
             }
         }
     }
 
-    //forse è usato solo insieme a removePlayer, in quel caso fare merge: valutare alla fine
+    /**
+     * It removes a client from the list of connected clients when he leaves the lobby.
+     * @param playerName the name of the player.
+     */
     public void removeClient(String playerName) {
         if(connectedClients.containsKey(playerName)) {
             gameInstance.getPlayersTotemColors().remove(playerName);
@@ -132,7 +151,9 @@ public class GameController {
 
     /** chooseTotemColor method is called by View, following player's input.
      * It verifies chosen color is available and then calls respective method
-     * in Game class, that updates model. Finally, all clients are notified.     *
+     * in Game class, that updates model. Finally, all clients are notified.
+     * @param playerName the name of the player choosing the totem color.
+     * @param totemColor the {@link Color} value of the totem chosen by the player.
      */
     public synchronized void chooseTotemColor(String playerName, Color totemColor){
         if(!gameInstance.getAvailableColors().contains(totemColor)){
@@ -148,26 +169,18 @@ public class GameController {
         }
     }
 
-    /**
-     * checks if the action is done during the right game phase
-     */
-
-    //serve?
-
-    public synchronized void checkPhase(GamePhase phase) {
-        if(phase != gameInstance.getGamePhase()){
-            throw new IllegalActionPhaseException();
-        }
-    }
-
     public synchronized void checkPlayer(Player player){
         if(player != gameInstance.getCurrentPlayer()){
             throw new IllegalActionTurnException();
         }
     }
 
-
-    //da capire se serve
+    /**
+     * This method is used to set the next player of the game. If the {@link GamePhase} is ON_DRAW and the next player
+     * has no draws (tile A case) it immediately moves it back to the respective slot of the starting tile and gives him
+     * the food bonus, it notifies the new food bonus, and it passes to the next player.
+     * @return the reference to the next {@link Player}.
+     */
     public synchronized Player setNextPlayer() {
         try {
             Player nextPlayer =  gameInstance.setNextPlayer();
@@ -197,7 +210,17 @@ public class GameController {
         }
     }
 
-    public void startGame(String requestingPlayer) {
+    /**
+     * This method starts the game when the host client launches the command. It creates the {@link Player} instances
+     * for every connected client, calculates the initial food to give to every player, it shuffles the first turn order,
+     * it sets the {@link GamePhase} to START_TURN and inits the offer track with the first rows. Finally, it notifies
+     * all players with the information needed.
+     * @param requestingPlayer the player requesting to start the game.
+     * @throws NotTheHostException if the player requesting to start the game is not the host.
+     * @throws NotEnoughPlayersException if there are not enough players to start the game.
+     * @throws TotemColorNotChosen if there are still some player left who have not chosen their totem color.
+     */
+    public synchronized void startGame(String requestingPlayer) throws NotTheHostException, NotEnoughPlayersException, TotemColorNotChosen {
         if(!requestingPlayer.equals(hostClient)) {
             throw new NotTheHostException("ERROR: you can't start the game if you're not the host!");
         }
@@ -232,9 +255,15 @@ public class GameController {
     }
 
     /**
-     * When a new round starts, after all the events are resolved and the rows are repopulated
+     * This method is called when the drawing phase comes to an end and the last round's bottom events are resolved.
+     * It sets the {@link GamePhase} to START_TURN and notifies the players about the start of the round and about the
+     * results of the last events. It updates the rows of the offer track and updates the era if necessary. Finally,
+     * it notifies all the players with the new offer track status. It catches a {@link LastRoundException} if the
+     * previous round was the last one. If it was so, it calculates the final points to set the final ranking
+     * @param lastEventsResults the map containing all information about the results of the last resolved events.
+     * @throws EndOfGameException if the previous round was the last one.
      */
-    public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
+    public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws EndOfGameException{
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
         boolean isLastRound = false;
         notifyAll(n -> {
@@ -299,20 +328,17 @@ public class GameController {
         String firstPlayer = gameInstance.setFirstPlayer();
     }
 
-    /** Handles the player request to place the totem on a specific
+    /**
+     * Handles the player request to place the totem on a specific
      * offer tile. It checks whether it is player's turn and the correct phase of the game.
      * The method delegates the update of the model to Game class.
-     *
      * @param playerName the player who requests to place the totem
      * @param index index of the offer tile, starting from 0.
+     * @throws OccupiedTileException if the tile is already occupied by another player.
      */
-    //TODO: da fare che se tutti hanno scelto si passa alla fase di pesca delle carte
-    public synchronized void handleChooseOfferTile (String playerName, int index) {
+    public synchronized void handleChooseOfferTile (String playerName, int index) throws OccupiedTileException{
         System.out.println("[GAME " + gameInstance.getGameID() + "] ACTION: '" + playerName + "' placing totem on tile " + index);
-        //throws to ServerController IllegalActionPhaseException
-        checkPhase(GamePhase.START_TURN);
         Player player = gameInstance.getPlayerByName(playerName);
-        //throws to ServerController IllegalActionTurnException
         checkPlayer(player);
         if(gameInstance.getOfferTrack().getOfferTiles().get(index).isOccupied()) {
             throw new OccupiedTileException();
@@ -323,7 +349,7 @@ public class GameController {
                 n.notifyChosenTile(playerName, index);
             });
         }
-        catch (OccupiedTileException e) {   //viene catchata da serverController ma acknowledged qua, se ne può parlare
+        catch (OccupiedTileException e) {
             throw new OccupiedTileException();
         }
         catch(StubException e){
@@ -344,7 +370,9 @@ public class GameController {
 
     /**
      * This method handles the player requests to draw a card. If the draw is successful all players are notified and
-     * if the player has drawn all his cards the next player is set.
+     * if the player has drawn all his cards the next player is set. It catches a {@link LastPlayerOfTurnException} if
+     * this player was the last player of the drawing {@link GamePhase}.
+     * If it was, the events are resolved, the game phase is set to START_TURN and a new round is started.
      * When all the players have finished drawing their cards, the bottom row events are resolved
      * and the new round is started.
      * @param playerName the player requesting to draw
@@ -420,6 +448,7 @@ public class GameController {
                             gameInstance.setCurrentPhase(GamePhase.ON_EVENT);
 
                             ArrayList<EventCard> events = gameInstance.getOfferTrack().getBottomEvents();
+                            // if the current round is the last one, it also resolves the top row's events
                             if (gameInstance.getCurrentRound() == 10)
                                 events.addAll(gameInstance.getOfferTrack().getTopEvents());
                             Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(events, gameInstance.getPlayers(), gameInstance.getBuildingManager());
@@ -438,7 +467,15 @@ public class GameController {
             }
     }
 
-    public void handlePassTurn(String playerName) {
+    /**
+     * This method handles the request by the player to pass his turn if there are no more available character cards
+     * left to draw and if he doesn't want to draw any building card. After that, it sets the next player. It catches a
+     * {@link LastPlayerOfTurnException} if this player was the last player of the drawing {@link GamePhase}.
+     * If it was, the events are resolved, the game phase is set to START_TURN and a new round is started.
+     * @param playerName the name of the player requesting to pass his drawing turn.
+     * @throws IllegalClientStateActionException if the player can still draw cards.
+     */
+    public synchronized void handlePassTurn(String playerName) throws IllegalClientStateActionException {
         Player currPlayer = gameInstance.getPlayerByName(playerName);
         OfferTrack offerTrack = gameInstance.getOfferTrack();
         int oldFoodReserve = currPlayer.getTribe().getFoodReserve();
@@ -486,6 +523,11 @@ public class GameController {
         }
     }
 
+    /**
+     * This method is called at the end of the last round, when all the events are resolved. It calls the building whose
+     * effect applies at the end of the game and calls the model's method to create the final ranking who will be notified
+     * to the players.
+     */
     public void calculateFinalPoints() {
         Map<String,Integer> finalPoints = new LinkedHashMap<>();
         for (Player player : gameInstance.getPlayers()) {

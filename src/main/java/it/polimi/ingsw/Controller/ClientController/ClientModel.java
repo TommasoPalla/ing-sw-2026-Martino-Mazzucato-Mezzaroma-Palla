@@ -6,7 +6,6 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.Users.DrawableCardVisitor;
 
@@ -266,9 +265,7 @@ public class ClientModel {
     void chosenTotemColor(String playerName, Color color){
         totemColors.put(playerName, color);
     }
-    void updateCharacterDrawn(CharacterCard character, String playerName) {
-        players.get(playerName).addCharacter(character);
-    }
+
     void chosenOfferTile(String playerName, int index){
         offerTiles.get(index).occupy(playerName);
         int playerIdx = this.turnOrder.indexOf(playerName);
@@ -276,9 +273,7 @@ public class ClientModel {
             turnTileStatus.put(playerIdx, "");
         }
     }
-    void updateBuildingDrawn(BuildingCard building, String playerName){
-        players.get(playerName).addBuilding(building);
-    }
+
     void updateCurrentRound(int newCurrentRound){
         currentRound = newCurrentRound;
     }
