@@ -54,7 +54,7 @@ public class ChooseNumberOfPlayersController {
             }
         });
 
-        Image img = new Image(getClass().getResource("/Images/mesosBoxQuality.png").toExternalForm());
+        Image img = new Image(getClass().getResource("/Images/Background/Background.png").toExternalForm());
 
         background.setImage(img);
 

@@ -3,7 +3,6 @@ package it.polimi.ingsw.View.GUIView.GuiControllers;
 import it.polimi.ingsw.View.GUIView.Gui;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 
 import java.io.IOException;
@@ -53,7 +51,7 @@ public class ChooseNickNameController {
                 handleConfirm();  //invia i dati premendo ENTER
             }
         });
-        Image img = new Image(getClass().getResource("/Images/mesosBoxQuality.png").toExternalForm());
+        Image img = new Image(getClass().getResource("/Images/Background/Background.png").toExternalForm());
 
         background.setImage(img);
 

@@ -5,7 +5,6 @@ import it.polimi.ingsw.View.GUIView.Gui;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -57,7 +56,7 @@ public class LobbySceneController {
     @FXML
     public void initialize() {
 
-        Image img = new Image(getClass().getResource("/Images/lobbyBackground.jpeg").toExternalForm());
+        Image img = new Image(getClass().getResource("/Images/Background/rockyBackground.jpeg").toExternalForm());
 
         background.setImage(img);
 

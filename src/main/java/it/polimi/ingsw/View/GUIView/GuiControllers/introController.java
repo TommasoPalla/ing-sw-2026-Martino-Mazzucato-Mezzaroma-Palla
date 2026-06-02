@@ -17,7 +17,7 @@ public class introController {
     public void initialize() {
 
         background.setImage(
-                new Image(getClass().getResource("/Images/mesosBoxQuality.png").toExternalForm())
+                new Image(getClass().getResource("/Images/Background/mesosBoxQuality.png").toExternalForm())
         );
 
         background.setPreserveRatio(true);

@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
@@ -40,7 +39,7 @@ public class ChooseToCreateController {
     @FXML
     public void initialize() {
 
-        Image img = new Image(getClass().getResource("/Images/mesosBoxQuality.png").toExternalForm());
+        Image img = new Image(getClass().getResource("/Images/Background/Background.png").toExternalForm());
 
         background.setImage(img);
 
