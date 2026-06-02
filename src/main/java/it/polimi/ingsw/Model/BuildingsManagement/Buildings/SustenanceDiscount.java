@@ -10,6 +10,10 @@ import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.EventManagement.SustenanceEvent;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
+/**
+ * During the sustenance event, the owner of this building has a discount of 1 Food token on the total they
+ * would have to pay, for each of the indicated Characters in their tribe.
+ */
 public class SustenanceDiscount extends BuildingCard {
     private final CharacterRole roleEffect;
     private final int foodDiscount; //stored as a positive number

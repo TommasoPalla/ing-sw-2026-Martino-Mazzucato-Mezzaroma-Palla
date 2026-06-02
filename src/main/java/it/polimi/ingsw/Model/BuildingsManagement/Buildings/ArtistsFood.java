@@ -10,8 +10,9 @@ import it.polimi.ingsw.Model.EventManagement.CavePaintingsEvent;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
-// During the Cave Paintings event, the owner takes 1 food token for every
-// artist in his tribe
+/**
+ * During the Cave Paintings event, the owner takes 1 food token for every artist in his tribe.
+ */
 public class ArtistsFood extends BuildingCard {
     private final int foodBonus;
 

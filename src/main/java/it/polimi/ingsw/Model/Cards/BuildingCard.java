@@ -8,10 +8,17 @@ import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.util.Map;
 
+/**
+ * A building card, unlike a Character card, has a cost in Food that the player has to pay to acquire it, and it does
+ * not increase the tribe's population number.
+ * It has an effect that is activated during a specific {@link GamePhase} and it can provide Food, Prestige Points or
+ * give the owner advantages like discounts during events, additional draws or possibility to avoid losing Prestige
+ * Points. It extends the general class {@link Card}.
+ */
 public abstract class BuildingCard extends Card {
     private final int cost; // food cost of the building card
     private final GamePhase activatedAt; // game phase during which this building card is activated
-    private final Effect effect;    //da aggiungere al costruttore
+    private final Effect effect;
     private final String effectDescription; //si potrebbe fare uno switch dentro il costruttore per alleggerire il JSON
     private final int prestige;
     private Player owner; // the owner of this building, assigned when the building is purchased
@@ -67,24 +74,37 @@ public abstract class BuildingCard extends Card {
     /**
      * checkIP whether player has sufficient food to purchase this buildingCard
      */
-    // chiamata all'interno dei metodi di draw
-    public boolean isPurchasable(Player player){
-        int discountedCost = cost - player.getTribe().getBuildersDiscount();
-        int foodReserve = player.getTribe().getFoodReserve();
-        return foodReserve >= discountedCost;
-    }
+//    public boolean isPurchasable(Player player){
+//        int discountedCost = cost - player.getTribe().getBuildersDiscount();
+//        int foodReserve = player.getTribe().getFoodReserve();
+//        return foodReserve >= discountedCost;
+//    }
+
+    /**
+     * When the Building card is acquired, the player who purchased it is set as its owner.
+     * @param player the player who purchased it.
+     */
     public void assignOwner(Player player){
         this.owner = player;
     }
 
 
-    // Called in Tribe when the building is purchased. Used for buildings
-    // "ComboFood","InventorsFood" and "BonusStars".
+    /**
+     * Called in Tribe when the building is purchased. Used for buildings
+     * "ComboFood","InventorsFood" and "BonusStars".
+     * @param tribe the {@link TribeInterface} of the player who just acquired the Building card.
+     */
     public void effectOnPurchase(TribeInterface tribe){}
 
-    // The method is overridden in all buildings, the second one is used
-    // by buildings related to events
+    /**
+     * It applies the effect of the building. The method is overridden in all buildings.
+     */
     public void applyEffect(){}
+
+    /**
+     * It applies the effect of the building when its activation time is during a certain event.
+     * @param context the {@link EffectContext} containing the information about the event.
+     */
     public void applyEffect(EffectContext context){}
 
     public boolean isUsedIn(Class<? extends EventStrategy> eventType){

@@ -6,8 +6,11 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-
+/**
+ * This abstract class contains all the information common to all types of cards of the game.
+ */
 public abstract class Card implements Serializable {
+
     private final int era;
     private final String cardID;
 

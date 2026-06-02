@@ -4,6 +4,11 @@ import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
 import it.polimi.ingsw.Model.Users.TribeInterface;
 
+/**
+ * Shamans have a certain amount of Shamanic Stars shown on the card.
+ * During the Shamanic Ritual Event, having the majority of these icons provides Prestige Points; having the minority,
+ * on the other hand, results in losing Prestige Points.
+ */
 public class Shaman extends CharacterCard {
     private final int shamansStars;
 

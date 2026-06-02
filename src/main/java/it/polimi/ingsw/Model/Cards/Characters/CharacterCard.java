@@ -10,8 +10,14 @@ import it.polimi.ingsw.View.TUIView.TuiIcons;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * A Character card is defined by its {@link CharacterRole}. It is drawable by the players and increases the
+ * population of a player's tribe when it's drawn. Every card can have different effects during different game phases
+ * or events based on its role and parameters. It extends the general class {@link Card}.
+ */
 public abstract class CharacterCard extends Card {
-    private final int numPlayersFlag;//3 stands for 3+, 4 for 4+. How many players are required to use the card
+
+    private final int numPlayersFlag; //3 stands for 3+, 4 for 4+. How many players are required to use the card
     private final CharacterRole role;
 
     // constructor
@@ -54,5 +60,10 @@ public abstract class CharacterCard extends Card {
     @Override
     public void accept(Visitor visitor){visitor.visitCard(this);}
 
+    /**
+     * Called when the Character card is picked by a player. It applies the character card effect. It's overridden in
+     * the different Character Types cards.
+     * @param tribe the {@link TribeInterface} of the player who picked the card.
+     */
     public void applyEffect(TribeInterface tribe){}
 }

@@ -4,6 +4,10 @@ import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
 import it.polimi.ingsw.Model.Users.TribeInterface;
 
+/**
+ * During the game, each builder reduces the Food cost of every Building card you take by the amount indicated on
+ * the card.
+ */
 public class Builder extends CharacterCard {
     private final int prestigePoints;
     private final int buildingDiscount;

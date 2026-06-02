@@ -6,9 +6,11 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
-// If at the end of every turn, when the owner moves his totem back to the Turn
-// Order tile, they place it in a space that provides a bonus in food, they immediately
-// take 1 additional Food token. The building has no effect if the totem is placed in the last place.
+/**
+ * If at the end of every turn (also during the last round), when the owner moves his totem back to the Turn
+ * Order tile, they place it in a space that provides a bonus in food, they immediately
+ * take 1 additional Food token. The building has no effect if the totem is placed in the last space.
+ */
 public class TotemFood extends BuildingCard {
     private Game game;
     private final int foodBonus;
@@ -25,10 +27,6 @@ public class TotemFood extends BuildingCard {
                 buildingData.prestige);
         this.game = null;
         this.foodBonus = buildingData.foodBonus;
-    }
-    //da verificare
-    public void updateGame(Game instance){
-        this.game = instance;
     }
 
     @Override

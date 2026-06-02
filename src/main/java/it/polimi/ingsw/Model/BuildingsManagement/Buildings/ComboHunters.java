@@ -11,7 +11,7 @@ import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 /**
  * During the Hunt event, the owner of the building takes 'foodBonus' Food token
- * and gains 'prestigeBonus' additional Prestige Point for each Hunter in his tribe
+ * and gains 'prestigeBonus' additional Prestige Point for each Hunter in his tribe.
  */
 public class ComboHunters extends BuildingCard {
 

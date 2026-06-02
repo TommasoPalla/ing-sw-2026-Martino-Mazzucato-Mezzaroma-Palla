@@ -9,16 +9,33 @@ import it.polimi.ingsw.Model.Parser.CardLoader;
 
 import java.util.*;
 
-/**The Deck class represents the actual game's deck,
+/** The Deck class represents the actual game's deck,
  * with a tribe deck that consists of characters and events
  * and a building deck. Deck also has lists of all cards,
  * divided by type, instantiated by CardLoader methods.
  */
 public class Deck {
+    /**
+     * Instance to the game.
+     */
     private final Game game;
+
+    /**
+     * A stack of {@link Card} containing the Character and Event cards of the game. It's different based on the
+     * number of players.
+     */
     private ArrayDeque<Card> tribeDeck;
+
+    /**
+     * A stack of {@link BuildingCard} containing the Building cards of the game. It's different based on the number
+     * of players.
+     */
     private ArrayDeque<BuildingCard> buildingsDeck;
-    private int[] buildingsDeckLength;  //Number of buildingCards for each era
+
+    /**
+     * An array of ints containing the numbers of Building cards for each era.
+     */
+    private int[] buildingsDeckLength;
 
     private final List<CharacterCard> allCharacterCards;
     private final List<EventCard> allEventCards;
@@ -43,15 +60,16 @@ public class Deck {
         initBuildingDeck();
     }
 
-    //getters
+    // Getters
     public ArrayDeque<Card> getTribeDeck() {return tribeDeck;}
     public ArrayDeque<BuildingCard> getBuildingsDeck() {return buildingsDeck;}
 
-    /** Method intTribeDeck creates a new deck with characters and events:
+    /** This method creates a new deck with characters and events:
      * first picks all cards suitable for the number of players,
      * then it shuffles them and moves the cards to the private tribeDeck field.
      * The method is defined as 'private' because it can only be invoked
      * by the class constructor.
+     * @param numPlayers the number of players playing in this Mesos match.
      */
     private void initTribeDeck(int numPlayers){
         this.tribeDeck = new ArrayDeque<>();
@@ -81,7 +99,7 @@ public class Deck {
         }
     }
 
-    /** The initBuildingDeck method creates a deck with buildings:
+    /** This method creates a deck with buildings:
      * it shuffles all buildings for each era and then picks
      * the correct number of cards for the number of players.
      * The method is defined as 'private' because it can only be invoked

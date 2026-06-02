@@ -9,8 +9,9 @@ import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.EventManagement.ShamanicRitualEvent;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
-// If the owner is one of the winners of the Shamanic Ritual event
-// he gains double the indicated Prestige Points
+/**
+ * If the owner is one of the winners of the Shamanic Ritual event he gains double the indicated Prestige Points.
+ */
 public class MultiBonusRitual extends BuildingCard {
     private final int multiplier;
 

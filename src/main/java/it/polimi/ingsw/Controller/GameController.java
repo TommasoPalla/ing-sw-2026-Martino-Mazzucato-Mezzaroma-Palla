@@ -104,7 +104,7 @@ public class GameController {
      * Moreover, connectedClients identifies players waiting in the lobby
      * for hostClient to start the game.
      * @param playerName a valid name, not already used by a player in this lobby.
-     * @param newNotifier relative to this specific playerName, to update them.
+     * @param newNotifier {@link ClientNotifier} relative to this specific playerName, to update them.
      */
     public void addClient(String playerName, ClientNotifier newNotifier) {
         if(connectedClients.containsKey(playerName)) {
@@ -539,6 +539,7 @@ public class GameController {
      * This method is called at the end of the last round, when all the events are resolved. It calls the building whose
      * effect applies at the end of the game and calls the model's method to create the final ranking who will be notified
      * to the players.
+     * @throws EndOfGameException to notify the server controller that this game has ended.
      */
     public void calculateFinalPoints() throws EndOfGameException {
         Map<String,Integer> finalPoints = new LinkedHashMap<>();

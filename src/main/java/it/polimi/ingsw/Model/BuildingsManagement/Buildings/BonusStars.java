@@ -6,7 +6,9 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 import it.polimi.ingsw.Model.Users.TribeInterface;
 
-// During the Shamanic Ritual event, the owner's tribe has 3 additional stars
+/**
+ * During the Shamanic Ritual event, the owner's tribe has 3 additional stars.
+ */
 public class BonusStars extends BuildingCard {
     private final int starBonus;
 

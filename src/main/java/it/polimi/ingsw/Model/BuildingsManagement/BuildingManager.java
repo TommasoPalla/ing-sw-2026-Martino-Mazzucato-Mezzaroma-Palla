@@ -9,9 +9,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class serves as a manager for buildings activation. When a player purchases a building, the reference is stored
+ * in a map based on his activation phase. When a certain {@link GamePhase} starts or an event occurs, the building
+ * manager calls the overridden apply method of the respective buildings. Only the building of that game phase which
+ * override the apply method with that exact signature will be activated. To activate the buildings of a certain type,
+ * it uses two different type of useBuilding methods, one for normal buildings and one for building which are activated
+ * during certain events.
+ */
 public class BuildingManager {
+
+    /**
+     * It maps from the {@link GamePhase} to another map. This second map contains the players' names as its
+     * keys, and the values are arrays of {@link BuildingCard} which are in that player's tribe.
+     */
     Map<GamePhase, Map<String, ArrayList<BuildingCard>>> buildingsMap = new HashMap<>();
-    ArrayList<Player> players = new ArrayList<>();
 
     public BuildingManager(ArrayList<Player> players) {
         for (GamePhase gamePhase : GamePhase.values()) {
@@ -25,15 +37,22 @@ public class BuildingManager {
     // Getter
     public Map<GamePhase, Map<String, ArrayList<BuildingCard>>> getBuildingsMap() { return buildingsMap; }
 
+    /**
+     * When a new building is purchased it is added to the buildings map.
+     * @param buildingCard the {@link BuildingCard} which has been purchased.
+     * @param player the name of the player who purchased it.
+     */
     public void addBuilding(BuildingCard buildingCard, Player player) {
         GamePhase gamePhase = buildingCard.getActivatedAt();
         buildingsMap.get(gamePhase).putIfAbsent(player.getName(), new ArrayList<>());
         buildingsMap.get(gamePhase).get(player.getName()).add(buildingCard);
     }
 
-    //FORSE questi due metodi si possono unire se tutti quanti gli edifici usano context invece di player (che dovrebbe tra l'altro essere meglio)
-    //da capire dove va chiamata questa roba e se serve un altro metodo in BuildingManager per chiamare tutti gli useBuilding() non ON_EVENT
-    //a quel punto cambiare anche l'altra useBuilding in useEventBuilding() e non serve dirgli che siamo in ON_EVENT (duh)
+    /**
+     * Activates a player's building when the specified game phase occurs.
+     * @param gamePhase the {@link GamePhase} of activation.
+     * @param player the name of the player whose buildings have to be activated.
+     */
     public void useBuilding(GamePhase gamePhase, Player player) {
         Map<String, ArrayList<BuildingCard>> phaseMap = buildingsMap.get(gamePhase);
         if(phaseMap == null) return;
@@ -44,6 +63,13 @@ public class BuildingManager {
 
     }
 
+    /**
+     * Activates a player's buildings which activation time is during events. It receives a {@link EffectContext} as
+     * input to know which kind of parameters will be modified during that event.
+     * @param gamePhase the {@link GamePhase} of activation.
+     * @param context the {@link EffectContext} containing the player name and the parameters for that event.
+     * @param eventType the strategy value indicating the {@link it.polimi.ingsw.Enums.EventType}
+     */
     public void useBuilding(GamePhase gamePhase, EffectContext context, Class<? extends EventStrategy> eventType) {
         Player player = context.getPlayer();
         Map<String, ArrayList<BuildingCard>> phaseMap = buildingsMap.get(gamePhase);

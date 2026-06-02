@@ -12,6 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Starting since the player purchases this building, everytime they complete a set of 6 different
+ * Character cards, they take 5 food tokens. They do not receive food tokens for sets already completed at the
+ * time of acquiring the building.
+ */
 public class ComboFood extends BuildingCard {
     private final int foodBonus;
     long currentSetsNumber = 0;
@@ -35,8 +40,8 @@ public class ComboFood extends BuildingCard {
         return this.foodBonus;
     }
 
-    /**When the player purchases the building, initializes the variable currentSetsNumber
-     * with the number of sets already completed in their tribe
+    /** When the player purchases the building, initializes the variable currentSetsNumber
+     * with the number of sets already completed in their tribe.
      */
     @Override
     public void effectOnPurchase(TribeInterface tribe) {

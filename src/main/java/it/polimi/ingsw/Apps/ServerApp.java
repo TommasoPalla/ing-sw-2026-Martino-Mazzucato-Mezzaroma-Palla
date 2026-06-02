@@ -13,9 +13,9 @@ import java.sql.SQLException;
 /**
  * This class must not have any parameters or methods. It is just an entry point
  * It starts both an RMI connection and a TCP connection, being able to listen for
- * incoming clients on both protocols
+ * incoming clients on both protocols. Then he connects to the MySQL server to access
+ * the Mesos match history database.
  */
-
 public class ServerApp {
     private static RMIServer rmiServer;
 

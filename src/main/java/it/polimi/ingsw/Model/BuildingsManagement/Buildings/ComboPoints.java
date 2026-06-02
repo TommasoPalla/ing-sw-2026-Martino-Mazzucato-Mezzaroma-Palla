@@ -9,8 +9,10 @@ import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 import java.util.HashMap;
 import java.util.Map;
 
-// At the end of the game, the owner gains 6 Prestige Points for each set of 6
-// different Character cards in their tribe
+/**
+ * At the end of the game, the owner gains 6 Prestige Points for each set of 6
+ * different Character cards in their tribe.
+ */
 public class ComboPoints extends BuildingCard {
     private final int prestigeBonus;
 

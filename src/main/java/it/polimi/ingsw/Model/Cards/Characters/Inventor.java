@@ -5,6 +5,10 @@ import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Parser.CharacterCardDTO;
 import it.polimi.ingsw.Model.Users.TribeInterface;
 
+/**
+ * At the end of the game, Inventors provide a number of Prestige Points equal to the number of Inventors in their
+ * tribe multiplied by the number of different Invention icons the player has.
+ */
 public class Inventor extends CharacterCard {
     private final InventorType type;
 

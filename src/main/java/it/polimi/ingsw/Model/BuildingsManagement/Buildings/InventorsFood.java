@@ -8,6 +8,11 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 import it.polimi.ingsw.Model.Users.TribeInterface;
 
+/**
+ * Starting from when the player purchases this building, every time they obtain a pair of identical inventors (with
+ * the same invention icon), they take 3 food tokens. they do not take Food for pairs already owned at the time of
+ * acquiring the building.
+ */
 public class InventorsFood extends BuildingCard {
     private int inventorsNumber;
     private final int foodBonus;
@@ -31,6 +36,11 @@ public class InventorsFood extends BuildingCard {
         return this.foodBonus;
     }
 
+    /**
+     * When purchased, it saves the number of inventors already possessed by the player. If the last card
+     * drawn was an inventor, the variable is increased.
+     * @param tribe the {@link TribeInterface} containing the tribe methods.
+     */
     @Override
     public void effectOnPurchase(TribeInterface tribe) {
         this.inventorsNumber = tribe.getPopulation().get(CharacterRole.INVENTOR).size();
@@ -39,7 +49,7 @@ public class InventorsFood extends BuildingCard {
     @Override
     public void applyEffect() {
         // ATT!! Si basa sul presupposto che la carta pescata si trovi all'ultimo posto nell'array population della tribe
-        // if the drew card is an inventor...
+        // if the drawn card is an inventor...
         if(this.getOwner().getTribe().getPopulation().get(CharacterRole.INVENTOR).size() > this.inventorsNumber) {
             this.inventorsNumber++;
             CharacterCard inventor = this.getOwner().getTribe().getPopulation().get(CharacterRole.INVENTOR).getLast();

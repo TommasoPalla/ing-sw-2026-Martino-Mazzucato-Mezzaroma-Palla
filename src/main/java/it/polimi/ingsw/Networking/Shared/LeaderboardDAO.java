@@ -16,12 +16,25 @@ import java.util.List;
  * limited to the 'root' user.
  */
 public class LeaderboardDAO {
+
+    /**
+     * The connection to the Mesos database. This connection is assigned after the {@link DriverManager} connects to
+     * the db using the USER (here 'root'), the database URL and the PASSWORD.
+     */
     private final Connection connection;
 
     public LeaderboardDAO(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * This method adds a player to the database when the game is over. It stores their nickname, their final score
+     * the number of players of that game, and the data at which that game has been played.
+     * @param player the player whose to be added.
+     * @param finalScore the final score the player has obtained at the end of the game.
+     * @param playersNum the number of players of that game.
+     * @throws SQLException if it was not possible to execute the SQL query to the database.
+     */
     public void saveMatchResult(String player, int finalScore, int playersNum) throws SQLException {
         String query = "INSERT INTO match_history (nickname, final_score, players_number) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -32,6 +45,13 @@ public class LeaderboardDAO {
         }
     }
 
+    /**
+     * This method extracts the leaderboard of players considering the games with the specified number of players.
+     * @param playersNum the number of players to select only the scores who match this number.
+     * @return a list of Strings, each one containing a player nickname, their position in the leaderboard, their
+     * final score, and the date in which that score has been achieved.
+     * @throws SQLException if it was not possible to execute the SQL query to the database.
+     */
     public List<String> getLeaderboard(int playersNum) throws SQLException {
         List<String> leaderboard = new ArrayList<>();
         String query = "SELECT nickname, final_score, match_date FROM match_history WHERE players_number = ? ORDER BY final_score DESC";
@@ -50,6 +70,14 @@ public class LeaderboardDAO {
         return leaderboard;
     }
 
+    /**
+     * This method extracts a player's position from the leaderboard of players considering the games with the
+     * specified number of players.
+     * @param playersNum the number of players to select only the scores who match this number.
+     * @param finalScore the final score of the player.
+     * @return the position of the player in the leaderboard. -1 if there has been an error.
+     * @throws SQLException if it was not possible to execute the SQL query to the database.
+     */
     public int getPlayerPosition(int playersNum, int finalScore) throws SQLException {
         String query = "SELECT COUNT(*) + 1 AS player_rank FROM match_history WHERE players_number = ? AND final_score > ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {

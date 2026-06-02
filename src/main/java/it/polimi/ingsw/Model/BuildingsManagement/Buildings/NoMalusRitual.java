@@ -9,7 +9,9 @@ import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.EventManagement.ShamanicRitualEvent;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
-// if the owner loses the Shamanic Ritual event, he doesn't lose any pp
+/**
+ * If the owner loses the Shamanic Ritual event, he doesn't lose any pp.
+ */
 public class NoMalusRitual extends BuildingCard {
     public NoMalusRitual(int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                          String effectDescription, int prestige) {

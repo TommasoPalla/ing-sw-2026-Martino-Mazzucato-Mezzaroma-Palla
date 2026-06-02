@@ -9,7 +9,7 @@ import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 /**
  * At the end of the game, the owner gains double the Prestige Points indicated
- * on the Builder cards in his tribe
+ * on the Builder cards in his tribe.
  */
 public class MultiPointsBuilder extends BuildingCard {
     private final int multiplier;

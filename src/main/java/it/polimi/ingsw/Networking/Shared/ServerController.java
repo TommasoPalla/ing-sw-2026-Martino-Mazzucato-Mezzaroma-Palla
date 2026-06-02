@@ -17,29 +17,63 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * This class has all the method of the model and some other
- * It is called by RMIServer and SocketServer, allowing them to modify
- * the model state without directly giving them access to it.
+ * This class represents the only reference instanced of the server controller. This controller serves as the main
+ * controller of all active games and of the communication between clients and their {@link GameController}.
+ * It keeps trace of all the active games and of the clients connected to them, preserving a reference to their game
+ * controllers to call their methods when needed. It has all the methods of the model and some other.
+ * Its methods are accessed by RMIServer and SocketServer, allowing them to modify the model state without directly
+ * giving them access to it. The reference of this server controller is created right after the
+ * {@link it.polimi.ingsw.Apps.ServerApp} is run. It keeps open the communication both for RMI and Socket, and it also
+ * saves a reference to a {@link LeaderboardDAO} which is used by this controller to communicate with the Mesos database.
  */
-
 public class ServerController {
+
+    /**
+     * The list of clients using the RMI connection.
+     */
     private ArrayList<VirtualRMIClient> RMIClients = new ArrayList<>();
+
+    /**
+     * The list of clients using the Socket TCP connection.
+     */
     private ArrayList<SocketClientHandler> socketClients = new ArrayList<>();
 
-    //si potrebbe ottimizzare tenendo lista di clients non in partita (non giocatori) ma eviterebbe solo qualche aggiornamento inutile
+    /**
+     * A record containing the {@link Game} instance, associated to its {@link GameController}.
+     * @param game the instance of a game.
+     * @param gameController the instance of the controller of that game.
+     */
     public record GameRecord(Game game, GameController gameController) {}
+
+    /**
+     * The map containing all the active games' IDs mapped to their respective {@link GameRecord}.
+     */
     private final Map<Integer, GameRecord> activeGames = new ConcurrentHashMap<>();
 
+    /**
+     * A pool of threads used for sending notifications.
+     */
     private final ExecutorService notificationThreads = Executors.newCachedThreadPool();
+
+    /**
+     * This value is increased every time a new game is created.
+     */
     private static int nextGameID = 0;
 
+    /**
+     * It is used by the server controllar to communicate by SQL queries to the MYSql Mesos database, which contains the
+     * match history of all the Mesos games played.
+     */
     private LeaderboardDAO leaderboardDAO;
 
     public void setLeaderboardDAO(LeaderboardDAO leaderBoardDAO) {
         this.leaderboardDAO = leaderBoardDAO;
     }
 
-    // logic handling connected players
+    /**
+     * It removes a client from a game when he leaves the lobby.
+     * @param playerRecord The record of that player, containing his name and the gameID of the game's lobby he was into.
+     */
     public void removeClientFromGame(PlayerRecord playerRecord){
         try {
             String playerName = playerRecord.playerName();
@@ -54,10 +88,11 @@ public class ServerController {
     }
 
     /**
-     * This method creates a Player object in the corresponding game to which it is connected
-     * @param playerRecord
+     * This method creates adds a player to the list of connected clients in the game controller of that game.
+     * @param playerRecord the {@link PlayerRecord} containing the player's name and the gameID of the lobby he just
+     *                     joined.
+     * @param notifier the {@link ClientNotifier} interface connected to the player.
      */
-    //forse si può rimuovere e chiamare direttamente addClient di gameController negli usages, attenzione sincronizzazione
     public synchronized void addClientToGame(PlayerRecord playerRecord, ClientNotifier notifier){
         try {
             String playerName = playerRecord.playerName();
@@ -72,11 +107,12 @@ public class ServerController {
         }
     }
     /**
-     * This method adds a new game to the list of active games
-     *  and instantiates its game controller, so the game can start
-     * @param firstPlayerName
-     * @param playerNum
-     * @return
+     * This method adds a new game to the list of active games and instantiates its game controller, so the
+     * game can start.
+     * @param notifier the {@link ClientNotifier} interface connected to the player who created the game.
+     * @param firstPlayerName the name of the player who created the game.
+     * @param playerNum the number of players needed to start the game, it is decided by the creator.
+     * @return the ID of the game which was just created.
      */
     public synchronized int createNewGame(ClientNotifier notifier, String firstPlayerName, int playerNum) {
         int gameID = nextGameID;
@@ -90,8 +126,6 @@ public class ServerController {
         PlayerRecord newPlayer = new PlayerRecord(gameID, firstPlayerName);
         addClientToGame(newPlayer, notifier);
 
-        //addNotifierToGame(newPlayer, notifier);
-
         new Thread( () -> {
             try {
                 notifier.notifyGameCreated(gameID, firstPlayerName, playerNum);
@@ -103,6 +137,13 @@ public class ServerController {
         return nextGameID-1;
     }
 
+    /**
+     * Called when a player wants to join an existing game's lobby. It throws {@link NotJoinableGameException} if the
+     * lobby was not joinable for some reason.
+     * @param notifier the {@link ClientNotifier} interface of the player.
+     * @param newPlayer the {@link PlayerRecord} of the player, containing its name and the gameID of the game he wants
+     *                  to join.
+     */
     public void joinGame(ClientNotifier notifier, PlayerRecord newPlayer) {
         try {
             addClientToGame(newPlayer, notifier);
@@ -112,6 +153,11 @@ public class ServerController {
         }
     }
 
+    /**
+     * Called when a player wants to leave the game's lobby he is in
+     * @param leavingPlayer the {@link PlayerRecord} of the player, containing its name and the gameID of the game's
+     *                      lobby he wants to leave.
+     */
     public void leaveGame(PlayerRecord leavingPlayer) {
         if (activeGames.containsKey(leavingPlayer.gameID())) {
             System.out.println("[SERVER] Player '" + leavingPlayer.playerName() + "' leaving the game " + leavingPlayer.gameID());
@@ -124,6 +170,13 @@ public class ServerController {
         }
     }
 
+    /**
+     * Called by the host of a game to start it. It throws {@link NotTheHostException} if the player requesting to start
+     * is not the host, {@link NotEnoughPlayersException} if there are not enough players in the lobby to start the game,
+     * and {@link TotemColorNotChosen} if not all players have chosen the totem color.
+     * @param requestingPlayer the name of the player requesting to start the game.
+     * @param gameID the ID of the game to be started.
+     */
     public void startGame(String requestingPlayer, int gameID) {
         try {
             System.out.println("[SERVER] Start game " + gameID + " requested by host '" + requestingPlayer + "'");
@@ -138,6 +191,9 @@ public class ServerController {
         }
     }
 
+    /**
+     * It notifies all clients connected to the server of the available active games.
+     */
     public void notifyAvailableGames(){
         Map<Integer, GamePlayers> gamesData = new HashMap<>();
         synchronized (activeGames) {
@@ -167,7 +223,16 @@ public class ServerController {
         }
     }
 
-    // logic of methods that modify the model state
+    /*
+     * logic of methods that modify the model state
+     */
+
+    /**
+     * Request by a player to choose a totem color. It throws {@link UnavailableColorException} if the color
+     * has already been picked by another player.
+     * @param playerRecord the {@link PlayerRecord} of the player, containing its name and the gameID.
+     * @param totemColor the {@link Color} value of the totem color chosen.
+     */
     public void chooseTotemColor(PlayerRecord playerRecord, Color totemColor){
         System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + "' choosing totem color " + totemColor);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
@@ -180,6 +245,16 @@ public class ServerController {
         }
     }
 
+    /**
+     * Forwards to the game controller the request by the player to draw a card. It catches and rethrows a
+     * {@link IllegalDrawException} if the card was not drawable. It also catches a {@link EndOfGameException} threw
+     * by the game Controller when the game is ended: the server updates the Mesos match history database with the
+     * players final scores and then extracts the leaderboard infos to notify them to players.
+     * @param playerRecord the {@link PlayerRecord} of the player, containing its name and the gameID.
+     * @param fromTopRow true if the card drawn is from top row, false if from bottom.
+     * @param fromBuildings true if the card drawn is from the Building cards row, false if otherwise.
+     * @param index the index of the array of cards from where the cards have been drawn.
+     */
     public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index) {
         System.out.println("[GAME " + playerRecord.gameID() + "] Player '" + playerRecord.playerName() + "' drawing card from " + (fromTopRow ? "TOP" : "BOTTOM") + " row, index " + index);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
@@ -210,6 +285,14 @@ public class ServerController {
         }
     }
 
+    /**
+     * Forwards to the game controller the request by the player to pass his drawing turn if there are no more
+     * available Character cards to draw and the player doesn't want to draw a Building card. It catches a
+     * {@link EndOfGameException} threw by the game Controller when the game is ended: the server updates the Mesos
+     * match history database with the players final scores and then extracts the leaderboard infos to notify them to
+     * players.
+     * @param playerRecord the {@link PlayerRecord} of the player, containing its name and the gameID.
+     */
     public void passTurn(PlayerRecord playerRecord) {
         System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + " passing turn");
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
@@ -238,6 +321,13 @@ public class ServerController {
         }
     }
 
+    /**
+     * Forwards to the game controller the request by the player to place his totem on an Offer Tile. It throws a
+     * {@link InvalidSelectionException} if the player was not in turn or if the Offer Tile was already occupied by
+     * another player.
+     * @param playerRecord the {@link PlayerRecord} of the player, containing its name and the gameID.
+     * @param index the index of the Offer Tile on the Offer Track.
+     */
     public void chooseOfferTile(PlayerRecord playerRecord, int index) {
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         try {

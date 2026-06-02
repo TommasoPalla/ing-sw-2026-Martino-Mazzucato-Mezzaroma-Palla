@@ -5,7 +5,9 @@ import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
-// At the end of the game, the owner gains 25 Prestige Points
+/**
+ * At the end of the game, the owner gains 25 Prestige Points.
+ */
 public class BonusPoints extends BuildingCard {
     private final int prestigeBonus;
 

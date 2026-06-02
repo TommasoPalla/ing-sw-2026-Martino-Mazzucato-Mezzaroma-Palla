@@ -6,6 +6,12 @@ import it.polimi.ingsw.Model.Users.TribeInterface;
 
 import java.util.ArrayList;
 
+/**
+ * Whenever a player adds a Hunter without a Food icon to their tribe, they get nothing. Whenever they add a Hunter
+ * with a Food icon to their tribe, they immediately take 1 Food token for each Hunter in their tribe (with or
+ * without a Food icon).
+ * During the Hunt Event, they take Food and gain Prestige Points based on the number of Hunters in their tribe.
+ */
 public class Hunter extends CharacterCard {
     private final boolean hunterIcon;
 

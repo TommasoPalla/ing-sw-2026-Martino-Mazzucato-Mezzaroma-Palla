@@ -6,8 +6,10 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
-// After resolving all actions and before the End of the Round phase, the owner can take one Character or one Building
-// card (paying its cost) from the top row
+/**
+ * After resolving all actions and before the End of the Round phase, the owner can take one Character or one Building
+ * card (paying its cost) from the top row.
+ */
 public class DrawAdditionalCard extends BuildingCard {
     private Game game;
     public DrawAdditionalCard(Game gameInstance, int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
