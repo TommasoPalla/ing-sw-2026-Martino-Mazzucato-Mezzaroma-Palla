@@ -10,9 +10,8 @@ import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 import it.polimi.ingsw.Networking.Socket.SocketClientHandler;
 import it.polimi.ingsw.View.GamePlayers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,6 +32,12 @@ public class ServerController {
 
     private final ExecutorService notificationThreads = Executors.newCachedThreadPool();
     private static int nextGameID = 0;
+
+    private LeaderboardDAO leaderboardDAO;
+
+    public void setLeaderboardDAO(LeaderboardDAO leaderBoardDAO) {
+        this.leaderboardDAO = leaderBoardDAO;
+    }
 
     // logic handling connected players
     public void removeClientFromGame(PlayerRecord playerRecord){
@@ -175,7 +180,7 @@ public class ServerController {
         }
     }
 
-    public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index){
+    public void drawCard(PlayerRecord playerRecord, boolean fromTopRow, boolean fromBuildings, int index) {
         System.out.println("[GAME " + playerRecord.gameID() + "] Player '" + playerRecord.playerName() + "' drawing card from " + (fromTopRow ? "TOP" : "BOTTOM") + " row, index " + index);
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         String playerName = playerRecord.playerName();
@@ -186,16 +191,50 @@ public class ServerController {
         } catch (IllegalDrawException e){
             throw new IllegalDrawException();
         } catch (EndOfGameException e) {
+            Map<String,Integer> finalRanking = currentController.getFinalRanking();
+            int playersNum = finalRanking.size();
+            try {
+                for (String player : finalRanking.keySet()) {
+                    leaderboardDAO.saveMatchResult(player, finalRanking.get(player), playersNum);
+                }
+                List<String> leaderboard = leaderboardDAO.getLeaderboard(playersNum);
+                for (String player : finalRanking.keySet()) {
+                    int playerPosition = leaderboardDAO.getPlayerPosition(playersNum, finalRanking.get(player));
+                    currentController.getConnectedClientsNotifiers().get(player).notifyLeaderboardInfo(leaderboard, playerPosition);
+                }
+            } catch (SQLException e1) {
+                System.out.println("[ERROR]  Unable to connect to MySQL mesos database:");
+                e1.printStackTrace();
+            }
             activeGames.remove(playerRecord.gameID());
         }
     }
 
-    public void passTurn(PlayerRecord playerRecord){
+    public void passTurn(PlayerRecord playerRecord) {
         System.out.println("[SERVER] Game " + playerRecord.gameID() + ": Player '" + playerRecord.playerName() + " passing turn");
         GameController currentController = activeGames.get(playerRecord.gameID()).gameController();
         String playerName = playerRecord.playerName();
-        synchronized (currentController){
-            currentController.handlePassTurn(playerName);
+        try{
+            synchronized (currentController){
+                currentController.handlePassTurn(playerName);
+            }
+        } catch (EndOfGameException e) {
+            Map<String,Integer> finalRanking = currentController.getFinalRanking();
+            int playersNum = finalRanking.size();
+            try {
+                for (String player : finalRanking.keySet()) {
+                    leaderboardDAO.saveMatchResult(player, finalRanking.get(player), playersNum);
+                }
+                List<String> leaderboard = leaderboardDAO.getLeaderboard(playersNum);
+                for (String player : finalRanking.keySet()) {
+                    int playerPosition = leaderboardDAO.getPlayerPosition(playersNum, finalRanking.get(player));
+                    currentController.getConnectedClientsNotifiers().get(player).notifyLeaderboardInfo(leaderboard, playerPosition);
+                }
+            } catch (SQLException e1) {
+                System.out.println("[ERROR]  Unable to connect to MySQL mesos database:");
+                e1.printStackTrace();
+            }
+            activeGames.remove(playerRecord.gameID());
         }
     }
 

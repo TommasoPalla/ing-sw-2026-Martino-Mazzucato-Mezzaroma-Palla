@@ -244,6 +244,15 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
+    public void notifyLeaderboardInfo(List<String> leaderboard, int playerPosition) {
+        try {
+            clientStub.updateLeaderboardInfo(leaderboard, playerPosition);
+        } catch (RemoteException e){
+            //throw new StubException("could not notify");
+        }
+    }
+
+    @Override
     public void notifyForceQuit(String disconnectedPlayer) {
         try {
             clientStub.forceQuit(disconnectedPlayer);

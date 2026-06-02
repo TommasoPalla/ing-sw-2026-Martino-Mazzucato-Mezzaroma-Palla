@@ -251,6 +251,16 @@ public class SocketServerHandler implements Runnable{
                 client.updateEndGame(finalRanking);
             } catch (IOException e){}
         });
+        commandHandlers.put(SocketHeaderNames.LEADERBOARD_INFO, parameters -> {
+            String leaderboardString = gson.toJson(parameters[0]);
+            Type leaderboardType = new TypeToken<List<String>>(){}.getType();
+            List<String> leaderboard = gson.fromJson(leaderboardString, leaderboardType);
+
+            int playerPosition = ((Double) parameters[1]).intValue();
+            try {
+                client.updateLeaderboardInfo(leaderboard,playerPosition);
+            } catch (IOException e) {}
+        });
         commandHandlers.put(SocketHeaderNames.FORCE_QUIT, parameters -> {
             String disconnectedPlayer = (String) parameters[0];
             try {

@@ -44,6 +44,7 @@ public enum SocketHeaderNames {
     CHANGED_GAME_PHASE,
     CHANGED_ERA,
     GAME_ENDED,
+    LEADERBOARD_INFO,
 
     PING,
     FORCE_QUIT

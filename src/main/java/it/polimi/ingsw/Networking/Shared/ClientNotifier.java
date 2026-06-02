@@ -151,12 +151,6 @@ public interface ClientNotifier {
      */
     void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings);
 
-//    /**
-//     * Notifies whose turn is next.
-//     * @param playerName the name of the next player.
-//     */
-//    void notifyNextPlayer(String playerName);
-
     /**
      * Notifies a change in game phase.
      * @param newPhase the new phase.
@@ -174,6 +168,15 @@ public interface ClientNotifier {
      * @param finalRanking the ranking based on final points.
      */
     void notifyEndGame(Map<String, Integer> finalRanking);
+
+    /**
+     * Notifies the player about their position in the general leaderboard for games with the same number of players
+     * as this one.
+     * @param leaderboard a list of Strings representing the leaderboard with the final scores of all the game played
+     *                    with the same number of players.
+     * @param playerPosition the player's position in the leaderboard.
+     */
+    void notifyLeaderboardInfo(List<String> leaderboard, int playerPosition);
 
     /**
      * Forces the client to quit, usually due to a critical error or disconnection.

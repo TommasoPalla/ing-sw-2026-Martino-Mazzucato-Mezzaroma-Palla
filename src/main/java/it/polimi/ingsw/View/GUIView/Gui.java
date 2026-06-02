@@ -258,6 +258,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
+    public void notifyLeaderboardInfo(int playerPosition) {
+
+    }
+
+    @Override
     public void showCreationChoiceScene() throws IOException {
 
         Platform.runLater(() -> {//serve a thread, carica la scena appena possibile, lambda e esempio di uso gui con thread

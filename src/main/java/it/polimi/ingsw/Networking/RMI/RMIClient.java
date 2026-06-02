@@ -178,6 +178,11 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
+    public void updateLeaderboardInfo(List<String> leaderboard, int playerPosition) throws RemoteException {
+        controller.updateLeaderboardInfo(leaderboard, playerPosition);
+    }
+
+    @Override
     public synchronized void forceQuit(String disconnectedPlayer) {
         controller.handleServerDisconnection(disconnectedPlayer);
     }

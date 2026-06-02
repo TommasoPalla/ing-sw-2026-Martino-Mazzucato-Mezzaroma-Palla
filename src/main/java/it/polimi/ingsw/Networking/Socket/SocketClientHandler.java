@@ -346,6 +346,14 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
+    public void notifyLeaderboardInfo(List<String> leaderboard, int playerPosition) {
+        Type type = new TypeToken<List<String>>(){}.getType();
+        JsonElement leaderboardJE = gson.toJsonTree(leaderboard, type);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.LEADERBOARD_INFO, leaderboardJE, playerPosition);
+        outStream.println(gson.toJson(message));
+    }
+
+    @Override
     public void notifyForceQuit(String disconnectedPlayer) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.FORCE_QUIT, disconnectedPlayer);
         outStream.println(gson.toJson(message));

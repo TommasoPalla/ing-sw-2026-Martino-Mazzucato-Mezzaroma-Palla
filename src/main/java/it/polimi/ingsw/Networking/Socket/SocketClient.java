@@ -165,6 +165,11 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
+    public void updateLeaderboardInfo(List<String> leaderboard, int playerPosition) {
+        controller.updateLeaderboardInfo(leaderboard, playerPosition);
+    }
+
+    @Override
     public void forceQuit(String disconnectedPlayer) {
         controller.handleServerDisconnection(disconnectedPlayer);
     }

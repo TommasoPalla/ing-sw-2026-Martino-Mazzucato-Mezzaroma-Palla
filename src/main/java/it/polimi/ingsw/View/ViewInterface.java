@@ -7,6 +7,7 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface ViewInterface {
@@ -35,4 +36,5 @@ public interface ViewInterface {
     void notifyPrestigePoints(String playerName, int pp);
     void notifyEvent(EventType eventType, int foodModified, int ppModified);
     void notifyEndGame(Map<String, Integer> finalRanking);
+    void notifyLeaderboardInfo(int playerPosition);
 }

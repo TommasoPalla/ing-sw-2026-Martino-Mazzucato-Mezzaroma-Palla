@@ -40,4 +40,5 @@ public interface ClientViewUpdate {
     void updateGamePhase(GamePhase phase);
     void updateCurrentEra(int era);
     void updateEndGame(Map<String, Integer> finalRanking);
+    void updateLeaderboardInfo(List<String> leaderboard, int playerPosition);
 }
