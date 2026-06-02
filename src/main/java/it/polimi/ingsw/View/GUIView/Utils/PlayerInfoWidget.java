@@ -4,6 +4,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Gui;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,11 +24,10 @@ import java.util.Objects;
  *
  */
 public class PlayerInfoWidget extends GridPane{
-    private static final double WIDGET_WIDTH = 400;
-    private static final double WIDGET_HEIGHT = 300;
 
     private final Label nameLabel;
-    private final Label foodQuantity;
+    private final Label foodReserve;
+    private final Label prestigePoints;
     private final Label charactersNum;
     private final Label sustenanceDiscount;
     private final Label shamanStars;
@@ -52,89 +52,109 @@ public class PlayerInfoWidget extends GridPane{
      */
     public PlayerInfoWidget(String name, Color totemColor, Gui gui){
         super();
-        this.setPrefSize(WIDGET_WIDTH, WIDGET_HEIGHT);
+        this.setPrefSize(GUISettings.PlayerWidget.WIDTH, GUISettings.PlayerWidget.HEIGHT);
         this.setAlignment(Pos.TOP_CENTER);
-        this.setPadding(new Insets(5));
-        this.setHgap(10);
-        this.setVgap(5);
-        this.setStyle("-fx-border-color: #b5b5b5; -fx-border-radius: 5; -fx-background-color: #f9f9f9;");
+        this.setPadding(new Insets(10));
+        this.setHgap(15);
+        this.setVgap(12);
+        this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
+        this.getStyleClass().add("player-widget");
         this.gui = gui;
 
         //Graphical layout
-        //Row 0: totem and playerName
+        //Row 0: totem, playerName and food
         ImageView totemImage = new ImageView();
-        totemImage.setFitWidth(24);
-        totemImage.setFitHeight(24);
+        totemImage.setFitWidth(GUISettings.Icons.BIG_ICON_WIDTH);
+        totemImage.setFitHeight(GUISettings.Icons.BIG_ICON_HEIGHT);
         totemImage.setPreserveRatio(true);
-        String totemImagePath = "Images/Totems/" + totemColor.toString() + ".png";
+        String totemImagePath = "/Images/Totems/" + totemColor.toString() + ".png";
         try {
             Image totemImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(totemImagePath)));
             totemImage.setImage(totemImg);
+            //TODO: non sembra funzionare lo stile
+            totemImage.setStyle("-fx-border-width: 1; -fx-border-color: #FF6B35; -fx-background-radius: 20");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         this.add(totemImage, 0, 0);
 
+        //name
         nameLabel = new Label(name);
-        nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14");
-        this.add(nameLabel, 1, 0, 3, 1);
+        nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 18");
+        this.add(nameLabel, 1, 0, 4, 1);
 
-        //row 1 food, characters numbers and sustenance discount
         //food
         ImageView foodImage = new ImageView();
-        foodImage.setFitWidth(24);
-        foodImage.setFitHeight(24);
+        foodImage.setFitWidth(GUISettings.Icons.BIG_ICON_WIDTH);
+        foodImage.setFitHeight(GUISettings.Icons.BIG_ICON_HEIGHT);
         foodImage.setPreserveRatio(true);
-        String foodImagePath = "Images/Icons/Food.png";
+        String foodImagePath = "/Images/Icons/Food.png";
         try {
             Image foodImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(foodImagePath)));
             foodImage.setImage(foodImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(foodImage, 0, 1);
-        foodQuantity = new Label("0");
-        this.add(foodQuantity, 1, 1);
+        this.add(foodImage, 5, 0, 2, 1);
+        foodReserve = new Label("0");
+        this.add(foodReserve, 7, 0);
+
+        //row 1 prestige, characters numbers and sustenance discount
+        //prestige
+        ImageView prestigeImage = new ImageView();
+        prestigeImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        prestigeImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
+        prestigeImage.setPreserveRatio(true);
+        String prestigeImgPath = "/Images/Icons/Prestige.png";
+        try {
+            Image prestigeImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(prestigeImgPath)));
+            prestigeImage.setImage(prestigeImg);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        this.add(prestigeImage, 0, 1);
+        prestigePoints = new Label("0");
+        this.add(prestigePoints, 1, 1);
 
         //characters
         ImageView charactersImage = new ImageView();
-        charactersImage.setFitWidth(24);
-        charactersImage.setFitHeight(24);
+        charactersImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        charactersImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         charactersImage.setPreserveRatio(true);
-        String charactersImagePath = "Images/Icons/Characters.png";
+        String charactersImagePath = "/Images/Icons/Characters.png";
         try {
             Image charactersImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(charactersImagePath)));
             charactersImage.setImage(charactersImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(charactersImage, 2, 1);
+        this.add(charactersImage, 3, 1);
         charactersNum = new Label("0");
-        this.add(charactersNum, 3, 1);
+        this.add(charactersNum, 4, 1);
 
         //sustenanceDiscount
         ImageView sustenanceDiscountImage = new ImageView();
-        sustenanceDiscountImage.setFitWidth(24);
-        sustenanceDiscountImage.setFitHeight(24);
+        sustenanceDiscountImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        sustenanceDiscountImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         sustenanceDiscountImage.setPreserveRatio(true);
-        String discountImagePath = "Images/Icons/Sustenance.png";
+        String discountImagePath = "/Images/Icons/Sustenance.png";
         try {
             Image sustenanceImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(discountImagePath)));
             sustenanceDiscountImage.setImage(sustenanceImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(sustenanceDiscountImage, 4, 1);
+        this.add(sustenanceDiscountImage, 6, 1);
         sustenanceDiscount = new Label("0");
-        this.add(sustenanceDiscount, 5, 1);
+        this.add(sustenanceDiscount, 7, 1);
 
         //row 2: shamanic stars, buildingsDiscount and InventionsNumber
         //shamanStars
         ImageView starsImage = new ImageView();
-        starsImage.setFitWidth(24);
-        starsImage.setFitHeight(24);
+        starsImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        starsImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         starsImage.setPreserveRatio(true);
-        String starsImagePath = "Images/Icons/ShamanStar.png";
+        String starsImagePath = "/Images/Icons/ShamanStar.png";
         try {
             Image starsImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(starsImagePath)));
             starsImage.setImage(starsImg);
@@ -147,43 +167,43 @@ public class PlayerInfoWidget extends GridPane{
 
         //buildingDiscount
         ImageView buildingsDiscountImage = new ImageView();
-        buildingsDiscountImage.setFitWidth(24);
-        buildingsDiscountImage.setFitHeight(24);
+        buildingsDiscountImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        buildingsDiscountImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         buildingsDiscountImage.setPreserveRatio(true);
-        String buildingsDiscountImagePath = "Images/Icons/buildingsDiscount.png";
+        String buildingsDiscountImagePath = "/Images/Icons/BuildingsDiscount.png";
         try {
             Image discountImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(buildingsDiscountImagePath)));
             buildingsDiscountImage.setImage(discountImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(buildingsDiscountImage, 2, 2);
+        this.add(buildingsDiscountImage, 3, 2);
         buildingsDiscount = new Label("0");
-        this.add(buildingsDiscount, 3, 2);
+        this.add(buildingsDiscount, 4, 2);
 
         //inventions Num
         ImageView inventionsImage = new ImageView();
-        inventionsImage.setFitWidth(24);
-        inventionsImage.setFitHeight(24);
+        inventionsImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        inventionsImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         inventionsImage.setPreserveRatio(true);
-        String inventionsImgPath = "Images/Icons/Inventions.png";
+        String inventionsImgPath = "/Images/Icons/Inventions.png";
         try {
             Image inventionsImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(inventionsImgPath)));
             inventionsImage.setImage(inventionsImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(inventionsImage, 4, 2);
+        this.add(inventionsImage, 6, 2);
         inventionsNum = new Label("0");
-        this.add(inventionsNum, 5, 2);
+        this.add(inventionsNum, 7, 2);
 
         //row 3: shamans, builders, inventors
         //shamans
         ImageView shamansImage = new ImageView();
-        shamansImage.setFitWidth(24);
-        shamansImage.setFitHeight(24);
+        shamansImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        shamansImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         shamansImage.setPreserveRatio(true);
-        String shamanImgPath = "Images/Icons/Shaman.png";
+        String shamanImgPath = "/Images/Icons/Shaman.png";
         try {
             Image shamanImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(shamanImgPath)));
             shamansImage.setImage(shamanImg);
@@ -196,43 +216,43 @@ public class PlayerInfoWidget extends GridPane{
 
         //builders
         ImageView buildersImage = new ImageView();
-        buildersImage.setFitWidth(24);
-        buildersImage.setFitHeight(24);
+        buildersImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        buildersImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         buildersImage.setPreserveRatio(true);
-        String buildersImgPath = "Images/Icons/Builder.png";
+        String buildersImgPath = "/Images/Icons/Builder.png";
         try {
             Image builderImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(buildersImgPath)));
             buildersImage.setImage(builderImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(buildersImage, 2, 3);
+        this.add(buildersImage, 3, 3);
         buildersNum = new Label("0");
-        this.add(buildersNum, 3, 3);
+        this.add(buildersNum, 4, 3);
 
         //inventors
         ImageView inventorsImage = new ImageView();
-        inventorsImage.setFitWidth(24);
-        inventorsImage.setFitHeight(24);
+        inventorsImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        inventorsImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         inventorsImage.setPreserveRatio(true);
-        String inventorsImgPath = "Images/Icons/Inventor.png";
+        String inventorsImgPath = "/Images/Icons/Inventor.png";
         try {
             Image inventorImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(inventorsImgPath)));
             inventorsImage.setImage(inventorImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(inventorsImage, 4, 3);
+        this.add(inventorsImage, 6, 3);
         inventorsNum = new Label("0");
-        this.add(inventorsNum, 5, 3);
+        this.add(inventorsNum, 7, 3);
 
         //row 4: gatherers, hunters, artists
         //gatherers
         ImageView gatherersImage = new ImageView();
-        gatherersImage.setFitWidth(24);
-        gatherersImage.setFitHeight(24);
+        gatherersImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        gatherersImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         gatherersImage.setPreserveRatio(true);
-        String gatherersImgPath = "Images/Icons/Gatherer.png";
+        String gatherersImgPath = "/Images/Icons/Gatherer.png";
         try {
             Image gathererImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(gatherersImgPath)));
             gatherersImage.setImage(gathererImg);
@@ -245,35 +265,35 @@ public class PlayerInfoWidget extends GridPane{
 
         //hunters
         ImageView huntersImage = new ImageView();
-        huntersImage.setFitWidth(24);
-        huntersImage.setFitHeight(24);
+        huntersImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        huntersImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         huntersImage.setPreserveRatio(true);
-        String huntersImgPath = "Images/Icons/Hunter.png";
+        String huntersImgPath = "/Images/Icons/Hunter.png";
         try {
             Image huntersImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(huntersImgPath)));
             huntersImage.setImage(huntersImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(huntersImage, 2, 4);
+        this.add(huntersImage, 3, 4);
         huntersNum = new Label("0");
-        this.add(huntersNum, 3, 4);
+        this.add(huntersNum, 4, 4);
 
         //artists
         ImageView artistsImage = new ImageView();
-        artistsImage.setFitWidth(24);
-        artistsImage.setFitHeight(24);
+        artistsImage.setFitWidth(GUISettings.Icons.ICON_WIDTH);
+        artistsImage.setFitHeight(GUISettings.Icons.ICON_HEIGHT);
         artistsImage.setPreserveRatio(true);
-        String artistsImgPath = "Images/Icons/Artist.png";
+        String artistsImgPath = "/Images/Icons/Artist.png";
         try {
             Image artistsImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(artistsImgPath)));
             artistsImage.setImage(artistsImg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(artistsImage, 4, 4);
+        this.add(artistsImage, 6, 4);
         artistsNum = new Label("0");
-        this.add(artistsNum, 5, 4);
+        this.add(artistsNum, 7, 4);
     }
 
     /**Called by the gameSceneController to update number of characters in this tribe
@@ -336,11 +356,20 @@ public class PlayerInfoWidget extends GridPane{
     }
 
     /**called by the gameSceneController to update foodQuantity label
-     *
-     * @param deltaFood variation of food managed by this player
+     * @param currFood new value of player's food
      */
-    public void updateFoodQuantity(int deltaFood){
-        int prevValue = Integer.parseInt(foodQuantity.getText());
-        foodQuantity.setText(String.valueOf(prevValue + deltaFood));
+    public void updateFoodReserve(int currFood){
+        foodReserve.setText(String.valueOf(currFood));
+    }
+
+    public int getFoodReserve() {
+        return Integer.parseInt(foodReserve.getText());
+    }
+
+    public void updatePrestigePoints(int pp) {
+        prestigePoints.setText(String.valueOf(pp));
+    }
+    public int getPrestigePoints() {
+        return Integer.parseInt(prestigePoints.getText());
     }
 }

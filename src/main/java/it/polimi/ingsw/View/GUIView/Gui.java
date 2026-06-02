@@ -19,8 +19,13 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Gui implements ViewInterfaceGui, ViewInterface {
+
+    private static final Logger LOGGER = Logger.getLogger(Gui.class.getName());
 
     private ClientController controller;
     private final Stage primaryStage;
@@ -119,7 +124,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyNewCurrentPlayer(String playerName, ClientState clientState) {
-
+        if(gameScene != null) {
+            Platform.runLater(() -> {
+                try {
+                    gameScene.showNewCurrentPlayer(playerName);
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to set new current player", e);
+                }
+            });
+        }
     }
 
     @Override
@@ -128,7 +141,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             try{
                 lobbyScene();
             }catch(Exception e){
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Failed to display lobby scene", e);
             }
         });
     }
@@ -141,7 +154,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
                 //ChooseId.loadGames(controller.getAvailableGames());//private controllers keep the reference to the active ones
                 players.add(playerName);
             }catch(Exception e){
-                e.printStackTrace();
+                LOGGER.log(Level.WARNING, "Failed to display player joining lobby", e);
             }
         });
     }
@@ -185,7 +198,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyStartRound(int round) {
-
+        if(gameScene != null) {
+            Platform.runLater(() -> {
+                try {
+                    gameScene.showNewRound(round);
+                } catch(Exception e) {
+                    LOGGER.log(Level.WARNING, "Failed to display start round", e);
+                }
+            });
+        }
     }
 
     @Override
@@ -195,7 +216,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
-
+        if (gameScene != null) {
+            Platform.runLater(() -> {
+                try {
+                    gameScene.showInitialFood(initialFood);
+                } catch (Exception e){
+                    LOGGER.log(Level.SEVERE, "Failed to display initial food", e);
+                }
+            });
+        }
     }
 
     @Override
@@ -212,7 +241,24 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     public void notifyCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
         if(gameScene != null){
             Platform.runLater(() -> {
-                gameScene.showCardDrawn(player, card, topRow, fromBuildings);
+                try {
+                    gameScene.showCardDrawn(player, card, topRow, fromBuildings);
+                } catch(Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to display card drawn", e);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void notifyEraChanged(int era) {
+        if (gameScene != null) {
+            Platform.runLater(() -> {
+                try {
+                    gameScene.showNewEra(era);
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "Failed to display era change", e);
+                }
             });
         }
     }
@@ -229,12 +275,28 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyFood(String playerName, int food) {
-
+        if(gameScene != null){
+            Platform.runLater(() -> {
+                try {
+                    gameScene.showFoodModified(playerName, food);
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to show food update", e);
+                }
+            });
+        }
     }
 
     @Override
     public void notifyPrestigePoints(String playerName, int pp) {
-
+        if(gameScene != null){
+            Platform.runLater(() -> {
+                try {
+                    gameScene.showPrestigeModified(playerName, pp);
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to show prestige update", e);
+                }
+            });
+        }
     }
 
     @Override
@@ -254,7 +316,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void notifyEndGame(Map<String, Integer> finalRanking) {
-
+        if(gameScene != null) {
+            Platform.runLater(() -> {
+                try {
+                    gameScene.showEndGame(finalRanking);
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to show game ended", e);
+                }
+            });
+        }
     }
 
     @Override
@@ -342,17 +412,22 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/GameScene.fxml"));
             Parent root = loader.load();
+
             GameSceneController controller = loader.getController();
             controller.setGUI(this);
             gameScene = controller;
+
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
+
             primaryStage.setScene(scene);
-            primaryStage.show();
-
+            Platform.runLater(() -> {
+                primaryStage.setMaximized(false);
+                primaryStage.setMaximized(true);
+            });
         } catch (IOException e){
-            System.out.println("Error: "+ e);
+            LOGGER.log(Level.SEVERE, "Error loading GameScene", e);
         }
-
     }
 
     @Override

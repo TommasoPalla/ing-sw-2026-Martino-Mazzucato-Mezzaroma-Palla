@@ -1,31 +1,20 @@
 package it.polimi.ingsw.View.GUIView.Utils;
 
-import it.polimi.ingsw.Model.Cards.Card;
-import javafx.geometry.Pos;
+import it.polimi.ingsw.View.GUIView.GUISettings;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import java.io.InputStream;
 
 /**ImageManager class is used to show game assets images in the GUI.
- * getCardNode method returns the card's image or a placeholder if an exception occur.
- *
  */
 public class ImageManager {
     // Path inside the src/main/resources folder
     private static final String RESOURCE_PATH_PREFIX = "/Images/";
-
-    private static final double CARD_WIDTH = 103;
-    private static final double CARD_HEIGHT = 152;
-    private static final double TILE_WIDTH = 103;
-    private static final double TILE_HEIGHT = 153;
 
     /**
      * Returns the graphical representation of a card given its unique ID.
@@ -42,11 +31,17 @@ public class ImageManager {
 
         if (imageStream != null) {
             try {
-                // Background loading is set false to ensure the stream is read safely before closing
-                Image image = new Image(imageStream, CARD_WIDTH, CARD_HEIGHT, true, true);
+                // Background loading is set false to ensure the stream is read safely before closing. NO??
+                Image image = new Image(imageStream, GUISettings.Cards.WIDTH, GUISettings.Cards.HEIGHT, true, true);
                 ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(CARD_WIDTH);
-                imageView.setFitHeight(CARD_HEIGHT);
+                imageView.setFitWidth(GUISettings.Cards.WIDTH);
+                imageView.setFitHeight(GUISettings.Cards.HEIGHT);
+
+                Rectangle clip = new Rectangle(GUISettings.Cards.WIDTH, GUISettings.Cards.HEIGHT);
+                clip.setArcHeight(15);
+                clip.setArcWidth(15);
+                imageView.setClip(clip);
+
                 cardNode = imageView;
             } catch (Exception e) {
                 System.err.println("Error rendering internal image resource for ID " + cardId + ". Using fallback.");
@@ -66,10 +61,17 @@ public class ImageManager {
 
         if(imageStream != null) {
             try {
-                Image image = new Image(imageStream, TILE_WIDTH, TILE_HEIGHT, true, true);
+                Image image = new Image(imageStream, GUISettings.Tiles.WIDTH, GUISettings.Tiles.HEIGHT, true, true);
                 ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(TILE_WIDTH);
-                imageView.setFitHeight(TILE_HEIGHT);
+                imageView.setFitWidth(GUISettings.Tiles.WIDTH);
+                imageView.setFitHeight(GUISettings.Tiles.HEIGHT);
+
+                //sets clip to have 10 pixel border radius in tile Images
+                Rectangle clip = new Rectangle(GUISettings.Tiles.WIDTH, GUISettings.Tiles.HEIGHT);
+                clip.setArcHeight(15);
+                clip.setArcWidth(15);
+                imageView.setClip(clip);
+
                 tileNode = imageView;
             } catch (Exception e) {
                 System.err.println("Error rendering internal image resource offer tile for ID " + id + ". Using fallback.");
@@ -83,14 +85,19 @@ public class ImageManager {
 
     public static Node getTurnTile(int numPlayers){
         Node tileNode;
-        String fullPath = RESOURCE_PATH_PREFIX + "Tiles/Turn" + numPlayers /*va castato?*/ + ".png";
+        String fullPath = RESOURCE_PATH_PREFIX + "Tiles/Turn" + numPlayers + ".png";
         InputStream imageStream = ImageManager.class.getResourceAsStream(fullPath);
         if(imageStream != null) {
             try {
-                Image image = new Image(imageStream, TILE_WIDTH, TILE_HEIGHT, true, true);
+                Image image = new Image(imageStream, GUISettings.Tiles.WIDTH, GUISettings.Tiles.HEIGHT, true, true);
                 ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(TILE_WIDTH);
-                imageView.setFitHeight(TILE_HEIGHT);
+                imageView.setFitWidth(GUISettings.Tiles.WIDTH);
+                imageView.setFitHeight(GUISettings.Tiles.HEIGHT);
+                //sets clip to have 10 pixel border radius in tile Images
+                Rectangle clip = new Rectangle(GUISettings.Tiles.WIDTH, GUISettings.Tiles.HEIGHT);
+                clip.setArcHeight(15);
+                clip.setArcWidth(15);
+                imageView.setClip(clip);
                 tileNode = imageView;
             } catch (Exception e) {
                 System.err.println("Error rendering internal image resource for " + numPlayers + "players. Using fallback.");
@@ -105,16 +112,14 @@ public class ImageManager {
     private static Node createPlaceholder(String cardID, char offerTileID, int numPlayers){
         StackPane pane = new StackPane();
         pane.setPrefSize(
-                cardID != null ? CARD_WIDTH : TILE_WIDTH,
-                cardID != null ? CARD_HEIGHT : TILE_HEIGHT
+                cardID != null ? GUISettings.Cards.WIDTH : GUISettings.Tiles.WIDTH,
+                cardID != null ? GUISettings.Cards.HEIGHT : GUISettings.Tiles.HEIGHT
         );
 
-        Rectangle background = new Rectangle(CARD_WIDTH, CARD_HEIGHT);
-        background.setFill(Color.LIGHTGRAY);
-        background.setStroke(Color.DARKGRAY);
-        background.setStrokeWidth(2);
-        background.setArcWidth(10);
-        background.setArcHeight(10);
+        Rectangle background = new Rectangle(
+                cardID != null ? GUISettings.Cards.WIDTH : GUISettings.Tiles.WIDTH,
+                cardID != null ? GUISettings.Cards.HEIGHT : GUISettings.Tiles.HEIGHT);
+        background.getStyleClass().add("placeholder-style");
 
         Label textLabel;
         if(cardID != null){
@@ -124,11 +129,6 @@ public class ImageManager {
         } else {
             textLabel = new Label("OFFER TILE\nID: " + offerTileID);
         }
-        textLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        textLabel.setTextFill(Color.BLACK);
-        textLabel.setAlignment(Pos.CENTER);
-        textLabel.setStyle("-fx-text-alignment: center;");
-
         pane.getChildren().addAll(background, textLabel);
         return pane;
     }

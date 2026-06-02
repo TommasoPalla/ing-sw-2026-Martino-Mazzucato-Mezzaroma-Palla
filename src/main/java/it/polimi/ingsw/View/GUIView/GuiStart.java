@@ -12,10 +12,10 @@ public class GuiStart extends Application {
     public static void bindController(ClientController Controller){
         controller = Controller;
     }
+
     @Override
     public void start(Stage stage) throws Exception {
         Gui gui = new Gui(stage);
-        //controller = new ClientController();
         gui.bindController(controller);
 
         controller.bindView(gui);

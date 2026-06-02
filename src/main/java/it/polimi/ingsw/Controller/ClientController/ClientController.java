@@ -800,6 +800,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentEra(int era) {
         localModel.updateEra(era);
+        view.notifyEraChanged(era);
     }
 
     /**

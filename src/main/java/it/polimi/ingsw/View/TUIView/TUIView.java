@@ -631,6 +631,12 @@ public class TUIView implements ViewInterface {
         }
     }
 
+    //TODO
+    @Override
+    public void notifyEraChanged(int era) {
+
+    }
+
     @Override
     public void notifyTurnPassed(String playerThatPassed, String newCurrentPlayer) {
         System.out.println("\n" + playerThatPassed + " passed his turn! It's now " + newCurrentPlayer + "'s turn!");

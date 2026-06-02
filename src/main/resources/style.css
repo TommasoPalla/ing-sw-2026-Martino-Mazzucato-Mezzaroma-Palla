@@ -1,40 +1,147 @@
-.card-panel {
-    -fx-background-color: brown;
-    -fx-background-radius: 15.0;
-    -fx-border-color: beige;
-    -fx-border-radius: 15.0;
-    -fx-border-width: 2.0;
+.root {
+    /*Our version of black and white*/
+    -fx-dark-color: #1C1424;
+    -fx-light-color: #F4EEDD;
+
+    /*Main colors of the backgrounds*/
+    -fx-primary-background-color: #582D2F;
+    -fx-secondary-background-color: #41273B;
+
+    /*Main accent colors*/
+    -fx-primary-accent-color: #FD5619;
+    -fx-secondary-accent-color: #FFC83B;
 }
 
-.game-card {
-    -fx-background-color: grey;
-    -fx-opacity: 0.4;
+.main-background {
+    -fx-background-image: url("/Images/Background.png");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.status-bar {
+    -fx-background-color: -fx-primary-background-color;
+    -fx-background-radius: 20;
+}
+.status-bar .label {
+    -fx-font-family: "Helvetica", "Arial", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-light-color !important;
+}
+/*specific style for first Label (title label)
+  first-child selector is not native CSS, but
+  only JavaFX CSS, that is why results in a static error,
+  however it compiles correctly*/
+/*mi s ache non funziona*/
+.status-bar .label:first-child {
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: -fx-light-color;
+    -fx-text-transform: uppercase;
+}
+
+
+.card-style {
+    -fx-background-color: -fx-light-color;
+    -fx-background-radius: 10;
+    -fx-border-color: -fx-primary-accent-color;
     -fx-border-radius: 10.0;
+}
+
+.tribe-cards-row {
+    -fx-background-color: -fx-secondary-background-color;
+    -fx-background-radius: 10.0;
+    -fx-spacing: 7;
+    -fx-padding: 10;
+
+}
+.buildings-row {
+    -fx-background-color: -fx-primary-background-color;
+    -fx-background-radius: 10.0;
+    -fx-spacing: 7;
+    -fx-padding: 10;
+}
+
+/*TODO: definire gli highlight*/
+.highlight-card /*card-style:hover*/ {
+    -fx-border-color: -fx-secondary-accent-color;
+}
+.highlight-tile {
+    -fx-border-color: -fx-primary-accent-color;
 }
 
 .tile-style {
     -fx-border-radius: 10.0;
 }
 
-.cards-Box {
-    -fx-background-color: green;
+
+.tribe-region {
+    -fx-background-color: -fx-light-color;
     -fx-background-radius: 15.0;
-    -fx-border-color: green;
+    -fx-border-color: -fx-primary-accent-color;
     -fx-border-radius: 15.0;
-    -fx-border-width: 2.0;
+    -fx-border-width: 4.0;
 }
 
-.main-background {
-    -fx-background-image: url("/Images/Background/Background.png");
-    -fx-background-size: cover;
-    -fx-background-position: center;
-    -fx-background-repeat: no-repeat;
+.tribe-column {
+    -fx-background-color: -fx-light-color;
+    -fx-background-radius: 10.0;
+    -fx-border-color: -fx-primary-accent-color;
+    -fx-border-radius: 10.0;
+    -fx-border-width: 2.0;
+    -fx-spacing: -110px; /* Negative margin to create a cascade effect */
+    -fx-padding: 5px;
+    -fx-alignment: top-center;
 }
+
+.transparent-scroll {
+    -fx-background-color: transparent;
+}
+.transparent-scroll .viewport {
+    -fx-background-color: transparent;
+}
+.transparent-scroll .content {
+    -fx-background-color: transparent;
+}
+
+.info-board {
+    -fx-border-color: -fx-primary-background-color;
+    -fx-border-radius: 15;
+    -fx-border-width: 4;
+    -fx-background-color: -fx-light-color;
+    -fx-background-radius: 15;
+}
+
+.player-widget {
+    -fx-border-color: -fx-primary-background-color;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-background-color: -fx-light-color;
+    -fx-background-radius: 10;
+}
+
+
+.offer-track {
+    -fx-background-color: -fx-light-color;
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+}
+
 
 .banner-label {
-    -fx-background-color: #B5978D;
+    -fx-background-color: -fx-light-color;
     -fx-text-fill: black;
-    -fx-font-size: 36;
+    -fx-font-size: 24;
     -fx-font-weight: bold;
-    -fx-border-radius: 5;
+    -fx-border-radius: 15;
+}
+
+.placeholder-style {
+    -fx-background-color: -fx-light-color;
+    -fx-background-radius: 10;
+    -fx-text-alignment: center;
+    -fx-font-family: Arial;
+    -fx-font-size: 12;
+    -fx-text-fill: -fx-dark-color;
 }

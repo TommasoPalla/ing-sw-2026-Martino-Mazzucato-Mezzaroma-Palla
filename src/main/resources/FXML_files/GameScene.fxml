@@ -3,64 +3,174 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <?import javafx.scene.control.Label?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameSceneController"
-            maxHeight="2160" maxWidth="3840" minHeight="720" minWidth="1020" prefHeight="1080.0" prefWidth="1920.0"
-            style="-fx-background-image: url('/Images/Background/Background.png');
-                   -fx-background-size: cover;
-                   -fx-background-position: center;
-                   -fx-background-repeat: no-repeat;">
+<?import java.net.URL?>
 
-   <children>
-      <Label fx:id="bannerLabel" prefWidth="400" prefHeight="300" alignment="CENTER">
-         <font>
-            <Font name="System Bold" size="48.0"/>
-         </font>
-      </Label>
-      <HBox fx:id="topRow" spacing="10" AnchorPane.topAnchor="160" AnchorPane.leftAnchor="80"
-            style="-fx-background-color: #CFD5DA;
-                   -fx-background-radius: 15.0;
-                   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 10.0, 0.0, 0.0, 5.0);">
+
+<!--TODO: aggiungere tasto LeaveGame e endTurn -->
+
+
+<AnchorPane fx:id="mainAnchor" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameSceneController"
+            minWidth="1280" minHeight="720"
+            prefWidth="1280" prefHeight="720"
+            maxWidth="3840" maxHeight="2160"
+            styleClass="main-background">
+   <stylesheets>
+      <URL value="@/style.css"/>
+   </stylesheets>
+
+
+   <HBox fx:id="statusBar" AnchorPane.topAnchor="10"
+         AnchorPane.leftAnchor="0"
+         AnchorPane.rightAnchor="0"
+         alignment="TOP_CENTER">
+      <HBox spacing="20"
+            alignment="CENTER"
+            styleClass="status-bar">
          <padding>
-            <Insets left="10" top="10" right="10" bottom="10"/>
+            <Insets top="5" bottom="5" right="15" left="15" />
          </padding>
+         <VBox spacing="15">
+            <Label text="ERA" />
+            <Label fx:id="eraStatus" text="I" />
+         </VBox>
+         <VBox spacing="15">
+            <Label text="ROUND" />
+            <Label fx:id="roundStatus" text="1"/>
+         </VBox>
+         <VBox spacing="15">
+            <Label text="PHASE" />
+            <Label fx:id="phaseStatus" text="Start Game" />
+         </VBox>
+         <VBox spacing="15">
+            <Label text="ACTIVE PLAYER" />
+            <Label fx:id="playerStatus"/>
+         </VBox>
       </HBox>
-      <HBox layoutX="515.0" layoutY="153.0" prefHeight="173.0" prefWidth="515.0" fx:id="topBuildings" style="-fx-background-color: green;" AnchorPane.topAnchor="160" AnchorPane.rightAnchor="530"/>
-      <HBox layoutX="618.0" layoutY="153.0" prefHeight="173.0" prefWidth="618.0" fx:id="bottomRow" style="-fx-background-color: red;" AnchorPane.topAnchor="566" AnchorPane.leftAnchor="80"/>
-      <HBox layoutX="309.0" layoutY="153.0" prefHeight="173.0" prefWidth="309.0" fx:id="bottomBuildings" style="-fx-background-color: yellow;" AnchorPane.topAnchor="566" AnchorPane.rightAnchor="530"/>
+   </HBox>
 
-      <HBox fx:id="offerTrack" layoutX="309.0" layoutY="173.0" prefHeight="180.0" prefWidth="968.0"  style="-fx-background-color: pink;" AnchorPane.topAnchor="363" AnchorPane.leftAnchor="300"/>
+   <HBox fx:id="topRow" spacing="10" AnchorPane.topAnchor="120" AnchorPane.leftAnchor="80"
+         alignment="CENTER"
+         styleClass="tribe-cards-row">
+      <padding>
+         <Insets left="10" top="10" right="10" bottom="10"/>
+      </padding>
+   </HBox>
 
-      <VBox fx:id="infoBoard" layoutX="200" layoutY="100" prefHeight="900" prefWidth="400" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="50" style="-fx-background-color: beige" />
-      <VBox fx:id="tribeRegion" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="350" prefWidth="758" prefHeight="300"
-            styleClass="cards-Box">
-         <children>
-            <Label  text="My Tribe" alignment="TOP_CENTER" prefWidth="100">
-               <VBox.margin>
-                  <Insets left="329"/>
-               </VBox.margin>
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Label>
-            <HBox fx:id="myTribe" spacing="20.0" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="350" prefWidth="758" prefHeight="300">
-               <padding>
-                  <Insets top="15.0" bottom="10.0" left="10.0" right="10.0" />
-               </padding>
-               <children>
-                  <VBox fx:id="hunterColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
-                  <VBox fx:id="builderColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
-                  <VBox fx:id="gathererColumn" prefWidth="113" prefHeight="270"  spacing="-20"/>
-                  <VBox fx:id="artistColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
-                  <VBox fx:id="shamanColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
-                  <VBox fx:id="inventorColumn" prefWidth="113" prefHeight="270" spacing="-20"/>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
+   <HBox fx:id="topBuildings" layoutX="515.0" layoutY="153.0" styleClass="buildings-row"
+         alignment="CENTER" AnchorPane.topAnchor="120" AnchorPane.rightAnchor="530">
+      <padding>
+         <Insets left="10" top="10" right="10" bottom="10"/>
+      </padding>
+   </HBox>
 
-   </children>
+   <HBox fx:id="bottomRow" layoutX="618.0" layoutY="153.0" styleClass="tribe-cards-row"
+         alignment="CENTER"
+         AnchorPane.topAnchor="526" AnchorPane.leftAnchor="80">
+      <padding>
+         <Insets left="10" top="10" right="10" bottom="10"/>
+      </padding>
+   </HBox>
+
+   <HBox fx:id="bottomBuildings" layoutX="309.0" layoutY="153.0" styleClass="buildings-row"
+         alignment="CENTER"
+         AnchorPane.topAnchor="526" AnchorPane.rightAnchor="530">
+      <padding>
+         <Insets left="10" top="10" right="10" bottom="10"/>
+      </padding>
+   </HBox>
+
+   <ImageView fx:id="deck" fitHeight="153.0" fitWidth="102.0" preserveRatio="true"
+               AnchorPane.topAnchor="323" AnchorPane.leftAnchor="158"
+               styleClass="offer-track"/>
+
+   <HBox fx:id="offerTrack" layoutX="309.0" layoutY="173.0" styleClass="offer-track"
+         alignment="CENTER"
+         AnchorPane.topAnchor="323" AnchorPane.leftAnchor="300"/>
+
+   <ScrollPane fx:id="rightMenu" layoutX="200" layoutY="100" prefWidth="300"
+               fitToWidth="true" styleClass="transparent-scroll"
+               AnchorPane.rightAnchor="30" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="70"
+               hbarPolicy="NEVER">
+      <VBox fx:id="infoBoard" spacing="10" alignment="TOP_CENTER" styleClass="info-board"/>
+   </ScrollPane>
+
+
+   <VBox fx:id="tribeRegion" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="350" prefWidth="758" prefHeight="300"
+         styleClass="tribe-region">
+      <padding>
+         <Insets top="15.0" bottom="15.0" left="20.0" right="20.0"/>
+      </padding>
+      <HBox fx:id="tribeHeader" alignment="TOP_CENTER" spacing="15">
+         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+            <Image url="@/Images/Icons/Food.png"/>
+         </ImageView>
+         <Label fx:id="foodReserve" text="0" prefWidth="10"/>
+         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+            <Image url="@/Images/Icons/Prestige.png"/>
+         </ImageView>
+         <Label fx:id="prestigePoints" text="0" prefWidth="10"/>
+         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+            <Image url="@/Images/Icons/Characters.png"/>
+         </ImageView>
+         <Label fx:id="charactersNumber" text="0" prefWidth="10"/>
+
+         <Label text="My Tribe" alignment="TOP_CENTER" prefWidth="100">
+            <font>
+               <Font name="System Bold" size="18.0"/>
+            </font>
+         </Label>
+
+         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+            <Image url="@/Images/Icons/Sustenance.png"/>
+         </ImageView>
+         <Label fx:id="sustenanceDiscount" text="0" prefWidth="10"/>
+
+         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+            <Image url="@/Images/Icons/BuildingsDiscount.png"/>
+         </ImageView>
+         <Label fx:id="buildingsDiscount" text="0" prefWidth="10"/>
+         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+            <Image url="@/Images/Icons/ShamanStar.png"/>
+         </ImageView>
+         <Label fx:id="shamanStars" text="0" prefWidth="10"/>
+
+      </HBox>
+
+      <!--TODO: da sistemar, forse mettere label fuori dal VBOx sennò si sovrappone e definire stile-->
+      <HBox fx:id="myTribe" spacing="20.0" alignment="CENTER"
+            prefWidth="758" prefHeight="300">
+         <padding>
+            <Insets top="15.0" bottom="10.0" left="10.0" right="10.0"/>
+         </padding>
+         <VBox fx:id="hunterColumn" prefWidth="113" prefHeight="270" spacing="-20">
+            <Label fx:id="huntersNumber" text="0"/>
+         </VBox>
+         <VBox fx:id="builderColumn" prefWidth="113" prefHeight="270" spacing="-20">
+            <Label fx:id="buildersNumber" text="0"/>
+         </VBox>
+         <VBox fx:id="gathererColumn" prefWidth="113" prefHeight="270" spacing="-20">
+            <Label fx:id="gatherersNumber" text="0"/>
+         </VBox>
+         <VBox fx:id="artistColumn" prefWidth="113" prefHeight="270" spacing="-20">
+            <Label fx:id="artistsNumber" text="0"/>
+         </VBox>
+         <VBox fx:id="shamanColumn" prefWidth="113" prefHeight="270" spacing="-20">
+            <Label fx:id="shamansNumber" text="0"/>
+         </VBox>
+         <VBox fx:id="inventorColumn" prefWidth="113" prefHeight="270" spacing="-20">
+            <Label fx:id="inventorsNumber" text="0"/>
+         </VBox>
+         <VBox fx:id="buildingColumn" prefWidth="113" prefHeight="270" spacing="-20" >
+            <Label text="Buildings"/>
+         </VBox>
+      </HBox>
+   </VBox>
 </AnchorPane>
