@@ -320,6 +320,14 @@ public class ClientController implements ClientViewUpdate {
         connection.passTurn();
     }
 
+    public void leave() {
+        if (clientState != ClientState.END_GAME) {
+            throw new IllegalClientStateActionException("ERROR: Invalid command, please try again...");
+        }
+        clientState = ClientState.SETUP;
+        System.out.println("Client " + playerName + " has left the game!");
+    }
+
 
     //-----------------CALLBACKS FROM SERVER UPDATES--------------------------------------------------------------------
     /* Before making a call to the game controller methods, the client controller checks
@@ -801,12 +809,27 @@ public class ClientController implements ClientViewUpdate {
      */
     @Override
     public void updateEndGame(Map<String, Integer> finalRanking) {
+        localModel.updateGamePhase(GamePhase.END_GAME);
+        this.clientState = ClientState.END_GAME;
         for (String playerName : finalRanking.keySet()) {
             localModel.updatePrestigePoints(playerName, finalRanking.get(playerName));
         }
-        clientState = ClientState.SETUP;
         view.notifyEndGame(finalRanking);
     }
+
+    /**
+     * Notifies the player about their position in the general leaderboard for games with the same number of players
+     * as this one.
+     * @param leaderboard a list of Strings representing the leaderboard with the final scores of all the game played
+     *                    with the same number of players.
+     * @param playerPosition the player's position in the leaderboard.
+     */
+    @Override
+    public void updateLeaderboardInfo(List<String> leaderboard, int playerPosition) {
+        localModel.getDbLeaderboard().addAll(leaderboard);
+        view.notifyLeaderboardInfo(playerPosition);
+    }
+
 
     /**
      * This method is used to sync the {@link ClientState} of the player based on the {@link GamePhase} and on the current

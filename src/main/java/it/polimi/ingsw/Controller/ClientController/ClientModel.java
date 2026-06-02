@@ -34,6 +34,7 @@ public class ClientModel {
     Map<Integer,String> turnTileStatus;
     private int[] tileModifier;
     private ArrayList<OfferTile> offerTiles;
+    private List<String> dbLeaderboard;
 
     ClientModel(int gameId, int numPlayers){
         this.gameId = gameId;
@@ -50,6 +51,7 @@ public class ClientModel {
         this.totemColors = new HashMap<>();
         turnTileStatus = new HashMap<>();
         turnOrder = new ArrayList<>();
+        dbLeaderboard = new ArrayList<>();
         switch (numPlayers){
             case 2:
                 tileModifier = new int[]{1, -1};
@@ -314,4 +316,5 @@ public class ClientModel {
     public int[] getTileModifier() {return tileModifier;}
     public Map<Integer, String> getTurnTileStatus() {return turnTileStatus;}
     public ArrayList<OfferTile> getOfferTiles(){return offerTiles;}
+    public List<String> getDbLeaderboard(){return dbLeaderboard;}
 }

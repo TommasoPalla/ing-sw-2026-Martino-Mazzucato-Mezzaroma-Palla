@@ -130,6 +130,8 @@ public class TUIView implements ViewInterface {
             case PLACE_TOTEM            -> commandParser.parseChooseOfferTile(argsString);
             case HELP                   -> printAvailableActions(clientController.getClientState(), true);
             case SHOW_BUILDING_INFO     -> printCardInfo(argsString);
+            case SEE_LEADERBOARD        -> printLeaderBoard();
+            case LEAVE                  -> clientController.leave();
             default                     -> throw new IllegalArgumentException("ERROR: Invalid command, please try again or enter \"help()\" to know the available commands.");
         }
     }
@@ -138,6 +140,11 @@ public class TUIView implements ViewInterface {
      * Prints to terminal the tribe of the player
      */
     private void printTribe(String playerName) {
+        ClientState clientState = clientController.getClientState();
+        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
+            System.out.println("ERROR: You're not in a game, so there's no tribe to see!");
+            return;
+        }
         tuiState = TUIState.SHOW_TRIBE;
         LightTribe localTribe = clientController.getLocalModel().getPlayerTribe(playerName);
         if(localTribe != null) {
@@ -238,6 +245,11 @@ public class TUIView implements ViewInterface {
      * Prints to terminal the top row of the offerTrack
      */
     private void printTopRow() {
+        ClientState clientState = clientController.getClientState();
+        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
+            System.out.println("ERROR: You're not in a game, so there's no top row to see!");
+            return;
+        }
         boolean noChars = clientController.getLocalModel().getTopRow().isEmpty();
         boolean noBuildings = clientController.getLocalModel().getTopBuildings().isEmpty();
         
@@ -257,6 +269,11 @@ public class TUIView implements ViewInterface {
      * Prints to terminal the bottom row of the offerTrack
      */
     private void printBottomRow() {
+        ClientState clientState = clientController.getClientState();
+        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
+            System.out.println("ERROR: You're not in a game, so there's bottom row to see!");
+            return;
+        }
         boolean noChars = clientController.getLocalModel().getBottomRow().isEmpty();
         boolean noBuildings = clientController.getLocalModel().getBottomBuildings().isEmpty();
 
@@ -273,6 +290,11 @@ public class TUIView implements ViewInterface {
     }
 
     private void printOfferTrack() {
+        ClientState clientState = clientController.getClientState();
+        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
+            System.out.println("ERROR: You're not in a game, so there's no offer track to see!");
+            return;
+        }
         tuiState = TUIState.SHOW_OFFER_TRACK;
         // COSTRUZIONE TURN TILE ---------------------------------------------------------------------------------------
         // -------------------------------------------------------------------------------------------------------------
@@ -355,16 +377,26 @@ public class TUIView implements ViewInterface {
 
             System.out.println(leftPart + "   " + rightPart);
         }
-//        System.out.println();
-//        System.out.println(topBorder);
-//        System.out.println(actionRow);
-//        System.out.println(playerRow);
-//        System.out.println(bottomBorder);
         System.out.println();
     }
 
     private void printRemainingDraws(int remainingFromAbove, int remainingFromBelow){
         System.out.println("\n--- DRAWS REMAINING: ABOVE " + remainingFromAbove + " | BELOW " + remainingFromBelow + " ---");
+    }
+
+    private void printLeaderBoard() {
+        if (this.clientController.getClientState() != ClientState.END_GAME) {
+            System.out.println("ERROR: You cannot do this right now.");
+            return;
+        }
+        System.out.println();
+        System.out.println("This is the current Mesos leaderboard of games with " + clientController.getLocalModel().getNumPlayers() + " players:");
+        System.out.println();
+        List<String> leaderboard = clientController.getLocalModel().getDbLeaderboard();
+        for (int i = 0; i < leaderboard.size(); i++)
+            System.out.println(leaderboard.get(i));
+        System.out.println();
+        System.out.println("Type \"leave()\" to go back to setup to create or join another game of Mesos!");
     }
 
     public void changeClientState(ClientState clientState) {
@@ -714,7 +746,16 @@ public class TUIView implements ViewInterface {
             }
             else System.out.println();
         }
-        System.out.println("Congratulations to everyone! You will be now redirected to setup...");
+        System.out.println("Congratulations to everyone!");
+    }
+
+    @Override
+    public void notifyLeaderboardInfo(int playerPosition) {
+        System.out.println();
+        System.out.println("You are now in position " + playerPosition + "in the Mesos leaderboard of games with "
+        + clientController.getLocalModel().getNumPlayers() + " players!");
+        System.out.println();
+        System.out.println("If you want to see the entire leaderboard type \"see_leaderboard()\". Else, type \"leave()\" to go back to setup to create or join another game of Mesos!");
     }
 
     // METHODS FOR PRINTING INFORMATION LIKE CARDS, OFFER TRACK, AVAILABLE COMMANDS AND ACTIONS

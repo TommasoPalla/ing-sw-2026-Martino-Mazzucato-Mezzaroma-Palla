@@ -19,6 +19,8 @@ public enum CommandType {
     DRAW_CARD("draw_card", 3),
     PASS_TURN("pass_turn", 0),
     SHOW_BUILDING_INFO("show_building_info", 1),
+    SEE_LEADERBOARD("see_leaderboard", 0),
+    LEAVE("leave", 0),
     HELP("help", 0);
 
     /**

@@ -9,6 +9,7 @@ import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -194,6 +195,16 @@ public interface VirtualSocketClient {
      * @throws IOException if TCP communication fails.
      */
     void updateEndGame(Map<String,Integer> finalRanking) throws IOException;
+
+    /**
+     * Notifies the player about their position in the general leaderboard for games with the same number of players
+     * as this one.
+     * @param leaderboard a list of Strings representing the leaderboard with the final scores of all the game played
+     *                    with the same number of players.
+     * @param playerPosition the player's position in the leaderboard.
+     * @throws IOException if TCP communication fails.
+     */
+    void updateLeaderboardInfo(List<String> leaderboard, int playerPosition) throws IOException;
 
     /**
      * Forces the client to terminate the session, usually due to a server-side disconnection.

@@ -200,6 +200,16 @@ public interface VirtualRMIClient extends Remote {
     void updateEndGame(Map<String, Integer> finalRanking) throws RemoteException;
 
     /**
+     * Notifies the player about their position in the general leaderboard for games with the same number of players
+     * as this one.
+     * @param leaderboard a list of Strings representing the leaderboard with the final scores of all the game played
+     *                    with the same number of players.
+     * @param playerPosition the player's position in the leaderboard.
+     * @throws RemoteException if RMI communication fails.
+     */
+    void updateLeaderboardInfo(List<String> leaderboard, int playerPosition) throws RemoteException;
+
+    /**
      * Forces the client to terminate the session, usually due to a server-side disconnection.
      * @throws RemoteException if RMI communication fails.
      */

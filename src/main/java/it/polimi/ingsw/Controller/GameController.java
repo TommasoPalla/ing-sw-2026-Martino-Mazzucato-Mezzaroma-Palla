@@ -53,12 +53,18 @@ public class GameController {
     private final ExecutorService notificationThreads = Executors.newCachedThreadPool();
 
     /**
+     * The map where the final ranking will be stored at the end of the game.
+     */
+    Map<String, Integer> finalRanking;
+
+    /**
      * GameController's constructor is called in the {@link it.polimi.ingsw.Networking.Shared.ServerController}
      * when a new game is added.
      */
     public GameController(Game gameInstance) {
         this.gameInstance = gameInstance;
         this.connectedClients = new LinkedHashMap<>();
+        this.finalRanking = new LinkedHashMap<>();
     }
 
     public Game getGameModel() {
@@ -67,6 +73,14 @@ public class GameController {
 
     public ArrayList<String> getConnectedClients() {
         return new ArrayList<>(connectedClients.keySet());
+    }
+
+    public Map<String, ClientNotifier> getConnectedClientsNotifiers() {
+        return connectedClients;
+    }
+
+    public Map<String, Integer> getFinalRanking() {
+        return finalRanking;
     }
 
     /**
@@ -261,9 +275,8 @@ public class GameController {
      * it notifies all the players with the new offer track status. It catches a {@link LastRoundException} if the
      * previous round was the last one. If it was so, it calculates the final points to set the final ranking
      * @param lastEventsResults the map containing all information about the results of the last resolved events.
-     * @throws EndOfGameException if the previous round was the last one.
      */
-    public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws EndOfGameException{
+    public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
         boolean isLastRound = false;
         notifyAll(n -> {
@@ -302,7 +315,6 @@ public class GameController {
 //            }
 
             calculateFinalPoints();
-            throw new EndOfGameException();
         }
 
 //        notifyAll(n -> {
@@ -528,7 +540,7 @@ public class GameController {
      * effect applies at the end of the game and calls the model's method to create the final ranking who will be notified
      * to the players.
      */
-    public void calculateFinalPoints() {
+    public void calculateFinalPoints() throws EndOfGameException {
         Map<String,Integer> finalPoints = new LinkedHashMap<>();
         for (Player player : gameInstance.getPlayers()) {
             Tribe tribe = player.getTribe();
@@ -547,10 +559,11 @@ public class GameController {
                         (oldValue, newValue) -> oldValue,
                         LinkedHashMap::new
                 ));
-
+        this.finalRanking = finalRanking;
         notifyAll(n -> {
             n.notifyEndGame(finalRanking);
         });
+        throw new EndOfGameException();
     }
 
     /*TODO: definire la fase di shutdown del game a seguito di un client disconnesso e gestire
