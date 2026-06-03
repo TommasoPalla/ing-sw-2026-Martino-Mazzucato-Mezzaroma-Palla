@@ -626,8 +626,6 @@ public class TUIView implements ViewInterface {
             }
         } else {
             System.out.println(clientController.getLocalModel().getTotemColors().get(player).colorize(player) + " has drawn the " + cardType + " " + card.getCardID() + " from the " + row);
-            // Show offer track to others to see totem movements (e.g. returning to turn tile)
-            printOfferTrack();
         }
     }
 

@@ -446,8 +446,13 @@ public class GameController {
                                 currPlayer.setRemainingDraws(currPlayer.getRemainingAbove(), 0);
                         }
                     }
-                    
-                    if (currPlayer.getRemainingAbove() == 0 && currPlayer.getRemainingBelow() == 0) {
+
+                    // If player still has cards to draw...
+                    if(currPlayer.getRemainingAbove() != 0 || currPlayer.getRemainingBelow() != 0){
+                        notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));
+                        notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
+                    }
+                    else {
                         // Return to tile food bonus
                         gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
                         notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));

@@ -76,7 +76,10 @@ public class BuildingManager {
         if(phaseMap == null) return;
         ArrayList<BuildingCard> playersCurrPhaseBuildings = phaseMap.getOrDefault(player.getName(), new ArrayList<>());
         for (BuildingCard buildingCard : playersCurrPhaseBuildings) {
-            if (buildingCard.isUsedIn(eventType)) buildingCard.applyEffect(context);
+            if (buildingCard.isUsedIn(eventType)) {
+                System.out.println("[DEBUG] Building " + buildingCard.getCardID()  + " is used in event " + eventType.getSimpleName());
+                buildingCard.applyEffect(context);
+            }
 
         }
     }
