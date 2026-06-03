@@ -1,6 +1,7 @@
 package it.polimi.ingsw.View.TUIView;
 
 import it.polimi.ingsw.Controller.ClientController.ClientController;
+import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.CustomException.IllegalActionPhaseException;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
@@ -178,7 +179,7 @@ public record CommandParser(ClientController clientController) {
      * @param argsString the argument passed via terminal input, the cardID of the card we want to know info of
      * @return the description of the card
      */
-    public BuildingCard parseCardInfo(String argsString){
+    public BuildingCard parseBuildingInfo(String argsString){
         if(argsString.trim().isEmpty()) {
             throw new IllegalArgumentException("ERROR: this command requires arguments.");
         }
@@ -198,6 +199,14 @@ public record CommandParser(ClientController clientController) {
         for(BuildingCard building : clientController.getLocalModel().getBottomBuildings()){
             if(building != null && cardID.equalsIgnoreCase(building.getCardID()))
                 return building;
+        }
+
+        for(String playerName : clientController.getLocalModel().getPlayersNames()){
+            LightTribe tribe = clientController.getLocalModel().getPlayerTribe(playerName);
+            for(BuildingCard building : tribe.getBuildings()){
+                if(building != null && cardID.equalsIgnoreCase(building.getCardID()))
+                    return building;
+            }
         }
 
         // otherwise we default to error (should never happen, but it's safe to do)

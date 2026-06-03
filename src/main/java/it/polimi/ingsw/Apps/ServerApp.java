@@ -58,8 +58,7 @@ public class ServerApp {
 
             mainController.setLeaderboardDAO(new LeaderboardDAO(connection));
         } catch (SQLException e) {
-            System.out.println("[ERROR]  Unable to connect to MySQL mesos database:");
-            e.printStackTrace();
+            System.out.println("[ERROR]  Unable to connect to MySQL Mesos database: " + e.getMessage());
         }
     }
 }

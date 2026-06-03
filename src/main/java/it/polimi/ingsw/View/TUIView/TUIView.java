@@ -892,7 +892,7 @@ public class TUIView implements ViewInterface {
     private void printCardInfo(String argsString){
         BuildingCard requestedBuilding = null;
         try {
-            requestedBuilding =  commandParser.parseCardInfo(argsString);
+            requestedBuilding =  commandParser.parseBuildingInfo(argsString);
         } catch (Exception e){
             System.out.println(e.getMessage());
             return;

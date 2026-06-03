@@ -10,8 +10,9 @@ public class TuiIcons {
 
     public static final String POPULATION = "👥";
     public static final String SHAMANS_STARS = "🌟";
-    public static final String BUILDERS_DISCOUNT = "🔨🏷️";
-    public static final String GATHERERS_DISCOUNT = "🧺🏷️";
+    public static final String BUILDERS_DISCOUNT = "🔨🛒";
+
+    public static final String GATHERERS_DISCOUNT = "🧺🛒";
 
     public static final String HUNTER = "🏹";
     public static final String ALPHA_HUNTER = "🏹+";
