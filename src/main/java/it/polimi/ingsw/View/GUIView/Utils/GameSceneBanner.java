@@ -25,7 +25,6 @@ public class GameSceneBanner {
      */
     private StackPane overlay;
 
-    private final GaussianBlur blur;
 
     /**
      * The asynchronous background timer handling the automatic dismissal timeout.
@@ -42,7 +41,6 @@ public class GameSceneBanner {
      */
     public GameSceneBanner(AnchorPane target){
         this.target = target;
-        this.blur = new GaussianBlur(8.0);
     }
 
     public void showBanner(String message, double timeout, Runnable onCloseAction){
@@ -68,7 +66,7 @@ public class GameSceneBanner {
         }
         this.onCloseAction = onCloseAction;
 
-        target.setEffect(blur);
+
         target.setDisable(true);
 
         overlay = new StackPane();

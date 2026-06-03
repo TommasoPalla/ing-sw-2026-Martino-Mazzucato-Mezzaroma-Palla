@@ -9,6 +9,6 @@ public interface ViewInterfaceGui {
     void nicknameScene();
     void chooseTotemScene();
     void chooseNumberOfPlayers();
-    void playGameScene();
+    boolean playGameScene();
     void lobbyScene() throws IOException;
 }

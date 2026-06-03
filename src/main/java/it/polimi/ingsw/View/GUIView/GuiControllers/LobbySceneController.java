@@ -205,4 +205,8 @@ public class LobbySceneController {
         startGameButton.setVisible(gui.returnHost());
         startGameButton.setManaged(gui.returnHost());
     }
+
+    public GameSceneBanner getBanner(){
+        return this.banner;
+    }
 }

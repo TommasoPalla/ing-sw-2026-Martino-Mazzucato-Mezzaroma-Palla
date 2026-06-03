@@ -7,16 +7,20 @@ import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GUIView.GuiControllers.*;
+import it.polimi.ingsw.View.GUIView.Utils.ImageManager;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -38,9 +42,14 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     private ClientState guiState = ClientState.SETUP;       //va capito come sfruttare sta cosa e gestirla bene
     private int numPlayers;
 
-    public Gui(Stage stage){
 
+    public Gui(Stage stage){
         this.primaryStage = stage;
+        this.primaryStage.setMaximized(true);
+        String fullResourcePath = "/Images/Icons/Logo.png";
+        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream(fullResourcePath)));
+        this.primaryStage.getIcons().add(logo);
+        this.primaryStage.show();
         this.players = new ArrayList<>();
         this.isHost = false;
         this.numPlayers = 0;
@@ -91,8 +100,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.setMaximized(true);
-            primaryStage.show();
             PauseTransition delay = new PauseTransition(Duration.seconds(3));//splash iniziale dura 3 secondi
 
             delay.setOnFinished(event -> {
@@ -189,9 +196,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showGameStarted() {
-        //try catch da fare meglio
         Platform.runLater(() -> {
-            playGameScene();
+            boolean success = playGameScene();
+            if(!success) {
+                if(lobby != null) {
+                    lobby.getBanner().showBanner("Critical ERROR: cannot load GameScene. App will be terminated.",
+                            2.0, () -> System.exit(1));
+                    LOGGER.log(Level.SEVERE, "App is being terminated due to a critical error");
+                }
+            }
         });
 
     }
@@ -216,15 +229,16 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showInitialFood(Map<String, Integer> initialFood) {
-        if (gameScene != null) {
             Platform.runLater(() -> {
-                try {
-                    gameScene.showInitialFood(initialFood);
-                } catch (Exception e){
-                    LOGGER.log(Level.SEVERE, "Failed to display initial food", e);
+                if (gameScene != null) {
+                    try {
+                        gameScene.showInitialFood(initialFood);
+                    } catch (Exception e) {
+                        LOGGER.log(Level.SEVERE, "Failed to display initial food", e);
+                    }
                 }
             });
-        }
+
     }
 
     @Override
@@ -343,7 +357,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
                 Controller.setGUI(this);
                 Scene scene = new Scene(root);
                 primaryStage.setScene(scene);
-                primaryStage.show();
                 controller.setClientState(ClientState.CONNECTING);
             }catch (Exception e){
                 System.out.println("Error: " + e);
@@ -365,10 +378,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.show();
-            Platform.runLater(() -> {
-                primaryStage.setMaximized(true);
-            });
         }catch (Exception e){
             System.out.println("Error: " + e);
         }
@@ -385,7 +394,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.show();
+
         }catch (Exception e){
             System.out.println("Error: " + e);
         }
@@ -400,7 +409,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             controller.setGUI(this);
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.show();
+
         }catch(Exception e){
             System.out.println("Error: " + e);
 
@@ -408,25 +417,32 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void playGameScene() {
+    public boolean playGameScene() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/GameScene.fxml"));
             Parent root = loader.load();
 
+            if (root instanceof AnchorPane) {
+                AnchorPane rootAnchor = (AnchorPane) root;
+                rootAnchor.setPrefWidth(primaryStage.getWidth());
+                rootAnchor.setPrefHeight(primaryStage.getHeight());
+            }
+
             GameSceneController controller = loader.getController();
-            controller.setGUI(this);
+            controller.setup(this);
             gameScene = controller;
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
 
             primaryStage.setScene(scene);
-            Platform.runLater(() -> {
-                primaryStage.setMaximized(false);
-                primaryStage.setMaximized(true);
-            });
+            return true;
         } catch (IOException e){
             LOGGER.log(Level.SEVERE, "Error loading GameScene", e);
+            return false;
+        } catch (NullPointerException e) {
+            LOGGER.log(Level.WARNING, "Style.css or FXML resource path not found (NullPointerException)", e);
+            return false;
         }
     }
 
@@ -443,7 +459,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.show();
+
         }catch(IOException e){
             System.out.println("Error: " + e);
         }
@@ -460,7 +476,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            primaryStage.show();
+
         }catch (Exception e){
             System.out.println("Error: " + e);
         }

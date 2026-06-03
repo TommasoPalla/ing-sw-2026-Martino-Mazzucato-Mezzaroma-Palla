@@ -60,7 +60,7 @@
                         <graphic>
                             <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">
                                 <image>
-                                    <Image url="/Images/Totems/BLACK.png" />
+                                    <Image url="/Images/Totems/PURPLE.png" />
                                 </image>
                             </ImageView>
                         </graphic>

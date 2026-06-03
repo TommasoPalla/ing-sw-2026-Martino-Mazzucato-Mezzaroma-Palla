@@ -18,9 +18,6 @@
 
 <AnchorPane fx:id="mainAnchor" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameSceneController"
-            minWidth="1280" minHeight="720"
-            prefWidth="1280" prefHeight="720"
-            maxWidth="3840" maxHeight="2160"
             styleClass="main-background">
    <stylesheets>
       <URL value="@/style.css"/>
@@ -91,13 +88,13 @@
                AnchorPane.topAnchor="323" AnchorPane.leftAnchor="158"
                styleClass="offer-track"/>
 
-   <HBox fx:id="offerTrack" layoutX="309.0" layoutY="173.0" styleClass="offer-track"
+   <HBox fx:id="offerTrack" styleClass="offer-track"
          alignment="CENTER"
          AnchorPane.topAnchor="323" AnchorPane.leftAnchor="300"/>
 
-   <ScrollPane fx:id="rightMenu" layoutX="200" layoutY="100" prefWidth="300"
+   <ScrollPane fx:id="rightMenu" prefWidth="300"
                fitToWidth="true" styleClass="transparent-scroll"
-               AnchorPane.rightAnchor="30" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="70"
+               AnchorPane.rightAnchor="40" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="70"
                hbarPolicy="NEVER">
       <VBox fx:id="infoBoard" spacing="10" alignment="TOP_CENTER" styleClass="info-board"/>
    </ScrollPane>
@@ -108,7 +105,7 @@
       <padding>
          <Insets top="15.0" bottom="15.0" left="20.0" right="20.0"/>
       </padding>
-      <HBox fx:id="tribeHeader" alignment="TOP_CENTER" spacing="15">
+      <HBox fx:id="tribeHeader" alignment="TOP_CENTER" spacing="15" style="-fx-cursor: hand">
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/Food.png"/>
          </ImageView>

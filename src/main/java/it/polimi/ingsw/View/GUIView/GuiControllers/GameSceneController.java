@@ -9,7 +9,6 @@ import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.Utils.*;
 import javafx.animation.PauseTransition;
-import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -24,9 +23,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import javafx.scene.image.ImageView;
-import org.controlsfx.control.PrefixSelectionChoiceBox;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -39,6 +36,7 @@ public class GameSceneController implements BoardActionListener {
     private Gui gui;
     private GameSceneBanner banner;
     private boolean isTribeOpen = false;
+    private String localPlayer;
     private TranslateTransition transition;
 
     private static final String BACK_ERA_1 = "/Images/CardImages/Era_1.png";
@@ -119,16 +117,16 @@ public class GameSceneController implements BoardActionListener {
     private VBox buildingColumn;
 
 
-    public void setGUI(Gui gui){
+    public void setup(Gui gui){
         this.gui = gui;
-        initOfferTrack();
-        initInfoBoard();
+        this.localPlayer = gui.getClientController().getPlayerName();
+        updateInitialGameState();
     }
 
     @FXML
     public void initialize() {
         topRow.setVisible(false);
-        bottomBuildings.setVisible(false);
+        bottomRow.setVisible(false);
         topBuildings.setVisible(false);
         bottomBuildings.setVisible(false);
         tribeRegion.setVisible(false);
@@ -136,43 +134,31 @@ public class GameSceneController implements BoardActionListener {
 
         transition = new TranslateTransition(Duration.millis(300), tribeRegion);
 
-        // Usiamo Platform.runLater per essere sicuri che JavaFX abbia calcolato le altezze reali dei componenti
+        //Using platform.runLater to be sure correct dimensions have been calculated
         javafx.application.Platform.runLater(() -> {
-            // Calcoliamo lo spazio da nascondere: l'altezza totale meno l'altezza dell'intestazione
-            double amountToHide = tribeRegion.getHeight() - tribeHeader.getHeight() - 20.0;
-
-            // All'avvio, spingiamo il pannello verso il basso per nascondere le colonne delle carte
+            double amountToHide = tribeRegion.getHeight() - tribeHeader.getHeight() - 50.0;
             tribeRegion.setTranslateY(amountToHide);
-
-            // Associamo il click sull'intestazione per aprire/chiudere il pannello
+            //On mouse clicked tribe region will appear/disappear
             tribeHeader.setOnMouseClicked(event -> {
                 toggleTribeDrawer(amountToHide);
             });
-
-            // Cambiamo il cursore del mouse quando passa sull'intestazione per far capire che è cliccabile
-            tribeHeader.setStyle("-fx-cursor: hand;");
         });
-
         this.banner = new GameSceneBanner(mainAnchor);
-        PauseTransition delayOnset = new PauseTransition(Duration.seconds(2));
-        delayOnset.setOnFinished(event -> {
-
-            banner.showBanner("Game started!", null, 3, this::setupInitialGameState);
-        });
-        delayOnset.play();
     }
 
 
     //non credo manchi niente, perché per iniziare il round aspetta 'notifyNewRound'
-    private void setupInitialGameState(){
+    private void updateInitialGameState(){
+        initOfferTrack();
+        initInfoBoard();
         updateTopRow();
         updateBottomRow();
         updateBottomBuildings();
         updateTopBuildings();
         topRow.setVisible(true);
-        bottomBuildings.setVisible(true);
+        bottomBuildings.setVisible(false);  //necessarily void at the beginning of the game
         topBuildings.setVisible(true);
-        bottomBuildings.setVisible(true);
+        bottomRow.setVisible(true);
         tribeRegion.setVisible(true);
     }
 
@@ -195,9 +181,11 @@ public class GameSceneController implements BoardActionListener {
     private void initInfoBoard() {
         Map<String, Color> players = gui.getClientController().getLocalModel().getTotemColors();
         for(String player: players.keySet()){
-            PlayerInfoWidget playerInfo = new PlayerInfoWidget(player, players.get(player), gui);
-            playerInfo.setId(player);
-            infoBoard.getChildren().add(playerInfo);
+            if(!player.equals(localPlayer)) {
+                PlayerInfoWidget playerInfo = new PlayerInfoWidget(player, players.get(player), gui);
+                playerInfo.setId(player);
+                infoBoard.getChildren().add(playerInfo);
+            }
         }
     }
 
@@ -264,7 +252,6 @@ public class GameSceneController implements BoardActionListener {
     }
 
     private void addCardToTribe(Card card, boolean isBuilding){
-        String player = gui.getClientController().getPlayerName();
         String id = card.getCardID();
         if (isBuilding) {
             /*notifyPrestige e notifyFood fanno lo stesso lavoro
@@ -281,7 +268,7 @@ public class GameSceneController implements BoardActionListener {
         }
 
         else {
-            int charactersNum = gui.getClientController().getLocalModel().getPlayerTribe(player).getPopulationSize();
+            int charactersNum = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getPopulationSize();
             charactersNumber.setText(String.valueOf(charactersNum));
 
             CharacterCard character = (CharacterCard) card;
@@ -291,12 +278,12 @@ public class GameSceneController implements BoardActionListener {
             switch (character.getRole()) {
                 case ARTIST -> {
                     artistColumn.getChildren().addFirst(characterImage);
-                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(player).getArtistsNumber();
+                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getArtistsNumber();
                     artistsNumber.setText(String.valueOf(newNumberPerRole));
                 }
                 case BUILDER -> {
                     builderColumn.getChildren().addFirst(characterImage);
-                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(player).getBuildersNumber();
+                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getBuildersNumber();
                     buildersNumber.setText(String.valueOf(newNumberPerRole));
                     /*int newPrestige = gui.getClientController().getLocalModel().getPlayerTribe(player).getPrestigePoints();
                     prestigePoints.setText(String.valueOf(newPrestige));
@@ -305,14 +292,14 @@ public class GameSceneController implements BoardActionListener {
                 }
                 case GATHERER -> {
                     gathererColumn.getChildren().addFirst(characterImage);
-                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(player).getGatherersNumber();
+                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getGatherersNumber();
                     gatherersNumber.setText(String.valueOf(newNumberPerRole));
                     /*int sustenanceDiscount = gui.getClientController().getLocalModel().getPlayerTribe(player).getBuildersDiscount();
                     this.sustenanceDiscount.setText(String.valueOf(sustenanceDiscount));*/
                 }
                 case HUNTER -> {
                     hunterColumn.getChildren().addFirst(characterImage);
-                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(player).getHuntersNumber();
+                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getHuntersNumber();
                     huntersNumber.setText(String.valueOf(newNumberPerRole));
 
                     /*int newFood = gui.getClientController().getLocalModel().getPlayerTribe(player).getFoodReserve();
@@ -320,7 +307,7 @@ public class GameSceneController implements BoardActionListener {
                 }
                 case INVENTOR -> {
                     inventorColumn.getChildren().addFirst(characterImage);
-                    Map<InventorType, Integer> inventorsPerType = gui.getClientController().getLocalModel().getPlayerTribe(player).getInventorsPerType();
+                    Map<InventorType, Integer> inventorsPerType = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getInventorsPerType();
                     newNumberPerRole = inventorsPerType.values().stream()
                             .mapToInt(Integer::intValue)
                             .sum();
@@ -328,9 +315,9 @@ public class GameSceneController implements BoardActionListener {
                 }
                 case SHAMAN -> {
                     shamanColumn.getChildren().addFirst(characterImage);
-                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(player).getShamansNumber();
+                    newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getShamansNumber();
                     shamansNumber.setText(String.valueOf(newNumberPerRole));
-                    int shamanStars = gui.getClientController().getLocalModel().getPlayerTribe(player).getShamansStars();
+                    int shamanStars = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getShamansStars();
                     this.shamanStars.setText(String.valueOf(shamanStars));
                 }
             }
@@ -340,10 +327,24 @@ public class GameSceneController implements BoardActionListener {
 
     //può essere che i banner si sovrappongano, verificare
     public void showInitialFood(Map<String,Integer> initialFood) {
-        banner.showBanner("All of the players receive an initial food bonus!", 1.5, null);
-        for(String player: initialFood.keySet()){
-            showFoodModified(player, initialFood.get(player));
+        StringBuilder messageBuilder = new StringBuilder("Game Started!\nAll of the players receive an initial food bonus!");
+        int food;
+        String foodToString;
+        for (String player: initialFood.keySet()) {
+            food = initialFood.get(player);
+            foodToString = String.valueOf(food);
+            if(player.equals(localPlayer)) {
+                messageBuilder.append("\nYou: ");
+                foodReserve.setText(foodToString);
+            } else {
+                messageBuilder.append("\n").append(player).append(" ");
+                PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
+                playerWidget.updateFoodReserve(food);
+            }
+            messageBuilder.append(foodToString);
         }
+        String message = messageBuilder.toString();
+        banner.showBanner(message, 1.5, null);
     }
 
 
@@ -355,6 +356,7 @@ public class GameSceneController implements BoardActionListener {
         updateTopRow();
         updateBottomRow();
         updateBottomBuildings();
+        bottomBuildings.setVisible(true); //sarebbe meglio spostarlo per pulizia
         updateTopBuildings();
 
         banner.showBanner("Round " + round, 1.5, null);
@@ -397,8 +399,7 @@ public class GameSceneController implements BoardActionListener {
     public void showCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings){
         Node cardImage = ImageManager.getCardNode(card.getCardID());
         String prefix = "You have ";
-        String myName = gui.getClientController().getPlayerName();
-        if(player.equals(myName)){
+        if(player.equals(localPlayer)){
             addCardToTribe(card, fromBuildings);
             //prefix  = "You have ";
         } else if(!fromBuildings){
@@ -428,7 +429,6 @@ public class GameSceneController implements BoardActionListener {
 
     public void showNewCurrentPlayer(String player){
         //si potrebbe aggiungere che quando il player non quello in locale per lui le carte non sono evidenziate ecc
-        String localPlayer = gui.getClientController().getPlayerName();
         String prefix;
         if(localPlayer.equals(player)){
             prefix = "It's your ";
@@ -452,21 +452,19 @@ public class GameSceneController implements BoardActionListener {
 
     }
 
+    //foodQuantity is new value of player's foodReserve
     public void showFoodModified(String player, int foodQuantity){
         String prefix;
         int deltaFood;
-
-        String clientPlayer = gui.getClientController().getPlayerName();
-        int currFood = gui.getClientController().getLocalModel().getPlayerTribe(player).getFoodReserve();
-        if(player.equals(clientPlayer)){
-            deltaFood =  currFood - Integer.parseInt(foodReserve.getText());
-            foodReserve.setText(String.valueOf(currFood));
+        if(player.equals(localPlayer)){
+            deltaFood =  foodQuantity - Integer.parseInt(foodReserve.getText());
+            foodReserve.setText(String.valueOf(foodQuantity));
             prefix = (deltaFood > 0) ? "You gained "
                     : "You lost ";
         } else {
             PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
-            deltaFood = currFood - playerWidget.getFoodReserve();
-            playerWidget.updateFoodReserve(currFood);
+            deltaFood = foodQuantity - playerWidget.getFoodReserve();
+            playerWidget.updateFoodReserve(foodQuantity);
             prefix = (deltaFood > 0) ? player + " gained "
                     : player + " lost ";
         }
@@ -478,16 +476,15 @@ public class GameSceneController implements BoardActionListener {
         int deltaPrestige;
 
         String clientPlayer = gui.getClientController().getPlayerName();
-        int currPrestige = gui.getClientController().getLocalModel().getPlayerTribe(player).getPrestigePoints();
         if(player.equals(clientPlayer)){
-            deltaPrestige =  currPrestige - Integer.parseInt(prestigePoints.getText());
-            prestigePoints.setText(String.valueOf(currPrestige));
+            deltaPrestige =  pp - Integer.parseInt(prestigePoints.getText());
+            prestigePoints.setText(String.valueOf(pp));
             prefix = (deltaPrestige > 0) ? "You gained "
                     : "You lost ";
         } else {
             PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
-            deltaPrestige = currPrestige - playerWidget.getPrestigePoints();
-            playerWidget.updatePrestigePoints(currPrestige);
+            deltaPrestige = pp - playerWidget.getPrestigePoints();
+            playerWidget.updatePrestigePoints(pp);
             prefix = (deltaPrestige > 0) ? player + " gained "
                     : player + " lost ";
         }
@@ -509,8 +506,8 @@ public class GameSceneController implements BoardActionListener {
             transition.setToY(translationAmount);
             isTribeOpen = false;
         } else {
-            // Se è chiuso, lo riportiamo alla sua posizione Y naturale (0.0), facendolo salire
-            transition.setToY(20.0);
+            // Se è chiuso, lo riportiamo alla sua posizione Y naturale facendolo salire
+            transition.setToY(-35.0);
             isTribeOpen = true;
         }
         // Avvia l'animazione fluida
