@@ -6,8 +6,10 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * At the end of the game, the owner gains 6 Prestige Points for each set of 6
@@ -36,7 +38,10 @@ public class ComboPoints extends BuildingCard {
     public void applyEffect() {
         // Maps every character's type to the number of its occurrences in the player's tribe
         Map<CharacterRole, Integer> occurrencesPerRole = new HashMap<>();
-        for (CharacterRole role : this.getOwner().getTribe().getPopulation().keySet()) {
+        ArrayList<CharacterRole> roles = this.getOwner().getTribe().getPopulation().keySet().stream()
+                .filter(r -> !r.equals(CharacterRole.NONE))
+                .collect(Collectors.toCollection(ArrayList::new));
+        for (CharacterRole role : roles) {
             occurrencesPerRole.put(role, this.getOwner().getTribe().getPopulation().get(role).size());
         }
         // if there's at least one occurrence of every character's role, it extracts the

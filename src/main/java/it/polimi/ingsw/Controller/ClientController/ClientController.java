@@ -612,9 +612,9 @@ public class ClientController implements ClientViewUpdate {
                     }
 
                     // tribe's updating by ADDING deltas
-                    System.out.println("[DEBUG] Player " + playerResults.player() + "was added " + foodDelta + " food and " +  ppDelta + "pp because of event " + eventType.toString() + ". Now has " + localModel.getPlayerTribe(playerResults.player()).getFoodReserve() + " food and " + localModel.getPlayerTribe(playerResults.player()).getPrestigePoints() + " prestige points");
                     playersTribe.modifyFood(foodDelta);
                     playersTribe.modifyPrestigePoints(ppDelta);
+                    System.out.println("[DEBUG] Player " + playerResults.player() + "was added " + foodDelta + " food and " +  ppDelta + "pp because of event " + eventType.toString() + ". Now has " + localModel.getPlayerTribe(playerResults.player()).getFoodReserve() + " food and " + localModel.getPlayerTribe(playerResults.player()).getPrestigePoints() + " prestige points");
                 }
             }
         }

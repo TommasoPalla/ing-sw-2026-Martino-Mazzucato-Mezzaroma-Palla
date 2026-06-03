@@ -123,8 +123,8 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public synchronized void updatePrestigePoints(String playerName, int points) throws RemoteException {
-        controller.updatePrestigePoints(playerName, points);
+    public void updatePp(String playerName, int pp) throws RemoteException {
+        controller.updatePrestigePoints(playerName, pp);
     }
 
     @Override
@@ -157,10 +157,6 @@ public class RMIClient implements VirtualRMIClient {
         controller.updateBottomBuildings(newBottomBuildings);
     }
 
-//    @Override
-//    public void updateNextPlayer(String playerName) throws RemoteException {
-//        controller.updateCurrentPlayer(playerName);
-//    }
 
     @Override
     public synchronized void updateGamePhase(GamePhase phase) throws RemoteException {

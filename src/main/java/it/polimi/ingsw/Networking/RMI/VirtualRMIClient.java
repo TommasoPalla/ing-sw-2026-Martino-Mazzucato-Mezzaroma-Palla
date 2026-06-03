@@ -135,10 +135,10 @@ public interface VirtualRMIClient extends Remote {
     /**
      * Updates the Prestige Points for a specific player.
      * @param playerName the player's name.
-     * @param points the new prestige points.
+     * @param pp the new prestige points.
      * @throws RemoteException if RMI communication fails.
      */
-    void updatePrestigePoints(String playerName, int points) throws RemoteException;
+    void updatePp(String playerName, int pp) throws RemoteException;
 
     void updateBuildersDiscount(String playerName, int discount) throws RemoteException;
 

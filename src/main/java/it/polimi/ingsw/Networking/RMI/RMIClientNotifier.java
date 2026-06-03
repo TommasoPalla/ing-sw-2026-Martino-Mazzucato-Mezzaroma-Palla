@@ -135,9 +135,9 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyNewPrestigePoints(String playerName, int newPP) {
+    public void notifyNewPrestigePoints(String playerName, int points) {
         try {
-            clientStub.updatePrestigePoints(playerName, newPP);
+            clientStub.updatePp(playerName, points);
         } catch (RemoteException e) {
             //throw new StubException("could not notify");
         }
