@@ -6,7 +6,6 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.ComboHunters;
 import it.polimi.ingsw.Model.Cards.Characters.Hunter;
-import it.polimi.ingsw.Model.EventManagement.HuntEvent;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Users.Player;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +27,7 @@ public class HuntEventTest {
     @BeforeEach
     void setUp() {
         Game game = new Game(0, 2);
-        player1 = new Player(game, "pippo", Color.BLACK);
+        player1 = new Player(game, "pippo", Color.PURPLE);
         player2 = new Player(game, "pluto", Color.BLUE);
         players = new ArrayList<>(Arrays.asList(player1, player2));
         for(Player player : players)

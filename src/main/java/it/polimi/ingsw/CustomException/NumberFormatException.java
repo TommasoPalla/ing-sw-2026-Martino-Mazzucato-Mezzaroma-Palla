@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.CustomException;
 
 public class NumberFormatException extends RuntimeException {
     public NumberFormatException(String message) {

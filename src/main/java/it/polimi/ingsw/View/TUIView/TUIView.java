@@ -441,7 +441,7 @@ public class TUIView implements ViewInterface {
 //    }
 
     @Override
-    public void notifyNameSet(String newName) {
+    public void showNameSet(String newName) {
         this.player = newName;
         System.out.println("You have successfully set your name to " + newName + "!");
         System.out.println();
@@ -452,12 +452,12 @@ public class TUIView implements ViewInterface {
      * "JOIN_GAME" TUI state.
      */
     @Override
-    public void notifyNewAvailableGames() {
+    public void showNewAvailableGames() {
         if(tuiState == TUIState.JOIN_GAME) printAvailableGames();
     }
 
     @Override
-    public void notifyGameCreated(int gameID) {
+    public void showGameCreated(int gameID) {
         tuiState = TUIState.IN_LOBBY;
         System.out.println("\nThe game was successfully created with ID: " +  gameID + "!");
         System.out.println("\nYou are the host of this game.");
@@ -465,7 +465,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyPlayerJoinedLobby(String playerName) {
+    public void showPlayerJoinedLobby(String playerName) {
         if(tuiState == TUIState.IN_LOBBY) {
             System.out.println(playerName + " joined the lobby!");
         }
@@ -473,14 +473,14 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifySuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
+    public void showSuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
         tuiState = TUIState.IN_LOBBY;
         System.out.println("You have successfully joined the game with ID: " + gameID + "!");
         printAvailableActions(clientController.getClientState(), false);
     }
 
     @Override
-    public void notifyPlayerLeftLobby(String playerName, Color oldColor) {
+    public void showPlayerLeftLobby(String playerName, Color oldColor) {
         boolean hadColor = oldColor != null;
         System.out.println();
         if (playerName.equals(player)) {
@@ -501,7 +501,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyForceQuit(String disconnectedPlayerName, Color totemColor) {
+    public void showForceQuit(String disconnectedPlayerName, Color totemColor) {
         if(disconnectedPlayerName.equals(this.player)){
             System.err.println("You disconnected from the server." +
                     "The game will be interrupted and you will be brought back to setup.");
@@ -521,12 +521,12 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyNewHost() {
+    public void showNewHost() {
         System.out.println("\nYou are the new host of this game.");
     }
 
     @Override
-    public void notifyChosenTotemColor(String playerName, Color totemColor) {
+    public void showChosenTotemColor(String playerName, Color totemColor) {
         if (this.player.equals(playerName)) {
             System.out.println("You have successfully chosen the " + totemColor.colorize(String.valueOf(totemColor).toLowerCase()) + " totem!");
         }
@@ -541,7 +541,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyPlayerDisconnected(String playerName, boolean hadColor) {
+    public void showPlayerDisconnected(String playerName, boolean hadColor) {
         // IF IT'S A NETWORK ISSUE
         if (this.player.equals(playerName)) {
             tuiState = TUIState.SETUP;
@@ -566,7 +566,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyGameStarted() {
+    public void showGameStarted() {
         System.out.println("                  ---------------------------------------------------                 ");
         System.out.println("       -------------------------------------------------------------------------      ");
         System.out.println("-------------------------------- THE GAME HAS STARTED --------------------------------");
@@ -577,7 +577,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
+    public void showInitialFood(Map<String, Integer> initialFood) {
         System.out.println();
         System.out.println("Every player gets some initial food based on their first turn order!");
         System.out.println("You get " + initialFood.get(this.player) + "!");
@@ -590,7 +590,7 @@ public class TUIView implements ViewInterface {
      * @param round the current round.
      */
     @Override
-    public void notifyStartRound(int round) {
+    public void showStartRound(int round) {
         if (round < 10) {
             System.out.println();
             System.out.println("Round " + round + " has started!");
@@ -600,7 +600,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
+    public void showCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
         String row;
         String cardType;
         if (topRow) row = "top row!";
@@ -633,12 +633,12 @@ public class TUIView implements ViewInterface {
 
     //TODO
     @Override
-    public void notifyEraChanged(int era) {
+    public void showEraChanged(int era) {
 
     }
 
     @Override
-    public void notifyTurnPassed(String playerThatPassed, String newCurrentPlayer) {
+    public void showTurnPassed(String playerThatPassed, String newCurrentPlayer) {
         System.out.println("\n" + playerThatPassed + " passed his turn! It's now " + newCurrentPlayer + "'s turn!");
         if (!playerThatPassed.equals(this.player)) {
             printOfferTrack();
@@ -652,7 +652,7 @@ public class TUIView implements ViewInterface {
      * @param index the index of the offer tile on which the totem was placed.
      */
     @Override
-    public void notifyTileChosen(String playerName, int index) {
+    public void showTileChosen(String playerName, int index) {
         System.out.println();
         if(!playerName.equals(this.player)) {
             System.out.println("\n" + clientController.getLocalModel().getColors(playerName).colorize(playerName) + " placed his totem on tile " + index + "!");
@@ -663,7 +663,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyFoodBonusTile(String playerName, int foodBonus) {
+    public void showFoodBonusTile(String playerName, int foodBonus) {
         System.out.println();
         if(playerName.equals(this.player))
             System.out.println("You take " + foodBonus + " food bonus from your tile! Since you have no draws available, your totem will be moved back to the turn tile.");
@@ -673,7 +673,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyNewCurrentPlayer(String currentPlayerName, ClientState clientState) {
+    public void showNewCurrentPlayer(String currentPlayerName, ClientState clientState) {
         if(currentPlayerName == null || currentPlayerName.isEmpty()) return;
         if(currentPlayerName.equals(this.player)) {
             System.out.println("\n***************************************************");
@@ -699,7 +699,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyNewGamePhase(GamePhase newGamePhase) {
+    public void showNewGamePhase(GamePhase newGamePhase) {
         System.out.println();
         if(newGamePhase == GamePhase.START_TURN) {
             System.out.println("New game phase: It's time to place the totems!");
@@ -709,13 +709,13 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyFood(String playerName, int food) {
+    public void showFoodModified(String playerName, int food) {
         System.out.println();
         System.out.println("You got " + food + " food!");
     }
 
     @Override
-    public void notifyPrestigePoints(String playerName, int pp) {
+    public void showPrestigePointsModified(String playerName, int pp) {
         System.out.println();
         if (pp > 0)
             System.out.println("You gained " + pp + " prestige points!");
@@ -724,7 +724,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyEvent(EventType eventType, int foodModified, int ppModified) {
+    public void showEvent(EventType eventType, int foodModified, int ppModified) {
         System.out.println();
         String icon;
         if (eventType == EventType.HUNT) icon = TuiIcons.HUNTER;
@@ -737,7 +737,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyEndGame(Map<String, Integer> finalRanking) {
+    public void showEndGame(Map<String, Integer> finalRanking) {
         System.out.println();
         System.out.println(TuiIcons.SHAMANS_STARS + Color.YELLOW.colorize("The game has ended!") + TuiIcons.SHAMANS_STARS);
         System.out.println();
@@ -756,7 +756,7 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void notifyLeaderboardInfo(int playerPosition) {
+    public void showLeaderboardInfo(int playerPosition) {
         System.out.println();
         System.out.println("You are now in position " + Color.RED.colorize(String.valueOf(playerPosition)) + " in the Mesos leaderboard of games with "
         + clientController.getLocalModel().getNumPlayers() + " players!");

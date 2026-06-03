@@ -12,7 +12,7 @@ public class OfferTileTest {
     OfferTile tileA = new OfferTile('A');
     OfferTile tileG = new OfferTile('G');
     Game game = new Game(5, 4);
-    Player player = new Player(game,"AAA", Color.BLACK);
+    Player player = new Player(game,"AAA", Color.PURPLE);
     @Test
     void initOfferTile(){
         //tile A test

@@ -113,17 +113,17 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }//-> nickname
 
     @Override
-    public void notifyNewAvailableGames() {
+    public void showNewAvailableGames() {
 
     }
 
     @Override
-    public void notifyNameSet(String newName) {
+    public void showNameSet(String newName) {
 
     }
 
     @Override
-    public void notifyNewCurrentPlayer(String playerName, ClientState clientState) {
+    public void showNewCurrentPlayer(String playerName, ClientState clientState) {
         if(gameScene != null) {
             Platform.runLater(() -> {
                 try {
@@ -136,7 +136,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyGameCreated(int gameID) {
+    public void showGameCreated(int gameID) {
         Platform.runLater(() -> {//avoids to throw exception required by lobbyScene
             try{
                 lobbyScene();
@@ -147,7 +147,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyPlayerJoinedLobby(String playerName) {
+    public void showPlayerJoinedLobby(String playerName) {
         Platform.runLater(() -> {//avoids to throw exception required by lobbyScene
             try{
                 lobby.notifyPlayerJoined(playerName);
@@ -160,20 +160,20 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyPlayerLeftLobby(String playerName, Color oldColor) {
+    public void showPlayerLeftLobby(String playerName, Color oldColor) {
         lobby.notifyPlayerLeft(playerName);
         ChooseId.loadGames(controller.getAvailableGames());
         players.remove(playerName);
     }
 
     @Override
-    public void notifyNewHost() {
+    public void showNewHost() {
         this.isHost = true;
         lobby.newHost();
     }
 
     @Override
-    public void notifySuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
+    public void showSuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
         for(String playerName : playerNames){
             /*
             mezzo sbagliato. siccome notifyPlayerJoined era un metodo pensato per chi e' gia' in lobby
@@ -188,7 +188,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyGameStarted() {
+    public void showGameStarted() {
         //try catch da fare meglio
         Platform.runLater(() -> {
             playGameScene();
@@ -197,7 +197,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyStartRound(int round) {
+    public void showStartRound(int round) {
         if(gameScene != null) {
             Platform.runLater(() -> {
                 try {
@@ -210,12 +210,12 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyChosenTotemColor(String playerName, Color totemColor) {
+    public void showChosenTotemColor(String playerName, Color totemColor) {
 
     }
 
     @Override
-    public void notifyGiveInitialFood(Map<String, Integer> initialFood) {
+    public void showInitialFood(Map<String, Integer> initialFood) {
         if (gameScene != null) {
             Platform.runLater(() -> {
                 try {
@@ -228,17 +228,17 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyTileChosen(String playerName, int index) {
+    public void showTileChosen(String playerName, int index) {
 
     }
 
     @Override
-    public void notifyFoodBonusTile(String playerName, int foodBonus) {
+    public void showFoodBonusTile(String playerName, int foodBonus) {
 
     }
 
     @Override
-    public void notifyCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
+    public void showCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
         if(gameScene != null){
             Platform.runLater(() -> {
                 try {
@@ -251,7 +251,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyEraChanged(int era) {
+    public void showEraChanged(int era) {
         if (gameScene != null) {
             Platform.runLater(() -> {
                 try {
@@ -264,17 +264,17 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyTurnPassed(String playerThatPassed, String newCurrentPlayer) {
+    public void showTurnPassed(String playerThatPassed, String newCurrentPlayer) {
 
     }
 
     @Override
-    public void notifyNewGamePhase(GamePhase newGamePhase) {
+    public void showNewGamePhase(GamePhase newGamePhase) {
 
     }
 
     @Override
-    public void notifyFood(String playerName, int food) {
+    public void showFoodModified(String playerName, int food) {
         if(gameScene != null){
             Platform.runLater(() -> {
                 try {
@@ -287,7 +287,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyPrestigePoints(String playerName, int pp) {
+    public void showPrestigePointsModified(String playerName, int pp) {
         if(gameScene != null){
             Platform.runLater(() -> {
                 try {
@@ -300,22 +300,22 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyEvent(EventType eventType, int foodModified, int ppModified) {
+    public void showEvent(EventType eventType, int foodModified, int ppModified) {
 
     }
 
     @Override
-    public void notifyForceQuit(String disconnectedPlayerName, Color oldColor) {
+    public void showForceQuit(String disconnectedPlayerName, Color oldColor) {
 
     }
 
     @Override
-    public void notifyPlayerDisconnected(String playerName, boolean hadColor) {
+    public void showPlayerDisconnected(String playerName, boolean hadColor) {
 
     }
 
     @Override
-    public void notifyEndGame(Map<String, Integer> finalRanking) {
+    public void showEndGame(Map<String, Integer> finalRanking) {
         if(gameScene != null) {
             Platform.runLater(() -> {
                 try {
@@ -328,7 +328,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void notifyLeaderboardInfo(int playerPosition) {
+    public void showLeaderboardInfo(int playerPosition) {
 
     }
 

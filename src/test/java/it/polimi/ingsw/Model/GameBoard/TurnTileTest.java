@@ -67,7 +67,7 @@ public class TurnTileTest {
 
             player1 = new Player(game, "1", Color.BLUE);
             player2 = new Player(game,"2", Color.RED);
-            player3 = new Player(game,"3", Color.BLACK);
+            player3 = new Player(game,"3", Color.PURPLE);
 
             turnOrder = new ArrayList<>();
             turnOrder.add(player3);

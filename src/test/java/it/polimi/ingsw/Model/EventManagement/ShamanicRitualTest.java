@@ -6,7 +6,6 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.MultiBonusRitual;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.NoMalusRitual;
-import it.polimi.ingsw.Model.EventManagement.ShamanicRitualEvent;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Users.Player;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +30,7 @@ public class ShamanicRitualTest {
     void setUp() {
         Game game = new Game(0, 4);
         player1 = new Player(game, "pippo", Color.RED);
-        player2 = new Player(game, "pluto", Color.BLACK);
+        player2 = new Player(game, "pluto", Color.PURPLE);
         player3 = new Player(game, "paperino", Color.BLUE);
         player4 = new Player(game, "topolino", Color.WHITE);
         players = new ArrayList<>(Arrays.asList(player1, player2, player3, player4));

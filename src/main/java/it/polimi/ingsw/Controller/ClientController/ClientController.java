@@ -129,7 +129,7 @@ public class ClientController implements ClientViewUpdate {
             throw new IllegalClientStateActionException("ERROR: You can no longer change your name!");
         }
         this.playerName = playerName;
-        view.notifyNameSet(playerName);
+        view.showNameSet(playerName);
     }
 
     //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-------------------------------------------------------------
@@ -343,7 +343,7 @@ public class ClientController implements ClientViewUpdate {
     public void updateAvailableGames(Map<Integer, GamePlayers> availableGames){
       this.availableGames = availableGames;
       if(clientState == ClientState.SETUP){
-            view.notifyNewAvailableGames();
+            view.showNewAvailableGames();
         }
     }
 
@@ -356,7 +356,7 @@ public class ClientController implements ClientViewUpdate {
     public void updateGameCreated(int gameID, int numPlayers){
         createLocalModel(gameID, numPlayers);
         this.clientState = ClientState.IN_LOBBY;
-        view.notifyGameCreated(gameID);
+        view.showGameCreated(gameID);
     }
 
     /**
@@ -382,7 +382,7 @@ public class ClientController implements ClientViewUpdate {
             localModel.getTurnTileStatus().put(i, firstTurnOrder.get(i));
         }
         localModel.addPlayersTribes(firstTurnOrder);
-        view.notifyGameStarted();
+        view.showGameStarted();
         updateInitialFood(initialFood);
     }
     /**
@@ -392,7 +392,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updatePlayerConnected(String player) {
         localModel.addPlayer(player);
-        view.notifyPlayerJoinedLobby(player);
+        view.showPlayerJoinedLobby(player);
     }
 
     /**
@@ -411,7 +411,7 @@ public class ClientController implements ClientViewUpdate {
             localModel.chosenTotemColor(playerName, totemColors.get(playerName));
         }
         clientState = ClientState.IN_LOBBY;
-        view.notifySuccessfullyJoinedGame(gameID, players, totemColors);
+        view.showSuccessfullyJoinedGame(gameID, players, totemColors);
     }
 
     /**
@@ -423,14 +423,14 @@ public class ClientController implements ClientViewUpdate {
     public void updatePlayerLeftGame(String player) {
         if(this.playerName.equals(player)){
             clientState = ClientState.SETUP;
-            view.notifyPlayerLeftLobby(player,null);
+            view.showPlayerLeftLobby(player,null);
             localModel = null;
         }
         else {
             // rimuove il player dalla mappa di colori del model
             Color oldColor = localModel.getTotemColors().get(player);
             localModel.updatePlayerLeft(player);
-            view.notifyPlayerLeftLobby(player, oldColor);
+            view.showPlayerLeftLobby(player, oldColor);
         }
     }
 
@@ -439,7 +439,7 @@ public class ClientController implements ClientViewUpdate {
      */
     @Override
     public void updateNewHost() {
-        view.notifyNewHost();
+        view.showNewHost();
     }
 
 
@@ -476,7 +476,7 @@ public class ClientController implements ClientViewUpdate {
                 localModel.getPlayerTribe(playerName).addCharacter((CharacterCard) drawn);
             }
         }
-        view.notifyCardDrawn(playerName, drawn, fromTopRow, fromBuilding);
+        view.showCardDrawn(playerName, drawn, fromTopRow, fromBuilding);
 
         // If the player still has cards to draw from the top row, but the row is empty, and he cannot buy any
         // building from it, then it sets its remaining draws from above to 0
@@ -552,7 +552,7 @@ public class ClientController implements ClientViewUpdate {
             localModel.setCurrentPlayer("");
         }
 
-        view.notifyTurnPassed(playerName, localModel.getCurrentPlayer());
+        view.showTurnPassed(playerName, localModel.getCurrentPlayer());
     }
 
     /**
@@ -564,7 +564,7 @@ public class ClientController implements ClientViewUpdate {
     public void updateTotemColor(String playerName, Color totemColor) {
         if (clientState == ClientState.IN_LOBBY) {
             localModel.chosenTotemColor(playerName, totemColor);
-            view.notifyChosenTotemColor(playerName, totemColor);
+            view.showChosenTotemColor(playerName, totemColor);
         }
     }
 
@@ -578,7 +578,7 @@ public class ClientController implements ClientViewUpdate {
         for (String player : initialFood.keySet()) {
             localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
         }
-        view.notifyGiveInitialFood(initialFood);
+        view.showInitialFood(initialFood);
         updateStartRound(Collections.emptyMap());
     }
 
@@ -608,7 +608,7 @@ public class ClientController implements ClientViewUpdate {
 
                     // player's notification (only for the local player's view)
                     if (playerResults.player().equals(this.playerName)) {
-                        view.notifyEvent(eventType, foodDelta, ppDelta);
+                        view.showEvent(eventType, foodDelta, ppDelta);
                     }
 
                     // tribe's updating by ADDING deltas
@@ -624,7 +624,7 @@ public class ClientController implements ClientViewUpdate {
         }
 
         if (localModel.getCurrentRound() <= 10) {
-            view.notifyStartRound(localModel.getCurrentRound());
+            view.showStartRound(localModel.getCurrentRound());
             updateCurrentPlayer();
         }
     }
@@ -640,13 +640,13 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentOfferTile(String playerName, int index) {
         localModel.chosenOfferTile(playerName, index);
-        view.notifyTileChosen(playerName, index);
+        view.showTileChosen(playerName, index);
         try {
             updateCurrentPlayer();
         } catch (LastPlayerOfTurnException e) {
             localModel.computeNewTurnOrder();
             localModel.updateGamePhase(GamePhase.ON_DRAW);
-            view.notifyNewGamePhase(localModel.getCurrentPhase());
+            view.showNewGamePhase(localModel.getCurrentPhase());
 
             localModel.setCurrentPlayer(""); //reset
             try {
@@ -766,7 +766,7 @@ public class ClientController implements ClientViewUpdate {
                     if (tribe != null && tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
                         int foodBonus = localModel.getOfferTiles().get(localModel.getTurnOrder().indexOf(nextPlayer)).getFoodBonus();
                         localModel.moveTotemToTurnTile(nextPlayer);
-                        view.notifyFoodBonusTile(nextPlayer, foodBonus);
+                        view.showFoodBonusTile(nextPlayer, foodBonus);
                         continue; //find NEXT player
                     }
                 }
@@ -779,7 +779,7 @@ public class ClientController implements ClientViewUpdate {
 
         syncClientState();
         if (!nextPlayer.isEmpty())
-            view.notifyNewCurrentPlayer(nextPlayer, this.clientState);
+            view.showNewCurrentPlayer(nextPlayer, this.clientState);
     }
 
     /**
@@ -790,7 +790,7 @@ public class ClientController implements ClientViewUpdate {
     public void updateGamePhase(GamePhase phase) {
         localModel.updateGamePhase(phase);
         syncClientState();
-        view.notifyNewGamePhase(phase);
+        view.showNewGamePhase(phase);
     }
 
     /**
@@ -800,7 +800,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateCurrentEra(int era) {
         localModel.updateEra(era);
-        view.notifyEraChanged(era);
+        view.showEraChanged(era);
     }
 
     /**
@@ -815,7 +815,7 @@ public class ClientController implements ClientViewUpdate {
         for (String playerName : finalRanking.keySet()) {
             localModel.updatePrestigePoints(playerName, finalRanking.get(playerName));
         }
-        view.notifyEndGame(finalRanking);
+        view.showEndGame(finalRanking);
     }
 
     /**
@@ -828,7 +828,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateLeaderboardInfo(List<String> leaderboard, int playerPosition) {
         localModel.getDbLeaderboard().addAll(leaderboard);
-        view.notifyLeaderboardInfo(playerPosition);
+        view.showLeaderboardInfo(playerPosition);
     }
 
 
@@ -874,6 +874,6 @@ public class ClientController implements ClientViewUpdate {
             setClientState(ClientState.SETUP);
             localModel = null;
         }
-        view.notifyForceQuit(disconnectedPlayer, totemColor);
+        view.showForceQuit(disconnectedPlayer, totemColor);
     }
 }

@@ -8,7 +8,7 @@ public enum Color {
     YELLOW("\u001B[33m"),
     WHITE("\u001B[38;5;250m"),
     RED("\u001B[31m"),
-    BLACK("\u001B[35m"),
+    PURPLE("\u001B[35m"),
     BLUE("\u001B[34m");
 
     /**

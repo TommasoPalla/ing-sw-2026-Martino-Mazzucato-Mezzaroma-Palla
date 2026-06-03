@@ -156,8 +156,8 @@ public class ChooseTotemController {
     }
     @FXML
     private void handlePurple() {
-        if(gui.getClientController().getLocalModel().isColorAvailable(Color.BLACK)){
-            gui.getClientController().chooseTotemColor(Color.BLACK);
+        if(gui.getClientController().getLocalModel().isColorAvailable(Color.PURPLE)){
+            gui.getClientController().chooseTotemColor(Color.PURPLE);
             try{
                 gui.lobbyScene();
             }catch(IOException e){

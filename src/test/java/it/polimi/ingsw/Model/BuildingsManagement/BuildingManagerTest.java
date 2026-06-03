@@ -26,7 +26,7 @@ public class BuildingManagerTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
-        player1 =  new Player(game,"pippo", Color.BLACK);
+        player1 =  new Player(game,"pippo", Color.PURPLE);
         player2 =  new Player(game,"pluto", Color.RED);
         players = new ArrayList<>(Arrays.asList(player1, player1));
         for(Player player : players)

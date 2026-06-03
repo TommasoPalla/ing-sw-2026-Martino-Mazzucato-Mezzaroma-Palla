@@ -5,7 +5,6 @@ import it.polimi.ingsw.Model.BuildingsManagement.Buildings.SustenanceDiscount;
 import it.polimi.ingsw.Model.Cards.Characters.Artist;
 import it.polimi.ingsw.Model.Cards.Characters.Gatherer;
 import it.polimi.ingsw.Model.Cards.Characters.Inventor;
-import it.polimi.ingsw.Model.EventManagement.SustenanceEvent;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Users.Player;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
@@ -30,7 +29,7 @@ class SustenanceEventTest {
     void setUp() {
         Game game = new Game(0, 4);
         player1 = new Player(game, "pippo", Color.BLUE);
-        player2 = new Player(game, "pluto", Color.BLACK);
+        player2 = new Player(game, "pluto", Color.PURPLE);
         player3 = new Player(game, "paperino", Color.RED);
         player4 = new Player(game, "topolino", Color.WHITE);
         players = new ArrayList<>(Arrays.asList(player1, player2, player3, player4));

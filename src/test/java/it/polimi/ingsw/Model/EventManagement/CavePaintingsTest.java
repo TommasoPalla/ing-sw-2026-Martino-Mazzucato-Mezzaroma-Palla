@@ -6,9 +6,6 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.ArtistsFood;
 import it.polimi.ingsw.Model.Cards.Characters.Artist;
-import it.polimi.ingsw.Model.Cards.Characters.Hunter;
-import it.polimi.ingsw.Model.EventManagement.CavePaintingsEvent;
-import it.polimi.ingsw.Model.EventManagement.ShamanicRitualEvent;
 import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.Users.Player;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +31,7 @@ public class CavePaintingsTest {
         Game game = new Game(0, 4);
         player1 = new Player(game, "pippo", Color.RED);
         player2 = new Player(game, "pluto", Color.BLUE);
-        player3 = new Player(game, "paperino", Color.BLACK);
+        player3 = new Player(game, "paperino", Color.PURPLE);
         player4 = new Player(game, "topolino", Color.WHITE);
         players = new ArrayList<>(Arrays.asList(player1, player2, player3, player4));
         for(Player player : players)
