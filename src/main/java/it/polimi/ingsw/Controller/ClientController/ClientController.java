@@ -522,7 +522,7 @@ public class ClientController implements ClientViewUpdate {
         if (tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
             //System.out.println("DEBUG: Player " + playerName + " finished draws. Moving to turn tile.");
             localModel.moveTotemToTurnTile(playerName);
-            
+
             // If the player who finished was the current one, we trigger update
             if (playerName.equals(localModel.getCurrentPlayer())) {
                 try {
@@ -612,6 +612,7 @@ public class ClientController implements ClientViewUpdate {
                     }
 
                     // tribe's updating by ADDING deltas
+                    System.out.println("[DEBUG] Player " + playerResults.player() + "was added " + foodDelta + " food and " +  ppDelta + "pp because of event " + eventType.toString() + ". Now has " + localModel.getPlayerTribe(playerResults.player()).getFoodReserve() + " food and " + localModel.getPlayerTribe(playerResults.player()).getPrestigePoints() + " prestige points");
                     playersTribe.modifyFood(foodDelta);
                     playersTribe.modifyPrestigePoints(ppDelta);
                 }
@@ -665,6 +666,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateFoodReserve(String playerName, int food) {
         localModel.updateFoodReserve(playerName, food);
+        System.out.println("[DEBUG] player " + playerName + " was added " + food + " food. Now has " + localModel.getPlayerTribe(playerName).getFoodReserve());
     }
 
     /**
@@ -685,6 +687,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updatePrestigePoints(String playerName, int pp) {
         localModel.updatePrestigePoints(playerName, pp);
+        System.out.println("[DEBUG] player " + playerName + " was added " + pp + " prestige points. Now has " +  localModel.getPlayerTribe(playerName).getPrestigePoints());
     }
 
     /**

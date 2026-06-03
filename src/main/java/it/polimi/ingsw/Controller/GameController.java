@@ -397,8 +397,10 @@ public class GameController {
             OfferTrack offerTrack = gameInstance.getOfferTrack();
             int oldFoodReserve = currPlayer.getTribe().getFoodReserve();
             int oldPrestigePoints = currPlayer.getTribe().getPrestigePoints();
+            System.out.println("[DEBUG] Cibo e pp del player " + playerName + " prima del pescaggio della carta: F:" + oldFoodReserve + ", PP: " + oldPrestigePoints);
 
             Card drawn = currPlayer.drawCard(fromTopRow, fromBuilding, index, offerTrack);
+            System.out.println("[DEBUG] Cibo e pp del player " + playerName + " dopo il pescaggio della carta: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
 
             if(drawn != null){
                 try{
@@ -449,12 +451,16 @@ public class GameController {
 
                     // If player still has cards to draw...
                     if(currPlayer.getRemainingAbove() != 0 || currPlayer.getRemainingBelow() != 0){
+                        System.out.println("[DEBUG] Cibo e pp notificati al player " + playerName + ": F:" + (currPlayer.getTribe().getFoodReserve()-oldFoodReserve) + ", PP: " + (currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
                         notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));
                         notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
                     }
                     else {
                         // Return to tile food bonus
+                        System.out.println("[DEBUG] Cibo e pp del player " + playerName + " prima del ritorno alla turn tile: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
                         gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
+                        System.out.println("[DEBUG] Cibo e pp del player " + playerName + " dopo il ritorno alla turn tile: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
+                        System.out.println("[DEBUG] Cibo e pp notificati al player " + playerName + ": F:" + (currPlayer.getTribe().getFoodReserve()-oldFoodReserve) + ", PP: " + (currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
                         notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));
                         notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
 
