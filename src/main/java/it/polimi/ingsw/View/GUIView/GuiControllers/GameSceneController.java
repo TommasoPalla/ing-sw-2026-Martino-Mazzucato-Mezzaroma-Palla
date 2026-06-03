@@ -147,7 +147,6 @@ public class GameSceneController implements BoardActionListener {
     }
 
 
-    //non credo manchi niente, perché per iniziare il round aspetta 'notifyNewRound'
     private void updateInitialGameState(){
         initOfferTrack();
         initInfoBoard();
@@ -155,11 +154,6 @@ public class GameSceneController implements BoardActionListener {
         updateBottomRow();
         updateBottomBuildings();
         updateTopBuildings();
-        topRow.setVisible(true);
-        bottomBuildings.setVisible(false);  //necessarily void at the beginning of the game
-        topBuildings.setVisible(true);
-        bottomRow.setVisible(true);
-        tribeRegion.setVisible(true);
     }
 
     private void initOfferTrack(){
@@ -337,14 +331,27 @@ public class GameSceneController implements BoardActionListener {
                 messageBuilder.append("\nYou: ");
                 foodReserve.setText(foodToString);
             } else {
-                messageBuilder.append("\n").append(player).append(" ");
+                messageBuilder.append("\n").append(player).append(": ");
                 PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
                 playerWidget.updateFoodReserve(food);
             }
             messageBuilder.append(foodToString);
         }
         String message = messageBuilder.toString();
-        banner.showBanner(message, 1.5, null);
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(1));
+        delay.setOnFinished(event -> {
+            banner.showBanner(message, 4, this::showRowsComponent);
+        });
+        delay.play();
+    }
+
+    public void showRowsComponent() {
+        topRow.setVisible(true);
+        bottomBuildings.setVisible(false);  //necessarily void at the beginning of the game
+        topBuildings.setVisible(true);
+        bottomRow.setVisible(true);
+        tribeRegion.setVisible(true);
     }
 
 

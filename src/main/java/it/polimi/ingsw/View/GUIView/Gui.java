@@ -46,8 +46,8 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     public Gui(Stage stage){
         this.primaryStage = stage;
         this.primaryStage.setMaximized(true);
-        String fullResourcePath = "/Images/Icons/Logo.png";
-        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream(fullResourcePath)));
+        String logoPath = "/Images/Icons/Logo.png";
+        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream(logoPath)));
         this.primaryStage.getIcons().add(logo);
         this.primaryStage.show();
         this.players = new ArrayList<>();

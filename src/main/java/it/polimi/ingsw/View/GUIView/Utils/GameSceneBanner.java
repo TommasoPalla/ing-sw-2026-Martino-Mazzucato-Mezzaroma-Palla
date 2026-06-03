@@ -6,25 +6,25 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 
 /** Utility for rendering notification banners in the JavaFX GUI.
- * The banner introduces an overlay layer that darkens the background and applies
- * a blur effect to it. It supports dismissal via explicit user interaction (screen click)
+ * The banner introduces an overlay that prevents the user to click on the background.
+ * It supports dismissal via explicit user interaction (screen click)
  *  or automatic fade-out through an asynchronous background timer.
  */
 public class GameSceneBanner {
     private final AnchorPane target;
 
     /**
-     * The full-screen layout layer managing the semi-transparent backdrop
+     * The full-screen layout layer preventing misclicks
      * and catching click events for early dismissal.
      */
     private StackPane overlay;
-
 
     /**
      * The asynchronous background timer handling the automatic dismissal timeout.
@@ -65,27 +65,33 @@ public class GameSceneBanner {
             return;
         }
         this.onCloseAction = onCloseAction;
-
-
         target.setDisable(true);
 
         overlay = new StackPane();
-        overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);");
+        overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.0);");
         AnchorPane.setTopAnchor(overlay, 0.0);
         AnchorPane.setBottomAnchor(overlay, 0.0);
         AnchorPane.setLeftAnchor(overlay, 0.0);
         AnchorPane.setRightAnchor(overlay, 0.0);
 
-        VBox container = new VBox(15); //15 pixels of spacing
-        container.setAlignment(Pos.CENTER);
+        VBox container = new VBox();
+        StackPane.setAlignment(container, Pos.CENTER);
+        container.getStyleClass().add("banner-label");
+        container.setPickOnBounds(true);
         container.setMouseTransparent(false);
+        container.setMaxWidth(Region.USE_PREF_SIZE);
+        container.setMaxHeight(Region.USE_PREF_SIZE);
 
         Label banner = new Label(message);
-        banner.getStyleClass().add("banner-label");
         banner.setAlignment(Pos.CENTER);
+        banner.getStyleClass().add("banner-text");
         container.getChildren().add(banner);
 
         if (customNode != null) {
+            /*TODO: per mostrare descrizione carta
+            customNode.setOnMouseClicked(event -> {
+                showDescription();
+            });*/
             container.getChildren().add(customNode);
         }
         overlay.getChildren().add(container);
@@ -102,8 +108,7 @@ public class GameSceneBanner {
     }
 
     /**Teardown routine that closes the active banner display window context.
-     * Safely disposes overlay from main scene and removes blur effect,
-     * terminates any ticking background timers and fires any registered post-execution callback runnables.
+     * terminates any ticking background timers and fires any registered post-execution callback runnable.
      */
     public void hideBanner() {
         //if banner has been clicked before the timer ran out

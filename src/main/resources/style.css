@@ -131,10 +131,20 @@
 
 .banner-label {
     -fx-background-color: -fx-light-color;
-    -fx-text-fill: black;
-    -fx-font-size: 24;
-    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-padding: 30;
+    -fx-spacing: 20;
+    -fx-border-color: -fx-secondary-accent-color;
+    -fx-border-width: 3;
     -fx-border-radius: 15;
+}
+
+.banner-text {
+    -fx-text-fill: -fx-dark-color;
+    -fx-font-size: 18;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-opacity: 1.0;
 }
 
 .placeholder-style {
