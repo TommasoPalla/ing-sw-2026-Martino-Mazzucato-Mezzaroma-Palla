@@ -191,7 +191,7 @@ public class ClientController implements ClientViewUpdate {
      * @throws NotEnoughPlayersException Throws an exception if tried to start the game with
      * an insufficient number of players.
      */
-    public void startGame() throws NotTheHostException, NotEnoughPlayersException{
+    public void startGame() {
         if(clientState != ClientState.IN_LOBBY){
             throw new IllegalClientStateActionException("ERROR: You cannot start a game if you're not in one!");
         }

@@ -7,7 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 
 
-public class introController {
+public class IntroController {
     @FXML
     private ImageView background;
 

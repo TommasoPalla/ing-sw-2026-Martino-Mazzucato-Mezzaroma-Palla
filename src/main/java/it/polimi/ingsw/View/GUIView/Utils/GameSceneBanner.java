@@ -36,8 +36,6 @@ public class GameSceneBanner {
      */
     private Runnable onCloseAction;
 
-
-
     /**
      * Constructs a GameSceneBanner manager targeting a full root container (most of the time being the mainAnchorPane).
      * @param target the root where the banner will be attached.

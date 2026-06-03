@@ -1,7 +1,11 @@
 package it.polimi.ingsw.View.GUIView.GuiControllers;
 
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
+import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
+import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
 import it.polimi.ingsw.View.GUIView.Gui;
+import it.polimi.ingsw.View.GUIView.Utils.GameSceneBanner;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -50,6 +54,7 @@ public class LobbySceneController {
     private ImageView background;
 
     private final Scale scaleTransform = new Scale();
+    private GameSceneBanner banner;
 
     private static final double BASE_WIDTH = 1920;
     private static final double BASE_HEIGHT = 1080;
@@ -62,6 +67,8 @@ public class LobbySceneController {
 
         background.setPreserveRatio(true);
 
+        //TODO: gamePane dovrebbe essere quello giusto, se non funziona bene va cambiato in root  (e cambiata la classe Banner)
+        this.banner = new GameSceneBanner(gamePane);
 
         background.setFitWidth(BASE_WIDTH);
         background.setFitHeight(BASE_HEIGHT);
@@ -133,14 +140,11 @@ public class LobbySceneController {
 
     @FXML
     private void handleStart(){
-//        if(playersContainer.getChildren().size() == gui.getNumPlayers()){
-//            try{
-        gui.getClientController().startGame();
-        gui.playGameScene();
-//            }catch (IOException e){
-//
-//            }
-//        }
+        try {
+            gui.getClientController().startGame();
+        } catch (IllegalClientStateActionException | NotTheHostException | IllegalArgumentException e) {
+            banner.showBanner(e.getMessage(), 1.5, null);
+        }
     }
 
     public void joined(){
