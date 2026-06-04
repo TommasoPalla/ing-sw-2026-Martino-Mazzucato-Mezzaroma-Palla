@@ -397,7 +397,7 @@ public class GameController {
             OfferTrack offerTrack = gameInstance.getOfferTrack();
             int oldFoodReserve = currPlayer.getTribe().getFoodReserve();
             int oldPrestigePoints = currPlayer.getTribe().getPrestigePoints();
-            System.out.println("[DEBUG] Cibo e pp del player " + playerName + " prima del pescaggio della carta: F:" + oldFoodReserve + ", PP: " + oldPrestigePoints);
+            System.out.println("[DEBUG] " + playerName + " prima del pescaggio della carta: F:" + oldFoodReserve + ", PP: " + oldPrestigePoints);
 
             Card drawn = currPlayer.drawCard(fromTopRow, fromBuilding, index, offerTrack);
             System.out.println("[DEBUG] Cibo e pp del player " + playerName + " dopo il pescaggio della carta: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
@@ -451,18 +451,24 @@ public class GameController {
 
                     // If player still has cards to draw...
                     if(currPlayer.getRemainingAbove() != 0 || currPlayer.getRemainingBelow() != 0){
-                        System.out.println("[DEBUG] Cibo e pp notificati al player " + playerName + ": F:" + (currPlayer.getTribe().getFoodReserve()-oldFoodReserve) + ", PP: " + (currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
-                        notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));
-                        notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
+                        int foodDelta = currPlayer.getTribe().getFoodReserve() - oldFoodReserve;
+                        int prestigeDelta = currPlayer.getTribe().getPrestigePoints() - oldPrestigePoints;
+
+                        System.out.println("[DEBUG] Cibo e pp notificati al player " + playerName + ": F:" + (foodDelta) + ", PP: " + (prestigeDelta));
+                        notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
+                        notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
                     }
                     else {
                         // Return to tile food bonus
                         System.out.println("[DEBUG] Cibo e pp del player " + playerName + " prima del ritorno alla turn tile: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
                         gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
                         System.out.println("[DEBUG] Cibo e pp del player " + playerName + " dopo il ritorno alla turn tile: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
-                        System.out.println("[DEBUG] Cibo e pp notificati al player " + playerName + ": F:" + (currPlayer.getTribe().getFoodReserve()-oldFoodReserve) + ", PP: " + (currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
-                        notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));
-                        notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
+                        int foodDelta = currPlayer.getTribe().getFoodReserve() - oldFoodReserve;
+                        int prestigeDelta = currPlayer.getTribe().getPrestigePoints() - oldPrestigePoints;
+
+                        System.out.println("[DEBUG] Cibo e pp notificati al player " + playerName + ": F:" + (foodDelta) + ", PP: " + (prestigeDelta));
+                        notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
+                        notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
 
                         try {
                             setNextPlayer();
@@ -526,8 +532,11 @@ public class GameController {
 
             // Return to tile food bonus
             gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
-            notifyAll(n -> n.notifyNewFood(playerName, currPlayer.getTribe().getFoodReserve()-oldFoodReserve));
-            notifyAll(n -> n.notifyNewPrestigePoints(playerName, currPlayer.getTribe().getPrestigePoints()-oldPrestigePoints));
+
+            int foodDelta = currPlayer.getTribe().getFoodReserve() - oldFoodReserve;
+            int prestigeDelta = currPlayer.getTribe().getPrestigePoints() - oldPrestigePoints;
+            notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
+            notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
 
             try {
                 setNextPlayer();

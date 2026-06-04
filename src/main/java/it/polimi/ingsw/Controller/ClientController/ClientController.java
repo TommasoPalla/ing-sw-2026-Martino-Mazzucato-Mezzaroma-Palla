@@ -666,7 +666,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateFoodReserve(String playerName, int food) {
         localModel.updateFoodReserve(playerName, food);
-        System.out.println("[DEBUG] player " + playerName + " was added " + food + " food. Now has " + localModel.getPlayerTribe(playerName).getFoodReserve());
+        System.out.println("[DEBUG] updateFoodReserve for player " + playerName + ", +" + food + " food. Now has " + localModel.getPlayerTribe(playerName).getFoodReserve());
     }
 
     /**
@@ -687,7 +687,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updatePrestigePoints(String playerName, int pp) {
         localModel.updatePrestigePoints(playerName, pp);
-        System.out.println("[DEBUG] player " + playerName + " was added " + pp + " prestige points. Now has " +  localModel.getPlayerTribe(playerName).getPrestigePoints());
+        System.out.println("[DEBUG] updatePrestigePoints for player " + playerName + ", +"  + pp + " prestige points. Now has " +  localModel.getPlayerTribe(playerName).getPrestigePoints());
     }
 
     /**
