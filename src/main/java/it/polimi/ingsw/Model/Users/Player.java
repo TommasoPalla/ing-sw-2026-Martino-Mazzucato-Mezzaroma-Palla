@@ -19,6 +19,7 @@ public class Player {
     private OfferTile currentOfferTile;
     private int remainingAbove;
     private int remainingBelow;
+    private boolean canDrawAdditional;
 
     public Player(Game gameInstance, String name, Color totemColor) {
         this.game = gameInstance;
@@ -28,6 +29,7 @@ public class Player {
         this.currentOfferTile = null;
         this.remainingAbove = 0;
         this.remainingBelow = 0;
+        this.canDrawAdditional = false;
     }
 
     //getters
@@ -51,6 +53,9 @@ public class Player {
     }
     public int getRemainingBelow() {
         return remainingBelow;
+    }
+    public boolean getCanDrawAdditional() {
+        return canDrawAdditional;
     }
 
     //setters
@@ -77,6 +82,10 @@ public class Player {
         currentOfferTile = null;
         this.remainingAbove = 0;
         this.remainingBelow = 0;
+    }
+
+    public void setCanDrawAdditional(boolean canDrawAdditional) {
+        this.canDrawAdditional = canDrawAdditional;
     }
 
     //returns true if building is affordable to player or if the card is a character, returns false otherwise
@@ -126,6 +135,8 @@ public class Player {
                 getTribe().modifyFood(-discountedCost);
 
                 getTribe().addBuildingToTribe(drawnBuilding);
+                if (drawnBuilding.getCardID().equals("E3_B_8"))
+                    canDrawAdditional = true;
                 return drawnBuilding;
             }
             else {

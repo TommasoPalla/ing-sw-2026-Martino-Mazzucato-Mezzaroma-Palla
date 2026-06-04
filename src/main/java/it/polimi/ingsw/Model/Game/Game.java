@@ -5,10 +5,13 @@ import java.util.stream.Collectors;
 
 import it.polimi.ingsw.CustomException.*;
 import it.polimi.ingsw.Enums.Color;
+import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Deck.Deck;
 import it.polimi.ingsw.Model.Cards.EventCard;
+import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.Model.Users.*;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 import it.polimi.ingsw.Enums.GamePhase;
@@ -180,13 +183,6 @@ public class Game {
         return new HashMap<>(giveInitialFood(numPlayers));
     }
 
-    /*
-    public void finishGame(){
-      if(currentRound == 10){
-      }
-    }
-     */
-
     //actual functions
     public String setFirstPlayer(){
         currentPlayer = offerTrack.getTurnTile().getTurnOrder().getFirst();
@@ -217,6 +213,10 @@ public class Game {
             this.currentPlayer = null;
             throw new LastPlayerOfTurnException();
         }
+    }
+
+    public void setCurrentPlayer(Player currentPlayer){
+        this.currentPlayer = currentPlayer;
     }
 
     public void initOfferTrack() {
@@ -273,6 +273,59 @@ public class Game {
         era++;
         offerTrack.moveBuildings();
         offerTrack.repopulateTopBuildingCards();
+    }
+
+    public boolean checkAdditionalDraw() {
+        Player additionalDrawPlayer = null;
+        for (Player player : getPlayers()) {
+            if (player.getCanDrawAdditional()) {
+                additionalDrawPlayer = player;
+                break;
+            }
+        }
+        if (additionalDrawPlayer != null) {
+            Tribe tribe = additionalDrawPlayer.getTribe();
+
+            // checks if the player who can draw an additional card has any Character card to draw left on the top row
+            // or if there is a Building card on the top row that he can purchase.
+            boolean found = false;
+            int minCost = 20;
+            for (Card card : getOfferTrack().getTopRow()) {
+                if (!(card instanceof EventCard)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                for (BuildingCard buildingCard : getOfferTrack().getTopBuildingCard()) {
+                    if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
+                }
+            }
+            if (found || (minCost != 20 && tribe.getFoodReserve() >= minCost-tribe.getBuildersDiscount())) {
+                additionalDrawPlayer.setCanDrawAdditional(false);
+                getOfferTrack().getTurnTile().getTurnOrder().add(additionalDrawPlayer);
+                additionalDrawPlayer.setRemainingDraws(1, 0);
+                currentPlayer = additionalDrawPlayer;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Map<EventType, ArrayList<PlayerEventResults>> resolveEvents() {
+        currentPhase = GamePhase.ON_EVENT;
+        ArrayList<EventCard> events = getOfferTrack().getBottomEvents();
+        // if the current round is the last one, it also resolves the top row's events
+        if (currentRound == 10)
+            events.addAll(getOfferTrack().getTopEvents());
+        Map<EventType, ArrayList<PlayerEventResults>> eventsResults = eventManager.resolve(events, players, buildingManager);
+        System.out.println(eventsResults);
+        for (EventType eventType : eventsResults.keySet()) {
+            for (PlayerEventResults playerEventResults : eventsResults.get(eventType)) {
+                System.out.println("cibo e pp modificati dall'evento " + eventType + " per " + playerEventResults.player() + " : " + playerEventResults.foodAndPP()[0] + " , " + playerEventResults.foodAndPP()[1]);
+            }
+        }
+        return eventsResults;
     }
 
     public void chooseOfferTile(Player player, int index){

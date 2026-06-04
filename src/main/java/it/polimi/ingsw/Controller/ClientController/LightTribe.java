@@ -30,6 +30,8 @@ public class LightTribe implements TribeInterface {
     private int remainingAbove;
     private int remainingBelow;
 
+    private boolean canDrawAdditional;
+
     public LightTribe(String playerName) {
         this.playerName = playerName;
         this.prestigePoints = 0;
@@ -51,6 +53,7 @@ public class LightTribe implements TribeInterface {
         this.shamansStars = 0;
         this.remainingAbove = 0;
         this.remainingBelow = 0;
+        this.canDrawAdditional = false;
     }
 
     /*
@@ -110,6 +113,8 @@ public class LightTribe implements TribeInterface {
 
     public int getRemainingBelow() { return remainingBelow; }
 
+    public boolean getCanDrawAdditional() { return canDrawAdditional; }
+
     /*
     * Setters
      */
@@ -143,6 +148,7 @@ public class LightTribe implements TribeInterface {
     @Override
     public void addGathererDiscount(int discount) { this.gatherersDiscount += discount; }
 
+    public void setCanDrawAdditional(boolean canDrawAdditional) { this.canDrawAdditional = canDrawAdditional; }
     /**
      * Adds a character to the tribe and applies its immediate effects (resource bonuses/discounts).
      * @param character The character card to add.
@@ -158,6 +164,8 @@ public class LightTribe implements TribeInterface {
      */
     public void addBuilding(BuildingCard building) {
         buildings.add(building);
+        if (building.getCardID().equals("E3_B_8"))
+            this.canDrawAdditional = true;
     }
 
     @Override

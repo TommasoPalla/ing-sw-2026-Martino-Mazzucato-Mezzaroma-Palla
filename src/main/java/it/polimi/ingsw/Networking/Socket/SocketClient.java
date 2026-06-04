@@ -144,11 +144,6 @@ public class SocketClient implements VirtualSocketClient {
         controller.updateBottomBuildings(newBottomBuildings);
     }
 
-//    @Override
-//    public void updateNextPlayer(String playerName) {
-//        controller.updateCurrentPlayer(playerName);
-//    }
-
     @Override
     public void updateGamePhase(GamePhase phase) {
         controller.updateGamePhase(phase);

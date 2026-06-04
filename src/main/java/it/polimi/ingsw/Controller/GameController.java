@@ -419,11 +419,11 @@ public class GameController {
                             }
                         }
                         if (!found) {
-                            int minCost = 0;
+                            int minCost = 20;
                             for (BuildingCard buildingCard : gameInstance.getOfferTrack().getTopBuildingCard()) {
                                 if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
                             }
-                            if (minCost == 0 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
+                            if (minCost == 20 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
                                 currPlayer.setRemainingDraws(0, currPlayer.getRemainingBelow());
                         }
                     }
@@ -439,11 +439,11 @@ public class GameController {
                             }
                         }
                         if (!found) {
-                            int minCost = 0;
+                            int minCost = 20;
                             for (BuildingCard buildingCard : gameInstance.getOfferTrack().getBottomBuildingCard()) {
                                 if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
                             }
-                            if (minCost == 0 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
+                            if (minCost == 20 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
                                 currPlayer.setRemainingDraws(currPlayer.getRemainingAbove(), 0);
                         }
                     }
@@ -458,9 +458,10 @@ public class GameController {
                         notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
                     }
                     else {
-                        // Return to tile food bonus
                         System.out.println("[DEBUG] Cibo e pp del player " + playerName + " prima del ritorno alla turn tile: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
-                        gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
+                        if(gameInstance.getOfferTrack().getTurnTile().getTurnOrder().size() == gameInstance.getNumPlayer())
+                            // Return to tile food bonus
+                            gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
                         System.out.println("[DEBUG] Cibo e pp del player " + playerName + " dopo il ritorno alla turn tile: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
                         int foodDelta = currPlayer.getTribe().getFoodReserve() - oldFoodReserve;
                         int prestigeDelta = currPlayer.getTribe().getPrestigePoints() - oldPrestigePoints;
@@ -469,25 +470,7 @@ public class GameController {
                         notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
                         notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
 
-                        try {
-                            setNextPlayer();
-                        } catch (LastPlayerOfTurnException e) {
-                            // EVENT RESOLUTION
-                            gameInstance.setCurrentPhase(GamePhase.ON_EVENT);
-
-                            ArrayList<EventCard> events = gameInstance.getOfferTrack().getBottomEvents();
-                            // if the current round is the last one, it also resolves the top row's events
-                            if (gameInstance.getCurrentRound() == 10)
-                                events.addAll(gameInstance.getOfferTrack().getTopEvents());
-                            Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(events, gameInstance.getPlayers(), gameInstance.getBuildingManager());
-                            System.out.println(eventsResults);
-                            for (EventType eventType : eventsResults.keySet()) {
-                                for (PlayerEventResults playerEventResults : eventsResults.get(eventType)) {
-                                    System.out.println("cibo e pp modificati dall'evento " + eventType + " per " + playerEventResults.player() + " : " + playerEventResults.foodAndPP()[0] + " , " + playerEventResults.foodAndPP()[1]);
-                                }
-                            }
-                            startRound(eventsResults);
-                        }
+                        endTurn();
                     }
                 } catch (StubException e) {
                    //handleCriticalDisconnection();
@@ -529,24 +512,37 @@ public class GameController {
 
             notifyAll( n -> n.notifyPassedTurn(playerName));
 
-            // Return to tile food bonus
-            gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
-
+            if (gameInstance.getOfferTrack().getTurnTile().getTurnOrder().size() == gameInstance.getNumPlayer())
+                // Return to tile food bonus
+                gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
             int foodDelta = currPlayer.getTribe().getFoodReserve() - oldFoodReserve;
             int prestigeDelta = currPlayer.getTribe().getPrestigePoints() - oldPrestigePoints;
             notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
             notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
 
-            try {
-                setNextPlayer();
-            } catch (LastPlayerOfTurnException e) {
-                // EVENT RESOLUTION
-                gameInstance.setCurrentPhase(GamePhase.ON_EVENT);
+            endTurn();
+        } catch (StubException e) {
+        //handleCriticalDisconnection();
+        }
+    }
 
-                ArrayList<EventCard> events = gameInstance.getOfferTrack().getBottomEvents();
-                if (gameInstance.getCurrentRound() == 10)
-                    events.addAll(gameInstance.getOfferTrack().getTopEvents());
-                Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.getEventManager().resolve(events, gameInstance.getPlayers(), gameInstance.getBuildingManager());
+    private void endTurn() {
+        Player additionalDrawPlayer = null;
+        if (gameInstance.getOfferTrack().getTurnTile().getTurnOrder().size() > gameInstance.getNumPlayer()) {
+            additionalDrawPlayer = gameInstance.getCurrentPlayer();
+            gameInstance.getOfferTrack().getTurnTile().getTurnOrder().removeLast();
+            gameInstance.setCurrentPlayer(gameInstance.getOfferTrack().getTurnTile().getTurnOrder().getLast());
+        }
+
+        try {
+            setNextPlayer();
+        } catch (LastPlayerOfTurnException e) {
+            if (!gameInstance.checkAdditionalDraw()) {
+                if (additionalDrawPlayer != null) {
+                    additionalDrawPlayer.setCanDrawAdditional(true);
+                }
+                // EVENT RESOLUTION
+                Map<EventType, ArrayList<PlayerEventResults>> eventsResults = gameInstance.resolveEvents();
                 startRound(eventsResults);
             }
         } catch (StubException e) {

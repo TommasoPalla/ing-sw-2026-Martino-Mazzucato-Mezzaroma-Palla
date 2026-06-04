@@ -54,7 +54,21 @@ public class LeaderboardDAO {
      */
     public List<String> getLeaderboard(int playersNum) throws SQLException {
         List<String> leaderboard = new ArrayList<>();
-        String query = "SELECT nickname, final_score, match_date FROM match_history WHERE players_number = ? ORDER BY final_score DESC";
+        // First, it creates a table 'RankedMatches' extracting from the table 'match_history' the records grouped
+        // by nickname and ordered by descending final_score, only for the games with a number of players equal to
+        // playersNum, and adding the row number for every nickname's row saved as 'rn'.
+        // Then it extracts the rows from this table with rn = 1 (the records of players with their best final score)
+        // and finally it orders them by descending final_score.
+        String query = "WITH RankedMatches AS (" +
+                "    SELECT nickname, final_score, match_date, " +
+                "           ROW_NUMBER() OVER(PARTITION BY nickname ORDER BY final_score DESC) as rn " +
+                "    FROM match_history " +
+                "    WHERE players_number = ?" +
+                ") " +
+                "SELECT nickname, final_score, match_date " +
+                "FROM RankedMatches " +
+                "WHERE rn = 1 " +
+                "ORDER BY final_score DESC";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, playersNum);
@@ -79,7 +93,17 @@ public class LeaderboardDAO {
      * @throws SQLException if it was not possible to execute the SQL query to the database.
      */
     public int getPlayerPosition(int playersNum, int finalScore) throws SQLException {
-        String query = "SELECT COUNT(*) + 1 AS player_rank FROM match_history WHERE players_number = ? AND final_score > ?";
+        // First it extracts the table 'best_scores' containing the record of players with their best final scores
+        // obtained in games with a number of players equal to playersNum. Then, from this table it counts the number of
+        // records with a final score higher than finalScore, and it adds 1 to get the player's position.
+        String query = "SELECT COUNT(*) + 1 AS player_rank " +
+                "FROM (" +
+                "    SELECT MAX(final_score) AS best_score " +
+                "    FROM match_history " +
+                "    WHERE players_number = ? " +
+                "    GROUP BY nickname" +
+                ") AS best_scores " +
+                "WHERE best_score > ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, playersNum);
             pstmt.setInt(2, finalScore);

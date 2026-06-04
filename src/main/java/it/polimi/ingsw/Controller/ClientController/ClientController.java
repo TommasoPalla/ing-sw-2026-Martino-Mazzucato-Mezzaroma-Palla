@@ -479,11 +479,11 @@ public class ClientController implements ClientViewUpdate {
                 }
             }
             if (!found) {
-                int minCost = 0;
+                int minCost = 20;
                 for (BuildingCard buildingCard : localModel.getTopBuildings()){
                     if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
                 }
-                if (minCost == 0 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
+                if (minCost == 20 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
                     tribe.setRemainingDraws(0, tribe.getRemainingBelow());
             }
         }
@@ -499,11 +499,11 @@ public class ClientController implements ClientViewUpdate {
                 }
             }
             if (!found) {
-                int minCost = 0;
+                int minCost = 20;
                 for (BuildingCard buildingCard : localModel.getBottomBuildings()){
                     if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
                 }
-                if (minCost == 0 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
+                if (minCost == 20 || tribe.getFoodReserve() < minCost-tribe.getBuildersDiscount())
                     tribe.setRemainingDraws(tribe.getRemainingAbove(), 0);
             }
         }
@@ -511,13 +511,22 @@ public class ClientController implements ClientViewUpdate {
         //System.out.println("DEBUG: Card drawn by " + playerName + ". Remaining draws: " + tribe.getRemainingAbove() + "/" + tribe.getRemainingBelow());
         if (tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
             //System.out.println("DEBUG: Player " + playerName + " finished draws. Moving to turn tile.");
-            localModel.moveTotemToTurnTile(playerName);
+            if (localModel.getTurnOrder().size() == localModel.getNumPlayers())
+                localModel.moveTotemToTurnTile(playerName);
 
-            // If the player who finished was the current one, we trigger update
-            if (playerName.equals(localModel.getCurrentPlayer())) {
-                try {
-                    updateCurrentPlayer();
-                } catch (LastPlayerOfTurnException e) {
+            String additionalDrawPlayer = null;
+            if (localModel.getTurnOrder().size() > localModel.getNumPlayers()) {
+                additionalDrawPlayer = localModel.getCurrentPlayer();
+                localModel.getTurnOrder().removeLast();
+                localModel.setCurrentPlayer(localModel.getTurnOrder().getLast());
+            }
+
+            try {
+                updateCurrentPlayer();
+            } catch (LastPlayerOfTurnException e) {
+                if (!checkAdditionalDraw()) {
+                    if (additionalDrawPlayer != null)
+                        localModel.getPlayerTribe(additionalDrawPlayer).setCanDrawAdditional(true);
                     localModel.setCurrentPlayer("");
                 }
             }
@@ -534,15 +543,66 @@ public class ClientController implements ClientViewUpdate {
     public void updateTurnPassed(String playerName){
 
         localModel.getPlayerTribe(playerName).setRemainingDraws(0, 0);
-        localModel.moveTotemToTurnTile(playerName);
+        if (localModel.getTurnOrder().size() == localModel.getNumPlayers())
+            localModel.moveTotemToTurnTile(playerName);
+
+        view.showTurnPassed(playerName, localModel.getCurrentPlayer());
+
+        String additionalDrawPlayer = null;
+        if (localModel.getTurnOrder().size() > localModel.getNumPlayers()) {
+            additionalDrawPlayer = localModel.getCurrentPlayer();
+            localModel.getTurnOrder().removeLast();
+            localModel.setCurrentPlayer(localModel.getTurnOrder().getLast());
+        }
 
         try {
             updateCurrentPlayer();
-        } catch (LastPlayerOfTurnException e){
-            localModel.setCurrentPlayer("");
+        } catch (LastPlayerOfTurnException e) {
+            if (!checkAdditionalDraw()) {
+                if (additionalDrawPlayer != null)
+                    localModel.getPlayerTribe(additionalDrawPlayer).setCanDrawAdditional(true);
+                localModel.setCurrentPlayer("");
+            }
         }
+    }
 
-        view.showTurnPassed(playerName, localModel.getCurrentPlayer());
+    private boolean checkAdditionalDraw() {
+        String additionalDrawPlayer = null;
+
+        for (String player : localModel.getTurnOrder()) {
+            if (localModel.getPlayerTribe(player).getCanDrawAdditional()) {
+                additionalDrawPlayer = player;
+                break;
+            }
+        }
+        if (additionalDrawPlayer != null) {
+            LightTribe tribe = localModel.getPlayerTribe(additionalDrawPlayer);
+            // If the player still has cards to draw from the top row, but the row is empty, and he cannot buy any
+            // building from it, then it sets its remaining draws from above to 0
+            boolean found = false;
+            int minCost = 20;
+            for (Card card : localModel.getTopRow()) {
+                if (!(card instanceof EventCard)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                for (BuildingCard buildingCard : localModel.getTopBuildings()){
+                    if (buildingCard.getCost() < minCost) minCost = buildingCard.getCost();
+                }
+            }
+            if (found || (minCost != 0 && tribe.getFoodReserve() >= minCost - tribe.getBuildersDiscount())) {
+                tribe.setCanDrawAdditional(false);
+                localModel.getTurnOrder().add(additionalDrawPlayer);
+                localModel.getPlayerTribe(additionalDrawPlayer).setRemainingDraws(1,0);
+                localModel.setCurrentPlayer(additionalDrawPlayer);
+                syncClientState();
+                view.showNewCurrentPlayer(additionalDrawPlayer,this.clientState);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
