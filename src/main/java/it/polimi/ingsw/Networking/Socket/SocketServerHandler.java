@@ -267,6 +267,10 @@ public class SocketServerHandler implements Runnable{
                 client.forceQuit(disconnectedPlayer);
             } catch (IOException e) {}
         });
+        commandHandlers.put(SocketHeaderNames.ERROR, parameters -> {
+            String errorMessage = (String) parameters[0];
+            throw new RuntimeException(errorMessage);
+        });
     }
 
     @Override
@@ -279,7 +283,12 @@ public class SocketServerHandler implements Runnable{
 
                 Consumer<Object[]> handler = commandHandlers.get(socketHeader);
                 if(handler != null){
-                    handler.accept(socketDTO.getParameters());
+                    try {
+                        handler.accept(socketDTO.getParameters());
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+
                 } else {
                     System.out.println("ERROR: " + socketHeader + " is not a valid command"); //chiaramente un placeholder, va messo qualcosa di meglio
                 }

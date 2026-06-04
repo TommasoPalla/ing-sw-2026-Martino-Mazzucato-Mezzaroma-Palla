@@ -9,7 +9,6 @@ import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
-import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.EventCard;
@@ -353,16 +352,16 @@ public class GameController {
         Player player = gameInstance.getPlayerByName(playerName);
         checkPlayer(player);
         if(gameInstance.getOfferTrack().getOfferTiles().get(index).isOccupied()) {
+            String currentOccupant = gameInstance.getOfferTrack().getOfferTiles().get(index).getCurrentOccupant();
             throw new OccupiedTileException();
         }
-        try {
+
+        //TODO: da capire effettivamente cosa fare con queste StubException
+        try{
             gameInstance.chooseOfferTile(player, index);
             notifyAll( n -> {
                 n.notifyChosenTile(playerName, index);
             });
-        }
-        catch (OccupiedTileException e) {
-            throw new OccupiedTileException();
         }
         catch(StubException e){
             //handleCriticalDisconnection();

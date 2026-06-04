@@ -58,12 +58,13 @@ public record CommandParser(ClientController clientController) {
             clientController.chooseTotemColor(Color.valueOf(commandArgs[0].toUpperCase()));
         } catch (IllegalClientStateActionException e) {
             throw new IllegalClientStateActionException(e.getMessage());
+        } catch (UnavailableColorException e) {
+            throw new IllegalArgumentException(e.getMessage());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("ERROR: " + commandArgs[0] + " is not a valid color!");
         } catch (AlreadyChosenTotemException e){
-            throw new IllegalArgumentException("ERROR: You have already chosen a totem color!");
-        } catch (UnavailableColorException e) {
-            throw new IllegalArgumentException("ERROR: this totem color is already taken!");
+            Color alreadyChosen = clientController.getLocalModel().getColors(clientController.getPlayerName());
+            throw new IllegalArgumentException("You already chose the " + alreadyChosen.colorize(alreadyChosen.toString()) + " totem.");
         }
     }
 

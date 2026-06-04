@@ -5,6 +5,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
+import it.polimi.ingsw.Enums.SocketHeaderNames;
 import it.polimi.ingsw.Networking.RMI.VirtualRMIClient;
 import it.polimi.ingsw.Networking.Shared.ClientNotifier;
 import it.polimi.ingsw.Networking.Shared.HeartBeat;
@@ -83,7 +84,8 @@ public class SocketServer implements VirtualSocketServer{
         try {
             serverController.chooseTotemColor(handler.getPlayerRecord(), totemColor);
         }catch(UnavailableColorException e){
-            throw new UnavailableColorException(totemColor);
+            SocketMessageDTO errorMessage = new SocketMessageDTO(SocketHeaderNames.ERROR, e.getMessage());
+            handler.sendError(errorMessage);
         }
     }
 

@@ -47,5 +47,6 @@ public enum SocketHeaderNames {
     LEADERBOARD_INFO,
 
     PING,
-    FORCE_QUIT
+    FORCE_QUIT,
+    ERROR
 }

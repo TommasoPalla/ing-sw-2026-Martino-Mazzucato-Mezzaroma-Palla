@@ -218,7 +218,6 @@ public class ClientController implements ClientViewUpdate {
             throw new AlreadyChosenTotemException();
         }
         try {
-            //if (!localModel.isColorAvailable(color)) throw new IllegalArgumentException(); CONTROLLO VA FATTO DAL SERVER
             connection.chooseTotem(color);
         }catch (UnavailableColorException e){
             throw new UnavailableColorException(color);
@@ -281,15 +280,6 @@ public class ClientController implements ClientViewUpdate {
             throw new IllegalActionPhaseException();
         }
     }
-
-//    /*da definire: pensavo che il giocatore può mettere in pausa con un timer
-//    che scade in automatico. (volevo fare che se tutti sono d'accordo il game
-//    viene sospeso a tempo indefinito ma lasciamo stare)*/
-//    public void pauseGame(){
-//        //mostra schermata di pausa (dentro la view)
-//        //fa partire il timer
-//        //manda l'info al server per notificare gli altri player
-//    }
 
     /**
      * This method forwards the request by the player to pass his turn when he still has to draw cards but there are no
@@ -435,7 +425,7 @@ public class ClientController implements ClientViewUpdate {
     }
 
     /**
-     * It notifies the view when the host leaves and the player is chosen to be the new host.
+     * Notifies the view when the host leaves and the player is chosen to be the new host.
      */
     @Override
     public void updateNewHost() {
