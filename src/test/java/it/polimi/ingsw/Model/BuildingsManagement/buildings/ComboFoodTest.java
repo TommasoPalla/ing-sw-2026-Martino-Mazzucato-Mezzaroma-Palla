@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Enums.InventorType;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ComboFoodTest {
     Game game;
+    GameController controller;
     Player player1;
     Player player2;
     ArrayList<Player> players;
@@ -28,6 +30,9 @@ public class ComboFoodTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         game.addPlayer("pippo");
         game.addPlayer("pluto");
         player1 =  game.getPlayers().getFirst();
@@ -44,10 +49,8 @@ public class ComboFoodTest {
 
     @Test
     void comboFoodDefault(){
-        player1.getTribe().modifyFood(2);                       //2 food because he is first + 2 = 4
-        player1.getTribe().addBuildingToTribe(comboFood);       //-4 food = 0
-        assertEquals(0, player1.getTribe().getFoodReserve());
-        assertEquals(3, player1.getTribe().getPrestigePoints());
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(comboFood);
 
         //fifth character does not trigger the building
         player1.getTribe().addCharacterToTribe(new Builder(1, "B1", 2, 0, 3));
@@ -60,8 +63,8 @@ public class ComboFoodTest {
 
     @Test
     void notACombo(){
-        player1.getTribe().modifyFood(2);                       //2 food because he is first + 2 = 4
-        player1.getTribe().addBuildingToTribe(comboFood);       //-4 food = 0
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(comboFood);
 
         player1.getTribe().addCharacterToTribe(new Builder(1, "B1", 2, 0, 3));
         player1.getTribe().addCharacterToTribe(new Builder(1, "B1", 2, 0, 3));
@@ -77,8 +80,8 @@ public class ComboFoodTest {
         player1.getTribe().addCharacterToTribe(new Builder(1, "B1", 2, 0, 3));
         player1.getTribe().addCharacterToTribe(new Hunter(1, "H1", 2, false));
 
-        player1.getTribe().modifyFood(2);                       //2 food because he is first + 2 = 4
-        player1.getTribe().addBuildingToTribe(comboFood);       //-4 food = 0
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(comboFood);
 
         //since player1 bought the building after completing a combo he doesn't get the bonus food
         assertEquals(0, player1.getTribe().getFoodReserve());

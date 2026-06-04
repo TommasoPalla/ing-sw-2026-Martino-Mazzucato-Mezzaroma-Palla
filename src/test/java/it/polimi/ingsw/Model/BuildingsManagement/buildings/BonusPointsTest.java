@@ -37,17 +37,16 @@ public class BonusPointsTest {
 
     @Test
     void bonusPointsTest(){
-        player1.getTribe().modifyFood(8);                      //+10 food
-        player1.getTribe().addBuildingToTribe(bonusPoints);     //-10 food
-        assertEquals(0, player1.getTribe().getFoodReserve());       //2 food because he is first
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(bonusPoints);
 
+        assertEquals(0, player1.getTribe().getFoodReserve());
         assertEquals(0, player1.getTribe().getPrestigePoints());    //before the end of the game, the player has 0food and 0pp
 
         buildingManager.useBuilding(GamePhase.ON_PURCHASE, player1);
         assertEquals(0, player1.getTribe().getPrestigePoints());    //during a generic phase the effect is not activated
 
         buildingManager.useBuilding(GamePhase.END_GAME, player1);
-
         assertEquals(25, player1.getTribe().getPrestigePoints());
     }
 }

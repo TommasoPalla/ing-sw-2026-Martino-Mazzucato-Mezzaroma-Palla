@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PointsPerRoleTest {
     Game game;
+    GameController controller;
     Player player1;
     Player player2;
     ArrayList<Player> players;
@@ -30,6 +32,9 @@ public class PointsPerRoleTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         game.addPlayer("pippo");
         game.addPlayer("pluto");
         player1 =  game.getPlayers().getFirst();
@@ -47,39 +52,38 @@ public class PointsPerRoleTest {
 
     @Test
     void pointsPerRoleStandard(){
-        player1.getTribe().modifyFood(5);       //2food because he is first + 5 = 7 food
-        player1.getTribe().addBuildingToTribe(pointsPerRole);   //-7 food = 0
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(pointsPerRole);
 
-        assertEquals(0, player1.getTribe().getFoodReserve());       //2 food because he is first
-        assertEquals(pointsPerRole.getPrestige(), player1.getTribe().getPrestigePoints());
+        assertEquals(0, player1.getTribe().getFoodReserve());
+        assertEquals(0, player1.getTribe().getPrestigePoints());    //after purchase player1 has 0 food and 0 pp
 
         buildingManager.useBuilding(GamePhase.END_GAME, player1);
-        assertEquals(pointsPerRole.getPrestige() +
-                pointsPerRole.getPrestigeBonus() * player1.getTribe().getArtistsNumber(),
+        assertEquals(pointsPerRole.getPrestigeBonus() * player1.getTribe().getArtistsNumber(),
                 player1.getTribe().getPrestigePoints());
     }
 
     @Test
     void incorrectPhase(){
-        player1.getTribe().modifyFood(5);       //2food because he is first + 5 = 7 food
-        player1.getTribe().addBuildingToTribe(pointsPerRole);   //-7 food = 0
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(pointsPerRole);
 
-        assertEquals(0, player1.getTribe().getFoodReserve());       //2 food because he is first
-        assertEquals(pointsPerRole.getPrestige(), player1.getTribe().getPrestigePoints());
+        assertEquals(0, player1.getTribe().getFoodReserve());
+        assertEquals(0, player1.getTribe().getPrestigePoints());    //after purchase player1 has 0 food and 0 pp
 
         buildingManager.useBuilding(GamePhase.ON_DRAW, player1);
-        assertEquals(pointsPerRole.getPrestige(), player1.getTribe().getPrestigePoints());  //in a generic phase player1 doesn't get any extra pp
+        assertEquals(0, player1.getTribe().getPrestigePoints());  //in a generic phase player1 doesn't get any extra pp
     }
 
     @Test
     void zeroCharacters(){
-        player2.getTribe().modifyFood(4);       //3food because he is second + 4 = 7 food
-        player2.getTribe().addBuildingToTribe(pointsPerRole);   //-7 food = 0
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(pointsPerRole);
 
-        assertEquals(0, player2.getTribe().getFoodReserve());
-        assertEquals(pointsPerRole.getPrestige(), player2.getTribe().getPrestigePoints());
+        assertEquals(0, player1.getTribe().getFoodReserve());
+        assertEquals(0, player1.getTribe().getPrestigePoints());    //after purchase player1 has 0 food and 0 pp
 
         buildingManager.useBuilding(GamePhase.END_GAME, player2);
-        assertEquals(pointsPerRole.getPrestige(), player2.getTribe().getPrestigePoints());  //since player2 doesn't have any characters he doesn't get any extra pp
+        assertEquals(0, player2.getTribe().getPrestigePoints());  //since player2 doesn't have any characters he doesn't get any extra pp
     }
 }

@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Model.EventManagement;
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
@@ -23,10 +24,15 @@ public class EventManagerTest {
     private Player player1;
     private Player player2;
     private ArrayList<Player> players;
+    Game game;
+    GameController controller;
 
     @BeforeEach
     void setup(){
-        Game game = new Game(0, 2);
+        game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         eventManager = game.getEventManager();
 
         player1 = new Player(game, "pippo", Color.PURPLE);

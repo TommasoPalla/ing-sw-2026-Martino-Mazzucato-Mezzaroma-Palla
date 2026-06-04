@@ -44,19 +44,16 @@ public class ComboHunterTest {
         player1.getTribe().addCharacterToTribe(new Hunter(1, "H1", 2, false));
         player1.getTribe().addCharacterToTribe(new Hunter(1, "H2", 2, false));
 
-        player1.getTribe().modifyFood(5);                       //2 food because he is first +5 food = 7
-        player1.getTribe().addBuildingToTribe(comboHunter);     //-7 food = 0
-
-        assertEquals(0, player1.getTribe().getFoodReserve());
-        assertEquals(2, player1.getTribe().getPrestigePoints());
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(comboHunter);
 
         huntEvent.apply(huntEvent, players, buildingManager);
 
         //food = 0 + 1 * 2 from hunt event + 1 * 2 from building = 4
         assertEquals(4, player1.getTribe().getFoodReserve());
-        //pp = 2 from building purchase + 1 * 2 from hunt event + 2 * 2 from building = 8
-        assertEquals(8, player1.getTribe().getPrestigePoints());
+        //pp = 1 * 2 from hunt event + 2 * 2 from building = 6
+        assertEquals(6, player1.getTribe().getPrestigePoints());
         assertEquals(3, player2.getTribe().getFoodReserve());   //3 food because he is second
-        assertEquals(0, player2.getTribe().getPrestigePoints());
+        assertEquals(0, player2.getTribe().getPrestigePoints());//0 pp gained
     }
 }

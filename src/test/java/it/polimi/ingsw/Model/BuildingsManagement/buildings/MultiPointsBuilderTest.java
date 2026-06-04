@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MultiPointsBuilderTest {
     Game game;
+    GameController controller;
     Player player1;
     Player player2;
     ArrayList<Player> players;
@@ -28,6 +30,9 @@ public class MultiPointsBuilderTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         game.addPlayer("pippo");
         game.addPlayer("pluto");
         player1 =  game.getPlayers().getFirst();
@@ -36,11 +41,8 @@ public class MultiPointsBuilderTest {
         game.startGameUnshuffled();
         buildingManager = game.getBuildingManager();
 
-        player1.getTribe().modifyFood(4);                           //2 food because he is first + 4 = 6
-        player1.getTribe().addBuildingToTribe(multiPointsBuilder);  //-6 food = 0
-
-        assertEquals(0, player1.getTribe().getFoodReserve());
-        assertEquals(multiPointsBuilder.getPrestige(), player1.getTribe().getPrestigePoints());
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(multiPointsBuilder);
     }
 
     @Test
@@ -48,7 +50,8 @@ public class MultiPointsBuilderTest {
         player1.getTribe().addCharacterToTribe(new Builder(1, "B1", 2, 0, 2));
         player1.getTribe().addCharacterToTribe(new Builder(1, "B2", 2, 3, 1));
         buildingManager.useBuilding(GamePhase.END_GAME, player1);
-        assertEquals(10, player1.getTribe().getPrestigePoints());   //3 * 2 from the building + 4 from purchasing the building
+        player1.getTribe().calculatePlayerFinalPoints();
+        assertEquals(13, player1.getTribe().getPrestigePoints());   //3 * 2 from the building + 4 from purchasing the building + 3 from builder
     }
 
     @Test
@@ -56,6 +59,7 @@ public class MultiPointsBuilderTest {
         //with 0 builders or builders that gives 0 discount we can't se the building's effects
         player1.getTribe().addCharacterToTribe(new Builder(1, "B1", 2, 0, 2));
         buildingManager.useBuilding(GamePhase.END_GAME, player1);
+        player1.getTribe().calculatePlayerFinalPoints();
         assertEquals(multiPointsBuilder.getPrestige(), player1.getTribe().getPrestigePoints());   //3 * 2 from the building + 4 from purchasing the building
     }
 }

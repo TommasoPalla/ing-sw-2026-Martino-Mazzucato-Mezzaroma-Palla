@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BonusStarsTest {
     Game game;
+    GameController controller;
     Player player1;
     Player player2;
     ArrayList<Player> players;
@@ -27,6 +29,9 @@ public class BonusStarsTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         game.addPlayer("pippo");
         game.addPlayer("pluto");
         player1 =  game.getPlayers().getFirst();
@@ -38,9 +43,12 @@ public class BonusStarsTest {
 
     @Test
     void bonusStarsStandard(){
-        player1.getTribe().modifyFood(4);                      //2 food because he is first + 4 = 6
-        player1.getTribe().addBuildingToTribe(bonusStars);     //-6 food = 0
-        assertEquals(0, player1.getTribe().getFoodReserve());
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+
+        //before purchase he has 0 stars
+        assertEquals(0, player1.getTribe().getShamansStars());
+
+        player1.getTribe().addBuildingToTribe(bonusStars);
 
         //after purchase INDEPENDENTLY of GamePhases the player receives the stars
         assertEquals(3, player1.getTribe().getShamansStars());

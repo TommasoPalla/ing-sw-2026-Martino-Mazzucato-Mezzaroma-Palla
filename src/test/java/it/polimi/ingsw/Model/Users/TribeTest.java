@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.Users;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
@@ -23,6 +24,7 @@ public class TribeTest {
     Player player1;
     Player player2;
     ArrayList<Player> players;
+    GameController controller;
 
     @BeforeEach
     void setup(){
@@ -34,6 +36,8 @@ public class TribeTest {
             game.addPlayer(player.getName());
         tribe1 = player1.getTribe();
         game.startGame();
+        controller = new GameController(game);
+        game.setController(controller);
         buildingManager = game.getBuildingManager();
     }
 
@@ -63,10 +67,6 @@ public class TribeTest {
         tribe1.modifyFood(2);
         assertEquals(2, tribe1.getFoodReserve());
 
-        tribe1.modifyFood(-4);
-        assertEquals(0, tribe1.getFoodReserve());
-        assertEquals(8, tribe1.getPrestigePoints());
-
         tribe1.addShamansStars(10);
         assertEquals(10, tribe1.getShamansStars());
     }
@@ -82,19 +82,23 @@ public class TribeTest {
         tribe1.addCharacterToTribe(inventor1);
         assertEquals(2, tribe1.getInventorsPerType().get(inventor1.getInventorType()));
         assertEquals(2, tribe1.calculatePlayerFinalPoints());
+        tribe1.modifyPrestigePoints(-2);    //reset the prestige points to 0 for a new calculation
 
         tribe1.addCharacterToTribe(inventor2);
         tribe1.addCharacterToTribe(inventor2);
         assertEquals(8, tribe1.calculatePlayerFinalPoints());
+        tribe1.modifyPrestigePoints(-8);    //reset the prestige points to 0 for a new calculation
 
         tribe1.addCharacterToTribe(inventor3);
         tribe1.addCharacterToTribe(inventor4);
         assertEquals(24, tribe1.calculatePlayerFinalPoints());
+        tribe1.modifyPrestigePoints(-24);   //reset the prestige points to 0 for a new calculation
 
         Builder builder = new Builder(1, "hello", 2, 1, 4);
         tribe1.addCharacterToTribe(builder);
         assertEquals(1, tribe1.getPopulation().get(builder.getRole()).size());
         assertEquals(25, tribe1.calculatePlayerFinalPoints());
+        tribe1.modifyPrestigePoints(-25);   //reset the prestige points to 0 for a new calculation
 
         Artist artist = new Artist(3, "A5", 5);
         tribe1.addCharacterToTribe(artist);

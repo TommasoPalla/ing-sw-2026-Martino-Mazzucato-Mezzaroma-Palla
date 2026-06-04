@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Enums.InventorType;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ComboPointsTest {
     Game game;
+    GameController controller;
     Player player1;
     Player player2;
     ArrayList<Player> players;
@@ -29,6 +31,9 @@ public class ComboPointsTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         game.addPlayer("pippo");
         game.addPlayer("pluto");
         player1 =  game.getPlayers().getFirst();
@@ -43,11 +48,11 @@ public class ComboPointsTest {
         player1.getTribe().addCharacterToTribe(new Inventor(1, "I1", 2, InventorType.NECKLACE));
         player1.getTribe().addCharacterToTribe(new Builder(1, "B1", 2, 0, 3));
 
-        player1.getTribe().modifyFood(3);                       //2 food because he is first + 3 = 5
-        player1.getTribe().addBuildingToTribe(comboPoints);       //-5 food = 0
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(comboPoints);
 
         assertEquals(0, player1.getTribe().getFoodReserve());
-        assertEquals(comboPoints.getPrestige(), player1.getTribe().getPrestigePoints());
+        assertEquals(0, player1.getTribe().getPrestigePoints());    //after purchase player1 has 0 food and 0 pp
     }
 
     @Test

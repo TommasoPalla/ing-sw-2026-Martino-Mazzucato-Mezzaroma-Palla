@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MultiBonusRitualTest {
     Game game;
+    GameController controller;
     Player player1;
     Player player2;
     ArrayList<Player> players;
@@ -28,6 +30,9 @@ public class MultiBonusRitualTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         game.addPlayer("pippo");
         game.addPlayer("pluto");
         player1 =  game.getPlayers().getFirst();
@@ -43,11 +48,8 @@ public class MultiBonusRitualTest {
 
         player1.getTribe().addCharacterToTribe(new Shaman(1, "SH1", 2, 3));
 
-        player1.getTribe().modifyFood(5);                           //2 food because he is first +5 food = 7
-        player1.getTribe().addBuildingToTribe(multiBonusRitual);    //-7 food = 0
-
-        assertEquals(0, player1.getTribe().getFoodReserve());
-        assertEquals(multiBonusRitual.getPrestige(), player1.getTribe().getPrestigePoints());    // before the event, the player has 0food and 5pp (from building)
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(multiBonusRitual);
 
         shamanicRitualEvent.apply(shamanicRitualEvent, players, buildingManager);
 
@@ -61,15 +63,12 @@ public class MultiBonusRitualTest {
 
         player2.getTribe().addCharacterToTribe(new Shaman(1, "SH1", 2, 3));
 
-        player1.getTribe().modifyFood(5);                           //2 food because he is first +5 food = 7
-        player1.getTribe().addBuildingToTribe(multiBonusRitual);    //-7 food = 0
-
-        assertEquals(0, player1.getTribe().getFoodReserve());
-        assertEquals(multiBonusRitual.getPrestige(), player1.getTribe().getPrestigePoints());    // before the event, the player has 0food and 5pp (from building)
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(multiBonusRitual);
 
         shamanicRitualEvent.apply(shamanicRitualEvent, players, buildingManager);
 
-        assertEquals(-shamanicRitualEvent.getPrestigeMalus(), player1.getTribe().getPrestigePoints());  //player1 wins => 10pp for winning + 4 for building purchase
-        assertEquals(shamanicRitualEvent.getPrestigeBonus(), player2.getTribe().getPrestigePoints());   //player2 loses => -5pp
+        assertEquals(-shamanicRitualEvent.getPrestigeMalus(), player1.getTribe().getPrestigePoints());  //player1 loses => -5pp
+        assertEquals(shamanicRitualEvent.getPrestigeBonus(), player2.getTribe().getPrestigePoints());   //player2 wins => 10pp
     }
 }

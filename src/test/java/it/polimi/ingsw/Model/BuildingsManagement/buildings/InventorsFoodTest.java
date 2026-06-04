@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.BonusPoints;
 import it.polimi.ingsw.Model.BuildingsManagement.Buildings.InventorsFood;
@@ -18,6 +19,7 @@ import java.util.EnumMap;
 
 public class InventorsFoodTest {
     Game game;
+    GameController controller;
     Player player1;
     Player player2;
     ArrayList<Player> players;
@@ -27,6 +29,9 @@ public class InventorsFoodTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         game.addPlayer("pippo");
         game.addPlayer("pluto");
         player1 =  game.getPlayers().getFirst();
@@ -38,14 +43,15 @@ public class InventorsFoodTest {
 
     @Test
     public void inventorsFoodTest() {
-        player2.getTribe().modifyFood(2);                           //3 food because he is first + 2 = 5
-        player2.getTribe().addBuildingToTribe(inventorsFood);       //-5 = 0
+        player2.getTribe().modifyFood(-3);      //take away 3 food because he is second, he now has 0 food
+        player2.getTribe().addBuildingToTribe(inventorsFood);
+
         assertEquals(0, player2.getTribe().getFoodReserve());
-        assertEquals(6, player2.getTribe().getPrestigePoints());
+        assertEquals(0, player2.getTribe().getPrestigePoints());    //after purchasing the building player1 has 0 food and 0 pp
 
         player2.getTribe().addCharacterToTribe(new Inventor(1, "I1", 2, InventorType.NECKLACE));
         buildingManager.useBuilding(GamePhase.ON_DRAW, player2);
-        assertEquals(0, player2.getTribe().getFoodReserve());
+        assertEquals(0, player2.getTribe().getFoodReserve());   //after first inventor purchase => no food gained
 
         player2.getTribe().addCharacterToTribe(new Inventor(1, "I1", 2, InventorType.BOAT));
         buildingManager.useBuilding(GamePhase.ON_DRAW, player2);

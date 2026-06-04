@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.EventManagement;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
@@ -25,10 +26,15 @@ public class ShamanicRitualTest {
     private Player player4;
     private ArrayList<Player> players;
     ShamanicRitualEvent event = new ShamanicRitualEvent(1, "SR1", 10, 5);
+    Game game;
+    GameController controller;
 
     @BeforeEach
     void setUp() {
-        Game game = new Game(0, 4);
+        game = new Game(0, 4);
+        controller = new GameController(game);
+        game.setController(controller);
+
         player1 = new Player(game, "pippo", Color.RED);
         player2 = new Player(game, "pluto", Color.PURPLE);
         player3 = new Player(game, "paperino", Color.BLUE);

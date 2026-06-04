@@ -70,9 +70,9 @@ public class TurnTileTest {
             player3 = new Player(game,"3", Color.PURPLE);
 
             turnOrder = new ArrayList<>();
-            turnOrder.add(player3);
             turnOrder.add(player1);
             turnOrder.add(player2);
+            turnOrder.add(player3);
 
             for(Player player : turnOrder){
                 game.addPlayer(player.getName());
@@ -111,13 +111,14 @@ public class TurnTileTest {
 
         @Test
         public void returnToStartTest(){
+            ArrayList<Player> newTurnOrder = turnTile.updateTurnOrder();
             for(Player player : turnOrder){
                 turnTile.returnToStartingTile(player, game.getBuildingManager());
             }
-            assertEquals(2, player3.getTribe().getFoodReserve());       //player3 was the first => he got 2 food
-            assertEquals(0, player1.getTribe().getFoodReserve());       //player2 the second => he got 0 food
-            assertEquals(0, player2.getTribe().getFoodReserve());       //player1 the last => he got 0 food
-            assertEquals(-1, player2.getTribe().getPrestigePoints());   //and since he had no PP, he now has -1PP
+            assertEquals(2, player2.getTribe().getFoodReserve());
+            assertEquals(0, player1.getTribe().getFoodReserve());
+            assertEquals(0, player3.getTribe().getFoodReserve());
+            assertEquals(-2, player3.getTribe().getPrestigePoints());
         }
 
     }

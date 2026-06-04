@@ -43,16 +43,13 @@ public class ArtistsFoodTest {
         player1.getTribe().addCharacterToTribe(new Artist(1, "A1", 2));
         player1.getTribe().addCharacterToTribe(new Artist(2, "A2", 2));
 
-        player1.getTribe().modifyFood(5);                       //2 food because he is first +5 food = 7
-        player1.getTribe().addBuildingToTribe(artistsFood);     //-7 food = 0
-
-        assertEquals(0, player1.getTribe().getFoodReserve());
-        assertEquals(5, player1.getTribe().getPrestigePoints());    // before the event, the player has 0food and 5pp (from building)
+        player1.getTribe().modifyFood(-2);      //take away 2 food because he is first, he now has 0 food
+        player1.getTribe().addBuildingToTribe(artistsFood);
 
         cavePaintingsEvent.apply(cavePaintingsEvent, players, buildingManager);
 
         assertEquals(2, player1.getTribe().getFoodReserve());       //player1 should have 0 + 2*1 food (one for each artist)
-        assertEquals(7, player1.getTribe().getPrestigePoints());    // player1 should have 2 more food thanks to the building and 2 pp
+        assertEquals(2, player1.getTribe().getPrestigePoints());    // player1 should have 2 more food thanks to the building and 2 pp
         assertEquals(-1, player2.getTribe().getPrestigePoints());   // player2 should lose 1 point because of the event
     }
 }

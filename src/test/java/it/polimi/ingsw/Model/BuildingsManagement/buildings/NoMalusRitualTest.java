@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.BuildingsManagement.buildings;
 
+import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Enums.Effect;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.BuildingsManagement.BuildingManager;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NoMalusRitualTest {
     Game game;
+    GameController controller;
     Player player1;
     Player player2;
     ArrayList<Player> players;
@@ -28,6 +30,9 @@ public class NoMalusRitualTest {
     @BeforeEach
     void setup(){
         game = new Game(0, 2);
+        controller = new GameController(game);
+        game.setController(controller);
+
         game.addPlayer("pippo");
         game.addPlayer("pluto");
         player1 =  game.getPlayers().getFirst();
@@ -42,17 +47,13 @@ public class NoMalusRitualTest {
         ShamanicRitualEvent shamanicRitualEvent = new ShamanicRitualEvent(1, "SR1", 10, 5);
 
         player1.getTribe().addCharacterToTribe(new Shaman(1, "SH1", 2, 3));
-
-        player2.getTribe().modifyFood(2);                           //3 food because he is second +2 food = 5
-        player2.getTribe().addBuildingToTribe(noMalus);    //-5 food = 0
-
-        assertEquals(0, player2.getTribe().getFoodReserve());
-        assertEquals(noMalus.getPrestige(), player2.getTribe().getPrestigePoints());    // before the event, the player has 0food and 4pp (from building)
+        player2.getTribe().addBuildingToTribe(noMalus);
 
         shamanicRitualEvent.apply(shamanicRitualEvent, players, buildingManager);
 
+        //player 1 wins, player2 has the noMalus building
         assertEquals(shamanicRitualEvent.getPrestigeBonus(), player1.getTribe().getPrestigePoints());
-        assertEquals(noMalus.getPrestige(), player2.getTribe().getPrestigePoints());    //player2 loses but no pp are detracted
+        assertEquals(0, player2.getTribe().getPrestigePoints());    //player2 loses but no pp are detracted
     }
 
     @Test
@@ -60,16 +61,12 @@ public class NoMalusRitualTest {
         ShamanicRitualEvent shamanicRitualEvent = new ShamanicRitualEvent(1, "SR1", 10, 5);
 
         player1.getTribe().addCharacterToTribe(new Shaman(1, "SH1", 2, 3));
-
-        player1.getTribe().modifyFood(3);                           //2 food because he is second +3 food = 5
-        player1.getTribe().addBuildingToTribe(noMalus);    //-5 food = 0
-
-        assertEquals(0, player1.getTribe().getFoodReserve());
-        assertEquals(noMalus.getPrestige(), player1.getTribe().getPrestigePoints());    // before the event, the player has 0food and 4pp (from building)
+        player1.getTribe().addBuildingToTribe(noMalus);
 
         shamanicRitualEvent.apply(shamanicRitualEvent, players, buildingManager);
 
-        assertEquals(shamanicRitualEvent.getPrestigeBonus() + noMalus.getPrestige(), player1.getTribe().getPrestigePoints());
+        //player1 wins => noMalus has no effect
+        assertEquals(shamanicRitualEvent.getPrestigeBonus(), player1.getTribe().getPrestigePoints());
         assertEquals(-shamanicRitualEvent.getPrestigeMalus(), player2.getTribe().getPrestigePoints());
     }
 }
