@@ -1,12 +1,35 @@
 package it.polimi.ingsw.Model.GameBoard;
 
+/**
+ * This class represents the Offer Tile entity. It is instanced in the Offer Track's constructor. It contains all the
+ * information about a specific tile.
+ */
 public class OfferTile {
+
+    /**
+     * The number of cards the occupant can draw from the top row.
+     */
     private int cardsFromAbove;
+
+    /**
+     * The number of cards the occupant can draw from the bottom row.
+     */
     private int cardsFromBelow;
+
+    /**
+     * If the tile provides it, the Food bonus given by the tile.
+     */
     private int foodBonus;
+
+    /**
+     * The unique ID of the tile, indicated on the tile.
+     */
     private final char offerTileID;
 
-    private String currentOccupant; //player name
+    /**
+     * The nickname of the player who is currently occupying the tile.
+     */
+    private String currentOccupant;
 
     public OfferTile(char offerTileID){
         this.currentOccupant = null;
@@ -103,7 +126,7 @@ public class OfferTile {
 
     /**
      * It frees the tile when the player has drawn all the cards and returned to the turn tile.
-     * Sets currentOccupant to null
+     * Sets currentOccupant to null.
      */
     public void free(){
         currentOccupant = null;

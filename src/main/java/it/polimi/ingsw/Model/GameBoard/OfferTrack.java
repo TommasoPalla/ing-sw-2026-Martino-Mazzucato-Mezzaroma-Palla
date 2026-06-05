@@ -6,18 +6,51 @@ import it.polimi.ingsw.Model.Game.Game;
 
 import java.util.ArrayList;
 
-/**OfferTrack class represents game board, with current available cards,
- * divided in top and bottom row, and the offer tiles suitable for current number
+/**
+ * This class represents the game board, with the current available cards,
+ * divided in top and bottom row, and the Offer Tiles suitable for this game's number
  * of players.
  */
 public class OfferTrack{
+
+    /**
+     * instance of the {@link Game}.
+     */
     private final Game game;
+
+    /**
+     * The list of {@link OfferTile} of this game.
+     */
     private final ArrayList<OfferTile> offerTiles;
+
+    /**
+     * The current top row.
+     */
     private ArrayList<Card> topRow;
+
+    /**
+     * The current bottom row.
+     */
     public ArrayList<Card> bottomRow;
+
+    /**
+     * The current Buildings' top row.
+     */
     private ArrayList<BuildingCard> topBuildingCard;
+
+    /**
+     * The current Buildings' bottom row.
+     */
     private ArrayList<BuildingCard> bottomBuildingCard;
+
+    /**
+     * A reference to the {@link TurnTile}.
+     */
     private final TurnTile turnTile;
+
+    /**
+     * The number of players playing this match.
+     */
     private final int playerNumber;
     int[] availableBuildingsPerEra;
 
@@ -66,7 +99,7 @@ public class OfferTrack{
     /**
      * Here visitor pattern is used to identify only the Event Cards
      * among cards in the bottom row of the offer track.
-     * Once found, event cards are added to bottomEventCards list and returned.
+     * @return The list of Event cards in the bottom row.
      */
     public ArrayList<EventCard> getBottomEvents(){
         ArrayList<EventCard> bottomEventCards = new ArrayList<>();
@@ -83,6 +116,11 @@ public class OfferTrack{
         return bottomEventCards;
     }
 
+    /**
+     * Here visitor pattern is used to identify only the Event Cards
+     * among cards in the top row of the offer track.
+     * @return The list of Event cards in the top row.
+     */
     public ArrayList<EventCard> getTopEvents(){
         ArrayList<EventCard> topEventCards = new ArrayList<>();
         VisitorAdapter visitor = new VisitorAdapter() {
@@ -98,10 +136,10 @@ public class OfferTrack{
     }
 
 
-    //actual functions
+    // Actual functions ------------------------------------------------------------------------------------------------
 
-    //da testare con il visitor
-    /**initializeBottomRow method is called only at the beginning of a new game,
+    /**
+     * InitializeBottomRow method is called only at the beginning of a new game,
      * therefore bottomRow and topRow will be empty new arrays (created by constructor).
      * CharacterCards will be added to the bottomRow while EventCards to the topRow,
      * as prescribed by the  game's rules and implemented with visitor pattern.
@@ -116,12 +154,14 @@ public class OfferTrack{
         }
     }
 
-    /**repopulateTopRow method is called everytime new cards are needed:
+    /**
+     * This method is called everytime new cards are needed:
      * both at the end of each turn and at the start of the game.
      * When called at the end of the turn, it always comes after
      * the topRow has been cleared by the moveCardToBottom method.
      * When called for the first time at the start of the game,
      * the field has been created with 'new' operand right before.
+     * @return the list of cards forming the new top row.
      */
     public ArrayList<Card> repopulateTopRow() {
         while(topRow.size() < playerNumber + 4) {
@@ -130,7 +170,8 @@ public class OfferTrack{
         return topRow;
     }
 
-    /**Method gets new building cards for the current era.
+    /**
+     * This method gets new building cards for the current era.
      * BuildingsDeck is already built with correct number of cards for each era,
      * considering the number of players,
      * therefore no checkIP is needed other than cards' era.
@@ -152,6 +193,9 @@ public class OfferTrack{
         topRow = new ArrayList<>();
     }
 
+    /**
+     * When a new era has come, the bottom buildings are discarded, and the top buildings are moved to the bottom row.
+     */
     public void moveBuildings(){
         bottomBuildingCard.clear();
         bottomBuildingCard.addAll(topBuildingCard);

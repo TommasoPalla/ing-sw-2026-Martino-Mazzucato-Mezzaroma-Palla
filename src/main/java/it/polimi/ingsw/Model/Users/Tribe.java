@@ -11,7 +11,12 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * This class contains all the information about a player's tribe, like its population, their Food Reserve and Prestige
+ * Points, their buildings, etc.
+ */
 public class  Tribe implements TribeInterface{
+
     private final Game game;
     private final Player tribeOwner;
     private int prestigePoints;
@@ -25,7 +30,7 @@ public class  Tribe implements TribeInterface{
     private int gatherersDiscount = 0;
     private int shamansStars = 0;
 
-    //Tribe's constructor
+    // Tribe's constructor.
     public Tribe(Game gameInstance, Player tribeOwner) {
         this.game = gameInstance;
         this.prestigePoints = 0;
@@ -39,7 +44,10 @@ public class  Tribe implements TribeInterface{
         this.tribeOwner = tribeOwner;
     }
 
-    //getters
+    /*
+    * Getters
+     */
+
     public Player getTribeOwner() {
         return tribeOwner;
     }
@@ -131,10 +139,11 @@ public class  Tribe implements TribeInterface{
         game.getBuildingManager().useBuilding(GamePhase.ON_DRAW, this.tribeOwner);
     }
 
-    /** The owner of the building card is assigned and the building is added to the player's list
+    /**
+     * The owner of the building card is assigned and the building is added to the player's list
      * of buildings. The building is also registered in BuildingManager, for the specific player at
      * the specific activation phase (GamePhase)
-     * @param building the building to add to the tribe
+     * @param building the building to add to the tribe.
      */
     public void addBuildingToTribe(BuildingCard building) {
         buildings.add(building);
@@ -143,7 +152,10 @@ public class  Tribe implements TribeInterface{
         building.effectOnPurchase(this);
     }
 
-
+    /**
+     * This method calculates the final score of the player summing all the points related to Characters and Buildings.
+     * @return the final score who will determine their position at the end of the game.
+     */
     public int calculatePlayerFinalPoints() {
         int populationPoints = 0;
         for (CharacterCard character : population.get(CharacterRole.BUILDER)) {

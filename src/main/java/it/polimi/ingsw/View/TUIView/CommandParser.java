@@ -14,13 +14,11 @@ import it.polimi.ingsw.Utils.CardIDValidator;
 
 
 /**
- * This record class is used as a command parser. It translates command from the view and
- * sends them to the client controller
+ * This record class is used as a command parser. It translates commands from the view and
+ * sends them to the client controller.
  * @param clientController controller of the client to whom the view refers
  */
 public record CommandParser(ClientController clientController) {
-    // IN QUESTO MODO TUTTE LE EXCEPTION CATCHATE NEI VARI METODI PARSE THROWANO A LORO VOLTA UN EXCEPTION CATCHATA
-    // DALLA TUIVIEW, C'È DA RAGIONARE A UNA SOLUZIONE PIÙ PULITA, AD ESEMPIO UN METODO NOTIFY
 
     /**
      * Parses the arguments of the arguments of a command input of the player.
@@ -37,18 +35,35 @@ public record CommandParser(ClientController clientController) {
         return commandArgs;
     }
 
+    /**
+     * It parses the parameter of the draw_card command indicating the row from where the player wants to draw the card.
+     * It throws {@link IllegalArgumentException} if the argument is invalid.
+     * @param argument Must be 'top' or 'bottom'.
+     * @return true if the argument passed is 'top', false if 'bottom'
+     */
     private boolean parseRowBoolean(String argument){
         if (argument.equalsIgnoreCase("top")) return true;
         else if (argument.equalsIgnoreCase("bottom")) return false;
-        else throw new IllegalArgumentException("Row argument is invalid");
+        else throw new IllegalArgumentException("ERROR: Row argument is invalid");
     }
 
+    /**
+     * It parses the parameter of the draw_card command indicating the type of card the player wants to draw (Character
+     * or Building). It throws {@link IllegalArgumentException} if the argument is invalid.
+     * @param argument must be 'char' or 'building'.
+     * @return true if the argument passed is 'building', false if 'char'
+     */
     private boolean parseCardBoolean(String argument){
         if (argument.equalsIgnoreCase("char")) return false;
         else if (argument.equalsIgnoreCase("building")) return true;
         else throw new IllegalArgumentException("ERROR: Card argument is invalid");
     }
 
+    /**
+     * Parses the choice of the totem color of the player. It requires 1 argument, containing the name of one of the
+     * 5 possible totem colors
+     * @param argsString the string containing the arguments of the command.
+     */
     public void parseChooseTotemColor(String argsString) {
         if (argsString.trim().isEmpty()) {
             throw new IllegalArgumentException("ERROR: you have to choose a color!");
@@ -68,6 +83,11 @@ public record CommandParser(ClientController clientController) {
         }
     }
 
+    /**
+     * Parses the choice of the Offer Tile of the Offer Track where the player wants to place their totem. It requires
+     * 1 argument, containing the index of the Offer Tile.
+     * @param argsString the string containing the arguments of the command.
+     */
     public void parseChooseOfferTile(String argsString){
         if (argsString.trim().isEmpty()) {
             throw new IllegalArgumentException("ERROR: you have to choose an offer tile!");
@@ -95,8 +115,8 @@ public record CommandParser(ClientController clientController) {
     }
 
     /**
-     * This method parses the command to create a new game.
-     * @param argsString one argument is expected: the number of players.
+     * Parses the command to create a new game. It requires 1 argument, the number of players needed to start the game.
+     * @param argsString the string containing the arguments of the command.
      */
     public void parseCreateGame(String argsString) {
         if (argsString.trim().isEmpty()) {
@@ -115,8 +135,9 @@ public record CommandParser(ClientController clientController) {
     }
 
     /**
-     * This method parses the command to change the player name.
-     * @param argsString one argument is expected: the new name of the player.
+     * This method parses the command to change the player name. It requires 1 argument, the String containing the new
+     * nickname of the player.
+     * @param argsString the string containing the arguments of the command.
      */
     public void parseModifyName(String argsString) {
         if (argsString.trim().isEmpty()) {
@@ -131,8 +152,9 @@ public record CommandParser(ClientController clientController) {
     }
 
     /**
-     * This method parses the command to pick a card from top or bottom row of the offer track.
-     * @param argsString the string with the arguments passed by the player.
+     * Parses the command to pick a card from top or bottom row of the offer track. It requires 3 arguments:
+     * the row (top or bottom), the type of card (Character or Building) and the index of the respective row.
+     * @param argsString the string containing the arguments of the command.
      */
     public void parseDrawCard(String argsString) {
         int index;
@@ -160,9 +182,9 @@ public record CommandParser(ClientController clientController) {
     }
 
     /**
-     * Parsing the request to show another player's tribe
-     * @param argsString the argument(s) passed via terminal input
-     * @return the name of the player in input, cleaned
+     * Parses the command to show another player's tribe. It requires 1 argument, the name of the player.
+     * @param argsString the string containing the arguments of the command.
+     * @return the name of the player in input, cleaned.
      */
     //TODO: da fixare (?)
     public String parseOtherTribe(String argsString){
@@ -176,9 +198,9 @@ public record CommandParser(ClientController clientController) {
     }
 
     /**
-     * Parsing the request to show a specific card info
-     * @param argsString the argument passed via terminal input, the cardID of the card we want to know info of
-     * @return the description of the card
+     * Parses the command to show a specific building's effect.
+     * @param argsString the argument passed via terminal input, the cardID of the card we want to know info of.
+     * @return the description of the card.
      */
     public BuildingCard parseBuildingInfo(String argsString){
         if(argsString.trim().isEmpty()) {

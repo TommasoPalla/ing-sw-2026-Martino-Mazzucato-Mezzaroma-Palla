@@ -13,6 +13,10 @@ import it.polimi.ingsw.View.TUIView.TuiIcons;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * This class manages the calculation of players' prestige points and food during the Cave Paintings event. It overrides
+ * the {@link EventStrategy} apply method.
+ */
 public class CavePaintingsEvent extends EventCard implements EventStrategy{
     private final int artistThreshold;  //under(<) this threshold prestigeMalus is applied
     private final int prestigeMalus;

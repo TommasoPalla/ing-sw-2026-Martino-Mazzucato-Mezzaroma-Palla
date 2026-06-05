@@ -15,6 +15,10 @@ import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
+/**
+ * This class manages the calculation of players' prestige points and food during the Shamanic Ritual event. It overrides
+ * the {@link EventStrategy} apply method.
+ */
 public class ShamanicRitualEvent extends EventCard implements EventStrategy{
     private final int prestigeBonus;
     private final int prestigeMalus;

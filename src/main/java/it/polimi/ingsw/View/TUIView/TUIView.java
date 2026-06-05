@@ -296,31 +296,6 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void showPlayerDisconnected(String playerName, boolean hadColor) {
-        // IF IT'S A NETWORK ISSUE
-        if (this.player.equals(playerName)) {
-            tuiState = TUIState.SETUP;
-            System.out.println("ERROR: problems with connection. The game will be terminated and you will be taken to the setup.");
-            printAvailableActions(clientController.getClientState(), false);
-        }
-        // IF A PLAYER DISCONNECTED WHILE IN LOBBY
-        else if(tuiState == TUIState.IN_LOBBY) {
-            System.out.println("Player " + playerName + " disconnected from server.");
-            // se il player non ha ancora scelto il totem e il player che si è disconnesso lo aveva scelto,
-            // ristampa la lista dei colori aggiungendo il colore del player che è uscito
-            if (!clientController.getLocalModel().getTotemColors().containsKey(this.player) && hadColor) {
-                printAvailableColors();
-            }
-        }
-        // IF A PLAYER DISCONNECTED WHILE IN GAME
-        else {
-            tuiState = TUIState.SETUP;
-            System.out.println("Player " + playerName + " disconnected. The game will be terminated and you will be taken to the setup.");
-            printAvailableActions(clientController.getClientState(), false);
-        }
-    }
-
-    @Override
     public void showGameStarted() {
         System.out.println("                  ---------------------------------------------------                 ");
         System.out.println("       -------------------------------------------------------------------------      ");

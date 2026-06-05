@@ -9,6 +9,10 @@ import it.polimi.ingsw.Model.Cards.Card;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * These methods are common to both views types (GUI and TUI). It contains methods used to notify the view about changes
+ * to the status of the game.
+ */
 public interface ViewInterface {
     void runView();
     void showNameSet(String newName);
@@ -19,7 +23,6 @@ public interface ViewInterface {
     void showSuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors);
     void showPlayerLeftLobby(String playerName, Color oldColor);
     void showForceQuit(String disconnectedPlayerName, Color oldColor);
-    void showPlayerDisconnected(String playerName, boolean hadColor);
     void showNewHost();
 
     void showStartRound(int round);

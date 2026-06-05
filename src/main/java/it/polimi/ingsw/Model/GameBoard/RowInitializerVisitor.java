@@ -5,7 +5,8 @@ import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.Cards.VisitorAdapter;
 
 
-/**Implementation of Visitor Pattern that is used by OfferTrack.initializeBottomRow,
+/**
+ * Implementation of Visitor Pattern that is used by OfferTrack.initializeBottomRow,
  * to organize new drawn cards: characters to the bottomRow and Events to the topRow.
  */
 public class RowInitializerVisitor extends VisitorAdapter {

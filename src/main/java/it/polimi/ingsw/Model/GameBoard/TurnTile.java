@@ -7,17 +7,14 @@ import it.polimi.ingsw.Model.Users.Player;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**TurnTile class defines food modifiers based on players' positions
+/**
+ * The TurnTile class defines food modifiers based on players' positions
  * on the turn tile and the turn order. It has methods to manage turn order
- * and to re-allocate players to starting position, after their turn is finished.
+ * and to re-allocate players to starting position, after their drawing turn is finished.
  */
 public class TurnTile {
     private int[] tileModifier;
     private ArrayList<Player> turnOrder;
-
-    /**
-     * The status of the turn tile. It's maps from the slot of the turn tile to its occupant (null if it's free).
-     */
 
     public TurnTile(int numPlayers){
         turnOrder = new ArrayList<>();
@@ -37,11 +34,13 @@ public class TurnTile {
     }
 
     public int[] getTileModifier() {return tileModifier;}
-    /** initTurnOrder method is called only when the game is started,
+
+    /**
+     * This method is called only when the game is started,
      * unlike the TurnTile class constructor which is invoked right after
      * the OfferTrack class is instantiated by the Game class constructor
      * i.e. when the game is created and players are still in the lobby.
-     * @param players list of players
+     * @param players the list of {@link Player}'s instances of players.
      * @return the initial turn order, randomly selected.
      */
     public ArrayList<Player> initTurnOrder(ArrayList<Player> players){
@@ -50,7 +49,7 @@ public class TurnTile {
         return turnOrder;
     }
 
-    //This function is used only in testing because the true one is non-deterministic
+    // This function is used only in testing because the true one is non-deterministic
     public ArrayList<Player> initTurnOrderUnshuffled(ArrayList<Player> players){
         turnOrder = new ArrayList<>(players);
         return players;
@@ -60,9 +59,10 @@ public class TurnTile {
         return turnOrder;
     }
 
-    /**updateTurnOrder method sorts the players in the same order
+    /**
+     * This method sorts the players in the same order
      * they appear in the OfferTiles, starting from turn tile.
-     * @return the new turnOrder
+     * @return the new turn order.
      */
     public ArrayList<Player> updateTurnOrder(){
         turnOrder = turnOrder.stream().sorted(Comparator.comparing(
@@ -75,12 +75,13 @@ public class TurnTile {
         return turnOrder;
     }
 
-    /**returnToStartingTile method assigns to player which has ended their turn
+    /**
+     * This method assigns to a player which has ended their turn
      * the correct food modifier based on their position in the turn tile,
      * then if the player has any buildings that activate in this phase,
      * the method applies the effect.
      * Finally, player is re-allocated to starting position.
-     * @param returningPlayer player which has just ended their turn.
+     * @param returningPlayer the player which has just ended their turn.
      * @param buildingManager to apply buildings' effects.
      */
     public void returnToStartingTile(Player returningPlayer, BuildingManager buildingManager){

@@ -10,15 +10,46 @@ import it.polimi.ingsw.Model.Game.Game;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.Model.GameBoard.OfferTrack;
 
-
+/**
+ * This class contains all the information about a player. It's connected to its {@link Tribe}.
+ */
 public class Player {
+
+    /**
+     * a reference to the {@link Game}'s instance.
+     */
     private final Game game;
+
+    /**
+     * The name of this player.
+     */
     private final String name;
+
+    /**
+     * The totem color chosen by this player.
+     */
     private final Color totemColor;
     private final Tribe tribe;
+
+    /**
+     * the current Offer Tile this player is on.
+     */
     private OfferTile currentOfferTile;
+
+    /**
+     * The remaining draws from the top row that this player has left to make during his turn in the drawing phase.
+     */
     private int remainingAbove;
+
+    /**
+     * The remaining draws from the bottom row that this player has left to make during his turn in the drawing phase.
+     */
     private int remainingBelow;
+
+    /**
+     * True if this player owns the DrawAdditionalCard building and if it can activate its effect at the end of the
+     * drawing phase.
+     */
     private boolean canDrawAdditional;
 
     public Player(Game gameInstance, String name, Color totemColor) {
@@ -32,7 +63,9 @@ public class Player {
         this.canDrawAdditional = false;
     }
 
-    //getters
+    /*
+    * Getters
+     */
     public Game getGame(){
         return game;
     }
@@ -58,14 +91,20 @@ public class Player {
         return canDrawAdditional;
     }
 
-    //setters
+    /*
+    * Setters
+     */
 
     public void setRemainingDraws(int above, int below) {
         this.remainingAbove = above;
         this.remainingBelow = below;
     }
 
-    //functions
+    public void setCanDrawAdditional(boolean canDrawAdditional) {
+        this.canDrawAdditional = canDrawAdditional;
+    }
+
+    // Functions
 
     /**
      * Sets the player current offer tile when he occupies one.
@@ -77,6 +116,9 @@ public class Player {
         this.remainingBelow = offerTile.getCardsFromBelow();
     }
 
+    /**
+     * Frees the Offer Tile occupied by this player.
+     */
     public void freeOfferTile(){
         currentOfferTile.free();
         currentOfferTile = null;
@@ -84,11 +126,14 @@ public class Player {
         this.remainingBelow = 0;
     }
 
-    public void setCanDrawAdditional(boolean canDrawAdditional) {
-        this.canDrawAdditional = canDrawAdditional;
-    }
-
-    //returns true if building is affordable to player or if the card is a character, returns false otherwise
+    /**
+     * Checks if the card that this player wants to draw is drawable.
+     * @param fromTopRow true if it's from top row, false if from bottom.
+     * @param fromBuilding true if the card is a Building card, false if otherwise.
+     * @param index the index of the corresponding row.
+     * @param offerTrack a reference to the {@link OfferTrack}.
+     * @return true if building is affordable to player or if the card is a character, false otherwise.
+     */
     public boolean drawable(boolean fromTopRow, boolean fromBuilding, int index, OfferTrack offerTrack) {
         if (fromTopRow && remainingAbove <= 0) return false;
         if (!fromTopRow && remainingBelow <= 0) return false;
@@ -112,12 +157,13 @@ public class Player {
         return true;
     }
 
-    /**drawCard method is called when a player tries to add one
+    /**
+     * This method is called when a player tries to add one
      * of the cards on the OfferTrack to their tribe.
-     * @param index position of the card in its specific array
-     * @param fromTopRow top or bottom row (it does not depend on buildings or characters)
-     * @param fromBuildings true if the card to draw is in buildings arrays, false otherwise
-     * @return the drawn card, if the card can be drawn, returns null otherwise
+     * @param index position of the card in its specific array.
+     * @param fromTopRow top or bottom row (it does not depend on buildings or characters).
+     * @param fromBuildings true if the card to draw is in buildings arrays, false otherwise.
+     * @return the drawn card, if the card can be drawn, returns null otherwise.
      */
     public Card drawCard(boolean fromTopRow, boolean fromBuildings, int index, OfferTrack offerTrack){
         if(this.drawable(fromTopRow, fromBuildings, index, offerTrack)){

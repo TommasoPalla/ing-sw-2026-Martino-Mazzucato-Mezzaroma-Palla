@@ -10,7 +10,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class manages the resolving of game events. It makes use of a Strategy design pattern: it holds a reference to
+ * every type of event, each one overriding the method 'apply()', leaving to the context to delegate executing the right
+ * method to the linked strategy event. So when a new event occurs, its {@link EventType} works with the strategy to
+ * know what event apply method has to be called.
+ */
 public class EventManager {
+
+    /**
+     * It maps from the {@link EventType} to the {@link EventStrategy} containing the apply method, which is overridden
+     * in all the different types of events classes.
+     */
     private Map<EventType, EventStrategy> strategies = new HashMap<>();
 
     public EventManager(){
@@ -20,6 +31,14 @@ public class EventManager {
         strategies.put(EventType.SUSTENANCE, new SustenanceEvent(0, "SUSTENANCE_DUMMY", 0, 0));
     }
 
+    /**
+     * It resolves the events of the Event cards contained in the array.
+     * @param incomingEvents the list of incoming Event cards
+     * @param players the list of players to apply the changes to their Prestige Points and Food reserves.
+     * @param buildingManager a reference to the {@link BuildingManager} so the building with activation time during
+     *                        a specific event can be activated.
+     * @return a map containing the {@link PlayerEventResults} for every event resolved.
+     */
     public Map<EventType, ArrayList<PlayerEventResults>> resolve(ArrayList<EventCard> incomingEvents, ArrayList<Player> players, BuildingManager buildingManager){
 
         if (incomingEvents.isEmpty()) {

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.View.TUIView;
 
+/**
+ * Icons used for aesthetic reasons for the TUI.
+ */
 public class TuiIcons {
     public static final String FOOD = "🍖";
     public static final String FOOD_BONUS = "🍖";

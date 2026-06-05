@@ -7,7 +7,8 @@ import it.polimi.ingsw.Model.Cards.EventCard;
 import it.polimi.ingsw.Model.Cards.VisitorAdapter;
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 
-/**Implementation of Visitor Pattern to verify whether a card can be drawn by a player,
+/**
+ * Implementation of Visitor Pattern to verify whether a card can be drawn by a player,
  * an EventCard cannot be drawn,
  * a CharacterCard can always be drawn,
  * a BuildingCard can be drawn only if the player can afford it.

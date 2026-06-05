@@ -18,22 +18,76 @@ import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Controller.GameController;
 import it.polimi.ingsw.Model.EventManagement.EventManager;
 
+/**
+ * This is the main class of the game, representing the model and containing the references to all other model
+ * components. Its instance is stored in the corresponding {@link GameController}, which uses it to access and modify
+ * the current state of the model. This class is instantiated in the Server Controller when a player creates a new game,
+ * and it is passed to the Game Controller's constructor to associate it to this Game instance.
+ */
 public class Game {
-    private boolean readyToStart;   //set to true when all players joined
+    /**
+     * This variable is set to true when al players have joined and are ready.
+     */
+    private boolean readyToStart;
+
+    /**
+     * True if the game has started, false if not.
+     */
     private boolean isStarted;
+
+    /**
+     * The unique ID of this game, through which this game is recognized.
+     */
     private final int gameID;
+
+    /**
+     * The number of players playing this match.
+     */
     private final int numPlayers;
+
+    /**
+     * The list of {@link Player}'s instances of all the players playing this match.
+     */
     private final ArrayList<Player> players;
+
+    /**
+     * The current {@link Player} in turn.
+     */
     private Player currentPlayer;
+
+    /**
+     * Every player is mapped to the color they have chosen for their totem, if they have already chosen it.
+     */
     private final Map<String, Color> totemColors;
+
+    /**
+     * The current era of the game, updated every time it changes.
+     */
     private int era;
+
+    /**
+     * The current round of the game (goes from 1 to 10).
+     */
     private int currentRound;
+
+    /**
+     * The current {@link GamePhase}.
+     */
     private GamePhase currentPhase;
+
     private OfferTrack offerTrack;
     private BuildingManager buildingManager;
     private final EventManager eventManager;
     private Deck deck;
+
+    /**
+     * The path to the json used to get all the cards.
+     */
     private static final String jsonCardsPath = "json/cards.json";
+
+    /**
+     * Instance to the {@link GameController} of this game.
+     */
     private GameController controller;
 
     public Game(int gameID, int numPlayers) {
@@ -54,7 +108,9 @@ public class Game {
         return controller;
     }
 
-    //getters
+    /*
+    * Getters
+     */
     public boolean isReadyToStart(){
         return readyToStart;
     }
@@ -134,7 +190,11 @@ public class Game {
         throw new GameNotStartedException();
     }
 
-    //mainly used for tests
+    // -----------------------------------------------------------------------------------------------------------------
+    // METHODS WHICH UPDATE THE MODEL STATUS ---------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
+    // used for testing
     public void setEra(int era){
         this.era = era;
     }
@@ -147,7 +207,6 @@ public class Game {
         currentPhase = phase;
     }
 
-    //Next methods are used for update game data, according to player's actions
     public void chooseTotemColor(String playerName, Color totemColor){
         totemColors.put(playerName, totemColor);
     }
@@ -157,7 +216,7 @@ public class Game {
         players.add(newPlayer);
     }
 
-    //used for testing
+    // used for testing
     public void startGameUnshuffled(){
         isStarted = true;
         this.era = 1;
@@ -219,6 +278,9 @@ public class Game {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * Inits the rows of the offer track. If the era has changed it throws a {@link ChangeEraException}.
+     */
     public void initOfferTrack() {
         if(currentRound == 1){
             offerTrack.initializeBottomRow();
@@ -235,9 +297,10 @@ public class Game {
         }
     }
 
-    /*
-    * Called in "startRound()" in GameController, return the next round, throws Last_Round_Exception if
-    * the last round has been played
+    /**
+     * Called in "startRound()" in GameController, it returns the next round. It throws {@link LastRoundException} if
+     * the last round has been played.
+     * @return the next round to be played.
      */
     public int setNextRound() {
         if(currentRound == 10) {
@@ -246,6 +309,12 @@ public class Game {
         return currentRound++;
     }
 
+    /**
+     * It calculates the amount of Food tokens to give to every player at the start of the game based on their position
+     * in the first turn order and on the number of players.
+     * @param numPlayers the number of players.
+     * @return a map: for every player, the amount of Food tokens they get.
+     */
     private Map<String,Integer> giveInitialFood(int numPlayers){
         ArrayList<Player> turnOrder = offerTrack.getTurnTile().getTurnOrder();
         Map<String,Integer> initialFood = new HashMap<>();
@@ -269,12 +338,22 @@ public class Game {
         return initialFood;
     }
 
-    public void changeEra() { //da mettere un'eccezione (inutile)
+    /**
+     * It increases the era and repopulates the top and bottom building rows.
+     */
+    public void changeEra() {
         era++;
         offerTrack.moveBuildings();
         offerTrack.repopulateTopBuildingCards();
     }
 
+    /**
+     * This method is called at the end of every drawing {@link GamePhase} after the last player has returned his totem
+     * back to the Turn Tile and before resolving the events. It checks if there's a player who can draw an additional
+     * card from the top row by activating their DrawAdditionalCard building.
+     * @return true if there's a player with that building who has not activated it yet and who has drawable cards from
+     * the top row. False otherwise.
+     */
     public boolean checkAdditionalDraw() {
         Player additionalDrawPlayer = null;
         for (Player player : getPlayers()) {
@@ -312,10 +391,15 @@ public class Game {
         return false;
     }
 
+    /**
+     * This method is called at the end of every drawing {@link GamePhase}, to resolve the bottom Events. If the
+     * current round is the last one, it also resolves the top final Events.
+     * @return a map containing an array of {@link PlayerEventResults} for every Event resolved at the end of the round.
+     */
     public Map<EventType, ArrayList<PlayerEventResults>> resolveEvents() {
         currentPhase = GamePhase.ON_EVENT;
         ArrayList<EventCard> events = getOfferTrack().getBottomEvents();
-        // if the current round is the last one, it also resolves the top row's events
+        // if the current round is the last one, it also resolves the top row's Events
         if (currentRound == 10)
             events.addAll(getOfferTrack().getTopEvents());
         Map<EventType, ArrayList<PlayerEventResults>> eventsResults = eventManager.resolve(events, players, buildingManager);
@@ -328,133 +412,14 @@ public class Game {
         return eventsResults;
     }
 
+    /**
+     * It occupies an Offer Tile of the {@link OfferTrack} with a new player during the totem placing {@link GamePhase}.
+     * It then sets it as the current Offer Tile of the player.
+     * @param player the name of the player occupying the tile.
+     * @param index the index of the Offer Tile on the Offer Track.
+     */
     public void chooseOfferTile(Player player, int index){
         offerTrack.getOfferTiles().get(index).occupy(player.getName());
         player.setCurrentOfferTile(offerTrack.getOfferTiles().get(index));
     }
-
-
-//    //direi che potrebbe essere il caso di fare una classe turnManager: ci sono un sacco di cose di cui tener conto
-//    /**
-//     * @deprecated
-//     */
-//    public void playGame() throws IllegalDrawException {
-//
-//        this.startGame();
-//        while(this.currentRound <= 10){
-//            //turno di player 1 da createGame()
-//            for(int i=0; i<this.numPlayers;i++){//tutti scelgono la loro tile in ordine
-//
-//                //classe controller richiede l'indice input
-//                int k=0;
-//
-//                //currentPlayer.chooseOfferTile(k, offerTrack);
-//                buildingManager.useBuilding(currentPhase, currentPlayer);
-//                setNextPlayer();
-//            }
-//
-//            //se qualcuno sceglie la tessera A dagli 3 cibo
-//            for(int i=0; i<this.numPlayers;i++){
-//                Player player = offerTrack.getTurnTile().getTurnOrder().get(i);
-//                player.getTribe().modifyFood(player.getCurrentOfferTile().getFoodBonus());
-//            }
-//
-//            this.setCurrentPhase(GamePhase.GAME_ENDED);//fase draw
-//            //aggiornare turnorder qui
-//            //return turnTile
-//            offerTrack.getTurnTile().updateTurnOrder();
-//
-//            //forse dentro questo for il discorso currentPlayer e n-esima iterazione del ciclo si può gestire meglio
-//            for(Player player : offerTrack.getTurnTile().getTurnOrder()){//tutti scelgono le loro carte in ordine
-//
-//                //classe controller richiede gli indici input
-//                boolean fromTopRow = false;
-//                int index = 0;
-//                boolean isBuilding = true;
-//
-//                int topDrawable = currentPlayer.getCurrentOfferTile().getCardsFromAbove();
-//                int bottomDrawable = currentPlayer.getCurrentOfferTile().getCardsFromBelow();
-//                for(int j = 0; j < topDrawable + bottomDrawable; j++) {
-//                    //getRow && index da controller
-//
-//                    //da verificare che cardsLeft funzioni bene
-//                    int cardsLeft = (fromTopRow) ? topDrawable : bottomDrawable;
-//                    if(cardsLeft > 0){
-//                        while(!currentPlayer.drawable(fromTopRow, isBuilding, index, offerTrack)){
-//                            //chiede nuovi input
-//                        }
-//                        currentPlayer.drawCard(fromTopRow, isBuilding, index, offerTrack);
-//                        if (fromTopRow) topDrawable--;
-//                        else bottomDrawable--;
-//                    }
-//                    /* versione non ottimizzata
-//                    if (fromTopRow == 0 && topDrawable > 0) {
-//                        while(currentPlayer.drawable(index, fromTopRow, isBuilding, offerTrack) == false){
-//                            //chiede nuovi input
-//                        }
-//                        currentPlayer.drawCard(index, fromTopRow, isBuilding, offerTrack);
-//                        topDrawable--;
-//                    }
-//                    else if(fromTopRow == 1 && bottomDrawable > 0){
-//                        while(currentPlayer.drawable(index, fromTopRow, isBuilding, offerTrack) == false){
-//                            //chiede nuovi input
-//                        }
-//                        currentPlayer.drawCard(index, fromTopRow, isBuilding, offerTrack);
-//                        bottomDrawable--;
-//                    }*/
-//                    else{
-//                        throw new IllegalDrawException();
-//                    }
-//                    buildingManager.useBuilding(currentPhase, currentPlayer);
-//                }
-//                //fase intermittente tra return to tile on draw
-//                currentPhase = GamePhase.RETURN_TO_TILE;
-//                offerTrack.getTurnTile().returnToStartingTile(currentPlayer, buildingManager);
-//                currentPhase = GamePhase.ON_DRAW;
-//
-//                setNextPlayer();
-//            }
-//
-//            this.setCurrentPhase(GamePhase.GAME_ENDED);//fase eventi
-//            // If round is 10 then resolves both top and bottom rows' events.
-//            if(currentRound<10){
-//                eventManager.resolve(offerTrack.getBottomEvents(), players, buildingManager);
-//            }else{
-//                ArrayList<EventCard> allEvents = new ArrayList<>();
-//                allEvents.addAll(offerTrack.getBottomEvents());
-//                allEvents.addAll(offerTrack.getTopEvents());
-//                eventManager.resolve(allEvents, players, buildingManager);
-//            }
-//
-//
-//            this.setCurrentPhase(GamePhase.GAME_ENDED);//fase finale
-//
-//            for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del round
-//                buildingManager.useBuilding(currentPhase, currentPlayer);
-//                setNextPlayer();
-//            }
-//
-//
-//            //fase inizializzata
-//            this.setCurrentPhase(GamePhase.GAME_ENDED);
-//
-//            //track inizializzata
-//            offerTrack.moveCardsToBottom();
-//            offerTrack.repopulateTopRow();
-//            currentRound++;
-//        }
-//        currentPhase = GamePhase.GAME_ENDED;
-//
-//        for(int i=0; i<this.numPlayers;i++){//building attivati alla fine del gioco
-//            buildingManager.useBuilding(currentPhase, currentPlayer);
-//            currentPlayer.getTribe().modifyPrestigePoints(currentPlayer.getTribe().calculatePlayerFinalPoints());
-//            setNextPlayer();
-//        }
-//        ArrayList<Player> ranking = new ArrayList<>(players);
-//        ranking=players.stream().sorted(Comparator.comparingInt(
-//                (Player p) -> p.getTribe().getPrestigePoints()).reversed())
-//                        .collect(Collectors.toCollection(ArrayList::new));
-//        //showRanking nella view o qualcosa del genere
-//    }
-
 }

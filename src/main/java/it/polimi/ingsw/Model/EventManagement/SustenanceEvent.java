@@ -13,8 +13,11 @@ import it.polimi.ingsw.View.TUIView.TuiIcons;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * This class manages the calculation of players' prestige points and food during the Sustenance event. It overrides
+ * the {@link EventStrategy} apply method.
+ */
 public class SustenanceEvent extends EventCard implements EventStrategy{
-    //private int buildingDiscount = 0;      maybe use this to include the buildings into the computation??
     private final int prestigeMalus;
     private final int foodMalus;
 

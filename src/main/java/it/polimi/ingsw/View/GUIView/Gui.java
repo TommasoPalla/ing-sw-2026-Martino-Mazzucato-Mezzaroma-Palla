@@ -7,7 +7,6 @@ import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GUIView.GuiControllers.*;
-import it.polimi.ingsw.View.GUIView.Utils.ImageManager;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -20,7 +19,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
@@ -320,11 +318,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showForceQuit(String disconnectedPlayerName, Color oldColor) {
-
-    }
-
-    @Override
-    public void showPlayerDisconnected(String playerName, boolean hadColor) {
 
     }
 
