@@ -8,7 +8,8 @@ import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 
 /**
  * After resolving all actions and before the End of the Round phase, the owner can take one Character or one Building
- * card (paying its cost) from the top row.
+ * card (paying its cost) from the top row. This building has no applyEffect method, since its effect is applied by
+ * checking if it is present in a player's tribe.
  */
 public class DrawAdditionalCard extends BuildingCard {
     private Game game;
@@ -26,22 +27,5 @@ public class DrawAdditionalCard extends BuildingCard {
     //da verificare che abbia senso, nel costruttore non può andare
     public void updateGame(Game instance){
         this.game = instance;
-    }
-
-    /* Se la topRow non è vuota, pesca una carta in più a fine turno
-     */
-    @Override
-    public void applyEffect(){
-
-        //TODO: IMPORTANTE
-        //da chiedere l'input all'utente che carta vuole pescare e impostare fromBuilding al valore corrispondente
-        //stessa cosa per index.
-
-        int index=0;
-        boolean fromBuilding = true;
-
-        if(!game.getOfferTrack().getTopRow().isEmpty()) {
-            this.getOwner().drawCard(true, fromBuilding, index, game.getOfferTrack());
-        }
     }
 }

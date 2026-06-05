@@ -380,15 +380,11 @@ public class GameController {
     }
 
     /**
-     * This method handles the player requests to draw a card. If the draw is successful all players are notified and
-     * if the player has drawn all his cards the next player is set. It catches a {@link LastPlayerOfTurnException} if
-     * this player was the last player of the drawing {@link GamePhase}.
-     * If it was, the events are resolved, the game phase is set to START_TURN and a new round is started.
-     * When all the players have finished drawing their cards, the bottom row events are resolved
-     * and the new round is started.
-     * @param playerName the player requesting to draw
-     * @param fromTopRow true if the card drawn comes from the top row, false if it's of the bottom row
-     * @param fromBuilding true if the card drawn is a building, false if not
+     * This method handles the player request to draw a card. If the draw is successful all players are notified and
+     * if the player has drawn all his cards, his totem is moved back to the Turn Tile.
+     * @param playerName the player requesting to draw.
+     * @param fromTopRow true if the card drawn comes from the top row, false if it's of the bottom row.
+     * @param fromBuilding true if the card drawn is a building, false if not.
      * @param index index of the array of the row.
      */
     public synchronized void handleDraw(String playerName, boolean fromTopRow, boolean fromBuilding, int index){
@@ -470,7 +466,7 @@ public class GameController {
                         notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
                         notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
 
-                        endTurn();
+                        endDrawingTurn();
                     }
                 } catch (StubException e) {
                    //handleCriticalDisconnection();
@@ -480,13 +476,10 @@ public class GameController {
 
     /**
      * This method handles the request by the player to pass his turn if there are no more available character cards
-     * left to draw and if he doesn't want to draw any building card. After that, it sets the next player. It catches a
-     * {@link LastPlayerOfTurnException} if this player was the last player of the drawing {@link GamePhase}.
-     * If it was, the events are resolved, the game phase is set to START_TURN and a new round is started.
+     * left to draw and if he doesn't want to draw any building card.
      * @param playerName the name of the player requesting to pass his drawing turn.
-     * @throws IllegalClientStateActionException if the player can still draw cards.
      */
-    public synchronized void handlePassTurn(String playerName) throws IllegalClientStateActionException {
+    public synchronized void handlePassTurn(String playerName) {
         Player currPlayer = gameInstance.getPlayerByName(playerName);
         OfferTrack offerTrack = gameInstance.getOfferTrack();
         int oldFoodReserve = currPlayer.getTribe().getFoodReserve();
@@ -520,14 +513,23 @@ public class GameController {
             notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
             notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
 
-            endTurn();
+            endDrawingTurn();
         } catch (StubException e) {
         //handleCriticalDisconnection();
         }
     }
 
-    private void endTurn() {
+    /**
+     * This internal method manages the end of a player's drawing turn where next player is set. It catches a
+     * {@link LastPlayerOfTurnException} if it was the last player of the turn order. If it was
+     * it checks if there's a
+     * player who can draw an additional card applying the building effect, else the events are resolved and a new round
+     * is started
+     */
+    private void endDrawingTurn() {
         Player additionalDrawPlayer = null;
+        // If the turn order list is longer, it means that the owner of the DrawAdditionalCard building has used its
+        // effect
         if (gameInstance.getOfferTrack().getTurnTile().getTurnOrder().size() > gameInstance.getNumPlayer()) {
             additionalDrawPlayer = gameInstance.getCurrentPlayer();
             gameInstance.getOfferTrack().getTurnTile().getTurnOrder().removeLast();

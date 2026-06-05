@@ -2,7 +2,7 @@ package it.polimi.ingsw.Enums;
 
 /**
  * This enum contains all the possible states a client can have. It is used to decide which actions
- * and command he can perform and what he can visualize.
+ * and commands he can perform and what he can visualize.
  */
 public enum ClientState {
     CONNECTING,

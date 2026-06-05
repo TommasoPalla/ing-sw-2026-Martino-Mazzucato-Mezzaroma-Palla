@@ -437,7 +437,8 @@ public class ClientController implements ClientViewUpdate {
      * It updates every player about the card drawn by a player. It updates the respective row removing the card and
      * decrements the available draws of the player. If the player has no more available draws, it moves his totem back
      * to the respective slot of the turn tile and updates the next player. It catches a {@link LastPlayerOfTurnException}
-     * if this player was the last of this game phase. Lastly, it notifies the view about the draw of the player.
+     * if this player was the last of this game phase. If it was, it checks if there's some player who can draw
+     *      * an additional card from the top row.
      * @param fromTopRow true if the card drawn is from the top row, false if it's from bottom.
      * @param fromBuilding true if the card drawn comes from the buildings' row, false if otherwise.
      * @param index the index of the array of the respective row.
@@ -536,7 +537,8 @@ public class ClientController implements ClientViewUpdate {
     /**
      * Updates the players when a player decided to pass his turn because he couldn't draw any more cards during his
      * turn in the drawing game phase. It then updates the next player. It catches a {@link LastPlayerOfTurnException}
-     * if this player was the last of this game phase. Lastly, it notifies the view about the action of the player.
+     * if this player was the last of this game phase. If it was, it checks if there's some player who can draw
+     * an additional card from the top row.
      * @param playerName the name of the player who passed his turn.
      */
     @Override
@@ -566,6 +568,12 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
+    /**
+     * This internal method checks if, after all players drew their card, someone can draw an additional card applying
+     * the {@link it.polimi.ingsw.Model.BuildingsManagement.Buildings.DrawAdditionalCard} building. If there is and if
+     * there are still cards they can draw from the top row, they are set as the current player and they're notified.
+     * @return true if the building's effect can be applied, false if not.
+     */
     private boolean checkAdditionalDraw() {
         String additionalDrawPlayer = null;
 

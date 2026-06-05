@@ -22,18 +22,39 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * This class contains all the methods that implement the CLI. It serves as an input manager for player commands and
+ * contains all the show methods of the {@link ViewInterface} that prints to the terminal the information about the game
+ * and its new status. It keeps a reference to the {@link ClientController} which is used to forward the player's
+ * commands and to extract the information from the {@link it.polimi.ingsw.Controller.ClientController.ClientModel}.
+ * It makes use of a {@link CommandParser} to parse the player's commands. It runs a thread which is kept always on
+ * listening for the player's commands until the thread is interrupted.
+ */
 public class TUIView implements ViewInterface {
+
+    /**
+     * Reference to the client controller of this player.
+     */
     final private ClientController clientController;
+
+    /**
+     * The {@link CommandParser} the command parser used to parse the player's commands.
+     */
     final private CommandParser commandParser;
+
+    /**
+     * The name of this player.
+     */
     private String player;
+
+    /**
+     * The {@link TUIState} of this player, determining what section is visualising.
+     */
     private TUIState tuiState;
 
     public TUIView(ClientController clientController) {
         this.clientController = clientController;
         this.commandParser = new CommandParser(clientController);
-        /*
-         * This attribute defines which state of the TUI the player is currently visualizing.
-         */
         this.tuiState = TUIState.SETUP;
         // Starts the thread of this TUI, using 'run()' as Thread.run() method
         Thread commandListenThread = new Thread(this::runView);
@@ -41,6 +62,9 @@ public class TUIView implements ViewInterface {
     }
 
 
+    /**
+     * It makes the player choose its nickname and puts itself a continuous listening status.
+     */
     @Override
     public void runView() {
         System.out.println("Welcome to MESOS!");
@@ -70,7 +94,6 @@ public class TUIView implements ViewInterface {
         }
     }
 
-    // PARSECOMMAND E COMMANDPARSERSELECTOR NON SONO FINALI E TANTO MENO CORRETTI!!!!
     /**
      * Takes the input command and if it's valid, calls the command router.
      * @param command The string entered by the player.
@@ -130,273 +153,10 @@ public class TUIView implements ViewInterface {
             case PLACE_TOTEM            -> commandParser.parseChooseOfferTile(argsString);
             case HELP                   -> printAvailableActions(clientController.getClientState(), true);
             case SHOW_BUILDING_INFO     -> printCardInfo(argsString);
-            case SEE_LEADERBOARD        -> printLeaderBoard();
+            case SEE_LEADERBOARD        -> printLeaderboard();
             case LEAVE                  -> clientController.leave();
             default                     -> throw new IllegalArgumentException("ERROR: Invalid command, please try again or enter \"help()\" to know the available commands.");
         }
-    }
-
-    /**
-     * Prints to terminal the tribe of the player
-     */
-    private void printTribe(String playerName) {
-        ClientState clientState = clientController.getClientState();
-        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
-            System.out.println("ERROR: You're not in a game, so there's no tribe to see!");
-            return;
-        }
-        tuiState = TUIState.SHOW_TRIBE;
-        LightTribe localTribe = clientController.getLocalModel().getPlayerTribe(playerName);
-        if(localTribe != null) {
-            if(playerName.equals(this.player))
-                System.out.println("\n === YOUR TRIBE ===");
-            else
-                System.out.println("\n=== " + playerName.toUpperCase() + "'S TRIBE ===");
-            System.out.printf("%s: %d  %s: %d  %s: %d  %s: %d\n",
-                    TuiIcons.FOOD, localTribe.getFoodReserve(),
-                    TuiIcons.PRESTIGE_POINTS, localTribe.getPrestigePoints(),
-                    TuiIcons.POPULATION, localTribe.getPopulationSize(),
-                    TuiIcons.SHAMANS_STARS, localTribe.getShamansStars());
-
-            System.out.printf("DISCOUNTS: %s: %d  %s: %d\n",
-                    TuiIcons.BUILDERS_DISCOUNT, localTribe.getBuildersDiscount(),
-                    TuiIcons.GATHERERS_DISCOUNT, localTribe.getGatherersDiscount());
-
-            System.out.println("\nPOPULATION:");
-            List<CharacterCard> allCharacters = localTribe.getPopulation().values().stream()
-                    .flatMap(List::stream).collect(Collectors.toList());
-            printHorizontal(allCharacters.stream().map(this::renderCardBox).collect(Collectors.toList()));
-
-            System.out.println("\nBUILDING:");
-            printHorizontal(localTribe.getBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
-            System.out.println();
-        } else {
-            System.out.println(playerName + "'s tribe not found.");
-        }
-    }
-
-    private int getVisualLen(String input){
-        //Removes ANSI encoding from input string
-        String noAnsiString = input.replaceAll("\u001B\\[[;\\d]*m", "");
-        int visualLen = 0;
-        for(int i = 0; i < noAnsiString.length(); i++){
-            int codePoint = noAnsiString.codePointAt(i);
-
-            if(Character.isSupplementaryCodePoint(codePoint)){
-                visualLen += 2;
-                i++;
-            }
-            else
-                visualLen += 1;
-        }
-        return visualLen;
-    }
-
-    private List<String> renderCardBox(Card card) {
-        List<String> lines = new ArrayList<>();
-        int width = 22;
-        String border = "+" + "-".repeat(width - 2) + "+";
-
-        lines.add(border);
-
-        Map<String, String> stats = card.getDisplayStats();
-        for (Map.Entry<String, String> entry : stats.entrySet()) {
-            String statLine;
-            if (entry.getValue().isEmpty())
-                statLine = entry.getKey();
-            else
-                statLine = entry.getKey() + " " + entry.getValue();
-
-            int visualLen = getVisualLen(statLine);
-            int padding = (width - 4) - visualLen;
-
-            lines.add("| " + statLine + " ".repeat(Math.max(0, padding)) + " |");
-        }
-
-        while (lines.size() < 6) {
-            lines.add(String.format("| %-" + (width - 4) + "s |", ""));
-        }
-
-        String cardID = card.getCardID();
-        if (cardID.length() > width - 4) cardID = cardID.substring(0, width - 7) + "...";
-        lines.add(String.format("| %-" + (width - 4) + "s |", cardID));
-
-        lines.add(border);
-        return lines;
-    }
-
-    private void printHorizontal(List<List<String>> allBoxes) {
-        if (allBoxes.isEmpty()) {
-            System.out.println(" (NONE) ");
-            return;
-        }
-        int maxLines = allBoxes.stream().mapToInt(List::size).max().orElse(0);
-        for (int i = 0; i < maxLines; i++) {
-            StringBuilder row = new StringBuilder();
-            for (List<String> box : allBoxes) {
-                if (i < box.size()) row.append(box.get(i)).append("  ");
-                else row.append(" ".repeat(20)).append("  ");
-            }
-            System.out.println(row);
-        }
-    }
-
-    /**
-     * Prints to terminal the top row of the offerTrack
-     */
-    private void printTopRow() {
-        ClientState clientState = clientController.getClientState();
-        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
-            System.out.println("ERROR: You're not in a game, so there's no top row to see!");
-            return;
-        }
-        boolean noChars = clientController.getLocalModel().getTopRow().isEmpty();
-        boolean noBuildings = clientController.getLocalModel().getTopBuildings().isEmpty();
-        
-        if(noChars && noBuildings) {
-            System.out.println("--- TOP ROW IS EMPTY ---");
-            return;
-        }
-        
-        tuiState = TUIState.SHOW_TOP_ROW;
-        System.out.println("\n[TOP ROW - CHARACTERS/EVENTS]");
-        printHorizontal(clientController.getLocalModel().getTopRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
-        System.out.println("\n[TOP ROW - BUILDINGS]");
-        printHorizontal(clientController.getLocalModel().getTopBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
-    }
-
-    /**
-     * Prints to terminal the bottom row of the offerTrack
-     */
-    private void printBottomRow() {
-        ClientState clientState = clientController.getClientState();
-        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
-            System.out.println("ERROR: You're not in a game, so there's bottom row to see!");
-            return;
-        }
-        boolean noChars = clientController.getLocalModel().getBottomRow().isEmpty();
-        boolean noBuildings = clientController.getLocalModel().getBottomBuildings().isEmpty();
-
-        if(noChars && noBuildings) {
-            System.out.println("--- BOTTOM ROW IS EMPTY ---");
-            return;
-        }
-        
-        tuiState = TUIState.SHOW_BOTTOM_ROW;
-        System.out.println("\n[BOTTOM ROW - CHARACTERS/EVENTS]");
-        printHorizontal(clientController.getLocalModel().getBottomRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
-        System.out.println("\n[BOTTOM ROW - BUILDINGS]");
-        printHorizontal(clientController.getLocalModel().getBottomBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
-    }
-
-    private void printOfferTrack() {
-        ClientState clientState = clientController.getClientState();
-        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
-            System.out.println("ERROR: You're not in a game, so there's no offer track to see!");
-            return;
-        }
-        tuiState = TUIState.SHOW_OFFER_TRACK;
-        // COSTRUZIONE TURN TILE ---------------------------------------------------------------------------------------
-        // -------------------------------------------------------------------------------------------------------------
-        List<String> turnTileLines = new ArrayList<>();
-        String turnBorder = "+-----------------------+";
-        turnTileLines.add(turnBorder);
-        int[] tileModifier = clientController.getLocalModel().getTileModifier();
-        for (int i = 0; i < tileModifier.length; i++) {
-            String bonus;
-            if (tileModifier[i] != 0 && i < tileModifier.length - 1)
-                bonus = String.valueOf(tileModifier[i]) + TuiIcons.FOOD;
-            else if (i == tileModifier.length - 1)
-                bonus = "-1" + TuiIcons.FOOD_MALUS + "/-2" + TuiIcons.PRESTIGE_BONUS;
-            else
-                bonus = "";
-            String paddedBonus = String.format("%-10s", bonus);
-            String playerOnSlot = clientController.getLocalModel().getTurnTileStatus().getOrDefault(i, "");
-            String finalPlayerOnSlot;
-            if (!playerOnSlot.isEmpty()) {
-                Color playerColor = clientController.getLocalModel().getTotemColors().get(playerOnSlot);
-                String displayName = (playerOnSlot.length() > 10) ? playerOnSlot.substring(0, 7) + "..." : playerOnSlot;
-                String paddedName = String.format("%-10s", displayName);
-                finalPlayerOnSlot = playerColor.colorize(paddedName);
-            } else
-                finalPlayerOnSlot = String.format("%-10s", "---");
-            turnTileLines.add(String.format("| %s %s |", paddedBonus, finalPlayerOnSlot));
-        }
-        turnTileLines.add(turnBorder);
-
-        // COSTRUZIONE OFFER TRACK ------------------------------------------------------------------------------------
-        // ------------------------------------------------------------------------------------------------------------
-        List<String> offerTrackLines = new ArrayList<>();
-        StringBuilder topBorder = new StringBuilder();
-        StringBuilder actionRow = new StringBuilder();
-        StringBuilder playerRow = new StringBuilder();
-        StringBuilder bottomBorder = new StringBuilder();
-
-        tuiState = TUIState.SHOW_OFFER_TRACK;
-        System.out.print("This is the current offer track:\n");
-        System.out.println();
-        for (OfferTile tile : clientController.getLocalModel().getOfferTiles()) {
-            topBorder.append("+-----------------+ ");
-
-            if (tile.getFoodBonus() != 0) actionRow.append(String.format("| %-15s | ", tile.getFoodBonus() + TuiIcons.FOOD_BONUS));
-            else if (tile.getCardsFromAbove() != 0 && tile.getCardsFromBelow() != 0) {
-                actionRow.append(String.format("| %-15s | ", " " + TuiIcons.UP_ARROW + " " + tile.getCardsFromAbove() + " " + TuiIcons.DOWN_ARROW + " " + tile.getCardsFromBelow()));
-            } else if (tile.getCardsFromAbove() != 0) {
-                actionRow.append(String.format("| %-15s | ", " " + TuiIcons.UP_ARROW + " " + tile.getCardsFromAbove()));
-            } else actionRow.append(String.format("| %-15s | ", " " + TuiIcons.DOWN_ARROW + " " + tile.getCardsFromBelow()));
-
-            String playerOccupant = tile.getCurrentOccupant();
-            if (playerOccupant != null) {
-                Color playerColor = clientController.getLocalModel().getTotemColors().get(playerOccupant);
-                if (playerOccupant.length() > 15) {
-                    playerOccupant = playerOccupant.substring(0, 12) + "...";
-                }
-                String paddedOccupant = String.format("%-15s", playerOccupant);
-                String coloredOccupant = playerColor.colorize(paddedOccupant);
-                playerRow.append(String.format("| %s | ", coloredOccupant));
-            }
-            else playerRow.append(String.format("| %-15s | ", "---"));
-
-            bottomBorder.append("+-----------------+ ");
-        }
-
-        offerTrackLines.add(topBorder.toString());
-        offerTrackLines.add(actionRow.toString());
-        offerTrackLines.add(playerRow.toString());
-        offerTrackLines.add(bottomBorder.toString());
-
-        int maxLines = Math.max(turnTileLines.size(), offerTrackLines.size());
-
-        // Spazio vuoto compensativo per quando finiscono le righe della Turn Order tile.
-        // La larghezza è esattamente 25 caratteri (la stessa di turnBorder).
-        String emptyTurnSpace = String.format("%-25s", "");
-
-        for (int i = 0; i < maxLines; i++) {
-            String leftPart = (i < turnTileLines.size()) ? turnTileLines.get(i) : emptyTurnSpace;
-            String rightPart = (i < offerTrackLines.size()) ? offerTrackLines.get(i) : "";
-
-            System.out.println(leftPart + "   " + rightPart);
-        }
-        System.out.println();
-    }
-
-    private void printRemainingDraws(int remainingFromAbove, int remainingFromBelow){
-        System.out.println("\n--- DRAWS REMAINING: ABOVE " + remainingFromAbove + " | BELOW " + remainingFromBelow + " ---");
-    }
-
-    private void printLeaderBoard() {
-        if (this.clientController.getClientState() != ClientState.END_GAME) {
-            System.out.println("ERROR: You cannot do this right now.");
-            return;
-        }
-        System.out.println();
-        System.out.println("This is the current Mesos leaderboard of games with " + clientController.getLocalModel().getNumPlayers() + " players:");
-        System.out.println();
-        List<String> leaderboard = clientController.getLocalModel().getDbLeaderboard();
-        for (int i = 0; i < leaderboard.size(); i++)
-            System.out.println(leaderboard.get(i));
-        System.out.println();
-        System.out.println("Type \"leave()\" to go back to setup to create or join another game of Mesos!");
     }
 
     public void changeClientState(ClientState clientState) {
@@ -429,16 +189,11 @@ public class TUIView implements ViewInterface {
         }
     }
 
-//    @Override
-//    public void notifyTurnChange(String player) {
-//        if(this.player.equals(player)) {
-//            System.out.println("It's your turn!");
-//            printAvailableActions(ClientState.PLACE_TOTEM, false);
-//        }
-//        else {
-//            System.out.println("It's now " + player + "'s turn!");
-//        }
-//    }
+    /*
+    * ------------------------------------------------------------------------------------------------------------------
+    * METHODS FOR SHOWING INFORMATION TO THE PLAYER AND TO UPDATE THEM ABOUT THE STATUS OF THE GAME --------------------
+    * ------------------------------------------------------------------------------------------------------------------
+    */
 
     @Override
     public void showNameSet(String newName) {
@@ -762,10 +517,290 @@ public class TUIView implements ViewInterface {
         System.out.println("If you want to see the entire leaderboard type \"see_leaderboard()\". Else, type \"leave()\" to go back to setup to create or join another game of Mesos!");
     }
 
-    // METHODS FOR PRINTING INFORMATION LIKE CARDS, OFFER TRACK, AVAILABLE COMMANDS AND ACTIONS
+    /*
+     * -----------------------------------------------------------------------------------------------------------------
+     * METHODS FOR PRINTING INFORMATION LIKE CARDS, OFFER TRACK, AVAILABLE COMMANDS AND ACTIONS  -----------------------
+     * -----------------------------------------------------------------------------------------------------------------
+     */
 
     /**
-     * Prints to terminal the available colors the players can choose while in the lobby.
+     * Prints to terminal the tribe of a player.
+     * @param playerName the name of the player.
+     */
+    private void printTribe(String playerName) {
+        ClientState clientState = clientController.getClientState();
+        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
+            System.out.println("ERROR: You're not in a game, so there's no tribe to see!");
+            return;
+        }
+        tuiState = TUIState.SHOW_TRIBE;
+        LightTribe localTribe = clientController.getLocalModel().getPlayerTribe(playerName);
+        if(localTribe != null) {
+            if(playerName.equals(this.player))
+                System.out.println("\n === YOUR TRIBE ===");
+            else
+                System.out.println("\n=== " + playerName.toUpperCase() + "'S TRIBE ===");
+            System.out.printf("%s: %d  %s: %d  %s: %d  %s: %d\n",
+                    TuiIcons.FOOD, localTribe.getFoodReserve(),
+                    TuiIcons.PRESTIGE_POINTS, localTribe.getPrestigePoints(),
+                    TuiIcons.POPULATION, localTribe.getPopulationSize(),
+                    TuiIcons.SHAMANS_STARS, localTribe.getShamansStars());
+
+            System.out.printf("DISCOUNTS: %s: %d  %s: %d\n",
+                    TuiIcons.BUILDERS_DISCOUNT, localTribe.getBuildersDiscount(),
+                    TuiIcons.GATHERERS_DISCOUNT, localTribe.getGatherersDiscount());
+
+            System.out.println("\nPOPULATION:");
+            List<CharacterCard> allCharacters = localTribe.getPopulation().values().stream()
+                    .flatMap(List::stream).collect(Collectors.toList());
+            printHorizontal(allCharacters.stream().map(this::renderCardBox).collect(Collectors.toList()));
+
+            System.out.println("\nBUILDING:");
+            printHorizontal(localTribe.getBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
+            System.out.println();
+        } else {
+            System.out.println(playerName + "'s tribe not found.");
+        }
+    }
+
+    private int getVisualLen(String input){
+        //Removes ANSI encoding from input string
+        String noAnsiString = input.replaceAll("\u001B\\[[;\\d]*m", "");
+        int visualLen = 0;
+        for(int i = 0; i < noAnsiString.length(); i++){
+            int codePoint = noAnsiString.codePointAt(i);
+
+            if(Character.isSupplementaryCodePoint(codePoint)){
+                visualLen += 2;
+                i++;
+            }
+            else
+                visualLen += 1;
+        }
+        return visualLen;
+    }
+
+    private List<String> renderCardBox(Card card) {
+        List<String> lines = new ArrayList<>();
+        int width = 22;
+        String border = "+" + "-".repeat(width - 2) + "+";
+
+        lines.add(border);
+
+        Map<String, String> stats = card.getDisplayStats();
+        for (Map.Entry<String, String> entry : stats.entrySet()) {
+            String statLine;
+            if (entry.getValue().isEmpty())
+                statLine = entry.getKey();
+            else
+                statLine = entry.getKey() + " " + entry.getValue();
+
+            int visualLen = getVisualLen(statLine);
+            int padding = (width - 4) - visualLen;
+
+            lines.add("| " + statLine + " ".repeat(Math.max(0, padding)) + " |");
+        }
+
+        while (lines.size() < 6) {
+            lines.add(String.format("| %-" + (width - 4) + "s |", ""));
+        }
+
+        String cardID = card.getCardID();
+        if (cardID.length() > width - 4) cardID = cardID.substring(0, width - 7) + "...";
+        lines.add(String.format("| %-" + (width - 4) + "s |", cardID));
+
+        lines.add(border);
+        return lines;
+    }
+
+    private void printHorizontal(List<List<String>> allBoxes) {
+        if (allBoxes.isEmpty()) {
+            System.out.println(" (NONE) ");
+            return;
+        }
+        int maxLines = allBoxes.stream().mapToInt(List::size).max().orElse(0);
+        for (int i = 0; i < maxLines; i++) {
+            StringBuilder row = new StringBuilder();
+            for (List<String> box : allBoxes) {
+                if (i < box.size()) row.append(box.get(i)).append("  ");
+                else row.append(" ".repeat(20)).append("  ");
+            }
+            System.out.println(row);
+        }
+    }
+
+    /**
+     * Prints to terminal the current top row of the offerTrack.
+     */
+    private void printTopRow() {
+        ClientState clientState = clientController.getClientState();
+        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
+            System.out.println("ERROR: You're not in a game, so there's no top row to see!");
+            return;
+        }
+        boolean noChars = clientController.getLocalModel().getTopRow().isEmpty();
+        boolean noBuildings = clientController.getLocalModel().getTopBuildings().isEmpty();
+
+        if(noChars && noBuildings) {
+            System.out.println("--- TOP ROW IS EMPTY ---");
+            return;
+        }
+
+        tuiState = TUIState.SHOW_TOP_ROW;
+        System.out.println("\n[TOP ROW - CHARACTERS/EVENTS]");
+        printHorizontal(clientController.getLocalModel().getTopRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
+        System.out.println("\n[TOP ROW - BUILDINGS]");
+        printHorizontal(clientController.getLocalModel().getTopBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
+    }
+
+    /**
+     * Prints to terminal the current bottom row of the offerTrack.
+     */
+    private void printBottomRow() {
+        ClientState clientState = clientController.getClientState();
+        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
+            System.out.println("ERROR: You're not in a game, so there's bottom row to see!");
+            return;
+        }
+        boolean noChars = clientController.getLocalModel().getBottomRow().isEmpty();
+        boolean noBuildings = clientController.getLocalModel().getBottomBuildings().isEmpty();
+
+        if(noChars && noBuildings) {
+            System.out.println("--- BOTTOM ROW IS EMPTY ---");
+            return;
+        }
+
+        tuiState = TUIState.SHOW_BOTTOM_ROW;
+        System.out.println("\n[BOTTOM ROW - CHARACTERS/EVENTS]");
+        printHorizontal(clientController.getLocalModel().getBottomRow().stream().map(this::renderCardBox).collect(Collectors.toList()));
+        System.out.println("\n[BOTTOM ROW - BUILDINGS]");
+        printHorizontal(clientController.getLocalModel().getBottomBuildings().stream().map(this::renderCardBox).collect(Collectors.toList()));
+    }
+
+    /**
+     * Prints to terminal the current status of the Offer Track.
+     */
+    private void printOfferTrack() {
+        ClientState clientState = clientController.getClientState();
+        if (clientState == null || clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.IN_LOBBY) {
+            System.out.println("ERROR: You're not in a game, so there's no offer track to see!");
+            return;
+        }
+        tuiState = TUIState.SHOW_OFFER_TRACK;
+        // COSTRUZIONE TURN TILE ---------------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------------------------------------
+        List<String> turnTileLines = new ArrayList<>();
+        String turnBorder = "+-----------------------+";
+        turnTileLines.add(turnBorder);
+        int[] tileModifier = clientController.getLocalModel().getTileModifier();
+        for (int i = 0; i < tileModifier.length; i++) {
+            String bonus;
+            if (tileModifier[i] != 0 && i < tileModifier.length - 1)
+                bonus = String.valueOf(tileModifier[i]) + TuiIcons.FOOD;
+            else if (i == tileModifier.length - 1)
+                bonus = "-1" + TuiIcons.FOOD_MALUS + "/-2" + TuiIcons.PRESTIGE_BONUS;
+            else
+                bonus = "";
+            String paddedBonus = String.format("%-10s", bonus);
+            String playerOnSlot = clientController.getLocalModel().getTurnTileStatus().getOrDefault(i, "");
+            String finalPlayerOnSlot;
+            if (!playerOnSlot.isEmpty()) {
+                Color playerColor = clientController.getLocalModel().getTotemColors().get(playerOnSlot);
+                String displayName = (playerOnSlot.length() > 10) ? playerOnSlot.substring(0, 7) + "..." : playerOnSlot;
+                String paddedName = String.format("%-10s", displayName);
+                finalPlayerOnSlot = playerColor.colorize(paddedName);
+            } else
+                finalPlayerOnSlot = String.format("%-10s", "---");
+            turnTileLines.add(String.format("| %s %s |", paddedBonus, finalPlayerOnSlot));
+        }
+        turnTileLines.add(turnBorder);
+
+        // COSTRUZIONE OFFER TRACK ------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------------------------
+        List<String> offerTrackLines = new ArrayList<>();
+        StringBuilder topBorder = new StringBuilder();
+        StringBuilder actionRow = new StringBuilder();
+        StringBuilder playerRow = new StringBuilder();
+        StringBuilder bottomBorder = new StringBuilder();
+
+        tuiState = TUIState.SHOW_OFFER_TRACK;
+        System.out.print("This is the current offer track:\n");
+        System.out.println();
+        for (OfferTile tile : clientController.getLocalModel().getOfferTiles()) {
+            topBorder.append("+-----------------+ ");
+
+            if (tile.getFoodBonus() != 0) actionRow.append(String.format("| %-15s | ", tile.getFoodBonus() + TuiIcons.FOOD_BONUS));
+            else if (tile.getCardsFromAbove() != 0 && tile.getCardsFromBelow() != 0) {
+                actionRow.append(String.format("| %-15s | ", " " + TuiIcons.UP_ARROW + " " + tile.getCardsFromAbove() + " " + TuiIcons.DOWN_ARROW + " " + tile.getCardsFromBelow()));
+            } else if (tile.getCardsFromAbove() != 0) {
+                actionRow.append(String.format("| %-15s | ", " " + TuiIcons.UP_ARROW + " " + tile.getCardsFromAbove()));
+            } else actionRow.append(String.format("| %-15s | ", " " + TuiIcons.DOWN_ARROW + " " + tile.getCardsFromBelow()));
+
+            String playerOccupant = tile.getCurrentOccupant();
+            if (playerOccupant != null) {
+                Color playerColor = clientController.getLocalModel().getTotemColors().get(playerOccupant);
+                if (playerOccupant.length() > 15) {
+                    playerOccupant = playerOccupant.substring(0, 12) + "...";
+                }
+                String paddedOccupant = String.format("%-15s", playerOccupant);
+                String coloredOccupant = playerColor.colorize(paddedOccupant);
+                playerRow.append(String.format("| %s | ", coloredOccupant));
+            }
+            else playerRow.append(String.format("| %-15s | ", "---"));
+
+            bottomBorder.append("+-----------------+ ");
+        }
+
+        offerTrackLines.add(topBorder.toString());
+        offerTrackLines.add(actionRow.toString());
+        offerTrackLines.add(playerRow.toString());
+        offerTrackLines.add(bottomBorder.toString());
+
+        int maxLines = Math.max(turnTileLines.size(), offerTrackLines.size());
+
+        // Spazio vuoto compensativo per quando finiscono le righe della Turn Order tile.
+        // La larghezza è esattamente 25 caratteri (la stessa di turnBorder).
+        String emptyTurnSpace = String.format("%-25s", "");
+
+        for (int i = 0; i < maxLines; i++) {
+            String leftPart = (i < turnTileLines.size()) ? turnTileLines.get(i) : emptyTurnSpace;
+            String rightPart = (i < offerTrackLines.size()) ? offerTrackLines.get(i) : "";
+
+            System.out.println(leftPart + "   " + rightPart);
+        }
+        System.out.println();
+    }
+
+    /**
+     * Prints to terminal the number of the remaining draws the player in turn has still left to make.
+     * @param remainingFromAbove the remaining draws left from the top row.
+     * @param remainingFromBelow the remaining draws left from the bottom row.
+     */
+    private void printRemainingDraws(int remainingFromAbove, int remainingFromBelow){
+        System.out.println("\n--- DRAWS REMAINING: ABOVE " + remainingFromAbove + " | BELOW " + remainingFromBelow + " ---");
+    }
+
+    /**
+     * At the end of the game, the player can decide to see the leaderboard of the players with the higher final scores
+     * obtained in games played with the same amount of players of this game.
+     */
+    private void printLeaderboard() {
+        if (this.clientController.getClientState() != ClientState.END_GAME) {
+            System.out.println("ERROR: You cannot do this right now.");
+            return;
+        }
+        System.out.println();
+        System.out.println("This is the current Mesos leaderboard of games with " + clientController.getLocalModel().getNumPlayers() + " players:");
+        System.out.println();
+        List<String> leaderboard = clientController.getLocalModel().getDbLeaderboard();
+        for (int i = 0; i < leaderboard.size(); i++)
+            System.out.println(leaderboard.get(i));
+        System.out.println();
+        System.out.println("Type \"leave()\" to go back to setup to create or join another game of Mesos!");
+    }
+
+    /**
+     * Prints to terminal the available colors the player can choose while in the lobby.
      */
     private void printAvailableColors() {
         System.out.println();
@@ -779,6 +814,11 @@ public class TUIView implements ViewInterface {
         }
     }
 
+    /**
+     * Prints to terminal the available games a player can join.
+     * @return a map Containing the information about every available game. The gameID is mapped to a record
+     * containing the number of players who will play in that game and the list of players already in the lobby.
+     */
     private Map<Integer, GamePlayers> printAvailableGames() {
         Map<Integer, GamePlayers> availableGames = clientController.getAvailableGames();
         System.out.println();
@@ -801,7 +841,7 @@ public class TUIView implements ViewInterface {
     }
 
     /**
-     * Prints to terminal the list of available games a client can join after he sent the "join_game()" command
+     * Manages the available games a client can join after he sent the "join_game()" command
      * and takes in input the gameID of the game the client wants to join.
      */
     private void joinAvailableGames() {
@@ -852,7 +892,8 @@ public class TUIView implements ViewInterface {
 
     /**
      * Prints the available actions a player can make while in a certain state.
-     * @param clientState The state of the TUI the player is currently visualising.
+     * @param clientState The {@link ClientState} of the player.
+     * @param help if true it also prints the general commands a player can run at any time during the game.
      */
     private void printAvailableActions(ClientState clientState, boolean help) {
         System.out.println();
