@@ -277,16 +277,15 @@ public class GameController {
      */
     public void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
         gameInstance.setCurrentPhase(GamePhase.START_TURN);
-        boolean isLastRound = false;
-        notifyAll(n -> {
-            n.notifyStartRound(lastEventsResults);
-        });
+
         try {
             int newRound = gameInstance.setNextRound();
             System.out.println("[GAME " + gameInstance.getGameID() + "] Round " + newRound + " started.");
         } catch (LastRoundException e) {
             System.out.println("[GAME " + gameInstance.getGameID() + "] Final round reached!");
-            isLastRound = true;
+            notifyAll(n -> {
+                n.notifyStartRound(lastEventsResults);
+            });
 
 //        if (isLastRound) {
 //            // In the last round, we also resolve top row events that were left there
@@ -334,9 +333,10 @@ public class GameController {
             n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
             n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
             n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
+            n.notifyStartRound(lastEventsResults);
         });
 
-        String firstPlayer = gameInstance.setFirstPlayer();
+        gameInstance.setFirstPlayer();
     }
 
     /**
