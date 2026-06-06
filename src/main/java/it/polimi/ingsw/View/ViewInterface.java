@@ -37,7 +37,7 @@ public interface ViewInterface {
     void showNewGamePhase(GamePhase newGamePhase);
     void showFoodModified(String playerName, int food);
     void showPrestigePointsModified(String playerName, int pp);
-    void showEvent(EventType eventType, int foodModified, int ppModified);
+    void showEvent(String playerName, EventType eventType, int foodModified, int ppModified);
     void showEndGame(Map<String, Integer> finalRanking);
     void showLeaderboardInfo(int playerPosition);
 }

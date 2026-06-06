@@ -452,16 +452,19 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void showEvent(EventType eventType, int foodModified, int ppModified) {
-        System.out.println();
-        String icon;
-        if (eventType == EventType.HUNT) icon = TuiIcons.HUNTER;
-        else if (eventType == EventType.SUSTENANCE) icon = TuiIcons.FOOD;
-        else if (eventType == EventType.CAVE_PAINTINGS) icon = TuiIcons.ARTIST;
-        else icon = TuiIcons.SHAMAN;
+    public void showEvent(String playerName, EventType eventType, int foodModified, int ppModified) {
+        if(playerName.equals(player)) {
+            System.out.println();
+            String icon;
 
-        System.out.println(icon + " A " + eventType + " event occurred! " + icon + " These are the results: " + TuiIcons.FOOD + ": " + foodModified + ", " + TuiIcons.PRESTIGE_POINTS + ": " + ppModified + ";");
-        System.out.println();
+            if (eventType == EventType.HUNT) icon = TuiIcons.HUNTER;
+            else if (eventType == EventType.SUSTENANCE) icon = TuiIcons.FOOD;
+            else if (eventType == EventType.CAVE_PAINTINGS) icon = TuiIcons.ARTIST;
+            else icon = TuiIcons.SHAMAN;
+
+            System.out.println(icon + " A " + eventType + " event occurred! " + icon + " These are the results: " + TuiIcons.FOOD + ": " + foodModified + ", " + TuiIcons.PRESTIGE_POINTS + ": " + ppModified + ";");
+            System.out.println();
+        }
     }
 
     @Override

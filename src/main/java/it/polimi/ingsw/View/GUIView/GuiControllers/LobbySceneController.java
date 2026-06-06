@@ -143,7 +143,7 @@ public class LobbySceneController {
         try {
             gui.getClientController().startGame();
         } catch (IllegalClientStateActionException | NotTheHostException | IllegalArgumentException e) {
-            banner.showBanner(e.getMessage(), 1.5, null);
+            banner.showBanner(e.getMessage(), 1.5, null, 0);
         }
     }
 

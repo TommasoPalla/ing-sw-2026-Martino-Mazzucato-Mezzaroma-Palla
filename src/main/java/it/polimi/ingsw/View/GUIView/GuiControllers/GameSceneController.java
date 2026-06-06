@@ -1,5 +1,7 @@
 package it.polimi.ingsw.View.GUIView.GuiControllers;
 
+import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
@@ -35,6 +37,7 @@ import java.util.Objects;
 public class GameSceneController implements BoardActionListener {
     private Gui gui;
     private GameSceneBanner banner;
+    private GameNotificationManager notificationManager;
     private boolean isTribeOpen = false;
     private String localPlayer;
     private TranslateTransition transition;
@@ -144,6 +147,7 @@ public class GameSceneController implements BoardActionListener {
             });
         });
         this.banner = new GameSceneBanner(mainAnchor);
+        this.notificationManager = new GameNotificationManager(mainAnchor);
     }
 
 
@@ -263,7 +267,7 @@ public class GameSceneController implements BoardActionListener {
 
         else {
             int charactersNum = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getPopulationSize();
-            charactersNumber.setText(String.valueOf(charactersNum));
+            AnimationsUtils.animateLabelUpdate(charactersNumber, String.valueOf(charactersNum));
 
             CharacterCard character = (CharacterCard) card;
             Node characterImage = ImageManager.getCardNode(id);
@@ -273,12 +277,12 @@ public class GameSceneController implements BoardActionListener {
                 case ARTIST -> {
                     artistColumn.getChildren().addFirst(characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getArtistsNumber();
-                    artistsNumber.setText(String.valueOf(newNumberPerRole));
+                    AnimationsUtils.animateLabelUpdate(artistsNumber, String.valueOf(newNumberPerRole));
                 }
                 case BUILDER -> {
                     builderColumn.getChildren().addFirst(characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getBuildersNumber();
-                    buildersNumber.setText(String.valueOf(newNumberPerRole));
+                    AnimationsUtils.animateLabelUpdate(buildersNumber, String.valueOf(newNumberPerRole));
                     /*int newPrestige = gui.getClientController().getLocalModel().getPlayerTribe(player).getPrestigePoints();
                     prestigePoints.setText(String.valueOf(newPrestige));
                     int builderDiscount = gui.getClientController().getLocalModel().getPlayerTribe(player).getBuildersDiscount();
@@ -287,14 +291,14 @@ public class GameSceneController implements BoardActionListener {
                 case GATHERER -> {
                     gathererColumn.getChildren().addFirst(characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getGatherersNumber();
-                    gatherersNumber.setText(String.valueOf(newNumberPerRole));
+                    AnimationsUtils.animateLabelUpdate(gatherersNumber, String.valueOf(newNumberPerRole));
                     /*int sustenanceDiscount = gui.getClientController().getLocalModel().getPlayerTribe(player).getBuildersDiscount();
                     this.sustenanceDiscount.setText(String.valueOf(sustenanceDiscount));*/
                 }
                 case HUNTER -> {
                     hunterColumn.getChildren().addFirst(characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getHuntersNumber();
-                    huntersNumber.setText(String.valueOf(newNumberPerRole));
+                    AnimationsUtils.animateLabelUpdate(huntersNumber, String.valueOf(newNumberPerRole));
 
                     /*int newFood = gui.getClientController().getLocalModel().getPlayerTribe(player).getFoodReserve();
                     foodReserve.setText(String.valueOf(newFood));*/
@@ -305,14 +309,14 @@ public class GameSceneController implements BoardActionListener {
                     newNumberPerRole = inventorsPerType.values().stream()
                             .mapToInt(Integer::intValue)
                             .sum();
-                    inventorsNumber.setText(String.valueOf(newNumberPerRole));
+                    AnimationsUtils.animateLabelUpdate(inventorsNumber, String.valueOf(newNumberPerRole));
                 }
                 case SHAMAN -> {
                     shamanColumn.getChildren().addFirst(characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getShamansNumber();
-                    shamansNumber.setText(String.valueOf(newNumberPerRole));
+                    AnimationsUtils.animateLabelUpdate(shamansNumber, String.valueOf(newNumberPerRole));
                     int shamanStars = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getShamansStars();
-                    this.shamanStars.setText(String.valueOf(shamanStars));
+                    AnimationsUtils.animateLabelUpdate(this.shamanStars, String.valueOf(shamanStars));
                 }
             }
         }
@@ -329,7 +333,7 @@ public class GameSceneController implements BoardActionListener {
             foodToString = String.valueOf(food);
             if(player.equals(localPlayer)) {
                 messageBuilder.append("\nYou: ");
-                foodReserve.setText(foodToString);
+                AnimationsUtils.animateLabelUpdate(foodReserve, foodToString);
             } else {
                 messageBuilder.append("\n").append(player).append(": ");
                 PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
@@ -339,11 +343,7 @@ public class GameSceneController implements BoardActionListener {
         }
         String message = messageBuilder.toString();
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(1));
-        delay.setOnFinished(event -> {
-            banner.showBanner(message, 4, this::showRowsComponent);
-        });
-        delay.play();
+        banner.showBanner(message, 4, this::showRowsComponent, 1);
     }
 
     public void showRowsComponent() {
@@ -354,28 +354,48 @@ public class GameSceneController implements BoardActionListener {
         tribeRegion.setVisible(true);
     }
 
+    public GameNotificationManager getNotificationManager() {
+        return this.notificationManager;
+    }
 
-    //TODO: gestire round, turn e newPlayer
     public void showNewRound(int round) {
-        roundStatus.setText(String.valueOf(round));
-        phaseStatus.setText(GamePhase.START_TURN.toString());
+        AnimationsUtils.animateLabelUpdate(roundStatus, String.valueOf(round));
+        AnimationsUtils.animateLabelUpdate(phaseStatus, GamePhase.START_TURN.toString());
 
         updateTopRow();
         updateBottomRow();
         updateBottomBuildings();
-        bottomBuildings.setVisible(true); //sarebbe meglio spostarlo per pulizia
         updateTopBuildings();
 
-        banner.showBanner("Round " + round, 1.5, null);
-        roundStatus.setText(String.valueOf(round));
-        //shownewCurrentPlayer?
+        //verifcare che sia il giocatore giusto (già aggiornato)
+        String firstPlayer = gui.getClientController().getLocalModel().getTurnOrder().getFirst();
+        String prefix = (firstPlayer.equals(localPlayer)) ? "your "
+                : firstPlayer + "'s ";
+
+        AnimationsUtils.animateLabelUpdate(playerStatus, firstPlayer);
+        banner.showBanner("Round " + round + "!\nIt's " + prefix + "turn", 1.5, null, 0);
     }
 
     public void showNewEra(int era) {
         String prefix = setDeckImage(era);
-        banner.showBanner(prefix + "started!", 1.5, null);
-        eraStatus.setText(String.valueOf(era));
+        banner.showBanner(prefix + "started!", 1.5, null, 0);
+        AnimationsUtils.animateLabelUpdate(eraStatus, String.valueOf(era));
+        bottomBuildings.setVisible(true); //sarebbe meglio spostarlo per pulizia
     }
+
+    public void showFoodBonusTile(String player, int foodBonus) {
+        int foodReserve = gui.getClientController().getLocalModel().getPlayerTribe(player).getFoodReserve();
+        if(player.equals(localPlayer)) {
+            AnimationsUtils.animateLabelUpdate(this.foodReserve, String.valueOf(foodReserve));
+            banner.showBanner("You gained " + foodBonus + "units of food from Tile A", 1.5, null, 0);
+        } else {
+            PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
+            playerWidget.updateFoodReserve(foodReserve);
+            String message = player + " gained " + foodBonus + " units of food from Tile A";
+            notificationManager.addInfoNotification(message);
+        }
+    }
+
 
     private String setDeckImage (int era) {
         String imagePath, prefix;
@@ -419,7 +439,7 @@ public class GameSceneController implements BoardActionListener {
             prefix = player + "has drawn ";
         }*/
 
-        banner.showBanner(prefix + "this card", cardImage, 1.5, null);
+        banner.showBanner(prefix + "this card", cardImage, 1.5, null, 0);
 
         if(fromBuildings){
             if(topRow){
@@ -434,29 +454,69 @@ public class GameSceneController implements BoardActionListener {
         }
     }
 
-    public void showNewCurrentPlayer(String player){
+    public void showNewCurrentPlayer(String player, ClientState clientState){
         //si potrebbe aggiungere che quando il player non quello in locale per lui le carte non sono evidenziate ecc
-        String prefix;
-        if(localPlayer.equals(player)){
-            prefix = "It's your ";
-        } else {
-            prefix = "It's " + player + "'s ";
+        String gamePhase;
+        if(clientState == ClientState.DRAW_CARD) {
+            gamePhase = " to draw";
+        } else {    //if (clientState == ClientState.PLACE_TOTEM)
+            gamePhase = " to place the totem";
         }
-        banner.showBanner(prefix + "turn", 1.5, null);
-        playerStatus.setText(player);
+
+        String message;
+        if(!player.equals(gui.getClientController().getLocalModel().getTurnOrder().getFirst())) {
+            if(localPlayer.equals(player)){
+                message = "It's your turn" + gamePhase;
+                banner.showBanner(message, 1.5, null, 0);
+            } else {
+                message = "It's " + player + "'s turn" + gamePhase;
+                notificationManager.addInfoNotification(message);
+            }
+        }
+        AnimationsUtils.animateLabelUpdate(playerStatus, player);
     }
 
     //TODO: legata a notifyNewGamePhase
     public void showNewGamePhase(GamePhase phase){
         //
          //
-        phaseStatus.setText(phase.toString());
+        AnimationsUtils.animateLabelUpdate(phaseStatus, phase.toString());
     }
 
-    //TODO: legata a notifyEvent
-    //forse non prenderei i due int, mi serve la lista per tutti i player
-    public void showEventEffects(EventType eventType, int foodModified, int ppModified) {
 
+    public void showEventEffects(String player, EventType eventType, int foodModified, int ppModified) {
+        AnimationsUtils.animateLabelUpdate(phaseStatus, GamePhase.ON_EVENT.toString());
+        if(player.equals(localPlayer)) {
+            StringBuilder message = new StringBuilder(String.valueOf(eventType));
+            message.append(" event resolved!\nYou ");
+            String variation = (foodModified > 0) ? "gained "
+                                                : "lost ";
+            message.append(variation).append(String.valueOf(foodModified));
+            variation = (ppModified > 0) ? "\nYou gained "
+                                        : "\nYou lost ";
+            message.append(variation).append(String.valueOf(ppModified));
+                    //.append("\nThe effects of this event also applied to the other players");
+            /*TODO: vorrei mettere l'immagine dell'evento ma risalire a quale era fosse non è facile,
+               è già stata tolta dal tabellone?*/
+            banner.showBanner(message.toString(), 1.5, null, 0);
+
+            String foodReserve = String.valueOf(gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getFoodReserve());
+            AnimationsUtils.animateLabelUpdate(this.foodReserve, foodReserve);
+            String prestigePoints = String.valueOf(gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getPrestigePoints());
+            AnimationsUtils.animateLabelUpdate(this.prestigePoints, prestigePoints);
+        } else {
+            PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
+            //cannot use foodModified and ppModified because they are deltas,
+            // it is more reliable to get absolute values from Local Model
+            int food = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getFoodReserve();
+            playerWidget.updateFoodReserve(food);
+            int pp = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getPrestigePoints();
+            playerWidget.updatePrestigePoints(pp);
+
+            String message = eventType.toString() + " event\n" + player + ": " + foodModified + " food" +
+                    ppModified + " prestige Points";
+            notificationManager.addInfoNotification(message);
+        }
     }
 
     //foodQuantity is new value of player's foodReserve
@@ -465,7 +525,7 @@ public class GameSceneController implements BoardActionListener {
         int deltaFood;
         if(player.equals(localPlayer)){
             deltaFood =  foodQuantity - Integer.parseInt(foodReserve.getText());
-            foodReserve.setText(String.valueOf(foodQuantity));
+            AnimationsUtils.animateLabelUpdate(foodReserve, String.valueOf(foodQuantity));
             prefix = (deltaFood > 0) ? "You gained "
                     : "You lost ";
         } else {
@@ -475,7 +535,7 @@ public class GameSceneController implements BoardActionListener {
             prefix = (deltaFood > 0) ? player + " gained "
                     : player + " lost ";
         }
-        banner.showBanner(prefix + deltaFood + "units of food", 1.0, null);
+        banner.showBanner(prefix + deltaFood + "units of food", 1.0, null, 0);
     }
 
     public void showPrestigeModified(String player, int pp) {
@@ -485,7 +545,7 @@ public class GameSceneController implements BoardActionListener {
         String clientPlayer = gui.getClientController().getPlayerName();
         if(player.equals(clientPlayer)){
             deltaPrestige =  pp - Integer.parseInt(prestigePoints.getText());
-            prestigePoints.setText(String.valueOf(pp));
+            AnimationsUtils.animateLabelUpdate(prestigePoints, String.valueOf(pp));
             prefix = (deltaPrestige > 0) ? "You gained "
                     : "You lost ";
         } else {
@@ -495,12 +555,12 @@ public class GameSceneController implements BoardActionListener {
             prefix = (deltaPrestige > 0) ? player + " gained "
                     : player + " lost ";
         }
-        banner.showBanner(prefix + deltaPrestige + " prestige points", 1.0, null);
+        banner.showBanner(prefix + deltaPrestige + " prestige points", 1.0, null, 0);
     }
 
     public void showEndGame(Map<String, Integer> finalRanking) {
         //
-        phaseStatus.setText(GamePhase.END_GAME.toString());
+        AnimationsUtils.animateLabelUpdate(phaseStatus, GamePhase.END_GAME.toString());
         //
     }
 
@@ -529,7 +589,10 @@ public class GameSceneController implements BoardActionListener {
 
     @Override
     public void onPlaceTotemRequested(int index){
-        //try
-        gui.getClientController().chooseOfferTile(index);
+        try {
+            gui.getClientController().chooseOfferTile(index);
+        } catch (IllegalClientStateActionException | OccupiedTileException e) {
+            notificationManager.addWarning(e.getMessage());
+        }
     }
 }

@@ -11,6 +11,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 /** Utility for rendering notification banners in the JavaFX GUI.
  * The banner introduces an overlay that prevents the user to click on the background.
@@ -19,6 +22,10 @@ import javafx.util.Duration;
  */
 public class GameSceneBanner {
     private final AnchorPane target;
+
+    private final Queue<BannerRequest> bannerQueue;
+
+    private boolean isDisplayBusy;
 
     /**
      * The full-screen layout layer preventing misclicks
@@ -41,10 +48,12 @@ public class GameSceneBanner {
      */
     public GameSceneBanner(AnchorPane target){
         this.target = target;
+        this.bannerQueue = new LinkedList<>();
+        this.isDisplayBusy = false;
     }
 
-    public void showBanner(String message, double timeout, Runnable onCloseAction){
-        showBanner(message, null, timeout, onCloseAction);
+    public void showBanner(String message, double timeout, Runnable onCloseAction, double onsetDelay){
+        showBanner(message, null, timeout, onCloseAction, onsetDelay);
     }
 
     /**
@@ -60,12 +69,21 @@ public class GameSceneBanner {
      * @param onCloseAction asynchronous callback logic runnable context block triggered during teardown phase
      *                      Pass {@code null} if no action is required to be performed.
      */
-    public void showBanner(String message, Node customNode, double timeout, Runnable onCloseAction){
-        if(overlay != null) {
+    public void showBanner(String message, Node customNode, double timeout, Runnable onCloseAction, double onsetDelay) {
+        bannerQueue.add(new BannerRequest(message, customNode, timeout, onCloseAction, onsetDelay));
+
+        //Triggers queue execution
+        processQueue();
+    }
+
+    private void processQueue() {
+        if (isDisplayBusy || bannerQueue.isEmpty()) {
             return;
         }
-        this.onCloseAction = onCloseAction;
-        target.setDisable(true);
+
+        isDisplayBusy = true;
+        BannerRequest currentRequest = bannerQueue.poll();
+        this.onCloseAction = currentRequest.onCloseAction();
 
         overlay = new StackPane();
         overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.0);");
@@ -82,30 +100,36 @@ public class GameSceneBanner {
         container.setMaxWidth(Region.USE_PREF_SIZE);
         container.setMaxHeight(Region.USE_PREF_SIZE);
 
-        Label banner = new Label(message);
+        Label banner = new Label(currentRequest.message());
         banner.setAlignment(Pos.CENTER);
         banner.getStyleClass().add("banner-text");
         container.getChildren().add(banner);
 
-        if (customNode != null) {
+        if (currentRequest.customNode() != null) {
             /*TODO: per mostrare descrizione carta
             customNode.setOnMouseClicked(event -> {
                 showDescription();
             });*/
-            container.getChildren().add(customNode);
+            container.getChildren().add(currentRequest.customNode());
         }
+
         overlay.getChildren().add(container);
-
         overlay.setOnMouseClicked(event -> hideBanner());
-        target.getChildren().add(overlay);
-
-        if(timeout > 0){
-             autoCloseTimer = new PauseTransition(Duration.seconds(timeout));
-             autoCloseTimer.setOnFinished(event -> hideBanner());
-             autoCloseTimer.play();
+        if (currentRequest.onsetDelay() > 0) {
+            PauseTransition delay = new PauseTransition(Duration.seconds(currentRequest.onsetDelay()));
+            delay.setOnFinished(event -> target.getChildren().add(overlay));
+            delay.play();
+        } else {
+            target.getChildren().add(overlay);
         }
 
+        if(currentRequest.timeout() > 0){
+            autoCloseTimer = new PauseTransition(Duration.seconds(currentRequest.timeout() + currentRequest.onsetDelay()));
+            autoCloseTimer.setOnFinished(event -> hideBanner());
+            autoCloseTimer.play();
+        }
     }
+
 
     /**Teardown routine that closes the active banner display window context.
      * terminates any ticking background timers and fires any registered post-execution callback runnable.
@@ -120,12 +144,20 @@ public class GameSceneBanner {
             target.getChildren().remove(overlay);
             overlay = null;
             target.setEffect(null);
-            target.setDisable(false);
 
             if(onCloseAction != null) {
                 onCloseAction.run();
                 onCloseAction = null;
             }
+            isDisplayBusy = false;
+            PauseTransition inBetweenDelay = new PauseTransition(Duration.seconds(1));
+            inBetweenDelay.setOnFinished(event -> processQueue());
+            inBetweenDelay.play();
         }
     }
+
+    /**
+     * Internal immutable data record container representing a single unique notification event payload context.
+     */
+    private record BannerRequest(String message, Node customNode, double timeout, Runnable onCloseAction, double onsetDelay) {}
 }

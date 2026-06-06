@@ -25,6 +25,8 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/*TODO: verificare per ogni runLater di gameScene se si può togliere il try catch (lasciarlo solo se bisogna caricare
+*  risorse grafiche (in quel caso NullPointerException)*/
 public class Gui implements ViewInterfaceGui, ViewInterface {
 
     private static final Logger LOGGER = Logger.getLogger(Gui.class.getName());
@@ -37,7 +39,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     private ArrayList<String> players;
     private GameSceneController gameScene;
     private boolean isHost;
-    private ClientState guiState = ClientState.SETUP;       //va capito come sfruttare sta cosa e gestirla bene
     private int numPlayers;
 
 
@@ -129,15 +130,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showNewCurrentPlayer(String playerName, ClientState clientState) {
-        if(gameScene != null) {
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
                 try {
-                    gameScene.showNewCurrentPlayer(playerName);
+                    gameScene.showNewCurrentPlayer(playerName, clientState);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Failed to set new current player", e);
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -199,7 +200,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             if(!success) {
                 if(lobby != null) {
                     lobby.getBanner().showBanner("Critical ERROR: cannot load GameScene. App will be terminated.",
-                            2.0, () -> System.exit(1));
+                            2.0, () -> System.exit(1), 0);
                     LOGGER.log(Level.SEVERE, "App is being terminated due to a critical error");
                 }
             }
@@ -209,15 +210,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showStartRound(int round) {
-        if(gameScene != null) {
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if (gameScene != null) {
                 try {
                     gameScene.showNewRound(round);
                 } catch(Exception e) {
                     LOGGER.log(Level.WARNING, "Failed to display start round", e);
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -227,15 +228,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showInitialFood(Map<String, Integer> initialFood) {
-            Platform.runLater(() -> {
-                if (gameScene != null) {
-                    try {
-                        gameScene.showInitialFood(initialFood);
-                    } catch (Exception e) {
-                        LOGGER.log(Level.SEVERE, "Failed to display initial food", e);
-                    }
+        Platform.runLater(() -> {
+            if (gameScene != null) {
+                try {
+                    gameScene.showInitialFood(initialFood);
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to display initial food", e);
                 }
-            });
+            }
+        });
 
     }
 
@@ -246,33 +247,41 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showFoodBonusTile(String playerName, int foodBonus) {
-
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+                try {
+                    gameScene.showFoodBonusTile(playerName, foodBonus);
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to show food bonus from Tile A", e);
+                }
+            }
+        });
     }
 
     @Override
     public void showCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
-        if(gameScene != null){
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
                 try {
                     gameScene.showCardDrawn(player, card, topRow, fromBuildings);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Failed to display card drawn", e);
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
     public void showEraChanged(int era) {
-        if (gameScene != null) {
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
                 try {
                     gameScene.showNewEra(era);
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "Failed to display era change", e);
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -287,33 +296,41 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showFoodModified(String playerName, int food) {
-        if(gameScene != null){
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
                 try {
                     gameScene.showFoodModified(playerName, food);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Failed to show food update", e);
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
     public void showPrestigePointsModified(String playerName, int pp) {
-        if(gameScene != null){
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
                 try {
                     gameScene.showPrestigeModified(playerName, pp);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Failed to show prestige update", e);
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
-    public void showEvent(EventType eventType, int foodModified, int ppModified) {
-
+    public void showEvent(String playerName, EventType eventType, int foodModified, int ppModified) {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+                try {
+                    gameScene.showEventEffects(playerName, eventType, foodModified, ppModified);
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to show event effects", e);
+                }
+            }
+        });
     }
 
     @Override
@@ -442,7 +459,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     @Override
     public void lobbyScene() throws IOException{
         try {
-            guiState = ClientState.IN_LOBBY;
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/LobbyScene.fxml"));
             Parent root = loader.load();
             LobbySceneController Controller = loader.getController();

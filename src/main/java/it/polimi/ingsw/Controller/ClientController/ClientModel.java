@@ -50,7 +50,6 @@ public class ClientModel {
         this.bottomBuildings = new ArrayList<>();
         this.totemColors = new HashMap<>();
         turnTileStatus = new HashMap<>();
-        turnOrder = new ArrayList<>();
         dbLeaderboard = new ArrayList<>();
         switch (numPlayers){
             case 2:

@@ -623,12 +623,12 @@ public class ClientController implements ClientViewUpdate {
 
     /**
      * It updates the players when a new round is starting. It sets the game phase to START_TURN and increase the current
-     * round value. Then, it notifies the view about the results of the events who occurred during the end of the previous
+     * round value. Then, it notifies the view about the results of the events which occurred during the end of the previous
      * round, if there were any. If the previous round wasn't the last one, it notifies the view about the starting of
      * the new round, then it updates the next player who will be the first to place its totem at the start of this round.
      * @param lastEventsResults a map containing the result of the events resolved the previous round. It maps from the
      *                          {@link EventType} to an array of {@link PlayerEventResults}, containing the name of the
-     *                          player and the food taken and prestige points gained or lost during that event.
+     *                          player and food and prestige points gained or lost during that event.
      * @param newTopRow the list of cards of the repopulated top row.
      * @param newBottomRow the list of cards of the new bottom row.
      * @param newTopBuildings the list of Building cards of the new top row (changes only when era changes).
@@ -648,6 +648,7 @@ public class ClientController implements ClientViewUpdate {
 
         // UPDATING EVENTS RESULTS using deltas
         if (!lastEventsResults.isEmpty()) {
+            //TODO: system out da togliere
             System.out.println(lastEventsResults);
             for (EventType eventType : lastEventsResults.keySet()) {
                 for(PlayerEventResults playerResults : lastEventsResults.get(eventType)){
@@ -655,14 +656,11 @@ public class ClientController implements ClientViewUpdate {
                     int foodDelta = playerResults.foodAndPP()[0];
                     int ppDelta = playerResults.foodAndPP()[1];
 
-                    // player's notification (only for the local player's view)
-                    if (playerResults.player().equals(this.playerName)) {
-                        view.showEvent(eventType, foodDelta, ppDelta);
-                    }
-
                     // tribe's updating by ADDING deltas
                     playersTribe.modifyFood(foodDelta);
                     playersTribe.modifyPrestigePoints(ppDelta);
+                    view.showEvent(playerResults.player(), eventType, foodDelta, ppDelta);
+
                     System.out.println("[DEBUG] Player " + playerResults.player() + "was added " + foodDelta + " food and " +  ppDelta + "pp because of event " + eventType.toString() + ". Now has " + localModel.getPlayerTribe(playerResults.player()).getFoodReserve() + " food and " + localModel.getPlayerTribe(playerResults.player()).getPrestigePoints() + " prestige points");
                 }
             }
@@ -761,8 +759,8 @@ public class ClientController implements ClientViewUpdate {
 
     /**
      * This method manages the turning logic, deciding which player has to play next. If the game is in the drawing
-     * phase, it also manages the player who placed his totem on tile A, giving him the good bonus and immediately
-     * returning his totem to the Turn Tile. It then tries calling seyNextPlayer of the local model. If the last player
+     * phase, it also manages the player who placed his totem on tile A, giving him the food bonus and immediately
+     * returning his totem to the Turn Tile. It then tries calling setNextPlayer of the local model. If the last player
      * was the last one of the turn order, it catches a {@link LastPlayerOfTurnException}, rethrowing it immediately
      * to updateDrawCard or updateCurrentOfferTile, depending on the game phase.
      * After setting the next player, it calls the method to sync this player client state. Lastly, it notifies the view

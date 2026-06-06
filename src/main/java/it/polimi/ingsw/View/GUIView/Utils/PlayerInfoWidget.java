@@ -11,7 +11,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
 import java.util.Map;
 import java.util.Objects;
@@ -52,15 +54,26 @@ public class PlayerInfoWidget extends GridPane{
      */
     public PlayerInfoWidget(String name, Color totemColor, Gui gui){
         super();
-        this.setPrefSize(GUISettings.PlayerWidget.WIDTH, GUISettings.PlayerWidget.HEIGHT);
+        this.setMinWidth(GUISettings.PlayerWidget.WIDTH - 20);
+        this.setPrefWidth(GUISettings.PlayerWidget.WIDTH);
+        this.setMaxWidth(GUISettings.PlayerWidget.WIDTH + 40);
+        this.setMaxHeight(GUISettings.PlayerWidget.HEIGHT);
+
         this.setAlignment(Pos.TOP_CENTER);
         this.setPadding(new Insets(10));
-        this.setHgap(15);
+        this.setHgap(10);
         this.setVgap(12);
         this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
         this.getStyleClass().add("player-widget");
         this.gui = gui;
 
+        ColumnConstraints colIcon = new ColumnConstraints();
+        colIcon.setMinWidth(GUISettings.Icons.ICON_WIDTH);
+        colIcon.setHgrow(Priority.NEVER);
+        ColumnConstraints colLabel = new ColumnConstraints();
+        colLabel.setMinWidth(15);
+        colLabel.setHgrow(Priority.ALWAYS);
+        this.getColumnConstraints().addAll(colIcon, colLabel, colIcon, colLabel, colIcon, colLabel);
         //Graphical layout
         //Row 0: totem, playerName and food
         ImageView totemImage = new ImageView();
@@ -81,7 +94,7 @@ public class PlayerInfoWidget extends GridPane{
         //name
         nameLabel = new Label(name);
         nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 18");
-        this.add(nameLabel, 1, 0, 4, 1);
+        this.add(nameLabel, 1, 0, 2, 1);
 
         //food
         ImageView foodImage = new ImageView();
@@ -95,9 +108,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(foodImage, 5, 0, 2, 1);
+        this.add(foodImage, 3, 0, 2, 1);
         foodReserve = new Label("0");
-        this.add(foodReserve, 7, 0);
+        this.add(foodReserve, 5, 0);
 
         //row 1 prestige, characters numbers and sustenance discount
         //prestige
@@ -128,9 +141,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(charactersImage, 3, 1);
+        this.add(charactersImage, 2, 1);
         charactersNum = new Label("0");
-        this.add(charactersNum, 4, 1);
+        this.add(charactersNum, 3, 1);
 
         //sustenanceDiscount
         ImageView sustenanceDiscountImage = new ImageView();
@@ -144,9 +157,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(sustenanceDiscountImage, 6, 1);
+        this.add(sustenanceDiscountImage, 4, 1);
         sustenanceDiscount = new Label("0");
-        this.add(sustenanceDiscount, 7, 1);
+        this.add(sustenanceDiscount, 5, 1);
 
         //row 2: shamanic stars, buildingsDiscount and InventionsNumber
         //shamanStars
@@ -177,9 +190,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(buildingsDiscountImage, 3, 2);
+        this.add(buildingsDiscountImage, 2, 2);
         buildingsDiscount = new Label("0");
-        this.add(buildingsDiscount, 4, 2);
+        this.add(buildingsDiscount, 3, 2);
 
         //inventions Num
         ImageView inventionsImage = new ImageView();
@@ -193,9 +206,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(inventionsImage, 6, 2);
+        this.add(inventionsImage, 4, 2);
         inventionsNum = new Label("0");
-        this.add(inventionsNum, 7, 2);
+        this.add(inventionsNum, 5, 2);
 
         //row 3: shamans, builders, inventors
         //shamans
@@ -226,9 +239,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(buildersImage, 3, 3);
+        this.add(buildersImage, 2, 3);
         buildersNum = new Label("0");
-        this.add(buildersNum, 4, 3);
+        this.add(buildersNum, 3, 3);
 
         //inventors
         ImageView inventorsImage = new ImageView();
@@ -242,9 +255,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(inventorsImage, 6, 3);
+        this.add(inventorsImage, 4, 3);
         inventorsNum = new Label("0");
-        this.add(inventorsNum, 7, 3);
+        this.add(inventorsNum, 5, 3);
 
         //row 4: gatherers, hunters, artists
         //gatherers
@@ -275,9 +288,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(huntersImage, 3, 4);
+        this.add(huntersImage, 2, 4);
         huntersNum = new Label("0");
-        this.add(huntersNum, 4, 4);
+        this.add(huntersNum, 3, 4);
 
         //artists
         ImageView artistsImage = new ImageView();
@@ -291,9 +304,9 @@ public class PlayerInfoWidget extends GridPane{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        this.add(artistsImage, 6, 4);
+        this.add(artistsImage, 4, 4);
         artistsNum = new Label("0");
-        this.add(artistsNum, 7, 4);
+        this.add(artistsNum, 5, 4);
     }
 
     /**Called by the gameSceneController to update number of characters in this tribe
@@ -303,9 +316,8 @@ public class PlayerInfoWidget extends GridPane{
      *            checks that it is an instance of CharacterCard
      */
     public void updateCardDrawn(Card card){
-        int prevNum = Integer.parseInt(charactersNum.getText());
-        prevNum++;
-        charactersNum.setText(String.valueOf(prevNum));
+        int newCharNum = Integer.parseInt(charactersNum.getText()) + 1;
+        AnimationsUtils.animateLabelUpdate(charactersNum, String.valueOf(newCharNum));
 
         CharacterCard character = (CharacterCard) card;
         int newNum;
@@ -314,23 +326,23 @@ public class PlayerInfoWidget extends GridPane{
         switch (character.getRole()) {
             case ARTIST -> {
                 newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getArtistsNumber();
-                artistsNum.setText(String.valueOf(newNum));
+                AnimationsUtils.animateLabelUpdate(artistsNum, String.valueOf(newNum));
             }
             case BUILDER -> {
                 newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getBuildersNumber();
-                buildersNum.setText(String.valueOf(newNum));
+                AnimationsUtils.animateLabelUpdate(buildersNum, String.valueOf(newNum));
                 int newDiscount = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getBuildersDiscount();
-                buildingsDiscount.setText(String.valueOf(newDiscount));
+                AnimationsUtils.animateLabelUpdate(buildingsDiscount, String.valueOf(newDiscount));
             }
             case GATHERER -> {
                 newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getGatherersNumber();
-                gatherersNum.setText(String.valueOf(newNum));
+                AnimationsUtils.animateLabelUpdate(gatherersNum, String.valueOf(newNum));
                 int newDiscount = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getGatherersDiscount();
-                sustenanceDiscount.setText(String.valueOf(newDiscount));
+                AnimationsUtils.animateLabelUpdate(sustenanceDiscount, String.valueOf(newDiscount));
             }
             case HUNTER -> {
                 newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getHuntersNumber();
-                huntersNum.setText(String.valueOf(newNum));
+                AnimationsUtils.animateLabelUpdate(huntersNum, String.valueOf(newNum));
             }
             case INVENTOR -> {
                 Map<InventorType, Integer> inventors = gui.getClientController().getLocalModel().
@@ -343,14 +355,14 @@ public class PlayerInfoWidget extends GridPane{
                         typesNum++;
                     }
                 }
-                inventorsNum.setText(String.valueOf(newNum));
-                inventionsNum.setText(String.valueOf(typesNum));
+                AnimationsUtils.animateLabelUpdate(inventorsNum, String.valueOf(newNum));
+                AnimationsUtils.animateLabelUpdate(inventionsNum, String.valueOf(typesNum));
             }
             case SHAMAN -> {
                 newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getShamansNumber();
-                shamansNum.setText(String.valueOf(newNum));
+                AnimationsUtils.animateLabelUpdate(shamansNum, String.valueOf(newNum));
                 int newStars = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getShamansStars();
-                shamanStars.setText(String.valueOf(newStars));
+                AnimationsUtils.animateLabelUpdate(shamanStars, String.valueOf(newStars));
             }
         }
     }
@@ -359,7 +371,7 @@ public class PlayerInfoWidget extends GridPane{
      * @param currFood new value of player's food
      */
     public void updateFoodReserve(int currFood){
-        foodReserve.setText(String.valueOf(currFood));
+        AnimationsUtils.animateLabelUpdate(foodReserve, String.valueOf(currFood));
     }
 
     public int getFoodReserve() {
@@ -367,7 +379,7 @@ public class PlayerInfoWidget extends GridPane{
     }
 
     public void updatePrestigePoints(int pp) {
-        prestigePoints.setText(String.valueOf(pp));
+        AnimationsUtils.animateLabelUpdate(prestigePoints, String.valueOf(pp));
     }
     public int getPrestigePoints() {
         return Integer.parseInt(prestigePoints.getText());
