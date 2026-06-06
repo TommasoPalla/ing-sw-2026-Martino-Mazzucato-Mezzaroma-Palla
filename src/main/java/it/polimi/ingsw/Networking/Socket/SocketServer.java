@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Networking.Socket;
 
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.UIException.NotJoinableGameException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
@@ -105,7 +106,12 @@ public class SocketServer implements VirtualSocketServer{
     public void joinGame(SocketClientHandler handler){
         PlayerRecord record = handler.getPlayerRecord();
         this.clients.add(handler);
-        serverController.joinGame(handler, record);
+        try {
+            serverController.joinGame(handler, record);
+        } catch (NotJoinableGameException e){
+            SocketMessageDTO errorMessage = new SocketMessageDTO(SocketHeaderNames.ERROR, e.getMessage());
+            handler.sendError(errorMessage);
+        }
     }
 
     @Override

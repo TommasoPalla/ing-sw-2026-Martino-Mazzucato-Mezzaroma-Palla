@@ -204,7 +204,7 @@ public class GameController {
 
                 if (nextPlayer.getRemainingAbove() == 0 && nextPlayer.getRemainingBelow() == 0) {
                     System.out.println("[GAME " + gameInstance.getGameID() + "] Player '" + nextPlayer.getName() + "' has 0 draws, returning to tile.");
-                    int bonus = nextPlayer.getCurrentOfferTile().getFoodBonus();
+                    int bonus = (nextPlayer.getCurrentOfferTile() != null) ? nextPlayer.getCurrentOfferTile().getFoodBonus() : 0;
                     gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(nextPlayer, gameInstance.getBuildingManager());
                     if (bonus > 0) {
                         nextPlayer.getTribe().modifyFood(bonus);
@@ -578,8 +578,6 @@ public class GameController {
         throw new EndOfGameException();
     }
 
-    /*TODO: definire la fase di shutdown del game a seguito di un client disconnesso e gestire
-       in socket la disconnessione*/
     public void handleCriticalDisconnection(String disconnectedPlayer){
         System.err.println("[GAME " + gameInstance.getGameID() + "] CRITICAL DISCONNECTION detected. Forcing all clients to quit and clearing lobby.");
         notifyAll( n -> {

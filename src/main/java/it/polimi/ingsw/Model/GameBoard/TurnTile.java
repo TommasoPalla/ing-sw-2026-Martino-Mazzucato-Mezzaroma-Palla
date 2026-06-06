@@ -66,7 +66,7 @@ public class TurnTile {
      */
     public ArrayList<Player> updateTurnOrder(){
         turnOrder = turnOrder.stream().sorted(Comparator.comparing(
-                        p -> p.getCurrentOfferTile().getTileCode()))
+                        p -> p.getCurrentOfferTile() == null ? Character.MAX_VALUE : p.getCurrentOfferTile().getTileCode()))
                 .collect(Collectors.toCollection(ArrayList::new));
         ArrayList<String> playerNames = new ArrayList<>();
         for(Player p : turnOrder)

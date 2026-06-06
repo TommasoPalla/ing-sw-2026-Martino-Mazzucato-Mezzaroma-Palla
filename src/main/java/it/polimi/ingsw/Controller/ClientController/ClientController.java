@@ -245,16 +245,6 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
-    /*GESTIONE EXCEPTION ESEMPIO!
-    Il drawable può lanciare InsufficientFood o IllegalDraw
-    che viene catchato qui perché lasciarlo arrivare alla view (che è un altro thread)
-    causerebbe la morte del thread che si occupa di questa classe.
-    Lancia una nuova eccezione già formattata in un formato user-friendly per la view
-    con messaggio personalizzato e 'cause', ovvero l'eccezione originale.
-    Questa informazione non viene persa e può essere usata per stampare informazioni aggiuntive
-    o per mantenere informazioni di log.
-    * */
-
     /**
      * This method forwards the request by the player to draw a card (character or building) from the top or bottom row.
      * It can only be performed while in the DRAW_CARD client state.
@@ -790,7 +780,13 @@ public class ClientController implements ClientViewUpdate {
                 if (localModel.getCurrentPhase() == GamePhase.ON_DRAW) {
                     LightTribe tribe = localModel.getPlayerTribe(nextPlayer);
                     if (tribe != null && tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
-                        int foodBonus = localModel.getOfferTiles().get(localModel.getTurnOrder().indexOf(nextPlayer)).getFoodBonus();
+                        int foodBonus = 0;
+                        for (it.polimi.ingsw.Model.GameBoard.OfferTile tile : localModel.getOfferTiles()) {
+                            if (nextPlayer.equals(tile.getCurrentOccupant())) {
+                                foodBonus = tile.getFoodBonus();
+                                break;
+                            }
+                        }
                         localModel.moveTotemToTurnTile(nextPlayer);
                         view.showFoodBonusTile(nextPlayer, foodBonus);
                         continue; //find NEXT player

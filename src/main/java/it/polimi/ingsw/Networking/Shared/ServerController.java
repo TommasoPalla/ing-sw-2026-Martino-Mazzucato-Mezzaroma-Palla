@@ -61,7 +61,7 @@ public class ServerController {
     private static int nextGameID = 0;
 
     /**
-     * It is used by the server controllar to communicate by SQL queries to the MYSql Mesos database, which contains the
+     * It is used by the server controller to communicate via SQL queries with the MySQL Mesos database, which contains the
      * match history of all the Mesos games played.
      */
     private LeaderboardDAO leaderboardDAO;
@@ -83,7 +83,6 @@ public class ServerController {
             gameController.removeClient(playerName);
         } catch (IllegalArgumentException e){
             System.out.println("[SERVER] ERROR: could not remove player from game\n" + e.getMessage());
-            //probabilmente da cambiare con exception
         }
     }
 
