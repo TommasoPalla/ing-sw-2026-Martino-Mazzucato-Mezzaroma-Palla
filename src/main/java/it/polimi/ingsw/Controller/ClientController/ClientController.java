@@ -123,13 +123,14 @@ public class ClientController implements ClientViewUpdate {
      * @param playerName the new nickname he wants to use.
      */
     public void setPlayerName(String playerName) {
-        if(this.playerName.equals(playerName))
-            throw new IllegalArgumentException("This is already your name!");
         if (clientState != ClientState.SETUP && clientState != ClientState.CONNECTING) {
             throw new IllegalClientStateActionException("ERROR: You can no longer change your name!");
         }
-        this.playerName = playerName;
-        view.showNameSet(playerName);
+        String name = playerName.trim().replaceAll(" ", "_");
+        if(this.playerName.equals(name))
+            throw new IllegalArgumentException("This is already your name!");
+        this.playerName = name;
+        view.showNameSet(name);
     }
 
     //-----------------METHODS CALLED FROM PLAYERS' ACTIONS-------------------------------------------------------------

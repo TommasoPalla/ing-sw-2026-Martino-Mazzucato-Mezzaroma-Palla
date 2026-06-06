@@ -145,6 +145,11 @@ public class ServerController {
      *                  to join.
      */
     public void joinGame(ClientNotifier notifier, PlayerRecord newPlayer) {
+        int gameID = newPlayer.gameID();
+        GameRecord gameRecord = activeGames.get(gameID);
+        if (gameRecord == null) {
+            throw new NotJoinableGameException("[ERROR]: game " + gameID + " is not joinable");
+        }
         try {
             addClientToGame(newPlayer, notifier);
             notifyAvailableGames();

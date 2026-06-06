@@ -315,9 +315,6 @@ public class GameController {
             calculateFinalPoints();
         }
 
-//        notifyAll(n -> {
-//            n.notifyStartRound(lastEventsResults);
-//        });
         try {
             gameInstance.initOfferTrack();
         } catch(ChangeEraException e){
