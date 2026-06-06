@@ -353,7 +353,8 @@ public class ClientController implements ClientViewUpdate {
     /**
      * It notifies the players of the start of the game. It regroups all the infos from the shuffled first turn order,
      * to the initial food for every player to the initial top and bottom rows. It sets the game phase to START_TURN.
-     * It updates the local model of every player. From now on, the turn order is locally managed by the clients.
+     * It updates the local model of every player and the initial food is distributed. Then the first round is started.
+     * From now on, the turn order is locally managed by the clients.
      * @param firstTurnOrder an array which determines the first turn order of the game
      * @param initialFood the initial food every player gets at the start of the game based on the first turn order.
      * @param firstTopRow the first top row of the game.
@@ -364,18 +365,21 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) {
         localModel.updateGamePhase(GamePhase.START_TURN);
-        localModel.updateTopRow(firstTopRow);
-        localModel.updateBottomRow(firstBottomRow);
-        localModel.updateTopRowBuildings(buildingsTopRow);
-        localModel.updateBottomRowBuildings(buildingsBottomRow);
         localModel.setTurnOrder(firstTurnOrder);
         for (int i=0; i<firstTurnOrder.size(); i++){
             localModel.getTurnTileStatus().put(i, firstTurnOrder.get(i));
         }
         localModel.addPlayersTribes(firstTurnOrder);
         view.showGameStarted();
-        updateInitialFood(initialFood);
+
+        // Updates initial Food for players
+        for (String player : initialFood.keySet()) {
+            localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
+        }
+        view.showInitialFood(initialFood);
+        updateStartRound(Collections.emptyMap(), firstTopRow, firstBottomRow, buildingsTopRow, buildingsBottomRow);
     }
+
     /**
      * When a new player enters the lobby, the client controller updates his local model's list of players.
      * @param player the player who entered the lobby.
@@ -628,20 +632,6 @@ public class ClientController implements ClientViewUpdate {
     }
 
     /**
-     * Internal method of the client controller. It's called by the gameStartedUpdate method.
-     * It updates the local model with the food received by every player at the start of the game. It then calls the
-     * update method to start the first round.
-     * @param initialFood It maps from the player name to the food received.
-     */
-    private void updateInitialFood(Map<String, Integer> initialFood) {
-        for (String player : initialFood.keySet()) {
-            localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
-        }
-        view.showInitialFood(initialFood);
-        updateStartRound(Collections.emptyMap(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-    }
-
-    /**
      * It updates the players when a new round is starting. It sets the game phase to START_TURN and increase the current
      * round value. Then, it notifies the view about the results of the events who occurred during the end of the previous
      * round, if there were any. If the previous round wasn't the last one, it notifies the view about the starting of
@@ -661,12 +651,10 @@ public class ClientController implements ClientViewUpdate {
         localModel.updateGamePhase(GamePhase.START_TURN);
         localModel.updateCurrentRound(localModel.getCurrentRound() + 1);
         localModel.setCurrentPlayer("");
-        if (localModel.getCurrentRound() >= 2) {
-            localModel.updateTopRow(newTopRow);
-            localModel.updateBottomRow(newBottomRow);
-            localModel.updateTopRowBuildings(newTopBuildings);
-            localModel.updateBottomRowBuildings(newBottomBuildings);
-        }
+        localModel.updateTopRow(newTopRow);
+        localModel.updateBottomRow(newBottomRow);
+        localModel.updateTopRowBuildings(newTopBuildings);
+        localModel.updateBottomRowBuildings(newBottomBuildings);
 
         // UPDATING EVENTS RESULTS using deltas
         if (!lastEventsResults.isEmpty()) {
