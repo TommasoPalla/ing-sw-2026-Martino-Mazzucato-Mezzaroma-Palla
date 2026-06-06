@@ -9,7 +9,6 @@ import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.View.GamePlayers;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -89,9 +88,15 @@ public interface VirtualSocketClient {
     /**
      * Signals the start of a new game round.
      * @param lastEventsResults the results of all the events resolved at the end of the last round.
+     * @param newTopRow the list of cards of the repopulated top row.
+     * @param newBottomRow the list of cards of the new bottom row.
+     * @param newTopBuildings the list of Building cards of the new top row (changes only when era changes).
+     * @param newBottomBuildings the list of Building cards of the new bottom row (may change only when era changes).
      * @throws IOException if TCP communication fails.
      */
-    void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws IOException;
+    void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                          ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                          ArrayList<BuildingCard> newBottomBuildings) throws IOException;
 
     /**
      * Notifies that a player has drawn a card.
@@ -139,41 +144,6 @@ public interface VirtualSocketClient {
     void updateBuildersDiscount(String playerName, int discount) throws IOException;
 
     void updateGatherersDiscount(String playerName, int discount) throws IOException;
-
-    /**
-     * Updates the cards in the top row of the offer track.
-     * @param newTopRow the new list of character cards.
-     * @throws IOException if TCP communication fails.
-     */
-    void updateTopRow(ArrayList<Card> newTopRow) throws IOException;
-
-    /**
-     * Updates the building cards in the top row.
-     * @param newTopBuildings the new list of building cards.
-     * @throws IOException if TCP communication fails.
-     */
-    void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) throws IOException;
-
-    /**
-     * Updates the cards in the bottom row.
-     * @param newBottomRow the new list of character cards.
-     * @throws IOException if TCP communication fails.
-     */
-    void updateBottomRow(ArrayList<Card> newBottomRow) throws IOException;
-
-    /**
-     * Updates the building cards in the bottom row.
-     * @param newBottomBuildings the new list of building cards.
-     * @throws IOException if TCP communication fails.
-     */
-    void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) throws IOException;
-
-//    /**
-//     * Notifies the name of the player whose turn is next.
-//     * @param playerName the name of the next player.
-//     * @throws IOException if TCP communication fails.
-//     */
-//    void updateNextPlayer(String playerName) throws IOException;
 
     /**
      * Notifies a change in the game phase.

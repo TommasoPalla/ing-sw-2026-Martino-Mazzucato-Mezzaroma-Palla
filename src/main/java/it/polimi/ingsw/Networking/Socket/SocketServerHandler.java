@@ -123,8 +123,24 @@ public class SocketServerHandler implements Runnable{
             String eventResultsString = gson.toJson(parameters[0]);
             Type eventResultsType = new TypeToken<Map<EventType, ArrayList<PlayerEventResults>>>(){}.getType();
             Map<EventType, ArrayList<PlayerEventResults>> eventResults = gson.fromJson(eventResultsString, eventResultsType);
+
+            String topRowString = gson.toJson(parameters[1]);
+            Type topType = new TypeToken<ArrayList<Card>>(){}.getType();
+            ArrayList<Card> newTopRow = gson.fromJson(topRowString, topType);
+
+            String bottomRowString = gson.toJson(parameters[2]);
+            Type bottomType = new TypeToken<ArrayList<Card>>(){}.getType();
+            ArrayList<Card> newBottomRow = gson.fromJson(bottomRowString, bottomType);
+
+            String topBuildingsString = gson.toJson(parameters[3]);
+            Type topBuildType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+            ArrayList<BuildingCard> newTopBuildings = gson.fromJson(topBuildingsString, topBuildType);
+
+            String bottomBuildingsString = gson.toJson(parameters[4]);
+            Type bottomBuildType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+            ArrayList<BuildingCard> newBottomBuildings = gson.fromJson(bottomBuildingsString, bottomBuildType);
             try {
-                client.updateStartRound(eventResults);
+                client.updateStartRound(eventResults, newTopRow, newBottomRow, newTopBuildings, newBottomBuildings);
             } catch (IOException e){}
         });
         commandHandlers.put(SocketHeaderNames.CHOSEN_TOTEM_COLOR, parameters -> {
@@ -193,44 +209,6 @@ public class SocketServerHandler implements Runnable{
                 client.updateGatherersDiscount(playerName, discount);
             } catch (IOException e) {}
         });
-        commandHandlers.put(SocketHeaderNames.UPDATED_TOP_ROW, parameters -> {
-            String topRowString = gson.toJson(parameters[0]);
-            Type type = new TypeToken<ArrayList<Card>>(){}.getType();
-            ArrayList<Card> newTopRow = gson.fromJson(topRowString, type);
-            try {
-                client.updateTopRow(newTopRow);
-            } catch (IOException e) {}
-        });
-        commandHandlers.put(SocketHeaderNames.UPDATED_TOP_BUILDINGS, parameters -> {
-            String topBuildingsString = gson.toJson(parameters[0]);
-            Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
-            ArrayList<BuildingCard> newTopBuildings = gson.fromJson(topBuildingsString, type);
-            try {
-                client.updateTopBuildings(newTopBuildings);
-            } catch (IOException e) {}
-        });
-        commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_ROW, parameters -> {
-            String bottomRowString = gson.toJson(parameters[0]);
-            Type type = new TypeToken<ArrayList<Card>>(){}.getType();
-            ArrayList<Card> newBottomRow = gson.fromJson(bottomRowString, type);
-            try {
-                client.updateBottomRow(newBottomRow);
-            } catch (IOException e) {}
-        });
-        commandHandlers.put(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, parameters -> {
-            String bottomBuildingsString = gson.toJson(parameters[0]);
-            Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
-            ArrayList<BuildingCard> newBottomBuildings = gson.fromJson(bottomBuildingsString, type);
-            try {
-                client.updateBottomBuildings(newBottomBuildings);
-            } catch (IOException e) {}
-        });
-//        commandHandlers.put(SocketHeaderNames.NEXT_PLAYER, parameters -> {
-//           String playerName = (String) parameters[0];
-//           try {
-//               client.updateNextPlayer(playerName);
-//           } catch (IOException e) {}
-//        });
         commandHandlers.put(SocketHeaderNames.CHANGED_GAME_PHASE, parameters -> {
             GamePhase phase = GamePhase.valueOf((String) parameters[0]);
             try {

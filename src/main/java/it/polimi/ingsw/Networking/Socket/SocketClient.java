@@ -79,8 +79,10 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
-        controller.updateStartRound(lastEventsResults);
+    public void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                                 ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                                 ArrayList<BuildingCard> newBottomBuildings) {
+        controller.updateStartRound(lastEventsResults, newTopRow, newBottomRow, newTopBuildings, newBottomBuildings);
     }
 
     @Override
@@ -122,26 +124,6 @@ public class SocketClient implements VirtualSocketClient {
     @Override
     public void updateGatherersDiscount(String playerName, int discount) throws IOException {
         controller.updateGatherersDiscount(playerName, discount);
-    }
-
-    @Override
-    public void updateTopRow(ArrayList<Card> newTopRow) {
-        controller.updateTopRow(newTopRow);
-    }
-
-    @Override
-    public void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
-        controller.updateTopBuildings(newTopBuildings);
-    }
-
-    @Override
-    public void updateBottomRow(ArrayList<Card> newBottomRow) {
-        controller.updateBottomRow(newBottomRow);
-    }
-
-    @Override
-    public void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
-        controller.updateBottomBuildings(newBottomBuildings);
     }
 
     @Override

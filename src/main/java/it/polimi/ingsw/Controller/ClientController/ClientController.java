@@ -637,7 +637,7 @@ public class ClientController implements ClientViewUpdate {
             localModel.getPlayerTribe(player).modifyFood(initialFood.get(player));
         }
         view.showInitialFood(initialFood);
-        updateStartRound(Collections.emptyMap());
+        updateStartRound(Collections.emptyMap(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
     /**
@@ -648,12 +648,24 @@ public class ClientController implements ClientViewUpdate {
      * @param lastEventsResults a map containing the result of the events resolved the previous round. It maps from the
      *                          {@link EventType} to an array of {@link PlayerEventResults}, containing the name of the
      *                          player and the food taken and prestige points gained or lost during that event.
+     * @param newTopRow the list of cards of the repopulated top row.
+     * @param newBottomRow the list of cards of the new bottom row.
+     * @param newTopBuildings the list of Building cards of the new top row (changes only when era changes).
+     * @param newBottomBuildings the list of Building cards of the new bottom row (may change only when era changes).
      */
     @Override
-    public void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
+    public void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                                 ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                                 ArrayList<BuildingCard> newBottomBuildings) {
         localModel.updateGamePhase(GamePhase.START_TURN);
         localModel.updateCurrentRound(localModel.getCurrentRound() + 1);
         localModel.setCurrentPlayer("");
+        if (localModel.getCurrentRound() >= 2) {
+            localModel.updateTopRow(newTopRow);
+            localModel.updateBottomRow(newBottomRow);
+            localModel.updateTopRowBuildings(newTopBuildings);
+            localModel.updateBottomRowBuildings(newBottomBuildings);
+        }
 
         // UPDATING EVENTS RESULTS using deltas
         if (!lastEventsResults.isEmpty()) {
@@ -766,42 +778,6 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateGatherersDiscount(String playerName, int discount) {
         localModel.updateGatherersDiscount(playerName, discount);
-    }
-
-    /**
-     * It updates the players' local models with the new top row when a new round has started.
-     * @param newTopRow the array containing the cards (characters or events) of the new top row.
-     */
-    @Override
-    public void updateTopRow(ArrayList<Card> newTopRow) {
-        localModel.updateTopRow(newTopRow);
-    }
-
-    /**
-     * It updates the players' local models with the new top building row when a new round has started.
-     * @param newTopBuildings the array containing the building of the new top building row.
-     */
-    @Override
-    public void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
-        localModel.updateTopRowBuildings(newTopBuildings);
-    }
-
-    /**
-     * It updates the players' local models with the new bottom row when a new round has started.
-     * @param newBottomRow the array containing the cards (characters or events) of the new bottom row.
-     */
-    @Override
-    public void updateBottomRow(ArrayList<Card> newBottomRow) {
-        localModel.updateBottomRow(newBottomRow);
-    }
-
-    /**
-     * It updates the players' local models with the new bottom building row when a new round has started.
-     * @param newBottomBuildings the array containing the building of the new bottom building row.
-     */
-    @Override
-    public void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
-        localModel.updateBottomRowBuildings(newBottomBuildings);
     }
 
     /**

@@ -239,10 +239,25 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     }
 
     @Override
-    public void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
+    public void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                                 ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                                 ArrayList<BuildingCard> newBottomBuildings) {
+
         Type type = new TypeToken<Map<EventType, ArrayList<PlayerEventResults>>>(){}.getType();
         JsonElement serializedEvents = gson.toJsonTree(lastEventsResults, type);
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_ROUND, serializedEvents);
+
+        Type topType = new TypeToken<ArrayList<Card>>(){}.getType();
+        JsonElement serializedTopRow = gson.toJsonTree(newTopRow, topType);
+
+        Type bottomType = new TypeToken<ArrayList<Card>>(){}.getType();
+        JsonElement serializedBottomRow = gson.toJsonTree(newBottomRow, bottomType);
+
+        Type topBuildType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+        JsonElement serializedTopBuilding = gson.toJsonTree(newTopBuildings, topBuildType);
+
+        Type bottomBuildType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
+        JsonElement serializedBottomBuilding = gson.toJsonTree(newBottomBuildings, bottomBuildType);
+        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_ROUND, serializedEvents, serializedTopRow, serializedBottomRow, serializedTopBuilding, serializedBottomBuilding);
         sendMessage(message);
     }
 
@@ -292,38 +307,6 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     @Override
     public void notifyNewPrestigePoints(String playerName, int newPP) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_PRESTIGE_POINTS, playerName, newPP);
-        sendMessage(message);
-    }
-
-    @Override
-    public void notifyTopRow(ArrayList<Card> newTopRow) {
-        Type type = new TypeToken<ArrayList<Card>>(){}.getType();
-        JsonElement serializedMessage = gson.toJsonTree(newTopRow, type);
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_TOP_ROW, serializedMessage);
-        sendMessage(message);
-    }
-
-    @Override
-    public void notifyTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
-        Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
-        JsonElement serializedMessage = gson.toJsonTree(newTopBuildings, type);
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_TOP_BUILDINGS, serializedMessage);
-        sendMessage(message);
-    }
-
-    @Override
-    public void notifyBottomRow(ArrayList<Card> newBottomRow) {
-        Type type = new TypeToken<ArrayList<Card>>(){}.getType();
-        JsonElement serializedMessage = gson.toJsonTree(newBottomRow, type);
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_ROW, serializedMessage);
-        sendMessage(message);
-    }
-
-    @Override
-    public void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
-        Type type = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
-        JsonElement serializedMessage = gson.toJsonTree(newBottomBuildings, type);
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.UPDATED_BOTTOM_BUILDINGS, serializedMessage);
         sendMessage(message);
     }
 

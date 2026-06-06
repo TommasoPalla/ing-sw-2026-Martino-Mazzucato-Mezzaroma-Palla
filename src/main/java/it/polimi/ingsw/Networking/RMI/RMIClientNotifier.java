@@ -90,9 +90,11 @@ public class RMIClientNotifier implements ClientNotifier {
     }
 
     @Override
-    public void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) {
+    public void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                                 ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                                 ArrayList<BuildingCard> newBottomBuildings) {
         try {
-            clientStub.startRound(lastEventsResults);
+            clientStub.startRound(lastEventsResults, newTopRow, newBottomRow, newTopBuildings, newBottomBuildings);
         } catch (RemoteException e) {
             throw new StubException("could not notify start of new round");
         }
@@ -170,43 +172,7 @@ public class RMIClientNotifier implements ClientNotifier {
         }
     }
 
-    @Override
-    public void notifyTopRow(ArrayList<Card> newTopRow) {
-        try {
-            clientStub.updateTopRow(newTopRow);
-        } catch (Exception e) {
-            //throw new StubException("could not notify");
-        }
-    }
-
-    @Override
-    public void notifyTopBuildings(ArrayList<BuildingCard> newTopBuildings) {
-        try {
-            clientStub.updateTopBuildings(newTopBuildings);
-        } catch (Exception e) {
-            //throw new StubException("could not notify");
-        }
-    }
-
-    @Override
-    public void notifyBottomRow(ArrayList<Card> newBottomRow) {
-        try {
-            clientStub.updateBottomRow(newBottomRow);
-        } catch (RemoteException e) {
-            //throw new StubException("could not notify");
-        }
-    }
-
-    @Override
-    public void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) {
-        try {
-            clientStub.updateBottomBuildings(newBottomBuildings);
-        } catch (RemoteException e) {
-            //throw new StubException("could not notify");
-        }
-    }
-
-//    @Override
+    //    @Override
 //    public void notifyNextPlayer(String playerName) {
 //        try {
 //            clientStub.updateNextPlayer(playerName);

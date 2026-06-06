@@ -284,7 +284,7 @@ public class GameController {
         } catch (LastRoundException e) {
             System.out.println("[GAME " + gameInstance.getGameID() + "] Final round reached!");
             notifyAll(n -> {
-                n.notifyStartRound(lastEventsResults);
+                n.notifyStartRound(lastEventsResults, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             });
 
 //        if (isLastRound) {
@@ -328,12 +328,9 @@ public class GameController {
                 n.notifyEra(gameInstance.getEra());
             });
         }
+        OfferTrack offerTrack = gameInstance.getOfferTrack();
         notifyAll( n -> {
-            n.notifyTopRow(gameInstance.getOfferTrack().getTopRow());
-            n.notifyBottomRow(gameInstance.getOfferTrack().getBottomRow());
-            n.notifyTopBuildings(gameInstance.getOfferTrack().getTopBuildingCard());
-            n.notifyBottomBuildings(gameInstance.getOfferTrack().getBottomBuildingCard());
-            n.notifyStartRound(lastEventsResults);
+            n.notifyStartRound(lastEventsResults, offerTrack.getTopRow(), offerTrack.getBottomRow(), offerTrack.getTopBuildingCard(), offerTrack.getBottomBuildingCard());
         });
 
         gameInstance.setFirstPlayer();

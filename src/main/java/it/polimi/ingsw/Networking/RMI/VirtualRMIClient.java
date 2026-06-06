@@ -92,9 +92,15 @@ public interface VirtualRMIClient extends Remote {
     /**
      * Signals the start of a new game round.
      * @param lastEventsResults the results of all the events resolved at the end of the last round.
+     * @param newTopRow the list of cards of the repopulated top row.
+     * @param newBottomRow the list of cards of the new bottom row.
+     * @param newTopBuildings the list of Building cards of the new top row (changes only when era changes).
+     * @param newBottomBuildings the list of Building cards of the new bottom row (may change only when era changes).
      * @throws RemoteException if RMI communication fails.
      */
-    void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws RemoteException;
+    void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                    ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                    ArrayList<BuildingCard> newBottomBuildings) throws RemoteException;
 
     /**
      * Notifies that a player has drawn a card.
@@ -143,41 +149,6 @@ public interface VirtualRMIClient extends Remote {
     void updateBuildersDiscount(String playerName, int discount) throws RemoteException;
 
     void updateGatherersDiscount(String playerName, int discount) throws RemoteException;
-
-    /**
-     * Updates the cards in the top row of the offer track.
-     * @param newTopRow the new list of character cards.
-     * @throws RemoteException if RMI communication fails.
-     */
-    void updateTopRow(ArrayList<Card> newTopRow) throws RemoteException;
-
-    /**
-     * Updates the building cards in the top row.
-     * @param newTopBuildings the new list of building cards.
-     * @throws RemoteException if RMI communication fails.
-     */
-    void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) throws RemoteException;
-
-    /**
-     * Updates the cards in the bottom row.
-     * @param newBottomRow the new list of character cards.
-     * @throws RemoteException if RMI communication fails.
-     */
-    void updateBottomRow(ArrayList<Card> newBottomRow) throws RemoteException;
-
-    /**
-     * Updates the building cards in the bottom row.
-     * @param newBottomBuildings the new list of building cards.
-     * @throws RemoteException if RMI communication fails.
-     */
-    void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) throws RemoteException;
-
-//    /**
-//     * Notifies the name of the player whose turn is next.
-//     * @param playerName the name of the next player.
-//     * @throws RemoteException if RMI communication fails.
-//     */
-//    void updateNextPlayer(String playerName) throws RemoteException;
 
     /**
      * Notifies a change in the game phase.

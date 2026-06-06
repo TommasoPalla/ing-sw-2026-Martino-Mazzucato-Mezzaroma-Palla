@@ -78,8 +78,10 @@ public class RMIClient implements VirtualRMIClient {
     }
 
     @Override
-    public synchronized void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults) throws RemoteException {
-        controller.updateStartRound(lastEventsResults);
+    public synchronized void startRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                                        ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                                        ArrayList<BuildingCard> newBottomBuildings) throws RemoteException {
+        controller.updateStartRound(lastEventsResults, newTopRow, newBottomRow, newTopBuildings, newBottomBuildings);
     }
 
     @Override
@@ -135,26 +137,6 @@ public class RMIClient implements VirtualRMIClient {
     @Override
     public synchronized void updateGatherersDiscount(String playerName, int discount) throws RemoteException {
         controller.updateGatherersDiscount(playerName, discount);
-    }
-
-    @Override
-    public synchronized void updateTopRow(ArrayList<Card> newTopRow) throws RemoteException {
-        controller.updateTopRow(newTopRow);
-    }
-
-    @Override
-    public synchronized void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings) throws RemoteException {
-        controller.updateTopBuildings(newTopBuildings);
-    }
-
-    @Override
-    public synchronized void updateBottomRow(ArrayList<Card> newBottomRow) throws RemoteException {
-        controller.updateBottomRow(newBottomRow);
-    }
-
-    @Override
-    public synchronized void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings) throws RemoteException {
-        controller.updateBottomBuildings(newBottomBuildings);
     }
 
 

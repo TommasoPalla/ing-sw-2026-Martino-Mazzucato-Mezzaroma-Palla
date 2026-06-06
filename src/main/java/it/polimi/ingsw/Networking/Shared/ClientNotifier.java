@@ -75,8 +75,14 @@ public interface ClientNotifier {
     /**
      * Signals the start of a new round.
      * @param lastEventsResults the results of all the events resolved at the end of the last round.
+     * @param newTopRow the list of cards of the repopulated top row.
+     * @param newBottomRow the list of cards of the new bottom row.
+     * @param newTopBuildings the list of Building cards of the new top row (changes only when era changes).
+     * @param newBottomBuildings the list of Building cards of the new bottom row (may change only when era changes).
      */
-    void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults);
+    void notifyStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                          ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                          ArrayList<BuildingCard> newBottomBuildings);
 
     /**
      * Notifies that a card has been drawn by a player.
@@ -126,30 +132,6 @@ public interface ClientNotifier {
     void notifyNewBuildersDiscount(String playerName, int discount);
 
     void notifyNewGatherersDiscount(String playerName, int discount);
-
-    /**
-     * Updates the top row character cards.
-     * @param newTopRow the new list of cards.
-     */
-    void notifyTopRow(ArrayList<Card> newTopRow);
-
-    /**
-     * Updates the top row building cards.
-     * @param newTopBuildings the new list of building cards.
-     */
-    void notifyTopBuildings(ArrayList<BuildingCard> newTopBuildings);
-
-    /**
-     * Updates the bottom row character cards.
-     * @param newBottomRow the new list of cards.
-     */
-    void notifyBottomRow(ArrayList<Card> newBottomRow);
-
-    /**
-     * Updates the bottom row building cards.
-     * @param newBottomBuildings the new list of building cards.
-     */
-    void notifyBottomBuildings(ArrayList<BuildingCard> newBottomBuildings);
 
     /**
      * Notifies a change in game phase.

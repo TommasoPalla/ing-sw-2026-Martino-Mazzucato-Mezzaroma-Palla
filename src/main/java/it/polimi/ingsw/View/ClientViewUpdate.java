@@ -26,17 +26,15 @@ public interface ClientViewUpdate {
     void updateTurnPassed(String playerName);
     void updateTotemColor(String playerName, Color totemColor);
 
-    void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults);
+    void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
+                          ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
+                          ArrayList<BuildingCard> newBottomBuildings);
     void updateCurrentOfferTile(String playerName, int index);
     void updateFoodReserve(String playerName, int food);
     void updateShamansStars(String playerName, int stars);
     void updatePrestigePoints(String playerName, int pp);
     void updateBuildersDiscount(String playerName, int discount);
     void updateGatherersDiscount(String playerName, int discount);
-    void updateTopRow(ArrayList<Card> newTopRow);
-    void updateTopBuildings(ArrayList<BuildingCard> newTopBuildings);
-    void updateBottomRow(ArrayList<Card> newBottomRow);
-    void updateBottomBuildings(ArrayList<BuildingCard> newBottomBuildings);
     void updateGamePhase(GamePhase phase);
     void updateCurrentEra(int era);
     void updateEndGame(Map<String, Integer> finalRanking);
