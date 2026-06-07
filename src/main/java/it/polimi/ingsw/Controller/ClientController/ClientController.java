@@ -232,7 +232,7 @@ public class ClientController implements ClientViewUpdate {
      */
     public void chooseOfferTile(int index) {
         if (clientState == ClientState.DRAW_CARD)
-            throw new IllegalClientStateActionException("ERROR: You have to place your totem right now!");
+            throw new IllegalClientStateActionException("ERROR: You have to draw cards right now!");
         if (clientState == ClientState.NOT_IN_TURN)
             throw new IllegalClientStateActionException("ERROR: Wait for your turn!");
         if (clientState != ClientState.PLACE_TOTEM)
@@ -254,7 +254,7 @@ public class ClientController implements ClientViewUpdate {
      */
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index){
         if (clientState == ClientState.PLACE_TOTEM)
-            throw new IllegalClientStateActionException("ERROR: You have to draw right now!");
+            throw new IllegalClientStateActionException("ERROR: You have to place your totem right now!");
         if (clientState == ClientState.NOT_IN_TURN)
             throw new IllegalClientStateActionException("ERROR: Wait for your turn!");
         if (clientState != ClientState.DRAW_CARD)

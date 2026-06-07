@@ -13,6 +13,7 @@ import javafx.util.Duration;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 
 /** Utility for rendering notification banners in the JavaFX GUI.
@@ -48,7 +49,7 @@ public class GameSceneBanner {
      */
     public GameSceneBanner(AnchorPane target){
         this.target = target;
-        this.bannerQueue = new LinkedList<>();
+        this.bannerQueue = new ConcurrentLinkedDeque<>();
         this.isDisplayBusy = false;
     }
 
@@ -87,6 +88,7 @@ public class GameSceneBanner {
 
         overlay = new StackPane();
         overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.0);");
+        overlay.setAlignment(Pos.TOP_CENTER);
         AnchorPane.setTopAnchor(overlay, 0.0);
         AnchorPane.setBottomAnchor(overlay, 0.0);
         AnchorPane.setLeftAnchor(overlay, 0.0);

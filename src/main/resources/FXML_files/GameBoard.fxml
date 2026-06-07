@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:id="rootPane"
+            fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameBoardController">
+    <stylesheets>
+        <URL value="@/style.css"/>
+    </stylesheets>
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15" />
+    </padding>
+
+    <top>
+        <HBox alignment="CENTER" spacing="70">
+            <BorderPane.margin>
+                <Insets bottom="15"/>
+            </BorderPane.margin>
+            <HBox fx:id="topRow" spacing="10" alignment="CENTER_LEFT"
+                  styleClass="tribe-cards-row">
+                <padding>
+                    <Insets left="10" top="10" right="10" bottom="10"/>
+                </padding>
+            </HBox>
+
+            <HBox fx:id="topBuildings" styleClass="buildings-row"
+                  alignment="CENTER_RIGHT">
+                <padding>
+                    <Insets left="10" top="10" right="10" bottom="10"/>
+                </padding>
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="70">
+            <padding>
+                <Insets left="10" top="10" right="10" bottom="10"/>
+            </padding>
+
+            <ImageView fx:id="deck" fitHeight="153.0" fitWidth="102.0" preserveRatio="true"
+                       styleClass="offer-track"/>
+
+            <HBox fx:id="offerTrack" styleClass="offer-track"
+                  alignment="CENTER" />
+
+            <!--TODO: inserire elemento che idncia carte rimaste-->
+            <HBox fx:id="cardsRemaining" styleClass="cards-remaining-box"/>
+        </HBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="70" >
+            <BorderPane.margin>
+                <Insets top="15" />
+            </BorderPane.margin>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
+            <HBox fx:id="bottomRow" styleClass="tribe-cards-row"
+                  alignment="CENTER_LEFT">
+                <padding>
+                    <Insets left="10" top="10" right="10" bottom="10"/>
+                </padding>
+            </HBox>
+
+            <HBox fx:id="bottomBuildings" styleClass="buildings-row"
+                  alignment="CENTER_RIGHT">
+                <padding>
+                    <Insets left="10" top="10" right="10" bottom="10"/>
+                </padding>
+            </HBox>
+        </HBox>
+    </bottom>
+
+</BorderPane>

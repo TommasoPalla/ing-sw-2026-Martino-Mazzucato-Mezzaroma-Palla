@@ -291,7 +291,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showNewGamePhase(GamePhase newGamePhase) {
-
+        Platform.runLater(() -> {
+            if (gameScene != null) {
+                gameScene.showNewGamePhase(newGamePhase);
+            }
+        });
     }
 
     @Override

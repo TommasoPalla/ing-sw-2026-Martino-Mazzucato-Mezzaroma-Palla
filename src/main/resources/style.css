@@ -71,8 +71,39 @@
     -fx-border-color: -fx-primary-accent-color;
 }
 
+
+@keyframes zoom-in {
+    from { -fx-scale-x: 1.0; -fx-scale-y: 1.0; }
+    to   { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+}
+@keyframes zoom-out {
+    from {
+        -fx-scale-x: 1.05;
+        -fx-scale-y: 1.05;
+    }
+    to {
+        -fx-scale-x: 1.0;
+        -fx-scale-y: 1.0;
+    }
+}
+
 .tile-style {
+    -fx-cursor: default;
     -fx-border-radius: 10.0;
+    -fx-effect: null;
+    -fx-animation-name: zoom-out;
+    -fx-animation-duration: 0.15s;
+    -fx-animation-fill-mode: forwards;
+}
+.tile-style:selectable {
+    -fx-cursor: hand;
+    -fx-border-width: 5;
+    -fx-border-radius: 10;
+    -fx-border-color: -fx-secondary-accent-color;
+    -fx-animation-name: zoom-in;
+    -fx-animation-duration: 0.15s;
+    -fx-animation-fill-mode: forwards;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 255, 0, 0.6), 15, 0.3, 0, 0);
 }
 
 
@@ -126,6 +157,16 @@
     -fx-background-color: -fx-light-color;
     -fx-background-radius: 10;
     -fx-padding: 10;
+}
+
+.cards-remaining-box {
+    -fx-background-color: -fx-light-color;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-width: 4;
+    -fx-border-color: -fx-primary-accent-color;
+    -fx-padding: 10;
+    -fx-spacing: 5;
 }
 
 
