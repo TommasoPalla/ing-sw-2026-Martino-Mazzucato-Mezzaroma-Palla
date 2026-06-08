@@ -23,6 +23,7 @@ src/main/resources/Images/
 
 # Generated files
 .idea/**/contentModel.xml
+htmlReport/*
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
