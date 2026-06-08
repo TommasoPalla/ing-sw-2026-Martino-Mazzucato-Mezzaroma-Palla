@@ -65,7 +65,7 @@ public class ClientControllerTest {
         @Override public void showNewGamePhase(GamePhase newGamePhase) {}
         @Override public void showFoodModified(String playerName, int food) {}
         @Override public void showPrestigePointsModified(String playerName, int pp) {}
-        @Override public void showEvent(EventType eventType, int foodModified, int ppModified) {}
+        @Override public void showEvent(String playerName, EventType eventType, int foodModified, int ppModified) {}
         @Override public void showEndGame(Map<String, Integer> finalRanking) {}
         @Override public void showLeaderboardInfo(int playerPosition) {}
     }
