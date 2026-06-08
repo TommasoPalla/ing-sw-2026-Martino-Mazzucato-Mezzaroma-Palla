@@ -154,9 +154,6 @@ public class ClientController implements ClientViewUpdate {
     }
 
     public Map<Integer, GamePlayers> getAvailableGames(){
-//        if(clientState != ClientState.SETUP){
-//            throw new IllegalClientStateActionException("You cannot do that right now!");
-//        }
         return availableGames;
     }
 

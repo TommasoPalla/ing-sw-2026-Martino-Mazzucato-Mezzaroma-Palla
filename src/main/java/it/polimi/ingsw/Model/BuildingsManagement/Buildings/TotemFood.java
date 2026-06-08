@@ -12,20 +12,17 @@ import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
  * take 1 additional Food token. The building has no effect if the totem is placed in the last space.
  */
 public class TotemFood extends BuildingCard {
-    private Game game;
     private final int foodBonus;
 
     public TotemFood(Game gameInstance, int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
                      String effectDescription, int prestige, int foodBonus) {
         super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
-        this.game = gameInstance;
         this.foodBonus = foodBonus;
     }
     public TotemFood(BuildingCardDTO buildingData){
         super(buildingData.era, buildingData.cardID, buildingData.cost,
                 buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,
                 buildingData.prestige);
-        this.game = null;
         this.foodBonus = buildingData.foodBonus;
     }
 
@@ -36,8 +33,8 @@ public class TotemFood extends BuildingCard {
 
     @Override
     public void applyEffect() {
-        int playerTurn = game.getOfferTrack().getTurnTile().getTurnOrder().indexOf(this.getOwner());
-        if(game.getOfferTrack().getTurnTile().getTileModifier()[playerTurn] > 0){
+        int playerTurn = this.getOwner().getGame().getOfferTrack().getTurnTile().getTurnOrder().indexOf(this.getOwner());
+        if(this.getOwner().getGame().getOfferTrack().getTurnTile().getTileModifier()[playerTurn] > 0){
             this.getOwner().getTribe().modifyFood(this.foodBonus);
         }
     }

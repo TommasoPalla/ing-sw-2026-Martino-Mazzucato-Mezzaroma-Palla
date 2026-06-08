@@ -75,7 +75,9 @@ public class ShamanicRitualEvent extends EventCard implements EventStrategy{
             context.putParam(Parameters.PRESTIGE_BONUS, eventCard.getPrestigeBonus());
 
             //qui chiedo al building manager di fare le sue cose (nello specifico di raddoppiare i punti per chi vince)
+            System.out.println("before using building: " + player.getName() + " PP: " + context.getParam(Parameters.PRESTIGE_BONUS));
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
+            System.out.println("after using building: " + player.getName() + " PP: " + context.getParam(Parameters.PRESTIGE_BONUS));
 
             //prendo i punti bonus dal context che e' stato modificato dal building manager e li do al player
             int finalBonusPoints = context.getParam(Parameters.PRESTIGE_BONUS);
