@@ -25,6 +25,8 @@ public class NoMalusRitual extends BuildingCard {
 
     @Override
     public void applyEffect(EffectContext context) {
+        if(context.getParam(Parameters.PRESTIGE_BONUS) > 0)
+            return;
         context.putParam(Parameters.PRESTIGE_MALUS, 0);
     }
 

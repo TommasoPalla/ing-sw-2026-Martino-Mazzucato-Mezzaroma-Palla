@@ -33,8 +33,10 @@ public class MultiBonusRitual extends BuildingCard {
 
     @Override
     public void applyEffect(EffectContext context) {
+        if(context.getParam(Parameters.PRESTIGE_MALUS) > 0)
+            return;
         int ritualPoints = context.getParam(Parameters.PRESTIGE_BONUS);
-        if(ritualPoints > 0) ritualPoints *= this.multiplier;     //potrebbe lanciare un eccezione
+        if(ritualPoints > 0) ritualPoints *= this.multiplier;
         context.putParam(Parameters.PRESTIGE_BONUS, ritualPoints);
     }
 

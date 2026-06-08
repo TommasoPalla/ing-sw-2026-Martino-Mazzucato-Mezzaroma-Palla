@@ -73,6 +73,7 @@ public class ShamanicRitualEvent extends EventCard implements EventStrategy{
             //inizializzo il context: player corrente con bonus di punti che dipende dalla carta evento (Era)
             EffectContext context = new EffectContext(player);
             context.putParam(Parameters.PRESTIGE_BONUS, eventCard.getPrestigeBonus());
+            context.putParam(Parameters.PRESTIGE_MALUS, 0);
 
             //qui chiedo al building manager di fare le sue cose (nello specifico di raddoppiare i punti per chi vince)
             System.out.println("before using building: " + player.getName() + " PP: " + context.getParam(Parameters.PRESTIGE_BONUS));
@@ -89,7 +90,9 @@ public class ShamanicRitualEvent extends EventCard implements EventStrategy{
             context.putParam(Parameters.PRESTIGE_BONUS, 0);
             context.putParam(Parameters.PRESTIGE_MALUS, eventCard.getPrestigeMalus());
 
+            System.out.println("before using building: " + player.getName() + " PP: " + context.getParam(Parameters.PRESTIGE_BONUS));
             buildingManager.useBuilding(GamePhase.ON_EVENT, context, ShamanicRitualEvent.class);
+            System.out.println("after using building: " + player.getName() + " PP: " + context.getParam(Parameters.PRESTIGE_BONUS));
 
             int finalMalusPoints = context.getParam(Parameters.PRESTIGE_MALUS);
             player.getTribe().modifyPrestigePoints(-finalMalusPoints);
