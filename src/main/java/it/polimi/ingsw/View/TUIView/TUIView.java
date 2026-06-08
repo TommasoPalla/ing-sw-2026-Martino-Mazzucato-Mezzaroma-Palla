@@ -495,6 +495,13 @@ public class TUIView implements ViewInterface {
         System.out.println("If you want to see the entire leaderboard type \"see_leaderboard()\". Else, type \"leave()\" to go back to setup to create or join another game of Mesos!");
     }
 
+    @Override
+    public void showEndGameLeft() {
+        System.out.println();
+        System.out.println("You have left the game!");
+        printAvailableActions(clientController.getClientState(), false);
+    }
+
     /*
      * -----------------------------------------------------------------------------------------------------------------
      * METHODS FOR PRINTING INFORMATION LIKE CARDS, OFFER TRACK, AVAILABLE COMMANDS AND ACTIONS  -----------------------
@@ -930,6 +937,7 @@ public class TUIView implements ViewInterface {
         System.out.println("- show_building_info(cardID): to see all the information about the card.");
         System.out.println("- show_my_tribe(): to visualize your own tribe.");
         System.out.println("- show_other_tribe(player_name): to visualize the tribe of another player.");
+        System.out.println("- leave_game(): to leave this game and return to setup.");
         System.out.println();
         System.out.println("Type \"help()\" at any time to know which commands are available in that game phase or turn!");
     }

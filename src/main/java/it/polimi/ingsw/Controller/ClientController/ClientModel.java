@@ -115,9 +115,9 @@ public class ClientModel {
                         : getBottomRow().get(index);
             }
         } catch (IndexOutOfBoundsException e) {
-            throw new IllegalDrawException("Index " + index + " is out of bounds for the selected row.");
+            throw new IllegalDrawException("Index " + (index + 1) + " is out of bounds for the selected row.");
         }
-        card.accept(visitor);   //throws IllegalDraw and InsufficientFood
+        card.accept(visitor);
     }
 
     /**

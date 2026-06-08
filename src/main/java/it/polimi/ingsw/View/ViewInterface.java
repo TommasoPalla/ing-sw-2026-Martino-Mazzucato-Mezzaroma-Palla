@@ -40,4 +40,5 @@ public interface ViewInterface {
     void showEvent(String playerName, EventType eventType, int foodModified, int ppModified);
     void showEndGame(Map<String, Integer> finalRanking);
     void showLeaderboardInfo(int playerPosition);
+    void showEndGameLeft();
 }

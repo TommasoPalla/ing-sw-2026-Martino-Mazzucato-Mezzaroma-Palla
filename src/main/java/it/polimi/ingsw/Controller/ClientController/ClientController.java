@@ -173,11 +173,8 @@ public class ClientController implements ClientViewUpdate {
      * state is "IN_LOBBY".
      */
     public void leaveGame(){
-        if(clientState == ClientState.SETUP){
+        if(clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.END_GAME){
             throw new IllegalClientStateActionException("ERROR: You can't leave a game if you're not in one!");
-        }
-        if(clientState != ClientState.IN_LOBBY){
-            throw new IllegalClientStateActionException("ERROR: You can't leave the game now!");
         }
         connection.leaveGame(playerName, localModel.getGameId());
         setClientState(ClientState.SETUP);
@@ -303,7 +300,7 @@ public class ClientController implements ClientViewUpdate {
             throw new IllegalClientStateActionException("ERROR: Invalid command, please try again...");
         }
         clientState = ClientState.SETUP;
-        System.out.println("Client " + playerName + " has left the game!");
+        view.showEndGameLeft();
     }
 
 

@@ -95,10 +95,9 @@ public record CommandParser(ClientController clientController) {
         String[] commandArgs = parseArguments(CommandType.PLACE_TOTEM, argsString);
         int index;
         try {
-            index = Integer.parseInt(commandArgs[0]);
+            index = Integer.parseInt(commandArgs[0]) - 1;
         } catch (NumberFormatException e) {
-            //throw new RuntimeException(e.getMessage()); forse??
-            return;
+            throw new IllegalArgumentException("ERROR: the argument must be a number ranging from 1 to " + clientController.getLocalModel().getOfferTiles().size());
         }
         try {
             clientController.chooseOfferTile(index);
@@ -166,7 +165,7 @@ public record CommandParser(ClientController clientController) {
         String[] commandArgs = parseArguments(CommandType.DRAW_CARD, argsString);
 
         try {
-            index = Integer.parseInt(commandArgs[2]);
+            index = Integer.parseInt(commandArgs[2]) - 1;
             fromTopRow = parseRowBoolean(commandArgs[0]);
             fromBuilding = parseCardBoolean(commandArgs[1]);
         } catch (NumberFormatException e) {
@@ -176,9 +175,6 @@ public record CommandParser(ClientController clientController) {
         }
         //non vanno try e catch perché drawCard lancia eccezioni già "formattate" nel formato che piace alla view
         clientController.drawCard(fromTopRow, fromBuilding,  index);
-        /*catch (IllegalActionPhaseException e) {
-            throw new IllegalActionPhaseException();
-        }*/
     }
 
     /**

@@ -143,6 +143,16 @@ public class GameController {
      */
     public void removeClient(String playerName) {
         if(connectedClients.containsKey(playerName)) {
+            if (gameInstance.isStarted()) {
+                try {
+                    notifyAll( n -> {
+                        n.notifyForceQuit(playerName);
+                    });
+                    return;
+                } catch (StubException e) {
+                    //handleCriticalDisconnection();
+                }
+            }
             gameInstance.getPlayersTotemColors().remove(playerName);
             try {
                 notifyAll( n -> {

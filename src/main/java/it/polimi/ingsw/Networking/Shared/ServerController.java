@@ -166,7 +166,7 @@ public class ServerController {
         if (activeGames.containsKey(leavingPlayer.gameID())) {
             System.out.println("[SERVER] Player '" + leavingPlayer.playerName() + "' leaving the game " + leavingPlayer.gameID());
             removeClientFromGame(leavingPlayer);
-            if(activeGames.get(leavingPlayer.gameID()).gameController().getConnectedClients().isEmpty()) {
+            if(activeGames.get(leavingPlayer.gameID()).gameController().getConnectedClients().isEmpty() || activeGames.get(leavingPlayer.gameID()).gameController().getGameModel().isStarted()) {
                 System.out.println("[SERVER] Game " + leavingPlayer.gameID() + " is empty. Deleting game instance.");
                 activeGames.remove(leavingPlayer.gameID());
             }
