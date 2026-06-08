@@ -740,7 +740,7 @@
       "cardID": "E1_B_6",
       "cost": 5,
       "activatedAt": "ON_EVENT",
-      "effect": "MR",
+      "effect": "NR",
       "effectDescription": "During the Shamanic Ritual Event, you do not\nlose Prestige Points if you have fewer Shamanic Star icons\nthan all other players.",
       "prestige": 2
     },
@@ -792,7 +792,7 @@
       "cardID": "E2_B_5",
       "cost": 7,
       "activatedAt": "ON_EVENT",
-      "effect": "NR",
+      "effect": "MR",
       "effectDescription": "During the Shamanic Ritual Event, if you have\nmore Shamanic Star icons than any of the other players,\nyou gain double the indicated Prestige Points.\nYou still gain Prestige Points in case of a tie.",
       "multiplier": 2
     },
