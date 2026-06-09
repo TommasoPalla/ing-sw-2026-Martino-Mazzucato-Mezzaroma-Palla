@@ -221,9 +221,7 @@ public class ServerController {
             });
         }
         for(SocketClientHandler client : socketClients){
-            notificationThreads.submit( () -> {
-                client.notifyAvailableGames(gamesData);
-            });
+            notificationThreads.submit( () -> client.notifyAvailableGames(gamesData));
         }
     }
 
@@ -252,8 +250,7 @@ public class ServerController {
     /**
      * Forwards to the game controller the request by the player to draw a card. It catches and rethrows a
      * {@link IllegalDrawException} if the card was not drawable. It also catches a {@link EndOfGameException} threw
-     * by the game Controller when the game is ended: the server updates the Mesos match history database with the
-     * players final scores and then extracts the leaderboard infos to notify them to players.
+     * by the game Controller when the game is ended.
      * @param playerRecord the {@link PlayerRecord} of the player, containing its name and the gameID.
      * @param fromTopRow true if the card drawn is from top row, false if from bottom.
      * @param fromBuildings true if the card drawn is from the Building cards row, false if otherwise.
@@ -270,31 +267,14 @@ public class ServerController {
         } catch (IllegalDrawException e){
             throw new IllegalDrawException();
         } catch (EndOfGameException e) {
-            Map<String,Integer> finalRanking = currentController.getFinalRanking();
-            int playersNum = finalRanking.size();
-            try {
-                for (String player : finalRanking.keySet()) {
-                    leaderboardDAO.saveMatchResult(player, finalRanking.get(player), playersNum);
-                }
-                List<String> leaderboard = leaderboardDAO.getLeaderboard(playersNum);
-                for (String player : finalRanking.keySet()) {
-                    int playerPosition = leaderboardDAO.getPlayerPosition(playersNum, finalRanking.get(player));
-                    currentController.getConnectedClientsNotifiers().get(player).notifyLeaderboardInfo(leaderboard, playerPosition);
-                }
-            } catch (SQLException e1) {
-                System.out.println("[ERROR]  Unable to connect to MySQL mesos database:");
-                e1.printStackTrace();
-            }
-            activeGames.remove(playerRecord.gameID());
+            endGame(currentController);
         }
     }
 
     /**
      * Forwards to the game controller the request by the player to pass his drawing turn if there are no more
      * available Character cards to draw and the player doesn't want to draw a Building card. It catches a
-     * {@link EndOfGameException} threw by the game Controller when the game is ended: the server updates the Mesos
-     * match history database with the players final scores and then extracts the leaderboard infos to notify them to
-     * players.
+     * {@link EndOfGameException} threw by the game Controller when the game is ended.
      * @param playerRecord the {@link PlayerRecord} of the player, containing its name and the gameID.
      */
     public void passTurn(PlayerRecord playerRecord) {
@@ -306,22 +286,7 @@ public class ServerController {
                 currentController.handlePassTurn(playerName);
             }
         } catch (EndOfGameException e) {
-            Map<String,Integer> finalRanking = currentController.getFinalRanking();
-            int playersNum = finalRanking.size();
-            try {
-                for (String player : finalRanking.keySet()) {
-                    leaderboardDAO.saveMatchResult(player, finalRanking.get(player), playersNum);
-                }
-                List<String> leaderboard = leaderboardDAO.getLeaderboard(playersNum);
-                for (String player : finalRanking.keySet()) {
-                    int playerPosition = leaderboardDAO.getPlayerPosition(playersNum, finalRanking.get(player));
-                    currentController.getConnectedClientsNotifiers().get(player).notifyLeaderboardInfo(leaderboard, playerPosition);
-                }
-            } catch (SQLException e1) {
-                System.out.println("[ERROR]  Unable to connect to MySQL mesos database:");
-                e1.printStackTrace();
-            }
-            activeGames.remove(playerRecord.gameID());
+            endGame(currentController);
         }
     }
 
@@ -341,6 +306,31 @@ public class ServerController {
         } catch(IllegalActionPhaseException | IllegalActionTurnException | OccupiedTileException e) {
             throw new InvalidSelectionException(e);
         }
+    }
+
+    /**
+     * It manages the final phase of a game. It takes every player's final score and saves it as a new record in the
+     * external Mesos match history database. Finally, it notifies every player with the leaderboard of games with the
+     * same number of players and their position in the leaderboard.
+     * @param controller the {@link GameController} of the ending game.
+     */
+    private void endGame(GameController controller) {
+        Map<String,Integer> finalRanking = controller.getFinalRanking();
+        int playersNum = finalRanking.size();
+        try {
+            for (String player : finalRanking.keySet()) {
+                leaderboardDAO.saveMatchResult(player, finalRanking.get(player), playersNum);
+            }
+            List<String> leaderboard = leaderboardDAO.getLeaderboard(playersNum);
+            for (String player : finalRanking.keySet()) {
+                int playerPosition = leaderboardDAO.getPlayerPosition(playersNum, player);
+                controller.getConnectedClientsNotifiers().get(player).notifyLeaderboardInfo(leaderboard, playerPosition);
+            }
+        } catch (SQLException e1) {
+            System.out.println("[ERROR]  Unable to connect to MySQL mesos database:");
+            e1.printStackTrace();
+        }
+        activeGames.remove(controller.getGameModel().getGameID());
     }
 
     public void handleDisconnection(PlayerRecord playerRecord){

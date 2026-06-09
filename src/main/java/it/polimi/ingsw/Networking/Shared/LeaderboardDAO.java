@@ -88,25 +88,28 @@ public class LeaderboardDAO {
      * This method extracts a player's position from the leaderboard of players considering the games with the
      * specified number of players.
      * @param playersNum the number of players to select only the scores who match this number.
-     * @param finalScore the final score of the player.
+     * @param nickname the nickname of the player.
      * @return the position of the player in the leaderboard. -1 if there has been an error.
      * @throws SQLException if it was not possible to execute the SQL query to the database.
      */
-    public int getPlayerPosition(int playersNum, int finalScore) throws SQLException {
-        // First it extracts the table 'best_scores' containing the record of players with their best final scores
-        // obtained in games with a number of players equal to playersNum. Then, from this table it counts the number of
-        // records with a final score higher than finalScore, and it adds 1 to get the player's position.
-        String query = "SELECT COUNT(*) + 1 AS player_rank " +
-                "FROM (" +
-                "    SELECT MAX(final_score) AS best_score " +
+    public int getPlayerPosition(int playersNum, String nickname) throws SQLException {
+        // First it extracts the leaderboard containing the names of players ranked by their best final scores
+        // obtained in games with a number of players equal to playersNum and adding the row number for every
+        // nickname's row saved as 'player_rank'. Then, from this table it extracts the record of the player with the
+        // requested nickname.
+        String query = "WITH GlobalLeaderboard AS (" +
+                "    SELECT nickname, " +
+                "           ROW_NUMBER() OVER (ORDER BY MAX(final_score) DESC) AS player_rank " +
                 "    FROM match_history " +
                 "    WHERE players_number = ? " +
                 "    GROUP BY nickname" +
-                ") AS best_scores " +
-                "WHERE best_score > ?";
+                ") " +
+                "SELECT player_rank " +
+                "FROM GlobalLeaderboard " +
+                "WHERE nickname = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, playersNum);
-            pstmt.setInt(2, finalScore);
+            pstmt.setString(2, nickname);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt("player_rank");
