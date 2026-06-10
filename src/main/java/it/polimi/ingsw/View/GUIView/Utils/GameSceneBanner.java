@@ -13,6 +13,7 @@ import javafx.util.Duration;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 
@@ -113,6 +114,7 @@ public class GameSceneBanner {
                 showDescription();
             });*/
             container.getChildren().add(currentRequest.customNode());
+            StackPane.setAlignment(currentRequest.customNode(), Pos.BASELINE_CENTER);
         }
 
         overlay.getChildren().add(container);

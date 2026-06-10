@@ -70,8 +70,9 @@
    </ScrollPane>
 
 
-   <VBox fx:id="tribeRegion" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="350" prefWidth="758" prefHeight="300"
-         styleClass="tribe-region">
+   <VBox fx:id="tribeRegion" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="350"
+         maxWidth="1000" maxHeight="380" prefHeight="380"
+         styleClass="tribe-region" spacing="5">
       <padding>
          <Insets top="15.0" bottom="15.0" left="20.0" right="20.0"/>
       </padding>
@@ -79,15 +80,15 @@
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/Food.png"/>
          </ImageView>
-         <Label fx:id="foodReserve" text="0" prefWidth="10"/>
+         <Label fx:id="foodReserve" text="0" prefWidth="20"/>
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/Prestige.png"/>
          </ImageView>
-         <Label fx:id="prestigePoints" text="0" prefWidth="10"/>
+         <Label fx:id="prestigePoints" text="0" prefWidth="20"/>
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/Characters.png"/>
          </ImageView>
-         <Label fx:id="charactersNumber" text="0" prefWidth="10"/>
+         <Label fx:id="charactersNumber" text="0" prefWidth="20"/>
 
          <Label text="My Tribe" alignment="TOP_CENTER" prefWidth="100">
             <font>
@@ -98,16 +99,16 @@
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/Sustenance.png"/>
          </ImageView>
-         <Label fx:id="sustenanceDiscount" text="0" prefWidth="10"/>
+         <Label fx:id="sustenanceDiscount" text="0" prefWidth="20"/>
 
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/BuildingsDiscount.png"/>
          </ImageView>
-         <Label fx:id="buildingsDiscount" text="0" prefWidth="10"/>
+         <Label fx:id="buildingsDiscount" text="0" prefWidth="20"/>
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/ShamanStar.png"/>
          </ImageView>
-         <Label fx:id="shamanStars" text="0" prefWidth="10"/>
+         <Label fx:id="shamanStars" text="0" prefWidth="20"/>
 
       </HBox>
 
@@ -120,37 +121,37 @@
 
          <VBox spacing="10" alignment="TOP_CENTER">
             <Label fx:id="huntersNumber" text="0"/>
-            <VBox fx:id="hunterColumn" prefWidth="113" prefHeight="270" spacing="-100"/>
+            <VBox fx:id="hunterColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
             <Label fx:id="buildersNumber" text="0"/>
-            <VBox fx:id="builderColumn" prefWidth="113" prefHeight="270" spacing="-100"/>
+            <VBox fx:id="builderColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
             <Label fx:id="gatherersNumber" text="0"/>
-            <VBox fx:id="gathererColumn" prefWidth="113" prefHeight="270" spacing="-100"/>
+            <VBox fx:id="gathererColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
             <Label fx:id="artistsNumber" text="0"/>
-            <VBox fx:id="artistColumn" prefWidth="113" prefHeight="270" spacing="-100"/>
+            <VBox fx:id="artistColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
             <Label fx:id="shamansNumber" text="0"/>
-            <VBox fx:id="shamanColumn" prefWidth="113" prefHeight="270" spacing="-100"/>
+            <VBox fx:id="shamanColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
             <Label fx:id="inventorsNumber" text="0"/>
-            <VBox fx:id="inventorColumn" prefWidth="113" prefHeight="270" spacing="-100"/>
+            <VBox fx:id="inventorColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
             <Label text="Buildings"/>
-            <VBox fx:id="buildingColumn" prefWidth="113" prefHeight="270" spacing="-100"/>
+            <VBox fx:id="buildingColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
       </HBox>

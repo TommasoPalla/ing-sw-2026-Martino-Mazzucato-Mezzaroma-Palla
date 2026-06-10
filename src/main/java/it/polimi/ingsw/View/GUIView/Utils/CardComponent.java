@@ -38,7 +38,7 @@ public class CardComponent implements BoardInteractionStrategy {
         this.fromBuildings = fromBuildings;
         this.index = index;
         this.listener = listener;
-        this.cardLayout.getStyleClass().add("game-card");
+        this.cardLayout.getStyleClass().add("card-style");
 
         Node cardImageNode = ImageManager.getCardNode(cardId);
         this.cardLayout.setPrefSize(GUISettings.Cards.WIDTH, GUISettings.Cards.HEIGHT);

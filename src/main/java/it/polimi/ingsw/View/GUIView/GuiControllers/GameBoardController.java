@@ -1,17 +1,16 @@
 package it.polimi.ingsw.View.GUIView.GuiControllers;
 
+import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
 import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Gui;
-import it.polimi.ingsw.View.GUIView.Utils.BoardActionListener;
-import it.polimi.ingsw.View.GUIView.Utils.CardComponent;
-import it.polimi.ingsw.View.GUIView.Utils.ImageManager;
-import it.polimi.ingsw.View.GUIView.Utils.TileComponent;
+import it.polimi.ingsw.View.GUIView.Utils.*;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -20,19 +19,24 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class GameBoardController {
 
     private Gui gui;
     private BoardActionListener actionListener;
     //private GameSceneController parentController;
-    private static final PseudoClass SELECTABLE_PSEUDO = PseudoClass.getPseudoClass("selectable");
+    private String localPlayer;
 
+    private static final PseudoClass SELECTABLE_PSEUDO = PseudoClass.getPseudoClass("selectable");
     private static final String BACK_ERA_1 = "/Images/CardImages/Era_1.png";
     private static final String BACK_ERA_2 = "/Images/CardImages/Era_2.png";
     private static final String BACK_ERA_3 = "/Images/CardImages/Era_3.png";
+
+    private static final Pattern CHARACTER_CARD_ID = Pattern.compile("^E\\d_C.*$");
 
 
     @FXML
@@ -50,7 +54,11 @@ public class GameBoardController {
     @FXML
     private HBox offerTrack;
     @FXML
-    private HBox cardsRemaining;
+    private HBox remainingCards;
+    @FXML
+    private Label cardsTop;
+    @FXML
+    private Label cardsBottom;
 
 
     @FXML
@@ -59,11 +67,13 @@ public class GameBoardController {
         bottomRow.setVisible(false);
         topBuildings.setVisible(false);
         bottomBuildings.setVisible(false);
+        remainingCards.setVisible(false);
         setDeckImage(1);
     }
 
-    public void setup(Gui gui) {
+    public void setup(Gui gui, String localPlayer) {
         this.gui = gui;
+        this.localPlayer = localPlayer;
         updateInitialGameState();
     }
 
@@ -103,6 +113,11 @@ public class GameBoardController {
     }
 
     private void updateInitialGameState(){
+        topRow.managedProperty().bind(topRow.visibleProperty());
+        bottomRow.managedProperty().bind(bottomRow.visibleProperty());
+        topBuildings.managedProperty().bind(topBuildings.visibleProperty());
+        bottomBuildings.managedProperty().bind(bottomBuildings.visibleProperty());
+
         initOfferTrack();
         updateTopRow();
         updateBottomRow();
@@ -139,11 +154,14 @@ public class GameBoardController {
 
             CardComponent cardRepresentation = new CardComponent(card.getCardID(), true, false,
                     i, actionListener);
+            cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
             // Aggiunge il nodo grafico al layout lineare
             topRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
+        topRow.setVisible((i > 0) ? true
+                : false);
     }
 
     public void updateBottomRow() {
@@ -156,10 +174,14 @@ public class GameBoardController {
 
             CardComponent cardRepresentation = new CardComponent(card.getCardID(), false, false,
                     i, actionListener);
+            cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
+
             // Aggiunge il nodo grafico al layout lineare
             bottomRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
+        bottomRow.setVisible((i > 0) ? true
+                : false);
     }
 
     public void updateTopBuildings() {
@@ -171,10 +193,13 @@ public class GameBoardController {
 
             CardComponent cardRepresentation = new CardComponent(building.getCardID(), true, true,
                     i, actionListener);
+            cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
             topBuildings.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
+        topBuildings.setVisible((i > 0) ? true
+                                        : false);
     }
 
     public void updateBottomBuildings() {
@@ -186,13 +211,16 @@ public class GameBoardController {
 
             CardComponent cardRepresentation = new CardComponent(building.getCardID(), false, true,
                     i, actionListener);
+            cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
             bottomBuildings.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
+        bottomBuildings.setVisible((i > 0) ? true
+                : false);
     }
 
-    //TODO: quando inizia il round non viene attivato
+
     public void toggleSelectableTiles(boolean areSelectable) {
         int i = 1;
         for(OfferTile tile: gui.getClientController().getLocalModel().getOfferTiles()) {
@@ -202,15 +230,78 @@ public class GameBoardController {
         }
     }
 
-    public void showRowsComponent() {
-        topRow.setVisible(true);
-        bottomBuildings.setVisible(false);  //necessarily void at the beginning of the game
-        topBuildings.setVisible(true);
-        bottomRow.setVisible(true);
+    public void toggleSelectableCards(boolean areSelectable) {
+        ClientModel localModel = gui.getClientController().getLocalModel();
+        int remainingAbove = localModel.getPlayerTribe(localPlayer).getRemainingAbove();
+        int remainingBelow = localModel.getPlayerTribe(localPlayer).getRemainingBelow();
+
+        ArrayList<BuildingCard> modelTopBuildings = localModel.getTopBuildings();
+        //to prevent misalignment and race condition
+        int bottomLimit = Math.min(topBuildings.getChildren().size(), modelTopBuildings.size());
+
+        int buildersDiscount = localModel.getPlayerTribe(localPlayer).getBuildersDiscount();
+        int foodReserve = localModel.getPlayerTribe(localPlayer).getFoodReserve();
+
+        for(int i = 0; i < bottomLimit; i++) {
+            BuildingCard building = modelTopBuildings.get(i);
+            int buildingCost = building.getCost() - buildersDiscount;
+
+            boolean canPick = (foodReserve >= buildingCost) && (remainingAbove > 0);
+            boolean isCurrentBuildingSelectable = areSelectable && canPick;
+
+            topBuildings.getChildren().get(i).pseudoClassStateChanged(SELECTABLE_PSEUDO, isCurrentBuildingSelectable);
+            topBuildings.getChildren().get(i).applyCss();
+        }
+
+        ArrayList<BuildingCard> modelBottomBuildings = localModel.getBottomBuildings();
+        //to prevent misalignment and race condition
+        bottomLimit = Math.min(bottomBuildings.getChildren().size(), modelBottomBuildings.size());
+        for(int i = 0; i < bottomLimit; i++) {
+            BuildingCard building = modelBottomBuildings.get(i);
+            int buildingCost = building.getCost() - buildersDiscount;
+
+            boolean canPick = (foodReserve >= buildingCost) && (remainingAbove > 0);
+            boolean isCurrentBuildingSelectable = areSelectable && canPick;
+
+            bottomBuildings.getChildren().get(i).pseudoClassStateChanged(SELECTABLE_PSEUDO, isCurrentBuildingSelectable);
+            bottomBuildings.getChildren().get(i).applyCss();
+        }
+
+        ArrayList<Card> modelTopRow = localModel.getTopRow();
+        //to prevent misalignment and race condition
+        bottomLimit = Math.min(topRow.getChildren().size(), modelTopRow.size());
+
+        for(int i = 0; i < bottomLimit; i++) {
+            Card card = modelTopRow.get(i);
+            boolean isCharacter = CHARACTER_CARD_ID.matcher(card.getCardID()).matches();
+
+            boolean isCurrentCardSelectable = areSelectable && isCharacter && (remainingAbove > 0);
+            topRow.getChildren().get(i).pseudoClassStateChanged(SELECTABLE_PSEUDO, isCurrentCardSelectable);
+            topRow.getChildren().get(i).applyCss();
+        }
+
+
+        ArrayList<Card> modelBottomRow = localModel.getBottomRow();
+        //to prevent misalignment and race condition
+        bottomLimit = Math.min(bottomRow.getChildren().size(), modelBottomRow.size());
+
+        for(int i = 0; i < bottomLimit; i++) {
+            Card card = modelBottomRow.get(i);
+            boolean isCharacter = CHARACTER_CARD_ID.matcher(card.getCardID()).matches();
+
+            boolean isCurrentCardSelectable = areSelectable && isCharacter && (remainingBelow > 0);
+            bottomRow.getChildren().get(i).pseudoClassStateChanged(SELECTABLE_PSEUDO, isCurrentCardSelectable);
+            bottomRow.getChildren().get(i).applyCss();
+        }
     }
 
-    public void setBottomBuildingsVisible(boolean visible) {
-        bottomBuildings.setVisible(visible);
+    public void updateRemainingCards() {
+        int topCount = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getRemainingAbove();
+        int bottomCount = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getRemainingBelow();
+        AnimationsUtils.animateLabelUpdate(cardsTop, String.valueOf(topCount));
+        AnimationsUtils.animateLabelUpdate(cardsBottom, String.valueOf(bottomCount));
     }
-
+    public void showRemainingCards(boolean isVisible) {
+        remainingCards.setVisible(isVisible);
+    }
 }

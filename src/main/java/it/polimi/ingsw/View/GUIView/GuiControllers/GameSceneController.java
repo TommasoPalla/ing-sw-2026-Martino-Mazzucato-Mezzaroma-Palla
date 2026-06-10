@@ -6,6 +6,8 @@ import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.Game.Game;
+import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.Utils.*;
 import javafx.animation.TranslateTransition;
@@ -28,9 +30,13 @@ import java.util.Map;
 
 public class GameSceneController implements BoardActionListener {
     private Gui gui;
+
     private GameSceneBanner banner;
     private GameNotificationManager notificationManager;
+
     private String localPlayer;
+
+    private double defaultColumnSpacing;
     private TranslateTransition transition;
     private boolean isTribeOpen = false;
 
@@ -66,7 +72,6 @@ public class GameSceneController implements BoardActionListener {
     private Label prestigePoints;
     @FXML
     private Label charactersNumber;
-    //todo: fare che aumentnado il numero di carte lo spacing aumenta (in valore assoluto) e sistemare dimensioni
     @FXML
     private HBox myTribe;
     @FXML
@@ -107,7 +112,7 @@ public class GameSceneController implements BoardActionListener {
         this.gui = gui;
         this.localPlayer = gui.getClientController().getPlayerName();
         initInfoBoard();
-        gameBoardController.setup(gui);
+        gameBoardController.setup(gui, localPlayer);
     }
 
     @FXML
@@ -115,16 +120,15 @@ public class GameSceneController implements BoardActionListener {
         gameBoardController.setActionListener(this);
         tribeRegion.setVisible(false);
 
+        this.defaultColumnSpacing = hunterColumn.getSpacing();
         transition = new TranslateTransition(Duration.millis(300), tribeRegion);
+        tribeHeader.setOnMouseClicked(event -> toggleTribeDrawer());
 
         //Using platform.runLater to be sure correct dimensions have been calculated
         javafx.application.Platform.runLater(() -> {
-            double amountToHide = tribeRegion.getHeight() - tribeHeader.getHeight() - 50.0;
-            tribeRegion.setTranslateY(amountToHide);
+            double initialAmountToHide = tribeRegion.getHeight() - tribeHeader.getHeight() - 50.0;
+            tribeRegion.setTranslateY(initialAmountToHide);
             //On mouse clicked tribe region will appear/disappear
-            tribeHeader.setOnMouseClicked(event -> {
-                toggleTribeDrawer(amountToHide);
-            });
         });
         this.banner = new GameSceneBanner(mainAnchor);
         this.notificationManager = new GameNotificationManager(mainAnchor);
@@ -162,27 +166,34 @@ public class GameSceneController implements BoardActionListener {
             int newNumberPerRole;
             switch (character.getRole()) {
                 case ARTIST -> {
-                    artistColumn.getChildren().addFirst(characterImage);
+                    addCardToColumn(artistColumn, characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getArtistsNumber();
                     AnimationsUtils.animateLabelUpdate(artistsNumber, String.valueOf(newNumberPerRole));
                 }
                 case BUILDER -> {
-                    builderColumn.getChildren().addFirst(characterImage);
+                    addCardToColumn(builderColumn, characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getBuildersNumber();
                     AnimationsUtils.animateLabelUpdate(buildersNumber, String.valueOf(newNumberPerRole));
+                    int buildingDiscount = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getBuildersDiscount();
+                    AnimationsUtils.animateLabelUpdate(buildingsDiscount, String.valueOf(buildingDiscount));
+                    int prestigePoints = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getPrestigePoints();
+                    AnimationsUtils.animateLabelUpdate(this.prestigePoints, String.valueOf(prestigePoints));
                 }
                 case GATHERER -> {
-                    gathererColumn.getChildren().addFirst(characterImage);
+                    addCardToColumn(gathererColumn, characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getGatherersNumber();
                     AnimationsUtils.animateLabelUpdate(gatherersNumber, String.valueOf(newNumberPerRole));
+                    int gathererDiscount = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getGatherersDiscount();
+                    AnimationsUtils.animateLabelUpdate(this.sustenanceDiscount, String.valueOf(gathererDiscount));
                 }
                 case HUNTER -> {
-                    hunterColumn.getChildren().addFirst(characterImage);
+                    addCardToColumn(hunterColumn, characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getHuntersNumber();
                     AnimationsUtils.animateLabelUpdate(huntersNumber, String.valueOf(newNumberPerRole));
                 }
+                //todo: add invntor types
                 case INVENTOR -> {
-                    inventorColumn.getChildren().addFirst(characterImage);
+                    addCardToColumn(inventorColumn, characterImage);
                     Map<InventorType, Integer> inventorsPerType = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getInventorsPerType();
                     newNumberPerRole = inventorsPerType.values().stream()
                             .mapToInt(Integer::intValue)
@@ -190,13 +201,37 @@ public class GameSceneController implements BoardActionListener {
                     AnimationsUtils.animateLabelUpdate(inventorsNumber, String.valueOf(newNumberPerRole));
                 }
                 case SHAMAN -> {
-                    shamanColumn.getChildren().addFirst(characterImage);
+                    addCardToColumn(shamanColumn, characterImage);
                     newNumberPerRole = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getShamansNumber();
                     AnimationsUtils.animateLabelUpdate(shamansNumber, String.valueOf(newNumberPerRole));
                     int shamanStars = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getShamansStars();
                     AnimationsUtils.animateLabelUpdate(this.shamanStars, String.valueOf(shamanStars));
                 }
             }
+        }
+    }
+
+    public void addCardToColumn(VBox column, Node cardNode) {
+        column.getChildren().addFirst(cardNode);
+
+        int cardCount = column.getChildren().size();
+        if(cardCount > 1) {
+            double columnHeight = column.getPrefHeight();
+            double cardHeight = GUISettings.Cards.HEIGHT;
+
+            double requiredSpacing = (columnHeight - cardHeight) / (cardCount - 1) - cardHeight;
+            column.setSpacing(Math.min(requiredSpacing, defaultColumnSpacing));
+
+        } else {
+            column.setSpacing(0);
+        }
+        tribeRegion.applyCss();
+        tribeRegion.layout();
+        double amountToHide = tribeRegion.getHeight() - tribeHeader.getHeight() - 50;
+        if (!isTribeOpen) {
+            transition.stop();
+            tribeRegion.setTranslateY(amountToHide);
+            transition.setToY(amountToHide);
         }
     }
 
@@ -221,14 +256,8 @@ public class GameSceneController implements BoardActionListener {
         }
         String message = messageBuilder.toString();
 
-        banner.showBanner(message, 4, this::showFullScene, 1);
+        banner.showBanner(message, 4, () -> tribeRegion.setVisible(true), 1);
     }
-
-    public void showFullScene() {
-        tribeRegion.setVisible(true);
-        gameBoardController.showRowsComponent();
-    }
-
 
     public GameNotificationManager getNotificationManager() {
         return this.notificationManager;
@@ -247,7 +276,6 @@ public class GameSceneController implements BoardActionListener {
         String prefix = (firstPlayer.equals(localPlayer)) ? "your "
                 : firstPlayer + "'s ";
 
-        AnimationsUtils.animateLabelUpdate(playerStatus, firstPlayer);
         banner.showBanner("Round " + round + "!\nIt's " + prefix + "turn", 1.5, null, 0);
     }
 
@@ -256,7 +284,6 @@ public class GameSceneController implements BoardActionListener {
         String prefix = gameBoardController.setDeckImage(era);
         banner.showBanner(prefix + "started!", 1.5, null, 0);
         AnimationsUtils.animateLabelUpdate(eraStatus, String.valueOf(era));
-        gameBoardController.setBottomBuildingsVisible(true); //sarebbe meglio spostarlo per pulizia
     }
 
     public void showFoodBonusTile(String player, int foodBonus) {
@@ -273,18 +300,6 @@ public class GameSceneController implements BoardActionListener {
     }
 
     public void showCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings){
-        Node cardImage = ImageManager.getCardNode(card.getCardID());
-        String prefix = "You have drawn ";
-        if(player.equals(localPlayer)){
-            addCardToTribe(card, fromBuildings);
-        } else if(!fromBuildings){
-            PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
-            playerWidget.updateCardDrawn(card);
-            prefix = player + "has drawn ";
-        }
-
-        banner.showBanner(prefix + "this card", cardImage, 1.5, null, 0);
-
         if(fromBuildings){
             if(topRow){
                 gameBoardController.updateTopBuildings();
@@ -296,44 +311,86 @@ public class GameSceneController implements BoardActionListener {
         } else {
             gameBoardController.updateBottomRow();
         }
+
+        Node cardImage = ImageManager.getCardNode(card.getCardID());
+        String prefix = "You have drawn ";
+        if(player.equals(localPlayer)){
+            addCardToTribe(card, fromBuildings);
+
+            gameBoardController.updateRemainingCards();
+            gameBoardController.toggleSelectableCards(true);
+        } else if(!fromBuildings){
+            PlayerInfoWidget playerWidget = (PlayerInfoWidget) infoBoard.lookup("#" + player);
+            playerWidget.updateCardDrawn(card);
+            prefix = player + "has drawn ";
+        }
+
+        banner.showBanner(prefix + "this card", cardImage, 1.5, null, 0);
     }
 
     public void showNewCurrentPlayer(String player, ClientState clientState){
         String message;
-        if(!player.equals(gui.getClientController().getLocalModel().getTurnOrder().getFirst())) {
-            switch (clientState) {
-                case ClientState.NOT_IN_TURN -> {
+        switch (clientState) {
+            case ClientState.NOT_IN_TURN -> {
+                if(!player.equals(gui.getClientController().getLocalModel().getTurnOrder().getFirst())) {
                     GamePhase phase = gui.getClientController().getLocalModel().getCurrentPhase();
                     String phaseString = (phase == GamePhase.ON_DRAW) ? " to draw"
                             : " to place the totem";
                     message = "It's " + player + "'s turn" + phaseString;
                     notificationManager.addInfoNotification(message);
                 }
-                case ClientState.PLACE_TOTEM -> {
+
+                gameBoardController.showRemainingCards(false);
+                gameBoardController.toggleSelectableCards(false);
+                //selectableTiles are "hidden" after the totem is placed
+            }
+
+            case ClientState.PLACE_TOTEM -> {
+                if(!player.equals(gui.getClientController().getLocalModel().getTurnOrder().getFirst())) {
                     message = "It's your turn to place the totem";
                     banner.showBanner(message, 1.5, null, 0);
-                    gameBoardController.toggleSelectableTiles(true);
                 }
-                //TODO: aggiungere animazioni
-                default -> {
+                gameBoardController.showRemainingCards(false);
+                gameBoardController.toggleSelectableCards(false);
+                gameBoardController.toggleSelectableTiles(true);
+            }
+
+            default -> {
+                if(!player.equals(gui.getClientController().getLocalModel().getTurnOrder().getFirst())) {
                     message = "It's your turn to draw";
                     banner.showBanner(message, 1.5, null, 0);
                 }
+                gameBoardController.updateRemainingCards();
+                gameBoardController.showRemainingCards(true);
+                gameBoardController.toggleSelectableCards(true);
             }
         }
         AnimationsUtils.animateLabelUpdate(playerStatus, player);
     }
 
 
-    //stampa it's 's turn, vuol dire che nel model il player è settato a "", per ora si fa senza stampare il player
-    public void showNewGamePhase(GamePhase phase/*, String currentPlayer*/){
+    //fare un po' di prove per vedere che stampa effettivamente il prossimo giocatore
+    public void showNewGamePhase(GamePhase phase){
         StringBuilder messageBuilder = new StringBuilder("It's time to ");
-        messageBuilder.append(phase == GamePhase.ON_DRAW
-                ? "draw cards"
-                : "place totems");
-        /*messageBuilder.append(currentPlayer.equals(localPlayer)
-                ? "\nIt's your turn!"
-                : "\nIt's " + currentPlayer + "'s turn");*/
+        String currentPlayer = gui.getClientController().getLocalModel().getTurnOrder().getFirst();
+        if(phase == GamePhase.ON_DRAW) {
+            messageBuilder.append("draw cards");
+            messageBuilder.append(currentPlayer.equals(localPlayer)
+                    ? "\nIt's your turn!"
+                    : "\nIt's " + currentPlayer + "'s turn");
+            gameBoardController.toggleSelectableTiles(false);
+        } else if (phase == GamePhase.START_TURN){
+            messageBuilder.append("place totems");
+            messageBuilder.append(currentPlayer.equals(localPlayer)
+                    ? "\nIt's your turn!"
+                    : "\nIt's " + currentPlayer + "'s turn");
+            gameBoardController.toggleSelectableCards(false);
+        } else {
+            messageBuilder.append("to declare the winner");
+            gameBoardController.toggleSelectableTiles(false);
+            gameBoardController.toggleSelectableCards(false);
+
+        }
         String message = messageBuilder.toString();
         banner.showBanner(message, 2, null, 0);
         AnimationsUtils.animateLabelUpdate(phaseStatus, phase.toString());
@@ -420,20 +477,19 @@ public class GameSceneController implements BoardActionListener {
         //
     }
 
-    /**
-     * Gestisce l'animazione di salita e discesa del pannello della tribù
-     */
-    private void toggleTribeDrawer(double translationAmount) {
+
+    private void toggleTribeDrawer() {
+        transition.stop();
+        double amountToHide = tribeRegion.getHeight() - tribeHeader.getHeight() - 50.0;
         if (isTribeOpen) {
-            // Se è aperto, lo riposizioniamo verso il basso nascondendo le carte
-            transition.setToY(translationAmount);
+            transition.setFromY(-35.0);
+            transition.setToY(amountToHide);
             isTribeOpen = false;
         } else {
-            // Se è chiuso, lo riportiamo alla sua posizione Y naturale facendolo salire
+            transition.setFromY(amountToHide);
             transition.setToY(-35.0);
             isTribeOpen = true;
         }
-        // Avvia l'animazione fluida
         transition.play();
     }
 

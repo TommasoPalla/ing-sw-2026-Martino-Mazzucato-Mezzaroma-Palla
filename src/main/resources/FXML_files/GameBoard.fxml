@@ -9,6 +9,7 @@
 <?import javafx.geometry.Insets?>
 <?import java.net.URL?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:id="rootPane"
@@ -53,8 +54,34 @@
             <HBox fx:id="offerTrack" styleClass="offer-track"
                   alignment="CENTER" />
 
-            <!--TODO: inserire elemento che idncia carte rimaste-->
-            <HBox fx:id="cardsRemaining" styleClass="cards-remaining-box"/>
+            <HBox fx:id="remainingCards" styleClass="cards-remaining-box" spacing="10"
+                  alignment="CENTER" fillHeight="false" maxWidth="-Infinity"
+                  maxHeight="-Infinity">
+                <padding>
+                    <Insets top="5" right="5" bottom="5" left="5"/>
+                </padding>
+                <Label fx:id="cardsTop" text="0" styleClass="cards-remaining-label">
+                    <contentDisplay>
+                        <ContentDisplay fx:constant="TOP"/>
+                    </contentDisplay>
+                    <graphic>
+                        <ImageView fitWidth="40.0" preserveRatio="true">
+                            <Image url="@/Images/Icons/arrow_up.png"/>
+                        </ImageView>
+                    </graphic>
+                </Label>
+
+                <Label fx:id="cardsBottom" text="0" styleClass="cards-remaining-label">
+                    <contentDisplay>
+                        <ContentDisplay fx:constant="TOP"/>
+                    </contentDisplay>
+                    <graphic>
+                        <ImageView fitWidth="40.0" preserveRatio="true">
+                            <Image url="@/Images/Icons/arrow_down.png"/>
+                        </ImageView>
+                    </graphic>
+                </Label>
+            </HBox>
         </HBox>
     </center>
 
