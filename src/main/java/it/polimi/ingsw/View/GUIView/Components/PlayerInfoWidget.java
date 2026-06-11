@@ -1,11 +1,13 @@
-package it.polimi.ingsw.View.GUIView.Utils;
+package it.polimi.ingsw.View.GUIView.Components;
 
+import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Gui;
+import it.polimi.ingsw.View.GUIView.Utils.AnimationsUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -322,31 +324,27 @@ public class PlayerInfoWidget extends GridPane{
         CharacterCard character = (CharacterCard) card;
         int newNum;
         String playerName = nameLabel.getText();
+        LightTribe tribe = gui.getClientController().getLocalModel().getPlayerTribe(playerName);
 
         switch (character.getRole()) {
             case ARTIST -> {
-                newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getArtistsNumber();
+                newNum = tribe.getArtistsNumber();
                 AnimationsUtils.animateLabelUpdate(artistsNum, String.valueOf(newNum));
             }
             case BUILDER -> {
-                newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getBuildersNumber();
+                newNum = tribe.getBuildersNumber();
                 AnimationsUtils.animateLabelUpdate(buildersNum, String.valueOf(newNum));
-                int newDiscount = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getBuildersDiscount();
-                AnimationsUtils.animateLabelUpdate(buildingsDiscount, String.valueOf(newDiscount));
             }
             case GATHERER -> {
-                newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getGatherersNumber();
+                newNum = tribe.getGatherersNumber();
                 AnimationsUtils.animateLabelUpdate(gatherersNum, String.valueOf(newNum));
-                int newDiscount = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getGatherersDiscount();
-                AnimationsUtils.animateLabelUpdate(sustenanceDiscount, String.valueOf(newDiscount));
             }
             case HUNTER -> {
-                newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getHuntersNumber();
+                newNum = tribe.getHuntersNumber();
                 AnimationsUtils.animateLabelUpdate(huntersNum, String.valueOf(newNum));
             }
             case INVENTOR -> {
-                Map<InventorType, Integer> inventors = gui.getClientController().getLocalModel().
-                        getPlayerTribe(playerName).getInventorsPerType();
+                Map<InventorType, Integer> inventors = tribe.getInventorsPerType();
                 newNum = 0;
                 int typesNum = 0;   //represents number of different inventions this player has
                 for(InventorType inventorType: inventors.keySet()){
@@ -359,10 +357,8 @@ public class PlayerInfoWidget extends GridPane{
                 AnimationsUtils.animateLabelUpdate(inventionsNum, String.valueOf(typesNum));
             }
             case SHAMAN -> {
-                newNum = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getShamansNumber();
+                newNum = tribe.getShamansNumber();
                 AnimationsUtils.animateLabelUpdate(shamansNum, String.valueOf(newNum));
-                int newStars = gui.getClientController().getLocalModel().getPlayerTribe(playerName).getShamansStars();
-                AnimationsUtils.animateLabelUpdate(shamanStars, String.valueOf(newStars));
             }
         }
     }
@@ -383,5 +379,17 @@ public class PlayerInfoWidget extends GridPane{
     }
     public int getPrestigePoints() {
         return Integer.parseInt(prestigePoints.getText());
+    }
+
+    public void updateShamanStars(int stars) {
+        AnimationsUtils.animateLabelUpdate(shamanStars, String.valueOf(stars));
+    }
+
+    public void updateGathererDiscount(int discount){
+        AnimationsUtils.animateLabelUpdate(sustenanceDiscount, String.valueOf(discount));
+    }
+
+    public void updateBuildersDiscount(int discount) {
+        AnimationsUtils.animateLabelUpdate(buildingsDiscount, String.valueOf(discount));
     }
 }

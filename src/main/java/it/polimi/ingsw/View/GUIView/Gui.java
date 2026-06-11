@@ -6,7 +6,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.View.GUIView.GuiControllers.*;
+import it.polimi.ingsw.View.GUIView.Controllers.*;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -246,7 +246,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showTileChosen(String playerName, int index) {
-
+        Platform.runLater(() -> {
+            if (gameScene != null) {
+                try {
+                    gameScene.showTileChosen(playerName, index);
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "failed to show tile chosen", e);
+                }
+            }
+        });
     }
 
     @Override
@@ -303,11 +311,11 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void showFoodModified(String playerName, int food) {
+    public void showFoodModified(String playerName, int deltaFood, int finalFood) {
         Platform.runLater(() -> {
             if(gameScene != null) {
                 try {
-                    gameScene.showFoodModified(playerName, food);
+                    gameScene.showFoodModified(playerName, deltaFood, finalFood);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Failed to show food update", e);
                 }
@@ -316,13 +324,65 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     }
 
     @Override
-    public void showPrestigePointsModified(String playerName, int pp) {
+    public void showPrestigePointsModified(String playerName, int deltaPP, int finalPP) {
         Platform.runLater(() -> {
             if(gameScene != null) {
                 try {
-                    gameScene.showPrestigeModified(playerName, pp);
+                    gameScene.showPrestigeModified(playerName, deltaPP, finalPP);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Failed to show prestige update", e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showShamanStarsModified(String playerName, int stars) {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+                try {
+                    gameScene.showShamanStarsModified(playerName, stars);
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "Failed to show shaman stars update", e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showBuildersDiscountModified(String playerName, int discount) {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+                try {
+                    gameScene.showBuildersDiscountModified(playerName, discount);
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "Failed to show builders discount update", e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showGatherersDiscountModified(String playerName, int discount) {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+                try {
+                    gameScene.showGatherersDiscountModified(playerName, discount);
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "Failed to show gatherers discount update", e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void showTotemToTurnTile(String playerName, int index) {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+                try {
+                    gameScene.showTotemToTurnTile(playerName, index);
+                } catch (Exception e) {
+                    LOGGER.log(Level.SEVERE, "Failed to show totem going back to turn tile", e);
                 }
             }
         });

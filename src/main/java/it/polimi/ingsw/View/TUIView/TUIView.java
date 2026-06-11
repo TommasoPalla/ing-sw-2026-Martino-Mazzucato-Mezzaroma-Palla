@@ -391,6 +391,11 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
+    public void showTotemToTurnTile(String playerName, int index) {
+        //todo:
+    }
+
+    @Override
     public void showFoodBonusTile(String playerName, int foodBonus) {
         System.out.println();
         if(playerName.equals(this.player))
@@ -437,19 +442,41 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    public void showFoodModified(String playerName, int food) {
-        System.out.println();
-        System.out.println("You got " + food + " food!");
+    //TODO: decidere se non mostrarla subito ma solo su richiesta
+    public void showFoodModified(String playerName, int deltaFood, int finalFood) {
+        if(playerName.equals(player)){
+            System.out.println();
+            System.out.println("You got " + deltaFood + " food!");
+        }
     }
 
     @Override
-    public void showPrestigePointsModified(String playerName, int pp) {
-        System.out.println();
-        if (pp > 0)
-            System.out.println("You gained " + pp + " prestige points!");
-        else
-            System.out.println("You lost " + pp + " prestige points!");
+    //TODO: decidere se non mostrarla subito ma solo su richiesta
+    public void showPrestigePointsModified(String playerName, int deltaPP, int finalPP) {
+        if(playerName.equals(player)) {
+            System.out.println();
+            if (deltaPP > 0)
+                System.out.println("You gained " + deltaPP + " prestige points!");
+            else
+                System.out.println("You lost " + deltaPP + " prestige points!");
+        }
     }
+
+    @Override
+    public void showShamanStarsModified(String playerName, int stars) {
+
+    }
+
+    @Override
+    public void showBuildersDiscountModified(String playerName, int discount){
+
+    }
+
+    @Override
+    public void showGatherersDiscountModified(String playerName, int discount){
+
+    }
+
 
     @Override
     public void showEvent(String playerName, EventType eventType, int foodModified, int ppModified) {

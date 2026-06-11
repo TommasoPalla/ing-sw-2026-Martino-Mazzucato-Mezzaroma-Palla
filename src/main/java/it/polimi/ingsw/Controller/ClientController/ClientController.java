@@ -501,8 +501,10 @@ public class ClientController implements ClientViewUpdate {
         //System.out.println("DEBUG: Card drawn by " + playerName + ". Remaining draws: " + tribe.getRemainingAbove() + "/" + tribe.getRemainingBelow());
         if (tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
             //System.out.println("DEBUG: Player " + playerName + " finished draws. Moving to turn tile.");
-            if (localModel.getTurnOrder().size() == localModel.getNumPlayers())
-                localModel.moveTotemToTurnTile(playerName);
+            if (localModel.getTurnOrder().size() == localModel.getNumPlayers()) {
+                int idx = localModel.moveTotemToTurnTile(playerName);
+                view.showTotemToTurnTile(playerName, idx);
+            }
 
             String additionalDrawPlayer = null;
             if (localModel.getTurnOrder().size() > localModel.getNumPlayers()) {
@@ -534,8 +536,10 @@ public class ClientController implements ClientViewUpdate {
     public void updateTurnPassed(String playerName){
 
         localModel.getPlayerTribe(playerName).setRemainingDraws(0, 0);
-        if (localModel.getTurnOrder().size() == localModel.getNumPlayers())
-            localModel.moveTotemToTurnTile(playerName);
+        if (localModel.getTurnOrder().size() == localModel.getNumPlayers()) {
+            int idx = localModel.moveTotemToTurnTile(playerName);
+            view.showTotemToTurnTile(playerName, idx);
+        }
 
         view.showTurnPassed(playerName, localModel.getCurrentPlayer());
 
@@ -702,11 +706,15 @@ public class ClientController implements ClientViewUpdate {
     /**
      * It updates the players' local models with the food tokens gained or lost by a player.
      * @param playerName the name of the player.
-     * @param food the amount of food tokens gained or lost.
+     * @param food the amount of food tokens gained or lost (delta).
      */
     @Override
     public void updateFoodReserve(String playerName, int food) {
+        int oldReserve = localModel.getPlayerTribe(playerName).getFoodReserve();
         localModel.updateFoodReserve(playerName, food);
+        if(food != 0) {
+            view.showFoodModified(playerName, food,oldReserve + food);
+        }
         System.out.println("[DEBUG] updateFoodReserve for player " + playerName + ", +" + food + " food. Now has " + localModel.getPlayerTribe(playerName).getFoodReserve());
     }
 
@@ -718,16 +726,21 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateShamansStars(String playerName, int stars) {
         localModel.updateShamansStars(playerName, stars);
+        view.showShamanStarsModified(playerName, stars);
     }
 
     /**
      * It updates the players' local models with the prestige points gained or lost by a player.
      * @param playerName the name of the player.
-     * @param pp the amount of prestige points gained or lost.
+     * @param pp the amount of prestige points gained or lost (delta).
      */
     @Override
     public void updatePrestigePoints(String playerName, int pp) {
+        int oldPP = localModel.getPlayerTribe(playerName).getPrestigePoints();
         localModel.updatePrestigePoints(playerName, pp);
+        if(pp != 0) {
+            view.showPrestigePointsModified(playerName, pp, oldPP + pp);
+        }
         System.out.println("[DEBUG] updatePrestigePoints for player " + playerName + ", +"  + pp + " prestige points. Now has " +  localModel.getPlayerTribe(playerName).getPrestigePoints());
     }
 
@@ -739,6 +752,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateBuildersDiscount(String playerName, int discount) {
         localModel.updateBuildersDiscount(playerName, discount);
+        view.showBuildersDiscountModified(playerName, discount);
     }
 
     /**
@@ -749,6 +763,7 @@ public class ClientController implements ClientViewUpdate {
     @Override
     public void updateGatherersDiscount(String playerName, int discount) {
         localModel.updateGatherersDiscount(playerName, discount);
+        view.showGatherersDiscountModified(playerName, discount);
     }
 
     /**
@@ -779,8 +794,9 @@ public class ClientController implements ClientViewUpdate {
                                 break;
                             }
                         }
-                        localModel.moveTotemToTurnTile(nextPlayer);
+                        int idx = localModel.moveTotemToTurnTile(nextPlayer);
                         view.showFoodBonusTile(nextPlayer, foodBonus);
+                        view.showTotemToTurnTile(nextPlayer, idx);
                         continue; //find NEXT player
                     }
                 }

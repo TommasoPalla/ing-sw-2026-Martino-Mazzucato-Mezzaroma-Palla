@@ -24,10 +24,9 @@ public final class GUISettings {
         public static final double BIG_ICON_HEIGHT = 48.0;
     }
 
-    //da definire
     public static final class Totems {
-        public static final double WIDTH = 24.0;
-        public static final double HEIGHT = 24.0;
+        public static final double WIDTH = 48.0;
+        public static final double HEIGHT = 48.0;
     }
 
     public static final class Tiles {
@@ -36,7 +35,7 @@ public final class GUISettings {
     }
 
     public static final class PlayerWidget {
-        public static final double WIDTH = 300;
+        public static final double WIDTH = 270;
         public static final double HEIGHT = 215;
     }
 }

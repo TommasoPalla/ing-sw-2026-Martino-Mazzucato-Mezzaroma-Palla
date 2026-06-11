@@ -1,9 +1,14 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
+import it.polimi.ingsw.View.GUIView.Components.CardComponent;
+import it.polimi.ingsw.View.GUIView.Components.OfferTileComponent;
+import it.polimi.ingsw.View.GUIView.Components.TileComponent;
+import it.polimi.ingsw.View.GUIView.Components.TotemComponent;
 import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.Utils.*;
@@ -13,23 +18,23 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class GameBoardController {
 
     private Gui gui;
+
     private BoardActionListener actionListener;
     //private GameSceneController parentController;
     private String localPlayer;
+
+    private Map<String, TotemComponent> totems;
 
     private static final PseudoClass SELECTABLE_PSEUDO = PseudoClass.getPseudoClass("selectable");
     private static final String BACK_ERA_1 = "/Images/CardImages/Era_1.png";
@@ -53,6 +58,8 @@ public class GameBoardController {
     private ImageView deck;
     @FXML
     private HBox offerTrack;
+    @FXML
+    private Pane totemLayer;
     @FXML
     private HBox remainingCards;
     @FXML
@@ -126,20 +133,37 @@ public class GameBoardController {
     }
 
     private void initOfferTrack(){
-        offerTrack.getChildren().clear();
-        StackPane turnTileLayout = new StackPane();
-        turnTileLayout.getStyleClass().add("tile-style");
-        Node tileImageNode = ImageManager.getTurnTile(gui.getClientController().getLocalModel().getNumPlayers());
-        turnTileLayout.getChildren().add(tileImageNode);
-        offerTrack.getChildren().add(turnTileLayout);
+        totemLayer.setPickOnBounds(false);
 
-        ArrayList<OfferTile> tiles = gui.getClientController().getLocalModel().getOfferTiles();
+        offerTrack.getChildren().clear();
+        ClientModel localModel = gui.getClientController().getLocalModel();
+
+        int numPlayers = localModel.getNumPlayers();
+        TileComponent turnTile = new TileComponent(numPlayers);
+        offerTrack.getChildren().addFirst(turnTile.getGraphicNode());
+
+        ArrayList<OfferTile> tiles = localModel.getOfferTiles();
         int i = 0;
         for(OfferTile tile: tiles){
-            TileComponent tileRepresentation = new TileComponent(tile.getTileCode(), i, actionListener);
-            tileRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
-            offerTrack.getChildren().add(i+1, tileRepresentation.getGraphicsNode());
+            OfferTileComponent tileRepresentation = new OfferTileComponent(tile.getTileCode(), i, actionListener);
+            tileRepresentation.getGraphicNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
+            offerTrack.getChildren().add(i+1, tileRepresentation.getGraphicNode());
             i++;
+        }
+
+        //initializes totem graphical components
+        Map<String, Color> totems = localModel.getTotemColors();
+        List<String> turnOrder = localModel.getTurnOrder();
+        int index = 0;
+        this.totems = new HashMap<>();
+        TotemComponent.setNumPlayers(localModel.getNumPlayers());
+
+        for(String player: turnOrder) {
+            Color color = totems.get(player);
+            TotemComponent totemNode = new TotemComponent(totemLayer, color);
+            this.totems.put(player, totemNode);
+            moveTotemToTurnTile(player, index);
+            index++;
         }
     }
 
@@ -160,8 +184,7 @@ public class GameBoardController {
             topRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        topRow.setVisible((i > 0) ? true
-                : false);
+        topRow.setVisible(i > 0);
     }
 
     public void updateBottomRow() {
@@ -180,8 +203,7 @@ public class GameBoardController {
             bottomRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        bottomRow.setVisible((i > 0) ? true
-                : false);
+        bottomRow.setVisible(i > 0);
     }
 
     public void updateTopBuildings() {
@@ -198,8 +220,7 @@ public class GameBoardController {
             topBuildings.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        topBuildings.setVisible((i > 0) ? true
-                                        : false);
+        topBuildings.setVisible(i > 0);
     }
 
     public void updateBottomBuildings() {
@@ -216,8 +237,7 @@ public class GameBoardController {
             bottomBuildings.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        bottomBuildings.setVisible((i > 0) ? true
-                : false);
+        bottomBuildings.setVisible(i > 0);
     }
 
 
@@ -303,5 +323,17 @@ public class GameBoardController {
     }
     public void showRemainingCards(boolean isVisible) {
         remainingCards.setVisible(isVisible);
+    }
+
+    public void moveTotemToTurnTile(String playerName, int index) {
+        TotemComponent totem = this.totems.get(playerName);
+        Node tile = offerTrack.getChildren().getFirst();
+        totem.moveTotemToTurnTile(tile, index);
+    }
+
+    public void moveTotemToOfferTile(String playerName, int index) {
+        TotemComponent totem = this.totems.get(playerName);
+        Node tile = offerTrack.getChildren().get(index + 1); //plus one because at index 0 offer track has the turnTile
+        totem.moveTotemToOfferTile(tile);
     }
 }

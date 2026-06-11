@@ -1,28 +1,26 @@
-package it.polimi.ingsw.View.GUIView.Utils;
+package it.polimi.ingsw.View.GUIView.Components;
 
 import it.polimi.ingsw.View.GUIView.GUISettings;
-import javafx.scene.Cursor;
+import it.polimi.ingsw.View.GUIView.Utils.BoardActionListener;
+import it.polimi.ingsw.View.GUIView.Utils.BoardInteractionStrategy;
+import it.polimi.ingsw.View.GUIView.Utils.ImageManager;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 
 
 /**
  * Represents a graphical tile component within the user interface of the game board.
- * This component encapsulates the visual representation of a offer tile (including its size
+ * This component encapsulates the visual representation of an offer tile (including its size
  * and imagery managed via {@link ImageManager}) and implements the {@link BoardInteractionStrategy}
  * to handle player selection and drawing actions.
  */
-public class TileComponent implements BoardInteractionStrategy{
-
-    private final StackPane tileLayout;
+public class OfferTileComponent extends TileComponent implements BoardInteractionStrategy{
     private final int index;
     private final BoardActionListener listener;
 
 
-    public TileComponent(char id, int index, BoardActionListener listener){
-        this.tileLayout = new StackPane();
-        this.tileLayout.getStyleClass().add("tile-style");
+    public OfferTileComponent(char id, int index, BoardActionListener listener){
+        super();    //initializes StackPane tileLayout
         this.index = index;
         this.listener = listener;
 
@@ -42,10 +40,6 @@ public class TileComponent implements BoardInteractionStrategy{
             }
             event.consume();
         });
-    }
-
-    public Node getGraphicsNode(){
-        return tileLayout;
     }
 
     @Override
