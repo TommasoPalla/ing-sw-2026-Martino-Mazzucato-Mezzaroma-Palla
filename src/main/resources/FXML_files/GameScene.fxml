@@ -17,8 +17,9 @@
 
 
 <?import javafx.scene.layout.BorderPane?>
+<?import org.controlsfx.control.cell.ImageGridCell?>
 <AnchorPane fx:id="mainAnchor" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameSceneController"
+            fx:controller="it.polimi.ingsw.View.GUIView.Controllers.GameSceneController"
             styleClass="main-background">
    <stylesheets>
       <URL value="@/style.css"/>
@@ -62,16 +63,16 @@
    </HBox>
 
 
-   <ScrollPane fx:id="rightMenu" prefWidth="300"
+   <ScrollPane fx:id="rightMenu" prefWidth="270"
                fitToWidth="true" styleClass="transparent-scroll"
-               AnchorPane.rightAnchor="40" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="70"
+               AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="70"
                hbarPolicy="NEVER">
       <VBox fx:id="infoBoard" spacing="10" alignment="TOP_CENTER" styleClass="info-board"/>
    </ScrollPane>
 
 
-   <VBox fx:id="tribeRegion" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="350"
-         maxWidth="1000" maxHeight="380" prefHeight="380"
+   <VBox fx:id="tribeRegion" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="300"
+         maxWidth="860" prefWidth="860" maxHeight="380" prefHeight="380"
          styleClass="tribe-region" spacing="5">
       <padding>
          <Insets top="15.0" bottom="15.0" left="20.0" right="20.0"/>
@@ -109,12 +110,16 @@
             <Image url="@/Images/Icons/ShamanStar.png"/>
          </ImageView>
          <Label fx:id="shamanStars" text="0" prefWidth="20"/>
+         <ImageView fitWidth="36" fitHeight="36" preserveRatio="true">
+            <Image url="@/Images/Icons/Inventions.png" />
+         </ImageView>
+         <Label fx:id="distinctInventions" text="0" prefWidth="20" />
 
       </HBox>
 
       <!--TODO: definire stile label-->
       <HBox fx:id="myTribe" spacing="20.0" alignment="CENTER"
-            prefWidth="758" prefHeight="300">
+            prefWidth="860" maxWidth="860" prefHeight="300">
          <padding>
             <Insets top="15.0" bottom="10.0" left="10.0" right="10.0"/>
          </padding>

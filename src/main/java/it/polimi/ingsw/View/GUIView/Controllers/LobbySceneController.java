@@ -1,11 +1,10 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
-import it.polimi.ingsw.CustomException.UIException.TotemColorNotChosen;
 import it.polimi.ingsw.View.GUIView.Gui;
-import it.polimi.ingsw.View.GUIView.Utils.GameSceneBanner;
+import it.polimi.ingsw.View.GUIView.Components.GameSceneBanner;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

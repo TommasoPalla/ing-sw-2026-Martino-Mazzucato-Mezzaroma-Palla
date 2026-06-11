@@ -13,7 +13,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:id="rootPane"
-            fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameBoardController">
+            fx:controller="it.polimi.ingsw.View.GUIView.Controllers.GameBoardController">
     <stylesheets>
         <URL value="@/style.css"/>
     </stylesheets>
@@ -51,8 +51,12 @@
             <ImageView fx:id="deck" fitHeight="153.0" fitWidth="102.0" preserveRatio="true"
                        styleClass="offer-track"/>
 
-            <HBox fx:id="offerTrack" styleClass="offer-track"
-                  alignment="CENTER" />
+            <StackPane>
+                <HBox fx:id="offerTrack" styleClass="offer-track"
+                      alignment="CENTER" />
+                <Pane fx:id="totemLayer"/>
+            </StackPane>
+
 
             <HBox fx:id="remainingCards" styleClass="cards-remaining-box" spacing="10"
                   alignment="CENTER" fillHeight="false" maxWidth="-Infinity"

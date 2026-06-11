@@ -63,11 +63,22 @@ public class ClientControllerTest {
         @Override public void showFoodBonusTile(String playerName, int foodBonus) {}
         @Override public void showNewCurrentPlayer(String playerName, ClientState clientState) {}
         @Override public void showNewGamePhase(GamePhase newGamePhase) {}
-        @Override public void showFoodModified(String playerName, int food) {}
-        @Override public void showPrestigePointsModified(String playerName, int pp) {}
+
+        @Override public void showFoodModified(String playerName, int deltaFood, int finalFood) {}
+        @Override public void showPrestigePointsModified(String playerName, int deltaPP, int finalPP) {}
+        @Override public void showShamanStarsModified(String playerName, int stars){}
+        @Override public void showBuildersDiscountModified(String playerName, int discount){}
+        @Override public void showGatherersDiscountModified(String playerName, int discount){}
+        @Override public void showTotemToTurnTile(String playerName, int index) {}
         @Override public void showEvent(String playerName, EventType eventType, int foodModified, int ppModified) {}
+
         @Override public void showEndGame(Map<String, Integer> finalRanking) {}
         @Override public void showLeaderboardInfo(int playerPosition) {}
+
+        @Override
+        public void showEndGameLeft() {
+
+        }
     }
 
     @BeforeEach

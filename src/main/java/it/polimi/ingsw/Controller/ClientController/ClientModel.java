@@ -131,7 +131,7 @@ public class ClientModel {
      * It moves a player totem from the offer tile back to the respective slot of the turn tile, freeing the offer tile.
      * @param playerName the name of the player.
      */
-    public void moveTotemToTurnTile(String playerName) {
+    public int moveTotemToTurnTile(String playerName) {
         for (OfferTile tile : offerTiles) {
             if (playerName.equals(tile.getCurrentOccupant())) {
                 tile.free();
@@ -143,6 +143,7 @@ public class ClientModel {
         if (playerIdx != -1) {
             turnTileStatus.put(playerIdx, playerName);
         }
+        return playerIdx;
     }
 
     /**
@@ -220,7 +221,7 @@ public class ClientModel {
 
     /**
      * It removes the player from the list of players and from the colors map.
-     * @param playerName
+     * @param playerName name of player who left the game
      */
     void updatePlayerLeft(String playerName){
         totemColors.remove(playerName);

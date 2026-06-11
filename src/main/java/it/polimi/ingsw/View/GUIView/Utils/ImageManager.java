@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View.GUIView.Utils;
 
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.View.GUIView.GUISettings;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -41,6 +42,7 @@ public class ImageManager {
                 clip.setArcHeight(15);
                 clip.setArcWidth(15);
                 imageView.setClip(clip);
+                imageView.setSmooth(true);
 
                 cardNode = imageView;
             } catch (Exception e) {
@@ -107,6 +109,27 @@ public class ImageManager {
             tileNode = createPlaceholder(null, 'Z', numPlayers);
         }
         return tileNode;
+    }
+
+    public static Node getTotem(Color color) {
+        Node totemNode = null;
+        String fullPath = RESOURCE_PATH_PREFIX + "Totems/" + color.toString() + ".png";
+        InputStream imageStream = ImageManager.class.getResourceAsStream(fullPath);
+
+        if(imageStream != null) {
+            try {
+                Image image = new Image(imageStream, GUISettings.Totems.WIDTH, GUISettings.Totems.HEIGHT, true, true);
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(GUISettings.Totems.WIDTH);
+                imageView.setFitHeight(GUISettings.Totems.HEIGHT);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+                totemNode = imageView;
+            } catch (Exception e) {
+                System.err.println("Error rendering internal image resource for " + color);
+            }
+        }
+        return totemNode;
     }
 
     private static Node createPlaceholder(String cardID, char offerTileID, int numPlayers){

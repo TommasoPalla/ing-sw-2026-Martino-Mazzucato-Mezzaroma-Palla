@@ -1,6 +1,9 @@
-package it.polimi.ingsw.View.GUIView.Utils;
+package it.polimi.ingsw.View.GUIView.Components;
 
 import it.polimi.ingsw.View.GUIView.GUISettings;
+import it.polimi.ingsw.View.GUIView.Utils.BoardActionListener;
+import it.polimi.ingsw.View.GUIView.Utils.BoardInteractionStrategy;
+import it.polimi.ingsw.View.GUIView.Utils.ImageManager;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;

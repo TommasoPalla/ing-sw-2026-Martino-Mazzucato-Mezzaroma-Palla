@@ -1,6 +1,5 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
-import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GamePlayers;
 import javafx.beans.property.SimpleObjectProperty;

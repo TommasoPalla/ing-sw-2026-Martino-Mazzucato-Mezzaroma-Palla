@@ -1,19 +1,16 @@
-package it.polimi.ingsw.View.GUIView.Utils;
+package it.polimi.ingsw.View.GUIView.Components;
 
 import javafx.animation.PauseTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stack;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 

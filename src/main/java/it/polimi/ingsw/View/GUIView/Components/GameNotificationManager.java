@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.Utils;
+package it.polimi.ingsw.View.GUIView.Components;
 
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
