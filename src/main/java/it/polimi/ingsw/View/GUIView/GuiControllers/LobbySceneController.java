@@ -61,7 +61,7 @@ public class LobbySceneController {
     @FXML
     public void initialize() {
 
-        Image img = new Image(getClass().getResource("/Images/Background/rockyBackground.jpeg").toExternalForm());
+        Image img = new Image(getClass().getResource("/Images/Background/LobbyBackground.png").toExternalForm());
 
         background.setImage(img);
 
@@ -173,7 +173,7 @@ public class LobbySceneController {
                 //addPlayerToContainer(playerName);
 
                 Label playerLabel = new Label(playerName);
-                playerLabel.setStyle("-fx-font-size: 26px; -fx-text-fill: black; -fx-font-weight: bold;");
+                playerLabel.setStyle("-fx-text-fill: #E5CEBE; -fx-font-size: 28px; -fx-font-weight: bold;");
                 playersContainer.getChildren().add(playerLabel);
             }
         });

@@ -1,38 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
+<!--<?import javafx.scene.control.Button?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.control.TextField?>-->
+<!--<?import javafx.scene.effect.ColorAdjust?>-->
+<!--<?import javafx.scene.image.ImageView?>-->
+<!--<?import javafx.scene.layout.AnchorPane?>-->
+<!--<?import javafx.scene.layout.HBox?>-->
+<!--<?import javafx.scene.layout.Pane?>-->
+<!--<?import javafx.scene.text.Text?>-->
+
+<!--<?import javafx.scene.text.Font?>-->
+<!--<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController">-->
+
+<!--    <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">-->
+<!--        <children>-->
+<!--            <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">-->
+<!--                <effect>-->
+<!--                    <ColorAdjust saturation="-0.5" />-->
+<!--                </effect>-->
+<!--            </ImageView>-->
+<!--            <Label alignment="CENTER" layoutX="20.0" layoutY="200.0" prefHeight="30.0" prefWidth="1920.0" text="choose a number of players between 2 and 5 please" textAlignment="CENTER">-->
+<!--                <font>-->
+<!--                    <Font name="Calibri Bold Italic" size="37.0" />-->
+<!--                </font>-->
+<!--            </Label>-->
+<!--            <Label fx:id="errorLabel" layoutY="800.0" minWidth="1920.0" alignment="CENTER" layoutX="20.0" prefHeight="30.0" prefWidth="1920.0" text="" textAlignment="CENTER">-->
+<!--                <font>-->
+<!--                    <Font name="Calibri Bold Italic" size="20.0"/>-->
+<!--                </font>-->
+<!--            </Label>-->
+<!--         <HBox alignment="CENTER" layoutY="550.0" prefHeight="100.0" prefWidth="1920.0" spacing="180.0">-->
+<!--            <children>-->
+<!--                <TextField fx:id="numberField" alignment="CENTER" prefHeight="101.0" prefWidth="554.0">-->
+<!--                    <font>-->
+<!--                        <Font size="33.0" />-->
+<!--                    </font>-->
+<!--                </TextField>-->
+<!--                <Button fx:id="ConfirmButton" onAction="#handleConfirm" prefHeight="77.0" prefWidth="100.0" text="CONFIRM" />-->
+<!--            </children>-->
+<!--         </HBox>-->
+<!--        </children>-->
+<!--    </AnchorPane>-->
+<!--   <Text layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="1920.0" />-->
+
+<!--</Pane>-->
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Text?>
-
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController">
+
+<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;"
+      xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseNumberOfPlayersController">
 
     <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">
         <children>
             <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
                 <effect>
-                    <ColorAdjust saturation="-0.3" />
+                    <ColorAdjust saturation="-0.5" />
                 </effect>
             </ImageView>
-            <Label fx:id="errorLabel" layoutY="800.0" minWidth="1920.0" textFill="#e80707" />
-         <HBox alignment="CENTER" layoutY="454.0" prefHeight="100.0" prefWidth="1920.0" spacing="180.0">
-            <children>
-                <TextField fx:id="numberField" alignment="CENTER" prefHeight="101.0" prefWidth="554.0">
+
+            <VBox alignment="CENTER" layoutX="560.0" layoutY="330.0" prefWidth="800.0" spacing="45.0">
+
+                <Label alignment="CENTER" prefWidth="800.0" textAlignment="CENTER" wrapText="true"
+                       text="Choose a number of players"
+                       style="-fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 14, 0.3, 0, 2);">
                     <font>
-                        <Font size="33.0" />
+                        <Font name="Calibri Bold Italic" size="52.0" />
+                    </font>
+                </Label>
+
+                <TextField fx:id="numberField" alignment="CENTER" maxWidth="300.0"
+                           prefHeight="90.0" prefWidth="300.0" promptText="2 - 5"
+                           style="-fx-background-color: rgba(20,12,8,0.65); -fx-text-fill: #FFE193; -fx-background-radius: 10; -fx-border-color: rgba(244,180,146,0.65); -fx-border-width: 1.5; -fx-border-radius: 10; -fx-prompt-text-fill: rgba(244,180,146,0.45);">
+                    <font>
+                        <Font size="32.0" />
                     </font>
                 </TextField>
-                <Button fx:id="ConfirmButton" onAction="#handleConfirm" prefHeight="77.0" prefWidth="100.0" text="CONFIRM" />
-            </children>
-         </HBox>
+
+                <Button fx:id="ConfirmButton" onAction="#handleConfirm" text="CONFIRM"
+                        prefHeight="80.0" prefWidth="260.0"
+                        style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #FFE193; -fx-font-size: 26px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: #F4B492; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" />
+
+                <Label fx:id="errorLabel" alignment="CENTER" prefWidth="800.0" text=""
+                       textAlignment="CENTER" textFill="#eaed37" wrapText="true"
+                       style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 6, 0, 0, 0);">
+                    <font>
+                        <Font name="Calibri Bold Italic" size="34.0" />
+                    </font>
+                </Label>
+
+            </VBox>
         </children>
     </AnchorPane>
-   <Text layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="1920.0" />
 
 </Pane>

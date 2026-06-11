@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--<?import javafx.scene.control.Button?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.effect.ColorAdjust?>-->
+<!--<?import javafx.scene.image.ImageView?>-->
+<!--<?import javafx.scene.layout.AnchorPane?>-->
+<!--<?import javafx.scene.layout.HBox?>-->
+<!--<?import javafx.scene.layout.Pane?>-->
+<!--<?import javafx.scene.text.Font?>-->
+
+<!--<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseToCreateController">-->
+
+<!--    <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">-->
+<!--        <children>-->
+<!--            <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">-->
+<!--                <effect>-->
+<!--                    <ColorAdjust saturation="-0.5" />-->
+<!--                </effect>-->
+<!--            </ImageView>-->
+<!--            <Label alignment="CENTER" layoutX="20.0" layoutY="250.0" prefHeight="30.0" prefWidth="1920.0" text="Do you want to create or to join a game?" textAlignment="CENTER">-->
+<!--                <font>-->
+<!--                    <Font name="Calibri Bold Italic" size="37.0" />-->
+<!--                </font>-->
+<!--            </Label>-->
+<!--            <HBox alignment="CENTER" layoutY="550.0" prefHeight="100.0" prefWidth="1920.0" spacing="180.0">-->
+<!--                <children>-->
+<!--                    <Button fx:id="ChangeNick" mnemonicParsing="false" onAction="#handleNick" prefHeight="70.0" prefWidth="200.0" text="Change nickName" />-->
+<!--                    <Button fx:id="Create" mnemonicParsing="false" onAction="#handleCreate" prefHeight="70.0" prefWidth="200.0" text="Create a Game" />-->
+<!--                    <Button fx:id="Join" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleJoin" prefHeight="70.0" prefWidth="200.0" text="Join a Game" textAlignment="CENTER" />-->
+<!--                </children>-->
+<!--            </HBox>-->
+<!--        </children>-->
+<!--    </AnchorPane>-->
+
+<!--</Pane>-->
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.ColorAdjust?>
@@ -9,25 +44,37 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseToCreateController">
+<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;"
+      xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseToCreateController">
 
     <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">
         <children>
             <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
                 <effect>
-                    <ColorAdjust saturation="-0.3" />
+                    <ColorAdjust saturation="-0.5" />
                 </effect>
             </ImageView>
-            <Label alignment="CENTER" layoutX="20.0" layoutY="172.0" prefHeight="30.0" prefWidth="1920.0" text="Do you want to create or to join a game?" textAlignment="CENTER">
+
+            <Label alignment="CENTER" layoutY="380.0" prefWidth="1920.0"
+                   text="Do you want to create or to join a game?" textAlignment="CENTER"
+                   style="-fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 14, 0.3, 0, 2);">
                 <font>
-                    <Font name="Calibri Bold Italic" size="37.0" />
+                    <Font name="Calibri Bold Italic" size="56.0" />
                 </font>
             </Label>
-            <HBox alignment="CENTER" layoutY="454.0" prefHeight="100.0" prefWidth="1920.0" spacing="180.0">
+
+            <HBox alignment="CENTER" layoutY="560.0" prefHeight="100.0" prefWidth="1920.0" spacing="100.0">
                 <children>
-                    <Button fx:id="ChangeNick" mnemonicParsing="false" onAction="#handleNick" prefHeight="56.0" prefWidth="140.0" text="Change nickName" />
-                    <Button fx:id="Create" mnemonicParsing="false" onAction="#handleCreate" prefHeight="56.0" prefWidth="140.0" text="Create a Game" />
-                    <Button fx:id="Join" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleJoin" prefHeight="56.0" prefWidth="140.0" text="Join a Game" textAlignment="CENTER" />
+                    <Button fx:id="ChangeNick" mnemonicParsing="false" onAction="#handleNick"
+                            prefHeight="80.0" prefWidth="320.0" text="Change Nickname"
+                            style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #FFE193; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: #F4B492; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" />
+                    <Button fx:id="Create" mnemonicParsing="false" onAction="#handleCreate"
+                            prefHeight="80.0" prefWidth="320.0" text="Create a Game"
+                            style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #FFE193; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: #F4B492; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" />
+                    <Button fx:id="Join" mnemonicParsing="false" onAction="#handleJoin"
+                            prefHeight="80.0" prefWidth="320.0" text="Join a Game"
+                            style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #FFE193; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: #F4B492; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" />
                 </children>
             </HBox>
         </children>

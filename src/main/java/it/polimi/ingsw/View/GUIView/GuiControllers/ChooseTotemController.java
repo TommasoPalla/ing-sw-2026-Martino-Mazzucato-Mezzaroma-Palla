@@ -2,12 +2,16 @@ package it.polimi.ingsw.View.GUIView.GuiControllers;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.View.GUIView.Gui;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -17,6 +21,10 @@ import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.Random;
+
+import static java.lang.Double.max;
+import static java.lang.Double.min;
 
 public class ChooseTotemController {
     private Gui gui;
@@ -54,7 +62,7 @@ public class ChooseTotemController {
     @FXML
     public void initialize() {
 
-        Image img = new Image(getClass().getResource("/Images/Background/rockyBackground.jpeg").toExternalForm());
+        Image img = new Image(getClass().getResource("/Images/Background/LobbyBackground.png").toExternalForm());
 
         background.setImage(img);
 
@@ -84,6 +92,8 @@ public class ChooseTotemController {
                 Platform.runLater(this::updateScale);
             }
         });
+        addGlitchOutline(whiteButton, redButton, purpleButton, yellowButton, blueButton);
+
     }
     private void updateScale() {
 
@@ -106,6 +116,49 @@ public class ChooseTotemController {
                 (sceneHeight - scaledHeight) / 2
         );
     }
+    private final Random glitchRandom = new Random();
+
+    private void addGlitchOutline(Button... buttons) {
+        for (Button b : buttons) {
+            b.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; " +
+                    "-fx-border-width: 0; -fx-padding: 0; -fx-cursor: hand;");
+
+            ImageView totem = (ImageView) b.getGraphic();
+
+            // Esterno sul Button
+            DropShadow outer = new DropShadow();
+            outer.setBlurType(javafx.scene.effect.BlurType.GAUSSIAN);
+            outer.setColor(javafx.scene.paint.Color.BLACK);
+            outer.setRadius(30);
+            outer.setSpread(0.0);
+            b.setEffect(outer);
+
+            // Interno sull'ImageView
+            javafx.scene.effect.InnerShadow inner = new javafx.scene.effect.InnerShadow();
+            inner.setBlurType(javafx.scene.effect.BlurType.GAUSSIAN);
+            inner.setColor(javafx.scene.paint.Color.BLACK);
+            inner.setRadius(28);
+            inner.setChoke(0.25);
+            totem.setEffect(inner);
+
+            double phaseOffset = glitchRandom.nextDouble() * Math.PI * 2;
+            final long startTime = System.currentTimeMillis();
+
+            Timeline glitch = new Timeline(new KeyFrame(Duration.millis(50), e -> {
+                double t = (System.currentTimeMillis() - startTime) / 1000.0;
+
+                double slowWave   = Math.sin(t * Math.PI + phaseOffset);
+                double fastGlitch = glitchRandom.nextDouble() * 0.15;
+
+                outer.setRadius(25 + slowWave * 12 + fastGlitch * 8);
+                inner.setRadius(24 + slowWave * 10 + fastGlitch * 6);
+                inner.setChoke(0.20 + slowWave * 0.08 + fastGlitch * 0.05);
+            }));
+            glitch.setCycleCount(Animation.INDEFINITE);
+            glitch.play();
+        }
+    }
+
 
     @FXML
     private void handleHoverIn(MouseEvent event) {

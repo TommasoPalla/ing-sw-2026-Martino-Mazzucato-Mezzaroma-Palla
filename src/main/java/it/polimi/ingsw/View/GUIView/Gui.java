@@ -85,6 +85,10 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         this.isHost = false;
     }
 
+    public String getName(){
+        return nickname;
+    }
+
     @Override
     public void runView() {
 
@@ -362,7 +366,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showEndGameLeft() {
-
     }
 
     @Override
@@ -499,6 +502,29 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             System.out.println("Error: " + e);
         }
     }
+
+    @Override
+    public void rankingScene(){
+
+        Platform.runLater(() -> {//serve a thread, carica la scena appena possibile, lambda e esempio di uso gui con thread
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/RankingScene.fxml"));
+                Parent root = loader.load();
+                ChooseToCreateController Controller = loader.getController();
+                Controller.setGUI(this);
+
+                Scene scene = new Scene(root);
+                primaryStage.setScene(scene);
+
+            }catch (Exception e){
+                System.out.println("Error: " + e);
+            }
+
+        });
+    }
+
+
+
 
 
     public void handleJoin(){

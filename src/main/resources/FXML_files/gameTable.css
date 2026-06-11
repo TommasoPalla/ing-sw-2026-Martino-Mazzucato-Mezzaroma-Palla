@@ -1,0 +1,69 @@
+.table-view {
+    -fx-background-color: rgba(20,12,8,0.78);
+    -fx-background-radius: 10;
+    -fx-border-color: #F4B492;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-padding: 2;
+}
+
+/* Header */
+.table-view .column-header-background {
+    -fx-background-color: rgba(20,12,8,0.95);
+    -fx-background-radius: 8 8 0 0;
+}
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent rgba(244,180,146,0.5) transparent;
+    -fx-size: 55px;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #FFE193;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Righe e celle */
+.table-view .table-cell {
+    -fx-text-fill: #FFE193;
+    -fx-font-size: 22px;
+    -fx-alignment: CENTER;
+    -fx-border-color: transparent;
+}
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-cell-size: 50px;
+}
+.table-row-cell:odd {
+    -fx-background-color: rgba(244,180,146,0.07);
+}
+.table-row-cell:hover {
+    -fx-background-color: rgba(244,180,146,0.18);
+    -fx-cursor: hand;
+}
+.table-row-cell:selected {
+    -fx-background-color: rgba(244,180,146,0.35);
+}
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+}
+
+/* Niente sfondo bianco nell'area vuota */
+.table-view .virtual-flow,
+.table-view .virtual-flow .clipped-container .sheet {
+    -fx-background-color: transparent;
+}
+.table-view .placeholder .label {
+    -fx-text-fill: rgba(255,225,147,0.55);
+    -fx-font-size: 22px;
+}
+
+/* Scrollbar discreta */
+.table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(244,180,146,0.4);
+    -fx-background-radius: 6;
+}

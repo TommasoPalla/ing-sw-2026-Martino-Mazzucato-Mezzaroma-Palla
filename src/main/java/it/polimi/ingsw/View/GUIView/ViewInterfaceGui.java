@@ -11,4 +11,5 @@ public interface ViewInterfaceGui {
     void chooseNumberOfPlayers();
     boolean playGameScene();
     void lobbyScene() throws IOException;
+    void rankingScene();
 }

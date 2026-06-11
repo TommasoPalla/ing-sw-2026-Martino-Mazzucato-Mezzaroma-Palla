@@ -1,19 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--<?import javafx.scene.control.Button?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.effect.ColorAdjust?>-->
+<!--<?import javafx.scene.image.ImageView?>-->
+<!--<?import javafx.scene.layout.AnchorPane?>-->
+<!--<?import javafx.scene.layout.HBox?>-->
+<!--<?import javafx.scene.layout.Pane?>-->
+<!--<?import javafx.scene.shape.Circle?>-->
+<!--<?import javafx.scene.text.Font?>-->
+<!--<?import javafx.scene.text.Text?>-->
+
+<!--<?import javafx.scene.image.Image?>-->
+
+<!--<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseTotemController">-->
+
+<!--    <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">-->
+<!--        <children>-->
+<!--            <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">-->
+<!--                <effect>-->
+<!--                    <ColorAdjust saturation="-0.3" />-->
+<!--                </effect>-->
+<!--            </ImageView>-->
+<!--            <Label alignment="CENTER" layoutX="20.0" layoutY="300.0" prefHeight="30.0" prefWidth="1920.0" text="Choose your totem.." textAlignment="CENTER">-->
+<!--                <font>-->
+<!--                    <Font name="Calibri Bold Italic" size="37.0" />-->
+<!--                </font>-->
+<!--            </Label>-->
+<!--            <HBox alignment="CENTER" layoutY="550.0" prefHeight="100.0" prefWidth="1920.0" spacing="200.0">-->
+<!--                <children>-->
+<!--                    <Button fx:id="whiteButton"-->
+<!--                            onAction="#handleWhite"-->
+<!--                            onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"-->
+<!--                            style="-fx-background-color: transparent; -fx-cursor: hand;">-->
+<!--                        <graphic>-->
+<!--                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">-->
+<!--                                <image>-->
+<!--                                    <Image url="/Images/Totems/WHITE.png" />-->
+<!--                                </image>-->
+<!--                            </ImageView>-->
+<!--                        </graphic>-->
+<!--                    </Button>-->
+<!--                    <Button fx:id="redButton"-->
+<!--                            onAction="#handleRed"-->
+<!--                            onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"-->
+<!--                            style="-fx-background-color: transparent; -fx-cursor: hand;">-->
+<!--                        <graphic>-->
+<!--                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">-->
+<!--                                <image>-->
+<!--                                    <Image url="/Images/Totems/RED.png" />-->
+<!--                                </image>-->
+<!--                            </ImageView>-->
+<!--                        </graphic>-->
+<!--                    </Button>-->
+<!--                    <Button fx:id="purpleButton"-->
+<!--                            onAction="#handlePurple"-->
+<!--                            onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"-->
+<!--                            style="-fx-background-color: transparent; -fx-cursor: hand;">-->
+<!--                        <graphic>-->
+<!--                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">-->
+<!--                                <image>-->
+<!--                                    <Image url="/Images/Totems/PURPLE.png" />-->
+<!--                                </image>-->
+<!--                            </ImageView>-->
+<!--                        </graphic>-->
+<!--                    </Button>-->
+<!--                    <Button fx:id="whiteYellow"-->
+<!--                            onAction="#handleYellow"-->
+<!--                            onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"-->
+<!--                            style="-fx-background-color: transparent; -fx-cursor: hand;">-->
+<!--                        <graphic>-->
+<!--                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">-->
+<!--                                <image>-->
+<!--                                    <Image url="/Images/Totems/YELLOW.png" />-->
+<!--                                </image>-->
+<!--                            </ImageView>-->
+<!--                        </graphic>-->
+<!--                    </Button>-->
+<!--                    <Button fx:id="blueButton"-->
+<!--                            onAction="#handleBlue"-->
+<!--                            onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"-->
+<!--                            style="-fx-background-color: transparent; -fx-cursor: hand;">-->
+<!--                        <graphic>-->
+<!--                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">-->
+<!--                                <image>-->
+<!--                                    <Image url="/Images/Totems/BLUE.png" />-->
+<!--                                </image>-->
+<!--                            </ImageView>-->
+<!--                        </graphic>-->
+<!--                    </Button>-->
+<!--                </children>-->
+<!--            </HBox>-->
+<!--            <Label fx:id="errorLabel" alignment="CENTER" layoutX="20.0" layoutY="172.0" prefHeight="30.0" prefWidth="1920.0"  textFill="#fc0f0fba">-->
+<!--                <font>-->
+<!--                    <Font name="Calibri Bold Italic" size="28.0" />-->
+<!--                </font>-->
+<!--            </Label>-->
+<!--        </children>-->
+<!--    </AnchorPane>-->
+<!--<Text layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="1920.0" />-->
+
+<!--</Pane>-->
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.Image?>
-
-<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseTotemController">
+<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;"
+      xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.ChooseTotemController">
 
     <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">
         <children>
@@ -22,67 +123,64 @@
                     <ColorAdjust saturation="-0.3" />
                 </effect>
             </ImageView>
-            <Label alignment="CENTER" layoutX="20.0" layoutY="300.0" prefHeight="30.0" prefWidth="1920.0" text="Choose your totem.." textAlignment="CENTER">
+
+            <Label alignment="CENTER" layoutY="180.0" prefWidth="1920.0" text="Choose your totem" textAlignment="CENTER"
+                   style="-fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 14, 0.3, 0, 2);">
                 <font>
-                    <Font name="Calibri Bold Italic" size="37.0" />
+                    <Font name="Calibri Bold Italic" size="60.0" />
                 </font>
             </Label>
-            <HBox alignment="CENTER" layoutY="550.0" prefHeight="100.0" prefWidth="1920.0" spacing="200.0">
+
+            <HBox alignment="CENTER" layoutY="440.0" prefHeight="260.0" prefWidth="1920.0" spacing="200.0">
                 <children>
-                    <Button fx:id="whiteButton"
-                            onAction="#handleWhite"
+                    <Button fx:id="whiteButton" onAction="#handleWhite"
                             onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"
                             style="-fx-background-color: transparent; -fx-cursor: hand;">
                         <graphic>
-                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">
+                            <ImageView fitHeight="220.0" fitWidth="260.0" preserveRatio="true">
                                 <image>
                                     <Image url="/Images/Totems/WHITE.png" />
                                 </image>
                             </ImageView>
                         </graphic>
                     </Button>
-                    <Button fx:id="redButton"
-                            onAction="#handleRed"
+                    <Button fx:id="redButton" onAction="#handleRed"
                             onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"
                             style="-fx-background-color: transparent; -fx-cursor: hand;">
                         <graphic>
-                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">
+                            <ImageView fitHeight="220.0" fitWidth="260.0" preserveRatio="true">
                                 <image>
                                     <Image url="/Images/Totems/RED.png" />
                                 </image>
                             </ImageView>
                         </graphic>
                     </Button>
-                    <Button fx:id="purpleButton"
-                            onAction="#handlePurple"
-                            onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"
-                            style="-fx-background-color: transparent; -fx-cursor: hand;">
+                    <Button fx:id="purpleButton" onAction="#handlePurple"
+                            onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut">
                         <graphic>
-                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">
+                            <ImageView fitHeight="220.0" fitWidth="260.0" preserveRatio="true">
                                 <image>
                                     <Image url="/Images/Totems/PURPLE.png" />
                                 </image>
                             </ImageView>
                         </graphic>
                     </Button>
-                    <Button fx:id="whiteYellow"
-                            onAction="#handleYellow"
+                    <Button fx:id="yellowButton" onAction="#handleYellow"
                             onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"
                             style="-fx-background-color: transparent; -fx-cursor: hand;">
                         <graphic>
-                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">
+                            <ImageView fitHeight="220.0" fitWidth="260.0" preserveRatio="true">
                                 <image>
                                     <Image url="/Images/Totems/YELLOW.png" />
                                 </image>
                             </ImageView>
                         </graphic>
                     </Button>
-                    <Button fx:id="blueButton"
-                            onAction="#handleBlue"
+                    <Button fx:id="blueButton" onAction="#handleBlue"
                             onMouseEntered="#handleHoverIn" onMouseExited="#handleHoverOut"
                             style="-fx-background-color: transparent; -fx-cursor: hand;">
                         <graphic>
-                            <ImageView fitHeight="200.0" fitWidth="300.0" preserveRatio="true">
+                            <ImageView fitHeight="220.0" fitWidth="260.0" preserveRatio="true">
                                 <image>
                                     <Image url="/Images/Totems/BLUE.png" />
                                 </image>
@@ -91,13 +189,15 @@
                     </Button>
                 </children>
             </HBox>
-            <Label fx:id="errorLabel" alignment="CENTER" layoutX="20.0" layoutY="172.0" prefHeight="30.0" prefWidth="1920.0"  textFill="#fc0f0fba">
+
+            <Label fx:id="errorLabel" alignment="CENTER" layoutY="800.0" prefWidth="1920.0"
+                   textAlignment="CENTER" textFill="#eaed37" wrapText="true"
+                   style="-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 6, 0, 0, 0);">
                 <font>
-                    <Font name="Calibri Bold Italic" size="28.0" />
+                    <Font name="Calibri Bold Italic" size="34.0" />
                 </font>
             </Label>
         </children>
     </AnchorPane>
-<Text layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="1920.0" />
 
 </Pane>
