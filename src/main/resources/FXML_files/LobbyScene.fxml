@@ -12,7 +12,7 @@
 <!--<?import javafx.scene.image.ImageView?>-->
 
 
-<!--<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.LobbySceneController">-->
+<!--<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.Controllers.LobbySceneController">-->
 <!--    <children>-->
 
 <!--        <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">-->
@@ -62,7 +62,7 @@
 
 <Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;"
       xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.LobbySceneController">
+      fx:controller="it.polimi.ingsw.View.GUIView.Controllers.LobbySceneController">
     <children>
 
         <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">

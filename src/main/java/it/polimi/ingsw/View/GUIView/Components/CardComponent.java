@@ -1,12 +1,18 @@
 package it.polimi.ingsw.View.GUIView.Components;
 
+import it.polimi.ingsw.Model.Cards.BuildingCard;
+import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Utils.BoardActionListener;
 import it.polimi.ingsw.View.GUIView.Utils.BoardInteractionStrategy;
 import it.polimi.ingsw.View.GUIView.Utils.ImageManager;
 import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
+
+import javax.tools.Tool;
 
 
 /**
@@ -28,13 +34,13 @@ public class CardComponent implements BoardInteractionStrategy {
      * Constructs a new {@code CardComponent} with the specified game parameters and binds
      * it to an action listener for processing interaction events.
      *
-     * @param cardId        the unique text identifier used to retrieve the card's graphics asset
+     * @param card          the card used to retrieve the card's graphics asset
      * @param fromTopRow    {@code true} if the card belongs to the top row layout; {@code false} otherwise
      * @param fromBuildings {@code true} if the card represents a building card; {@code false} if it represents a character card
      * @param index         the zero-based index positioning of this card inside its corresponding container row
      * @param listener      the interaction delegate invoked when a draw action triggers on this component
      */
-    public CardComponent(String cardId, boolean fromTopRow, boolean fromBuildings, int index,
+    public CardComponent(Card card, boolean fromTopRow, boolean fromBuildings, int index,
                          BoardActionListener listener) {
         this.cardLayout = new StackPane();
         this.fromTopRow = fromTopRow;
@@ -43,11 +49,16 @@ public class CardComponent implements BoardInteractionStrategy {
         this.listener = listener;
         this.cardLayout.getStyleClass().add("card-style");
 
-        Node cardImageNode = ImageManager.getCardNode(cardId);
+        Node cardImageNode = ImageManager.getCardNode(card.getCardID());
         this.cardLayout.setPrefSize(GUISettings.Cards.WIDTH, GUISettings.Cards.HEIGHT);
         this.cardLayout.getChildren().add(cardImageNode);
 
-        //TODO: setupTooltip(tooltipText); da guardare dopo per far apparire testo con dettagli carta
+        if(fromBuildings) {
+            BuildingCard building = (BuildingCard) card;
+            Tooltip tooltip = new Tooltip(building.getEffectDescription());
+            tooltip.setShowDelay(Duration.millis(200));
+            Tooltip.install(this.cardLayout, tooltip);
+        }
 
         setupInteraction();
     }

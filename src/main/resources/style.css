@@ -29,18 +29,33 @@
     -fx-font-weight: bold;
     -fx-text-fill: -fx-light-color !important;
 }
-/*specific style for first Label (title label)
+/*todo: specific style for first Label (title label)
   first-child selector is not native CSS, but
   only JavaFX CSS, that is why results in a static error,
   however it compiles correctly*/
-/*mi s ache non funziona*/
+/*mi s ache non funziona
 .status-bar .label:first-child {
     -fx-font-size: 14px;
     -fx-font-weight: normal;
     -fx-text-fill: -fx-light-color;
     -fx-text-transform: uppercase;
-}
+}*/
 
+.leave-game-btn {
+    -fx-background-color: -fx-secondary-accent-color;
+    -fx-text-fill: -fx-dark-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 18;
+    -fx-background-radius: 15;
+    -fx-border-radius: 10;
+    -fx-border-width: 5;
+    -fx-border-color: -fx-dark-color;
+    -fx-cursor: hand;
+}
+.leave-game-btn:hover {
+    -fx-background-color: -fx-primary-accent-color;
+    -fx-text-fill: -fx-dark-color;
+}
 
 .card-style {
     -fx-cursor: default;
@@ -174,6 +189,23 @@
     -fx-border-color: -fx-secondary-accent-color;
     -fx-text-fill: -fx-dark-color;
     -fx-font-size: 18;
+}
+
+.pass-turn-btn {
+    -fx-background-color: -fx-secondary-accent-color;
+    -fx-text-fill: -fx-dark-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 14;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+.pass-turn-btn:hover {
+    -fx-background-color: -fx-primary-accent-color;
+    -fx-border-color: -fx-secondary-accent-color;
+    -fx-border-width: 2;
+    -fx-border-radius: 4px;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
 }
 
 

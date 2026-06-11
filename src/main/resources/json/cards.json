@@ -689,7 +689,7 @@
       "cost": 4,
       "activatedAt": "ON_DRAW",
       "effect": "CF",
-      "effectDescription": "Starting from when you have this Building, every\ntime you complete a set of 6 different\nCharacter cards, you get 5 Food tokens.\nYou do not receive Food tokens for sets already completed\nat the time of acquiring the Building.",
+      "effectDescription": "Starting from when you have this Building, \nevery time you complete a set of 6 different Character cards,\n you get 5 Food tokens.\nYou do not receive Food tokens for sets already completed\nat the time of acquiring the Building.",
       "prestige": 3,
       "foodBonus": 5
     },

@@ -168,7 +168,7 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
-    /**
+    /**todo: sistemare javadoc
      * This method forwards the request by the player to leave the lobby he is in. Can only be performed if the client
      * state is "IN_LOBBY".
      */
@@ -843,7 +843,10 @@ public class ClientController implements ClientViewUpdate {
         localModel.updateGamePhase(GamePhase.END_GAME);
         this.clientState = ClientState.END_GAME;
         for (String playerName : finalRanking.keySet()) {
-            localModel.updatePrestigePoints(playerName, finalRanking.get(playerName));
+            int oldPP = localModel.getPlayerTribe(playerName).getPrestigePoints();
+            int prestigeModified = finalRanking.get(playerName);
+            localModel.updatePrestigePoints(playerName, prestigeModified);
+            view.showPrestigePointsModified(playerName, prestigeModified, oldPP + prestigeModified);
         }
         view.showEndGame(finalRanking);
     }

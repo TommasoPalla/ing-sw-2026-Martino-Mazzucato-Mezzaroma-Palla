@@ -6,6 +6,8 @@ import it.polimi.ingsw.View.GUIView.Utils.ImageManager;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -21,6 +23,15 @@ public class TotemComponent {
     public TotemComponent(Pane totemLayer, Color color) {
         this.totemLayer = totemLayer;
         this.totemNode = ImageManager.getTotem(color);
+
+        DropShadow borderEffect = new DropShadow();
+        borderEffect.setColor(javafx.scene.paint.Color.BLACK);
+        borderEffect.setRadius(2.0);
+        borderEffect.setSpread(0.7);
+        borderEffect.setOffsetX(0);
+        borderEffect.setOffsetY(0);
+
+        this.totemNode.setEffect(borderEffect);
 
         if(!this.totemLayer.getChildren().contains(totemNode)){
             this.totemLayer.getChildren().add(totemNode);

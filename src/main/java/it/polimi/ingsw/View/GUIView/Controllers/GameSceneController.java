@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.Controller.ClientController.LightTribe;
@@ -6,6 +6,7 @@ import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UIException.InvalidSelectionException;
 import it.polimi.ingsw.Enums.*;
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.View.GUIView.Components.GameNotificationManager;
@@ -17,18 +18,21 @@ import it.polimi.ingsw.View.GUIView.Utils.*;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static java.lang.Math.abs;
 
 
-//TODO: gestire tutte le interazioni dei totem
 //TODO aggiungere icone sopra colonne di personaggi
 
 public class GameSceneController implements BoardActionListener {
@@ -61,6 +65,8 @@ public class GameSceneController implements BoardActionListener {
     private Label phaseStatus;
     @FXML
     private Label playerStatus;
+    @FXML
+    private Button leaveGameBtn;
     @FXML
     private ScrollPane rightMenu;
     @FXML
@@ -117,7 +123,7 @@ public class GameSceneController implements BoardActionListener {
         this.gui = gui;
         this.localPlayer = gui.getClientController().getPlayerName();
         initInfoBoard();
-        gameBoardController.setup(gui, localPlayer);
+        gameBoardController.setup(gui, this::onPassTurnRequested, localPlayer);
     }
 
     @FXML
@@ -156,6 +162,10 @@ public class GameSceneController implements BoardActionListener {
         String id = card.getCardID();
         if (isBuilding) {
             Node building = ImageManager.getCardNode(id);
+            BuildingCard buildingCard = (BuildingCard) card;
+            Tooltip tooltip = new Tooltip(buildingCard.getEffectDescription());
+            tooltip.setShowDelay(Duration.millis(200));
+            Tooltip.install(building, tooltip);
             buildingColumn.getChildren().add(building);
             //buildings effects are activated by notifyEffect
         }
@@ -288,11 +298,22 @@ public class GameSceneController implements BoardActionListener {
 
     public void showTotemToTurnTile(String playerName, int index) {
         gameBoardController.moveTotemToTurnTile(playerName, index);
+        gameBoardController.setPassTurnBtnEnabled(false);
+    }
+
+    public void showTurnPassed(String player) {
+        if(player.equals(localPlayer)) {
+            String message = "You successfully passed your turn";
+            banner.showBanner(message, 1.0, null, 0);
+        } else {
+            String message = player + "has passed their turn";
+            notificationManager.addInfoNotification(message);
+        }
     }
 
     public void showFoodBonusTile(String player, int foodBonus) {
         int foodReserve = gui.getClientController().getLocalModel().getPlayerTribe(player).getFoodReserve();
-        String suffix = foodBonus + "units of food from Tile A";
+        String suffix = foodBonus + "Food tokens from Tile A";
         if(player.equals(localPlayer)) {
             AnimationsUtils.animateLabelUpdate(this.foodReserve, String.valueOf(foodReserve));
             banner.showBanner("You gained " + suffix , 1.5, null, 0);
@@ -414,10 +435,10 @@ public class GameSceneController implements BoardActionListener {
             message.append(" event resolved!\nYou ");
             String variation = (foodModified > 0) ? "gained "
                                                 : "lost ";
-            message.append(variation).append(String.valueOf(foodModified)).append(" of food");
+            message.append(variation).append(String.valueOf(abs(foodModified))).append(" of food");
             variation = (ppModified > 0) ? "\nYou gained "
                                         : "\nYou lost ";
-            message.append(variation).append(String.valueOf(ppModified)).append(" prestige Points");
+            message.append(variation).append(String.valueOf(abs(ppModified))).append(" prestige Points");
                     //.append("\nThe effects of this event also applied to the other players");
             /*TODO: vorrei mettere l'immagine dell'evento ma risalire a quale era fosse non è facile,
                è già stata tolta dal tabellone?*/
@@ -446,7 +467,7 @@ public class GameSceneController implements BoardActionListener {
 
     //foodQuantity is new value of player's foodReserve
     public void showFoodModified(String player, int deltaFood, int foodQuantity){
-        String suffix = deltaFood + " units of food";
+        String suffix = abs(deltaFood) + " Food tokens";
         String prefix;
 
         if(player.equals(localPlayer)){
@@ -466,11 +487,11 @@ public class GameSceneController implements BoardActionListener {
     }
 
     public void showPrestigeModified(String player, int deltaPP, int finalPP) {
-        String suffix = deltaPP + " Prestige Points";
+        String suffix = abs(deltaPP) + " Prestige Points";
         String prefix;
 
         if(player.equals(localPlayer)){
-            AnimationsUtils.animateLabelUpdate(prestigePoints, String.valueOf(finalPP));
+            AnimationsUtils.animateLabelUpdate(prestigePoints, String.valueOf(abs(finalPP)));
             prefix = (deltaPP > 0) ? "You gained "
                     : "You lost ";
             banner.showBanner(prefix.concat(suffix), 1.5, null, 0);
@@ -515,10 +536,9 @@ public class GameSceneController implements BoardActionListener {
         }
     }
 
-    public void showEndGame(Map<String, Integer> finalRanking) {
-        //
+    public void showEndGame() {
         AnimationsUtils.animateLabelUpdate(phaseStatus, GamePhase.END_GAME.toString());
-        //
+        banner.showBanner("Game Ended!\nYou will be brought to final ranking", 3, () -> gui.rankingScene(), 0);
     }
 
 
@@ -560,6 +580,46 @@ public class GameSceneController implements BoardActionListener {
                 notificationManager.addWarning(e.getMessage() + e.getCause());
             }
             notificationManager.addWarning(e.getMessage());
+        }
+    }
+
+    public void onPassTurnRequested() {
+        try {
+            gui.getClientController().passTurn();
+            gameBoardController.toggleSelectableCards(false);
+        } catch (IllegalClientStateActionException e) {
+            notificationManager.addWarning(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void handleLeaveGame() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Leave game");
+        confirmAlert.setHeaderText("You are leaving this game once and for all.");
+        confirmAlert.setContentText("Are you sure?");
+
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                gui.getClientController().leaveGame();
+            } catch(Exception e) {
+                notificationManager.addWarning(e.getMessage());
+            }
+        }
+    }
+
+    public void showCriticalDisconnection(String playerName) {
+        String message = playerName + " left the game. You will be brought to setup.";
+        banner.showBanner(message, 3, this::goBackToSetup, 0);
+    }
+    public void goBackToSetup() {
+        try {
+            gui.showCreationChoiceScene();
+        } catch (IOException e) {
+            notificationManager.addWarning("failed to going back to setup scene");
+            throw new RuntimeException();
         }
     }
 

@@ -1,34 +1,40 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.View.GUIView.Gui;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 
-public class ChooseToCreateController {
+import java.io.IOException;
 
+public class ChooseNickNameController {
     private Gui gui;
 
+    public void setGUI(Gui gui) {
+        this.gui = gui;
+    }
     @FXML
-    private Button Join;
+    private Button ConfirmButton;
 
     @FXML
-    private Button Create;
+    private TextField nicknameField;
 
     @FXML
-    private Button ChangeNick;
+    private Label errorLabel;
 
     @FXML
     private Pane root;
 
     @FXML
     private AnchorPane gamePane;
-
     @FXML
     private ImageView background;
 
@@ -36,9 +42,15 @@ public class ChooseToCreateController {
 
     private static final double BASE_WIDTH = 1920;
     private static final double BASE_HEIGHT = 1080;
+
     @FXML
     public void initialize() {
 
+        nicknameField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                handleConfirm();  //invia i dati premendo ENTER
+            }
+        });
         Image img = new Image(getClass().getResource("/Images/Background/Background.png").toExternalForm());
 
         background.setImage(img);
@@ -91,20 +103,35 @@ public class ChooseToCreateController {
                 (sceneHeight - scaledHeight) / 2
         );
     }
-    public void setGUI(Gui gui) {
-        this.gui = gui;
+    @FXML
+    private void handleConfirm() {
+
+        String nickname = nicknameField.getText().trim();
+        if (nickname.isEmpty()) {
+            showError("Please enter a nickname.");
+            return;
+        }
+
+        clearError();
+        try{
+            gui.handleNickname(nickname);
+        }catch(IOException e){
+            showError("An IO error occurred");
+            errorLabel.setText("try another nickName please");
+        }
     }
 
-    @FXML
-    private void handleJoin() {
-        gui.handleJoin();
+
+    private void showError(String message) {
+        if (errorLabel != null) {
+            errorLabel.setText(message);
+            errorLabel.setVisible(true);
+        }
     }
-    @FXML
-    private void handleCreate() {
-        gui.handleCreate();
-    }
-    @FXML
-    private void handleNick() {
-        gui.handleNickChange();
+    private void clearError() {
+        if (errorLabel != null) {
+            errorLabel.setText("");
+            errorLabel.setVisible(false);
+        }
     }
 }

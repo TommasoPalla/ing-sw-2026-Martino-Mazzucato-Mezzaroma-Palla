@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.View.GUIView.Gui;
 import javafx.application.Platform;
@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class RankingSceneController{
@@ -30,7 +29,6 @@ public class RankingSceneController{
 
     @FXML
     private AnchorPane gamePane;
-
     @FXML
     private ImageView background;
 

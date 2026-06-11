@@ -13,21 +13,22 @@
 <?import java.net.URL?>
 
 
-<!--TODO: aggiungere tasto LeaveGame e endTurn -->
+<!--TODO: aggiungere tasto LeaveGame -->
 
 
 <?import javafx.scene.layout.BorderPane?>
 <?import org.controlsfx.control.cell.ImageGridCell?>
+<?import javafx.scene.control.Button?>
 <AnchorPane fx:id="mainAnchor" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameSceneController"
+            fx:controller="it.polimi.ingsw.View.GUIView.Controllers.GameSceneController"
             styleClass="main-background">
    <stylesheets>
       <URL value="@/style.css"/>
    </stylesheets>
    <BorderPane AnchorPane.topAnchor="100"
                AnchorPane.bottomAnchor="90"
-               AnchorPane.leftAnchor="60"
-               AnchorPane.rightAnchor="300">
+               AnchorPane.leftAnchor="40"
+               AnchorPane.rightAnchor="310">
       <fx:include fx:id="gameBoard"
                   source="GameBoard.fxml"/>
    </BorderPane>
@@ -36,7 +37,9 @@
    <HBox fx:id="statusBar" AnchorPane.topAnchor="10"
          AnchorPane.leftAnchor="0"
          AnchorPane.rightAnchor="0"
-         alignment="TOP_CENTER">
+         alignment="TOP_CENTER"
+         spacing="200">
+
       <HBox spacing="20"
             alignment="CENTER"
             styleClass="status-bar">
@@ -60,6 +63,9 @@
             <Label fx:id="playerStatus"/>
          </VBox>
       </HBox>
+
+      <Button fx:id="leaveGameBtn" styleClass="leave-game-btn" alignment="CENTER_RIGHT"
+              text="Leave Game" onAction="#handleLeaveGame" />
    </HBox>
 
 

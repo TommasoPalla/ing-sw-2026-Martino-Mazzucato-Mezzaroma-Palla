@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.Enums.Color;
@@ -15,13 +15,16 @@ import it.polimi.ingsw.View.GUIView.Utils.*;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -31,7 +34,7 @@ public class GameBoardController {
     private Gui gui;
 
     private BoardActionListener actionListener;
-    //private GameSceneController parentController;
+    private Runnable onPassTurnRequested;
     private String localPlayer;
 
     private Map<String, TotemComponent> totems;
@@ -66,7 +69,8 @@ public class GameBoardController {
     private Label cardsTop;
     @FXML
     private Label cardsBottom;
-
+    @FXML
+    private Button passTurnBtn;
 
     @FXML
     public void initialize() {
@@ -76,10 +80,15 @@ public class GameBoardController {
         bottomBuildings.setVisible(false);
         remainingCards.setVisible(false);
         setDeckImage(1);
+
+        Tooltip tooltip = new Tooltip("Use it only when you should draw more cards,\nbut no character is present in the row");
+        tooltip.setShowDelay(Duration.millis(300));
+        passTurnBtn.setTooltip(tooltip);
     }
 
-    public void setup(Gui gui, String localPlayer) {
+    public void setup(Gui gui, Runnable onPassTurnRequested, String localPlayer) {
         this.gui = gui;
+        this.onPassTurnRequested = onPassTurnRequested;
         this.localPlayer = localPlayer;
         updateInitialGameState();
     }
@@ -87,11 +96,6 @@ public class GameBoardController {
     public void setActionListener(BoardActionListener actionListener) {
         this.actionListener = actionListener;
     }
-
-
-    /*public void setParent(GameSceneController gameSceneController) {
-        this.parentController = gameSceneController;
-    }*/
 
     public String setDeckImage(int era) {
         String imagePath, prefix;
@@ -125,6 +129,7 @@ public class GameBoardController {
         topBuildings.managedProperty().bind(topBuildings.visibleProperty());
         bottomBuildings.managedProperty().bind(bottomBuildings.visibleProperty());
 
+        setPassTurnBtnEnabled(false);
         initOfferTrack();
         updateTopRow();
         updateBottomRow();
@@ -176,7 +181,7 @@ public class GameBoardController {
         // Popola dinamicamente il contenitore
         for (Card card : cards) {
 
-            CardComponent cardRepresentation = new CardComponent(card.getCardID(), true, false,
+            CardComponent cardRepresentation = new CardComponent(card, true, false,
                     i, actionListener);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
@@ -195,7 +200,7 @@ public class GameBoardController {
         // Popola dinamicamente il contenitore
         for (Card card : cards) {
 
-            CardComponent cardRepresentation = new CardComponent(card.getCardID(), false, false,
+            CardComponent cardRepresentation = new CardComponent(card, false, false,
                     i, actionListener);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
@@ -213,7 +218,7 @@ public class GameBoardController {
         int i = 0;
         for (BuildingCard building : cards) {
 
-            CardComponent cardRepresentation = new CardComponent(building.getCardID(), true, true,
+            CardComponent cardRepresentation = new CardComponent(building, true, true,
                     i, actionListener);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
@@ -230,7 +235,7 @@ public class GameBoardController {
         int i = 0;
         for (BuildingCard building : cards) {
 
-            CardComponent cardRepresentation = new CardComponent(building.getCardID(), false, true,
+            CardComponent cardRepresentation = new CardComponent(building, false, true,
                     i, actionListener);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
@@ -251,6 +256,9 @@ public class GameBoardController {
     }
 
     public void toggleSelectableCards(boolean areSelectable) {
+        //boolean variable is used to assess that player can still draw a character, if 'false' "passTurnBtn" will be shown
+        boolean foundCharacter = false;
+
         ClientModel localModel = gui.getClientController().getLocalModel();
         int remainingAbove = localModel.getPlayerTribe(localPlayer).getRemainingAbove();
         int remainingBelow = localModel.getPlayerTribe(localPlayer).getRemainingBelow();
@@ -280,7 +288,7 @@ public class GameBoardController {
             BuildingCard building = modelBottomBuildings.get(i);
             int buildingCost = building.getCost() - buildersDiscount;
 
-            boolean canPick = (foodReserve >= buildingCost) && (remainingAbove > 0);
+            boolean canPick = (foodReserve >= buildingCost) && (remainingBelow > 0);
             boolean isCurrentBuildingSelectable = areSelectable && canPick;
 
             bottomBuildings.getChildren().get(i).pseudoClassStateChanged(SELECTABLE_PSEUDO, isCurrentBuildingSelectable);
@@ -298,6 +306,9 @@ public class GameBoardController {
             boolean isCurrentCardSelectable = areSelectable && isCharacter && (remainingAbove > 0);
             topRow.getChildren().get(i).pseudoClassStateChanged(SELECTABLE_PSEUDO, isCurrentCardSelectable);
             topRow.getChildren().get(i).applyCss();
+
+            //foundCharacter will result 'true' if at least once isCurrentCardSelectable has been 'true'
+            foundCharacter = foundCharacter || isCurrentCardSelectable;
         }
 
 
@@ -312,6 +323,12 @@ public class GameBoardController {
             boolean isCurrentCardSelectable = areSelectable && isCharacter && (remainingBelow > 0);
             bottomRow.getChildren().get(i).pseudoClassStateChanged(SELECTABLE_PSEUDO, isCurrentCardSelectable);
             bottomRow.getChildren().get(i).applyCss();
+
+            foundCharacter = foundCharacter || isCurrentCardSelectable;
+        }
+
+        if(!foundCharacter && areSelectable) {
+            setPassTurnBtnEnabled(true);
         }
     }
 
@@ -335,5 +352,19 @@ public class GameBoardController {
         TotemComponent totem = this.totems.get(playerName);
         Node tile = offerTrack.getChildren().get(index + 1); //plus one because at index 0 offer track has the turnTile
         totem.moveTotemToOfferTile(tile);
+    }
+
+    public void setPassTurnBtnEnabled(boolean enabled) {
+        passTurnBtn.setVisible(enabled);
+        passTurnBtn.setDisable(!enabled);
+    }
+
+    @FXML
+    private void handlePassTurn() {
+        passTurnBtn.setDisable(true);
+
+        if(onPassTurnRequested != null) {
+            onPassTurnRequested.run();
+        }
     }
 }

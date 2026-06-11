@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
@@ -66,7 +66,6 @@ public class LobbySceneController {
 
         background.setPreserveRatio(true);
 
-        //TODO: gamePane dovrebbe essere quello giusto, se non funziona bene va cambiato in root  (e cambiata la classe Banner)
         this.banner = new GameSceneBanner(gamePane);
 
         background.setFitWidth(BASE_WIDTH);

@@ -46,7 +46,7 @@ public class GameNotificationManager {
     }
 
     public void addInfoNotification(String message) {
-        addInfoNotification(message, 2.5);
+        addInfoNotification(message, 3);
     }
     public void addInfoNotification(String message, double timeout) {
         addNotification("info", message, timeout);

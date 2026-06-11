@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.GuiControllers;
+package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.View.GUIView.Gui;
@@ -22,6 +22,9 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Random;
+
+import static java.lang.Double.max;
+import static java.lang.Double.min;
 
 public class ChooseTotemController {
     private Gui gui;

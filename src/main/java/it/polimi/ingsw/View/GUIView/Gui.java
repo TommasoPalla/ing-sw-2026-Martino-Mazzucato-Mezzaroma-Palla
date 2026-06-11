@@ -6,7 +6,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.View.GUIView.GuiControllers.*;
+import it.polimi.ingsw.View.GUIView.Controllers.*;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -303,7 +303,15 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showTurnPassed(String playerThatPassed, String newCurrentPlayer) {
-
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+                try {
+                    gameScene.showTurnPassed(playerThatPassed);
+                } catch(Exception e) {
+                    LOGGER.log(Level.WARNING, "Failed to show player has passed turn", e);
+                }
+            }
+        });
     }
 
     @Override
@@ -408,21 +416,27 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     @Override
     public void showForceQuit(String disconnectedPlayerName, Color oldColor) {
-
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+               gameScene.showCriticalDisconnection(disconnectedPlayerName);
+            } else if(lobby != null) {
+                //todo: gestire disconnection in lobby
+            }
+        });
     }
 
     @Override
     public void showEndGame(Map<String, Integer> finalRanking) {
-        if(gameScene != null) {
-            Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            if(gameScene != null) {
                 try {
                     currentRanking = finalRanking;
-                    gameScene.showEndGame(finalRanking);
+                    gameScene.showEndGame();
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Failed to show game ended", e);
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -588,9 +602,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
         });
     }
-
-
-
 
 
     public void handleJoin(){

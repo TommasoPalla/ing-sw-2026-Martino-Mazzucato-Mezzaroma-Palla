@@ -30,7 +30,6 @@ public interface ViewInterface {
     void showCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings);
     void showEraChanged(int era);
 
-    //todo in gui
     void showTurnPassed(String playerThatPassed, String newCurrentPlayer);
     void showInitialFood(Map<String,Integer> initialFood);
     void showTileChosen(String playerName, int index);
@@ -48,7 +47,7 @@ public interface ViewInterface {
     void showGatherersDiscountModified(String playerName, int discount);
 
     void showTotemToTurnTile(String playerName, int index);
-    //todo in gui
+
     void showEndGame(Map<String, Integer> finalRanking);
     void showLeaderboardInfo(int playerPosition);
     void showEndGameLeft();
