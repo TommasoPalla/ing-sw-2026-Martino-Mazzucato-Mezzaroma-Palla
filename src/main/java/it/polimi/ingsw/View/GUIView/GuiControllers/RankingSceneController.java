@@ -11,9 +11,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class RankingSceneController{
     private Gui gui;
@@ -27,8 +30,18 @@ public class RankingSceneController{
 
     @FXML
     private AnchorPane gamePane;
+
     @FXML
     private ImageView background;
+
+    @FXML
+    private Button leaveLobby;
+
+    @FXML
+    private VBox ranking;
+
+    @FXML
+    private VBox generalLeaderboard;
 
     private final Scale scaleTransform = new Scale();
 
@@ -68,6 +81,14 @@ public class RankingSceneController{
                 Platform.runLater(this::updateScale);
             }
         });
+
+        for (Map.Entry<String, Integer> entry : gui.getCurrentRanking().entrySet()) {
+            Label label = new Label(entry.getKey() + ": " + entry.getValue());
+            ranking.getChildren().add(label);
+        }
+        for (String s : gui.getClientController().getLocalModel().getDbLeaderboard()){
+            generalLeaderboard.getChildren().add(new Label(s));
+        }
     }
     private void updateScale() {
 
@@ -90,7 +111,18 @@ public class RankingSceneController{
                 (sceneHeight - scaledHeight) / 2
         );
     }
-    //List<String> leaderboard = clientController.getLocalModel().getDbLeaderboard();
+
+    @FXML
+    private void handleLeave() {
+        gui.getClientController().leaveGame();
+        try {
+            gui.showCreationChoiceScene();
+            gui.removePlayers();
+            gui.handleLeave();
+        } catch (IOException e) {
+
+        }
+    }
 
 
 

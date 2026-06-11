@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.Controllers;
+package it.polimi.ingsw.View.GUIView.GuiControllers;
 
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;

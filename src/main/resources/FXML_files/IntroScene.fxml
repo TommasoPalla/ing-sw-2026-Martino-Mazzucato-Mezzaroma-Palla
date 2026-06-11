@@ -7,7 +7,7 @@
 
 <?import javafx.scene.layout.StackPane?>
 <StackPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:id="root" style="-fx-background-color: black;"
-           fx:controller="it.polimi.ingsw.View.GUIView.Controllers.IntroController">
+           fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.IntroController">
 
     <ImageView fx:id="background"
                preserveRatio="true"

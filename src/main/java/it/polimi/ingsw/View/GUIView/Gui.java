@@ -6,7 +6,7 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.View.GUIView.Controllers.*;
+import it.polimi.ingsw.View.GUIView.GuiControllers.*;
 import it.polimi.ingsw.View.ViewInterface;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -40,6 +40,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     private GameSceneController gameScene;
     private boolean isHost;
     private int numPlayers;
+    Map<String, Integer> currentRanking;
 
 
     public Gui(Stage stage){
@@ -87,6 +88,10 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     public String getName(){
         return nickname;
+    }
+
+    public Map<String, Integer> getCurrentRanking(){
+        return currentRanking;
     }
 
     @Override
@@ -411,6 +416,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         if(gameScene != null) {
             Platform.runLater(() -> {
                 try {
+                    currentRanking = finalRanking;
                     gameScene.showEndGame(finalRanking);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, "Failed to show game ended", e);

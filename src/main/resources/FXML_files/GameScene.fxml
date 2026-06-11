@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import org.controlsfx.control.cell.ImageGridCell?>
 <AnchorPane fx:id="mainAnchor" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.View.GUIView.Controllers.GameSceneController"
+            fx:controller="it.polimi.ingsw.View.GUIView.GuiControllers.GameSceneController"
             styleClass="main-background">
    <stylesheets>
       <URL value="@/style.css"/>

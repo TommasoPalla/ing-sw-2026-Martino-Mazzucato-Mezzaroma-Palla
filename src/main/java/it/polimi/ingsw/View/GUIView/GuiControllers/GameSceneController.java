@@ -1,6 +1,5 @@
-package it.polimi.ingsw.View.GUIView.Controllers;
+package it.polimi.ingsw.View.GUIView.GuiControllers;
 
-import com.mysql.cj.xdevapi.Client;
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.Controller.ClientController.LightTribe;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
@@ -26,7 +25,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import java.util.List;
 import java.util.Map;
 
 

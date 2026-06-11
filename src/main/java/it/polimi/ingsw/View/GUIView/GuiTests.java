@@ -8,15 +8,17 @@ import javafx.stage.Stage;
 
 public class GuiTests extends Application {
 
+
     @Override
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/gui/IntroScene.fxml"));
+                new FXMLLoader(getClass().getResource("/FXML_files/RankingScene.fxml"));
 
         Parent root = loader.load();
 
         stage.setScene(new Scene(root));
         stage.show();
     }
+
 }

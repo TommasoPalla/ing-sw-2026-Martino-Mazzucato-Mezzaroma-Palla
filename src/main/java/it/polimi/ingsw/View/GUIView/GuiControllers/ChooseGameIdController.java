@@ -1,4 +1,4 @@
-package it.polimi.ingsw.View.GUIView.Controllers;
+package it.polimi.ingsw.View.GUIView.GuiControllers;
 
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GamePlayers;
