@@ -52,6 +52,6 @@ public class DrawableCardVisitor extends VisitorAdapter {
 
     @Override
     public void visitCard(EventCard event) {
-        throw new IllegalDrawException();
+        throw new IllegalDrawException("You can't draw an Event card");
     }
 }

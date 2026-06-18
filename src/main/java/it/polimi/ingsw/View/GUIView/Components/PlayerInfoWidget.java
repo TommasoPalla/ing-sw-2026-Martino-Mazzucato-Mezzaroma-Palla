@@ -65,7 +65,7 @@ public class PlayerInfoWidget extends GridPane{
         this.setPadding(new Insets(10));
         this.setHgap(10);
         this.setVgap(12);
-        this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
+        this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/gameSceneStyle.css")).toExternalForm());
         this.getStyleClass().add("player-widget");
         this.gui = gui;
 

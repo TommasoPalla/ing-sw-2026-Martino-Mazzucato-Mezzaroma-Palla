@@ -138,7 +138,7 @@ public class RMIServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException {
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) {
         try {
             serverStub.drawCard(clientStub, fromTopRow, fromBuildings, index);
         } catch (RemoteException e) {

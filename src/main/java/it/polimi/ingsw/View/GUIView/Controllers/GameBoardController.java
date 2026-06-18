@@ -116,7 +116,7 @@ public class GameBoardController {
         Image deckImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
         deck.setImage(deckImage);
         //sets clipping
-        Rectangle clip = new Rectangle(GUISettings.Cards.WIDTH, GUISettings.Cards.HEIGHT);
+        Rectangle clip = new Rectangle(115.0, 171.0);
         clip.setArcHeight(15);
         clip.setArcWidth(15);
         deck.setClip(clip);

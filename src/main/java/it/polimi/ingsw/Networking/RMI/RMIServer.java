@@ -114,7 +114,7 @@ public class RMIServer implements VirtualRMIServer {
     }
 
     @Override
-    public void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException {
+    public void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws RemoteException {
         PlayerRecord callerRecord = clientRecords.get(client);
         serverController.drawCard(callerRecord, fromTopRow, fromBuildings, index);
     }

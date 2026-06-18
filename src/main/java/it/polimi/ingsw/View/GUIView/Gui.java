@@ -535,7 +535,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
             gameScene = controller;
 
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/gameSceneStyle.css")).toExternalForm());
 
             primaryStage.setScene(scene);
             return true;

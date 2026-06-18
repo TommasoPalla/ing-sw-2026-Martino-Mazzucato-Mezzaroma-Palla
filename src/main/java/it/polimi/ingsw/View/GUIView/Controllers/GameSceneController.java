@@ -272,7 +272,7 @@ public class GameSceneController implements BoardActionListener {
 
     public void showNewRound(int round) {
         AnimationsUtils.animateLabelUpdate(roundStatus, String.valueOf(round));
-        AnimationsUtils.animateLabelUpdate(phaseStatus, GamePhase.START_TURN.toString());
+        AnimationsUtils.animateLabelUpdate(phaseStatus, "Placing Totem");
 
         gameBoardController.updateTopRow();
         gameBoardController.updateBottomRow();
@@ -306,7 +306,7 @@ public class GameSceneController implements BoardActionListener {
             String message = "You successfully passed your turn";
             banner.showBanner(message, 1.0, null, 0);
         } else {
-            String message = player + "has passed their turn";
+            String message = player + " has passed their turn";
             notificationManager.addInfoNotification(message);
         }
     }
@@ -339,7 +339,7 @@ public class GameSceneController implements BoardActionListener {
         }
 
         Node cardImage = ImageManager.getCardNode(card.getCardID());
-        String prefix = player + "has drawn ";
+        String prefix = player + " has drawn ";
         if(player.equals(localPlayer)){
             addCardToTribe(card, fromBuildings);
 
@@ -408,26 +408,29 @@ public class GameSceneController implements BoardActionListener {
                     ? "\nIt's your turn!"
                     : "\nIt's " + currentPlayer + "'s turn");
             gameBoardController.toggleSelectableTiles(false);
+            AnimationsUtils.animateLabelUpdate(phaseStatus, "Drawing Cards");
         } else if (phase == GamePhase.START_TURN){
             messageBuilder.append("place totems");
             messageBuilder.append(currentPlayer.equals(localPlayer)
                     ? "\nIt's your turn!"
                     : "\nIt's " + currentPlayer + "'s turn");
             gameBoardController.toggleSelectableCards(false);
+            AnimationsUtils.animateLabelUpdate(phaseStatus, "Placing Totem");
+
         } else {
             messageBuilder.append("to declare the winner");
             gameBoardController.toggleSelectableTiles(false);
             gameBoardController.toggleSelectableCards(false);
+            AnimationsUtils.animateLabelUpdate(phaseStatus, "End Game");
 
         }
         String message = messageBuilder.toString();
         banner.showBanner(message, 2, null, 0);
-        AnimationsUtils.animateLabelUpdate(phaseStatus, phase.toString());
     }
 
 
     public void showEventEffects(String player, EventType eventType, int foodModified, int ppModified) {
-        AnimationsUtils.animateLabelUpdate(phaseStatus, GamePhase.ON_EVENT.toString());
+        AnimationsUtils.animateLabelUpdate(phaseStatus, "Event Resolution");
         LightTribe tribe = gui.getClientController().getLocalModel().getPlayerTribe(player);
 
         if(player.equals(localPlayer)) {
@@ -439,9 +442,6 @@ public class GameSceneController implements BoardActionListener {
             variation = (ppModified > 0) ? "\nYou gained "
                                         : "\nYou lost ";
             message.append(variation).append(String.valueOf(abs(ppModified))).append(" prestige Points");
-                    //.append("\nThe effects of this event also applied to the other players");
-            /*TODO: vorrei mettere l'immagine dell'evento ma risalire a quale era fosse non è facile,
-               è già stata tolta dal tabellone?*/
             banner.showBanner(message.toString(), 2, null, 0);
 
             String foodReserve = String.valueOf(tribe.getFoodReserve());
@@ -537,7 +537,7 @@ public class GameSceneController implements BoardActionListener {
     }
 
     public void showEndGame() {
-        AnimationsUtils.animateLabelUpdate(phaseStatus, GamePhase.END_GAME.toString());
+        AnimationsUtils.animateLabelUpdate(phaseStatus, "End Game");
         banner.showBanner("Game Ended!\nYou will be brought to final ranking", 3, () -> gui.rankingScene(), 0);
     }
 
@@ -563,7 +563,7 @@ public class GameSceneController implements BoardActionListener {
             gui.getClientController().drawCard(fromTopRow, fromBuildings, index);
         } catch (IllegalClientStateActionException | InvalidSelectionException e) {
             if(e.getCause() != null) {
-                notificationManager.addWarning(e.getMessage() + e.getCause());
+                notificationManager.addWarning(e.getMessage() + e.getCause().getMessage());
             } else {
                 notificationManager.addWarning(e.getMessage());
             }
@@ -577,7 +577,7 @@ public class GameSceneController implements BoardActionListener {
             gameBoardController.toggleSelectableTiles(false);
         } catch (IllegalClientStateActionException | OccupiedTileException e) {
             if(e.getCause() != null) {
-                notificationManager.addWarning(e.getMessage() + e.getCause());
+                notificationManager.addWarning(e.getMessage() + e.getCause().getMessage());
             }
             notificationManager.addWarning(e.getMessage());
         }
@@ -611,8 +611,10 @@ public class GameSceneController implements BoardActionListener {
     }
 
     public void showCriticalDisconnection(String playerName) {
-        String message = playerName + " left the game. You will be brought to setup.";
-        banner.showBanner(message, 3, this::goBackToSetup, 0);
+        String message = (playerName.equals(localPlayer)) ? playerName
+                                                        : "You";
+        String suffix = " left the game. You will be brought to setup.";
+        banner.showBanner(message.concat(suffix), 3, this::goBackToSetup, 0);
     }
     public void goBackToSetup() {
         try {

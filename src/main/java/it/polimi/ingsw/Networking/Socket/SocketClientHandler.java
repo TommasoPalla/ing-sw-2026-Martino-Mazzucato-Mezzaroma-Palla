@@ -113,7 +113,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
             try {
                 server.drawCard(fromTopRow, fromBuildings, index, this);
             } catch (IllegalDrawException e){
-                throw new IllegalDrawException();
+                throw new IllegalDrawException(e.getMessage());
             }
         });
         commandHandlers.put(SocketHeaderNames.CHOOSE_OFFER_TILE, parameters -> {

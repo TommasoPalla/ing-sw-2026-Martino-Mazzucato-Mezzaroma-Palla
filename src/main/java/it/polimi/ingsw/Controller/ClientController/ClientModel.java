@@ -91,10 +91,9 @@ public class ClientModel {
      * @param fromTopRow true if it's from top row, false if it's from bottom.
      * @param fromBuildings true if it's from the buildings' row, false if otherwise.
      * @param index the index of the array of cards chosen.
-     * @throws IllegalDrawException if the card chosen is not drawable, if the row chosen is empty or if it catches
      * a {@link IndexOutOfBoundsException} because the index inserted is invalid.
      */
-    public void drawable(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException {
+    public void drawable(boolean fromTopRow, boolean fromBuildings, int index) {
         LightTribe tribe = players.get(currentPlayer);
         if (fromTopRow && tribe.getRemainingAbove() <= 0) {
             throw new IllegalDrawException("No more draws allowed from top row for " + totemColors.get(currentPlayer).colorize(currentPlayer));

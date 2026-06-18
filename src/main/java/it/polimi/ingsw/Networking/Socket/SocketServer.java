@@ -76,7 +76,7 @@ public class SocketServer implements VirtualSocketServer{
     }
 
     @Override
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) throws IllegalDrawException {
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) {
         serverController.drawCard(clientHandler.getPlayerRecord(), fromTopRow, fromBuildings, index);
     }
 

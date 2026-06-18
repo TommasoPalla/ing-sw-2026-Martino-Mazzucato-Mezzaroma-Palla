@@ -13,7 +13,7 @@
             fx:id="rootPane"
             fx:controller="it.polimi.ingsw.View.GUIView.Controllers.GameBoardController">
     <stylesheets>
-        <URL value="@/style.css"/>
+        <URL value="@/css/gameSceneStyle.css"/>
     </stylesheets>
     <padding>
         <Insets top="15" right="15" bottom="15" left="15" />
@@ -46,7 +46,7 @@
                 <Insets left="10" top="10" right="10" bottom="10"/>
             </padding>
 
-            <ImageView fx:id="deck" fitHeight="153.0" fitWidth="102.0" preserveRatio="true"
+            <ImageView fx:id="deck" fitHeight="171.0" fitWidth="115.0" preserveRatio="true"
                        styleClass="offer-track"/>
 
             <StackPane>

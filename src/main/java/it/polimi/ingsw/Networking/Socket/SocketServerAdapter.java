@@ -102,7 +102,7 @@ public class SocketServerAdapter implements ServerConnection {
     }
 
     @Override
-    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException {
+    public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.DRAW_CARD, fromTopRow, fromBuildings, index);
         outStream.println(gson.toJson(message));
     }

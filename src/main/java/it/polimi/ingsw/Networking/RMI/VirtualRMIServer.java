@@ -43,10 +43,9 @@ public interface VirtualRMIServer extends Remote {
      * @param fromTopRow true to draw from the top row, false for bottom.
      * @param fromBuildings true if drawing a building, false for character.
      * @param index the position of the card.
-     * @throws IllegalDrawException if the draw action violates game rules.
      * @throws RemoteException if RMI communication fails.
      */
-    void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws IllegalDrawException, RemoteException;
+    void drawCard(VirtualRMIClient client, boolean fromTopRow, boolean fromBuildings, int index) throws RemoteException;
 
     /**
      * When the player in turn still has remaining draws but has no more character cards to draw, and he doesn't want

@@ -39,9 +39,8 @@ public interface VirtualSocketServer {
      * @param fromTopRow true to draw from the top row, false for bottom.
      * @param fromBuildings true if drawing a building, false for character.
      * @param index the position of the card.
-     * @throws IllegalDrawException if the draw action violates game rules.
      */
-    void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler) throws IllegalDrawException;
+    void drawCard(boolean fromTopRow, boolean fromBuildings, int index, SocketClientHandler clientHandler);
 
     /**
      * Chooses a totem color for the current game.

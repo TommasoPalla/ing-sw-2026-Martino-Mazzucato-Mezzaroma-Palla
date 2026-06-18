@@ -59,7 +59,7 @@
             </Label>
 
             <TableView fx:id="gamesTable" layoutX="510.0" layoutY="280.0" prefHeight="480.0" prefWidth="900.0"
-                       stylesheets="@gameTable.css">
+                       stylesheets="@../css/gameTable.css">
                 <columns>
                     <TableColumn fx:id="connectedColumn" prefWidth="200.0" text="Available" />
                     <TableColumn fx:id="playersColumn" prefWidth="538.0" text="Players connected" />

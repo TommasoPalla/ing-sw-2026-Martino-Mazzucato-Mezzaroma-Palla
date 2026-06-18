@@ -265,7 +265,7 @@ public class ServerController {
                 currentController.handleDraw(playerName, fromTopRow, fromBuildings, index);
             }
         } catch (IllegalDrawException e){
-            throw new IllegalDrawException();
+            throw new IllegalDrawException(e.getMessage());
         } catch (EndOfGameException e) {
             endGame(currentController);
         }
