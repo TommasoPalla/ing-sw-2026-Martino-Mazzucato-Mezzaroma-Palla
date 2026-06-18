@@ -29,17 +29,7 @@
     -fx-font-weight: bold;
     -fx-text-fill: -fx-light-color !important;
 }
-/*todo: specific style for first Label (title label)
-  first-child selector is not native CSS, but
-  only JavaFX CSS, that is why results in a static error,
-  however it compiles correctly*/
-/*mi s ache non funziona
-.status-bar .label:first-child {
-    -fx-font-size: 14px;
-    -fx-font-weight: normal;
-    -fx-text-fill: -fx-light-color;
-    -fx-text-transform: uppercase;
-}*/
+
 
 .leave-game-btn {
     -fx-background-color: -fx-secondary-accent-color;
@@ -122,10 +112,10 @@
 
 .tribe-region {
     -fx-background-color: -fx-light-color;
-    -fx-background-radius: 15.0;
-    -fx-border-color: -fx-primary-accent-color;
+    -fx-background-radius: 20.0;
+    -fx-border-color: -fx-primary-background-color;
     -fx-border-radius: 15.0;
-    -fx-border-width: 4.0;
+    -fx-border-width: 5.0;
 }
 
 .tribe-column {
@@ -154,7 +144,7 @@
     -fx-border-radius: 15;
     -fx-border-width: 4;
     -fx-background-color: -fx-light-color;
-    -fx-background-radius: 15;
+    -fx-background-radius: 20;
 }
 
 .player-widget {
@@ -162,7 +152,7 @@
     -fx-border-radius: 10;
     -fx-border-width: 2;
     -fx-background-color: -fx-light-color;
-    -fx-background-radius: 10;
+    -fx-background-radius: 15;
 }
 
 

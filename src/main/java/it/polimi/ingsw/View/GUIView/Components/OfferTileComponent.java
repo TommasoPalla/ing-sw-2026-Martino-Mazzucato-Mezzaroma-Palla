@@ -31,8 +31,6 @@ public class OfferTileComponent extends TileComponent implements BoardInteractio
     }
 
     public void setupInteraction() {
-        //TODO: tooltip
-
         // Manages interaction on click
         this.tileLayout.setOnMouseClicked((MouseEvent event) -> {
             if (this.listener != null) {
