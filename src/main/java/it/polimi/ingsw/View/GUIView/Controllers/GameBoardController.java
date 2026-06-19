@@ -12,6 +12,7 @@ import it.polimi.ingsw.View.GUIView.Components.TotemComponent;
 import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.Utils.*;
+import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -124,10 +125,15 @@ public class GameBoardController {
     }
 
     private void updateInitialGameState(){
-        topRow.managedProperty().bind(topRow.visibleProperty());
+        topRow.visibleProperty().bind(Bindings.isNotEmpty(topRow.getChildren()));
+        topBuildings.visibleProperty().bind(Bindings.isNotEmpty(topBuildings.getChildren()));
+        bottomRow.visibleProperty().bind(Bindings.isNotEmpty(bottomRow.getChildren()));
+        bottomBuildings.visibleProperty().bind(Bindings.isNotEmpty(bottomBuildings.getChildren()));
+
+        /*topRow.managedProperty().bind(topRow.visibleProperty());
         bottomRow.managedProperty().bind(bottomRow.visibleProperty());
         topBuildings.managedProperty().bind(topBuildings.visibleProperty());
-        bottomBuildings.managedProperty().bind(bottomBuildings.visibleProperty());
+        bottomBuildings.managedProperty().bind(bottomBuildings.visibleProperty());*/
 
         setPassTurnBtnEnabled(false);
         initOfferTrack();
@@ -189,7 +195,7 @@ public class GameBoardController {
             topRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        topRow.setVisible(i > 0);
+        //topRow.setVisible(i > 0);
     }
 
     public void updateBottomRow() {
@@ -208,7 +214,7 @@ public class GameBoardController {
             bottomRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        bottomRow.setVisible(i > 0);
+        //bottomRow.setVisible(i > 0);
     }
 
     public void updateTopBuildings() {
@@ -225,7 +231,7 @@ public class GameBoardController {
             topBuildings.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        topBuildings.setVisible(i > 0);
+        //topBuildings.setVisible(i > 0);
     }
 
     public void updateBottomBuildings() {
@@ -242,7 +248,7 @@ public class GameBoardController {
             bottomBuildings.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        bottomBuildings.setVisible(i > 0);
+        //bottomBuildings.setVisible(i > 0);
     }
 
 

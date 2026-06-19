@@ -12,21 +12,17 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
+
 import javafx.scene.transform.Scale;
 import java.util.List;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RankingSceneController{
     private Gui gui;
-
-    public void setGUI(Gui gui) {
-        this.gui = gui;
-    }
 
     @FXML
     private Pane root;
@@ -54,9 +50,16 @@ public class RankingSceneController{
     private static final double BASE_WIDTH = 1920;
     private static final double BASE_HEIGHT = 1080;
 
-    @FXML
+
+    public void setGUI(Gui gui) {
+        this.gui = gui;
+        setup();
+    }
+
+    /*@FXML
     public void initialize() {
 
+        Image img = new Image(Objects.requireNonNull(getClass().getResource("/Images/Background/Background.png")).toExternalForm());
         //logic for video ending
 //        String videoPath = getClass().getResource("/Images/Background/mesosvideo.mp4").toExternalForm();
 //        Media media = new Media(videoPath);
@@ -100,10 +103,9 @@ public class RankingSceneController{
                 Platform.runLater(this::updateScale);
             }
         });
+    }*/
 
-
-
-
+    private void setup(){
         for (Map.Entry<String, Integer> entry : gui.getCurrentRanking().entrySet()) {
             Label label = new Label(entry.getKey() + ": " + entry.getValue());
             ranking.getChildren().add(label);
@@ -112,6 +114,7 @@ public class RankingSceneController{
             generalLeaderboard.getChildren().add(new Label(s));
         }
     }
+
 
     public void populateRanking(Map<String, Integer> data) {
         data.entrySet().stream()

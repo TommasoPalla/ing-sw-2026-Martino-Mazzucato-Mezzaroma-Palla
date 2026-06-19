@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 /*TODO: verificare per ogni runLater di gameScene se si può togliere il try catch (lasciarlo solo se bisogna caricare
 *  risorse grafiche (in quel caso NullPointerException)*/
-public class Gui implements ViewInterfaceGui, ViewInterface {
+public class Gui implements ViewInterface {
 
     private static final Logger LOGGER = Logger.getLogger(Gui.class.getName());
 
@@ -99,7 +99,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
 
     }
 
-    @Override
     public void introScene() {
 
         try {
@@ -448,7 +447,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     public void showEndGameLeft() {
     }
 
-    @Override
+
     public void showCreationChoiceScene() throws IOException {
 
         Platform.runLater(() -> {//serve a thread, carica la scena appena possibile, lambda e esempio di uso gui con thread
@@ -467,7 +466,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         });
     }//->handleJoin, handleCreate
 
-    @Override
+
     public void showGameIdScene() {
         try {
             controller.setClientState(ClientState.SETUP);
@@ -485,7 +484,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         }
     }
 
-    @Override
     public void nicknameScene() {
         try {
 
@@ -502,7 +500,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         }
     }//->handle Nickname
 
-    @Override
+
     public void chooseTotemScene() {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseTotemScene.fxml"));
@@ -518,7 +516,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         }
     }
 
-    @Override
     public boolean playGameScene() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/GameScene.fxml"));
@@ -548,7 +545,7 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         }
     }
 
-    @Override
+
     public void lobbyScene() throws IOException{
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/LobbyScene.fxml"));
@@ -566,7 +563,6 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         }
     }
 
-    @Override
     public void chooseNumberOfPlayers() {
         try {
 
@@ -583,17 +579,16 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
         }
     }
 
-    @Override
     public void rankingScene(){
 
         Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/RankingScene.fxml"));
                 Parent root = loader.load();
-                RankingSceneController Controller = loader.getController();
-                Controller.setGUI(this);
-                Controller.populateRanking(getCurrentRanking());
-                Controller.populateLeaderboard(getClientController().getLocalModel().getDbLeaderboard());
+                RankingSceneController controller = loader.getController();
+                controller.setGUI(this);
+                controller.populateRanking(this.currentRanking);
+                controller.populateLeaderboard(getClientController().getLocalModel().getDbLeaderboard());
 
                 Scene scene = new Scene(root);
                 primaryStage.setScene(scene);

@@ -10,14 +10,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import java.net.URL?>
+<Pane fx:id="root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="it.polimi.ingsw.View.GUIView.Controllers.RankingSceneController"
+      styleClass="main-background">
+    <stylesheets>
+        <URL value="@/css/gameSceneStyle.css"/>
+    </stylesheets>
 <!--<?import javafx.scene.media.MediaView?>-->
-<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: transparent;"
-      xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.polimi.ingsw.View.GUIView.Controllers.RankingSceneController">
 
 <!--    <MediaView fx:id="background" fitWidth="1920.0" fitHeight="1080.0" preserveRatio="true" />-->
 
-    <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">
+    <AnchorPane fx:id="gamePane">
 
 <!--        <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">-->
 <!--            <effect>-->
@@ -25,7 +29,13 @@
 <!--            </effect>-->
 <!--        </ImageView>-->
 
-        <Label alignment="CENTER" prefWidth="480.0" layoutX="400.0" layoutY="200.0"
+        <Label alignment="CENTER" prefWidth="480.0" layoutX="400.0" layoutY="200.0"/>
+        <!-- <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
+            <effect>
+                <ColorAdjust saturation="-0.5" />
+            </effect>
+        </ImageView> -->
+        <Label alignment="CENTER" prefWidth="480.0" layoutX="400.0" layoutY="330.0"
                text="This game ranking"
                style="-fx-text-fill: #E5CEBE; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0.3, 0, 2);">
             <font>
