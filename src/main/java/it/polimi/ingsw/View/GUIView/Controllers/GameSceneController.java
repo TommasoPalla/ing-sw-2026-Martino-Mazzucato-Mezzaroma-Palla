@@ -537,6 +537,8 @@ public class GameSceneController implements BoardActionListener {
     }
 
     public void showEndGame() {
+        gameBoardController.clearRows();
+        gameBoardController.showRemainingCards(false);
         AnimationsUtils.animateLabelUpdate(phaseStatus, "End Game");
         banner.showBanner("Game Ended!\nYou will be brought to final ranking", 3, () -> gui.rankingScene(), 0);
     }

@@ -27,6 +27,7 @@
     -fx-font-family: "Helvetica", "Arial", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
+    -fx-alignment: center;
     -fx-text-fill: -fx-light-color !important;
 }
 
@@ -164,7 +165,7 @@
 
 .cards-remaining-box {
     -fx-background-color: -fx-light-color;
-    -fx-background-radius: 15;
+    -fx-background-radius: 20;
     -fx-border-radius: 15;
     -fx-border-width: 4;
     -fx-border-color: -fx-primary-accent-color;
@@ -173,7 +174,7 @@
 }
 
 .cards-remaining-label {
-    -fx-background-radius: 10;
+    -fx-background-radius: 15;
     -fx-border-radius: 10;
     -fx-border-width: 2;
     -fx-border-color: -fx-secondary-accent-color;

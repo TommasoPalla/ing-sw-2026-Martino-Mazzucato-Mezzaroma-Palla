@@ -342,6 +342,13 @@ public class GameBoardController {
         remainingCards.setVisible(isVisible);
     }
 
+    public void clearRows() {
+        topRow.getChildren().clear();
+        topBuildings.getChildren().clear();
+        bottomBuildings.getChildren().clear();
+        bottomRow.getChildren().clear();
+    }
+
     public void moveTotemToTurnTile(String playerName, int index) {
         TotemComponent totem = this.totems.get(playerName);
         Node tile = offerTrack.getChildren().getFirst();

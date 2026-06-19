@@ -43,19 +43,19 @@
          <padding>
             <Insets top="5" bottom="5" right="15" left="15" />
          </padding>
-         <VBox spacing="15">
+         <VBox spacing="15" alignment="CENTER">
             <Label text="ERA" />
             <Label fx:id="eraStatus" text="I" />
          </VBox>
-         <VBox spacing="15">
+         <VBox spacing="15" alignment="CENTER">
             <Label text="ROUND" />
             <Label fx:id="roundStatus" text="1"/>
          </VBox>
-         <VBox spacing="15">
+         <VBox spacing="15" alignment="CENTER">
             <Label text="PHASE" />
             <Label fx:id="phaseStatus" text="Start Game" />
          </VBox>
-         <VBox spacing="15">
+         <VBox spacing="15" alignment="CENTER">
             <Label text="ACTIVE PLAYER" />
             <Label fx:id="playerStatus"/>
          </VBox>
