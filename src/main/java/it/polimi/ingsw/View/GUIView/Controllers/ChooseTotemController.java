@@ -137,7 +137,7 @@ public class ChooseTotemController {
             javafx.scene.effect.InnerShadow inner = new javafx.scene.effect.InnerShadow();
             inner.setBlurType(javafx.scene.effect.BlurType.GAUSSIAN);
             inner.setColor(javafx.scene.paint.Color.BLACK);
-            inner.setRadius(28);
+            inner.setRadius(14);
             inner.setChoke(0.25);
             totem.setEffect(inner);
 
@@ -151,7 +151,7 @@ public class ChooseTotemController {
                 double fastGlitch = glitchRandom.nextDouble() * 0.15;
 
                 outer.setRadius(25 + slowWave * 12 + fastGlitch * 8);
-                inner.setRadius(24 + slowWave * 10 + fastGlitch * 6);
+                inner.setRadius(20 + slowWave * 3 + fastGlitch * 2);
                 inner.setChoke(0.20 + slowWave * 0.08 + fastGlitch * 0.05);
             }));
             glitch.setCycleCount(Animation.INDEFINITE);

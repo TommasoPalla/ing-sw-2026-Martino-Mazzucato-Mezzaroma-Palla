@@ -65,7 +65,7 @@
         <children>
             <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
                 <effect>
-                    <ColorAdjust saturation="-0.5" />
+                    <ColorAdjust saturation="0" />
                 </effect>
             </ImageView>
 

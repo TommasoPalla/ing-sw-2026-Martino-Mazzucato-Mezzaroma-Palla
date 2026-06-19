@@ -69,7 +69,7 @@
 
             <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
                 <effect>
-                    <ColorAdjust saturation="-0.5" />
+                    <ColorAdjust saturation="0" />
                 </effect>
             </ImageView>
 
@@ -110,7 +110,7 @@
                             prefHeight="80.0" prefWidth="420.0" text="Start Game"
                             style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #FFE193; -fx-font-size: 26px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: #F4B492; -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" />
                     <Button fx:id="leaveLobby" mnemonicParsing="false" onAction="#handleLeave"
-                            prefHeight="80.0" prefWidth="420.0" text="Back to Creation Scene"
+                            prefHeight="80.0" prefWidth="420.0" text="leave lobby"
                             style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #F4B492; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: rgba(244,180,146,0.55); -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" />
                 </children>
             </VBox>
