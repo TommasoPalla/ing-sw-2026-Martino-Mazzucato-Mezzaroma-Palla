@@ -586,12 +586,14 @@ public class Gui implements ViewInterfaceGui, ViewInterface {
     @Override
     public void rankingScene(){
 
-        Platform.runLater(() -> {//serve a thread, carica la scena appena possibile, lambda e esempio di uso gui con thread
+        Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/RankingScene.fxml"));
                 Parent root = loader.load();
-                ChooseToCreateController Controller = loader.getController();
+                RankingSceneController Controller = loader.getController();
                 Controller.setGUI(this);
+                Controller.populateRanking(getCurrentRanking());
+                Controller.populateLeaderboard(getClientController().getLocalModel().getDbLeaderboard());
 
                 Scene scene = new Scene(root);
                 primaryStage.setScene(scene);

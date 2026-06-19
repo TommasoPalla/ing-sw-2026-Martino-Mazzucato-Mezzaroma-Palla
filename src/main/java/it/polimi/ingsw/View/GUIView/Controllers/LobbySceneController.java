@@ -2,6 +2,8 @@ package it.polimi.ingsw.View.GUIView.Controllers;
 
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
+import it.polimi.ingsw.CustomException.UIException.ConnectionLostException;
+import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.Components.GameSceneBanner;
@@ -53,6 +55,7 @@ public class LobbySceneController {
     private ImageView background;
 
     private final Scale scaleTransform = new Scale();
+
     private GameSceneBanner banner;
 
     private static final double BASE_WIDTH = 1920;
@@ -140,8 +143,10 @@ public class LobbySceneController {
     private void handleStart(){
         try {
             gui.getClientController().startGame();
-        } catch (IllegalClientStateActionException | NotTheHostException | IllegalArgumentException e) {
-            banner.showBanner(e.getMessage(), 1.5, null, 0);
+            gui.removePlayers();
+        } catch (IllegalClientStateActionException | NotTheHostException | IllegalArgumentException |
+                 NotEnoughPlayersException | ConnectionLostException e) {
+            updateLabel.setText(e.getMessage());
         }
     }
 

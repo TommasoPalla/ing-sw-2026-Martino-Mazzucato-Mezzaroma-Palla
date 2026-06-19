@@ -60,6 +60,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<!--<?import javafx.scene.media.MediaView?>-->
 
 <Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;"
       xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
@@ -69,13 +70,14 @@
 
         <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
             <effect>
-                <ColorAdjust saturation="-0.5" />
+                <ColorAdjust saturation="0" />
             </effect>
         </ImageView>
+<!--        <MediaView fx:id="background" fitWidth="1920.0" fitHeight="1080.0" preserveRatio="true" />-->
 
         <VBox alignment="CENTER" layoutX="660.0" layoutY="330.0" prefWidth="600.0" spacing="45.0">
 
-            <Label alignment="CENTER" prefWidth="600.0" text="Choose your nickname"
+            <Label alignment="CENTER" prefWidth="600.0" text="choose a nickname"
                    style="-fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 14, 0.3, 0, 2);">
                 <font>
                     <Font name="Calibri Bold Italic" size="56.0" />
