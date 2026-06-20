@@ -299,6 +299,7 @@ public class ClientController implements ClientViewUpdate {
         if (clientState != ClientState.END_GAME) {
             throw new IllegalClientStateActionException("ERROR: Invalid command, please try again...");
         }
+        localModel = null;
         clientState = ClientState.SETUP;
         view.showEndGameLeft();
     }
