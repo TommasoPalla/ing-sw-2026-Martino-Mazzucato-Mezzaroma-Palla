@@ -61,11 +61,19 @@ public class ServerController {
     private static int nextGameID = 0;
 
     /**
+     * True if a Mesos Database has been configured, false if not.
+     */
+    private boolean DBConnected = false;
+
+    /**
      * It is used by the server controller to communicate via SQL queries with the MySQL Mesos database, which contains the
      * match history of all the Mesos games played.
      */
     private LeaderboardDAO leaderboardDAO;
 
+    public void setDBConnected(boolean DBConnected) {
+        this.DBConnected = DBConnected;
+    }
     public void setLeaderboardDAO(LeaderboardDAO leaderBoardDAO) {
         this.leaderboardDAO = leaderBoardDAO;
     }
@@ -315,20 +323,25 @@ public class ServerController {
      * @param controller the {@link GameController} of the ending game.
      */
     private void endGame(GameController controller) {
-        Map<String,Integer> finalRanking = controller.getFinalRanking();
-        int playersNum = finalRanking.size();
-        try {
-            for (String player : finalRanking.keySet()) {
-                leaderboardDAO.saveMatchResult(player, finalRanking.get(player), playersNum);
+        if (DBConnected) {
+            Map<String,Integer> finalRanking = controller.getFinalRanking();
+            int playersNum = finalRanking.size();
+            try {
+                for (String player : finalRanking.keySet()) {
+                    leaderboardDAO.saveMatchResult(player, finalRanking.get(player), playersNum);
+                }
+                List<String> leaderboard = leaderboardDAO.getLeaderboard(playersNum);
+                for (String player : finalRanking.keySet()) {
+                    int playerPosition = leaderboardDAO.getPlayerPosition(playersNum, player);
+                    controller.getConnectedClientsNotifiers().get(player).notifyLeaderboardInfo(leaderboard, playerPosition);
+                }
+            } catch (SQLException e1) {
+                System.out.println("[ERROR]  Unable to connect to MySQL mesos database:");
+                e1.printStackTrace();
             }
-            List<String> leaderboard = leaderboardDAO.getLeaderboard(playersNum);
-            for (String player : finalRanking.keySet()) {
-                int playerPosition = leaderboardDAO.getPlayerPosition(playersNum, player);
-                controller.getConnectedClientsNotifiers().get(player).notifyLeaderboardInfo(leaderboard, playerPosition);
-            }
-        } catch (SQLException e1) {
-            System.out.println("[ERROR]  Unable to connect to MySQL mesos database:");
-            e1.printStackTrace();
+        }
+        else {
+            controller.notifyAll( n -> { n.notifyLeaderboardInfo(Collections.emptyList(),0);});
         }
         activeGames.remove(controller.getGameModel().getGameID());
     }

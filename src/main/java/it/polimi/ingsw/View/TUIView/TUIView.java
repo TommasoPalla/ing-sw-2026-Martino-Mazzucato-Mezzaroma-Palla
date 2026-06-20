@@ -516,10 +516,15 @@ public class TUIView implements ViewInterface {
     @Override
     public void showLeaderboardInfo(int playerPosition) {
         System.out.println();
-        System.out.println("You are now in position " + Color.RED.colorize(String.valueOf(playerPosition)) + " in the Mesos leaderboard of games with "
-        + clientController.getLocalModel().getNumPlayers() + " players!");
-        System.out.println();
-        System.out.println("If you want to see the entire leaderboard type \"see_leaderboard()\". Else, type \"leave()\" to go back to setup to create or join another game of Mesos!");
+        if (playerPosition == 0) {
+            System.out.println("You are now in position " + Color.RED.colorize(String.valueOf(playerPosition)) + " in the Mesos leaderboard of games with "
+                    + clientController.getLocalModel().getNumPlayers() + " players!");
+            System.out.println();
+            System.out.println("If you want to see the entire leaderboard type \"see_leaderboard()\". Else, type \"leave()\" to go back to setup to create or join another game of Mesos!");
+        }
+        else {
+            System.out.println("This game has ended. Type \"leave()\" to go back to setup to create or join another game of Mesos!");
+        }
     }
 
     @Override
