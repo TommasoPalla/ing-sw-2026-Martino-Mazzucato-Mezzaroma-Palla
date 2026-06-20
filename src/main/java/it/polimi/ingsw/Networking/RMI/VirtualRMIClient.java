@@ -21,9 +21,6 @@ import java.util.Map;
  */
 public interface VirtualRMIClient extends Remote {
 
-    void showUpdate() throws RemoteException;
-    void reportError(String errorMessage) throws RemoteException;
-
     /**
      * Notifies the client that a new game has been created.
      * @param gameID the unique identifier of the created game.
@@ -78,6 +75,10 @@ public interface VirtualRMIClient extends Remote {
      */
     void playerLeftGame(String playerName) throws RemoteException;
 
+    /**
+     * Updates the player and setting it as the new host
+     * @throws RemoteException if RMI communication fails.
+     */
     void updateNewHost() throws RemoteException;
 
     /**
@@ -112,6 +113,11 @@ public interface VirtualRMIClient extends Remote {
      */
     void drawnCard(String playerName, boolean fromTopRow, boolean fromBuildings, int index) throws RemoteException;
 
+    /**
+     * Notifies that a player has passed his turn
+     * @param playerName the player that passed
+     * @throws RemoteException if RMI communication fails
+     */
     void turnPassed(String playerName) throws RemoteException;
 
     /**
@@ -146,16 +152,21 @@ public interface VirtualRMIClient extends Remote {
      */
     void updatePp(String playerName, int pp) throws RemoteException;
 
-    void updateBuildersDiscount(String playerName, int discount) throws RemoteException;
-
-    void updateGatherersDiscount(String playerName, int discount) throws RemoteException;
-
     /**
-     * Notifies a change in the game phase.
-     * @param phase the new GamePhase.
+     * Updates the Prestige Points for a specific player.
+     * @param playerName the player's name.
+     * @param discount the new builders discount.
      * @throws RemoteException if RMI communication fails.
      */
-    void updateGamePhase(GamePhase phase) throws RemoteException;
+    void updateBuildersDiscount(String playerName, int discount) throws RemoteException;
+
+    /**
+     * Updates the Prestige Points for a specific player.
+     * @param playerName the player's name.
+     * @param discount the new gatherers discount.
+     * @throws RemoteException if RMI communication fails.
+     */
+    void updateGatherersDiscount(String playerName, int discount) throws RemoteException;
 
     /**
      * Notifies a change in the game era.

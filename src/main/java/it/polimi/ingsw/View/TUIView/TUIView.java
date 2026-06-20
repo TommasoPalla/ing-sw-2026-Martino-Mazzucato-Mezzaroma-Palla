@@ -3,6 +3,7 @@ package it.polimi.ingsw.View.TUIView;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
+import it.polimi.ingsw.CustomException.StubException;
 import it.polimi.ingsw.CustomException.UIException.*;
 
 import it.polimi.ingsw.Enums.*;
@@ -86,7 +87,6 @@ public class TUIView implements ViewInterface {
             }
         } while (!nameVerified);
         changeClientState(ClientState.SETUP);
-        // ciclo di ascolto comandi
         Scanner commandScanner = new Scanner(System.in);
         while(!Thread.currentThread().isInterrupted()) {
             String command = commandScanner.nextLine();
@@ -103,7 +103,7 @@ public class TUIView implements ViewInterface {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(command);
         if(matcher.matches()){
-            CommandType commandType = null;     //!!!STAVOLTA VA FATTO PER FORZA!!!
+            CommandType commandType = null;
             try {
                 commandType = CommandType.valueOf(matcher.group(1).toUpperCase());
             } catch (IllegalArgumentException e) {
@@ -113,9 +113,6 @@ public class TUIView implements ViewInterface {
             try {
                 commandParserSelector(commandType, matcher);
             }
-            //sequenza di catch da gestire
-            //per ora è gestito il caso di drawCard,
-            //stampa "cant draw this card" + "insufficient food / cant draw event"
             catch(InvalidSelectionException | IllegalArgumentException | NotEnoughPlayersException |
                   NotTheHostException | IllegalClientStateActionException | OccupiedTileException e){
                 String causeMsg = (e.getCause() != null) ? e.getCause().getMessage() : "";
@@ -161,7 +158,6 @@ public class TUIView implements ViewInterface {
 
     public void changeClientState(ClientState clientState) {
         System.out.println();
-        // non sono sicuro che il clientState vada cambiato nella TUI
         clientController.setClientState(clientState);
         switch (clientState) {
             case SETUP -> {
@@ -224,7 +220,6 @@ public class TUIView implements ViewInterface {
         if(tuiState == TUIState.IN_LOBBY) {
             System.out.println(playerName + " joined the lobby!");
         }
-        //else if (tuiState == TUIState.JOIN_GAME) printAvailableGames();
     }
 
     @Override
@@ -246,8 +241,6 @@ public class TUIView implements ViewInterface {
         }
         if(tuiState.equals(TUIState.IN_LOBBY)) {
             System.out.println("Player " + (hadColor ? oldColor.colorize(playerName) : playerName) + " left the lobby!");
-            // se il player non ha ancora scelto il totem e il player che è uscito lo aveva scelto,
-            // ristampa la lista dei colori aggiungendo il colore del player che è uscito
             if (!clientController.getLocalModel().getTotemColors().containsKey(this.player) && hadColor) {
                 printAvailableColors();
             }
@@ -287,8 +280,6 @@ public class TUIView implements ViewInterface {
         }
         else if (tuiState == TUIState.IN_LOBBY) {
             System.out.println(playerName + " has chosen the " + totemColor.colorize(String.valueOf(totemColor).toLowerCase()) + " totem!");
-            // se il player non ha ancora scelto il totem, ristampa la lista dei colori rimuovendo
-            // il colore del player che ha appena scelto il totem
             if (!clientController.getLocalModel().getTotemColors().containsKey(this.player)) {
                 printAvailableColors();
             }
@@ -342,8 +333,6 @@ public class TUIView implements ViewInterface {
         if(this.player.equals(player)) {
             System.out.println("You have successfully drawn the " + cardType + " " + card.getCardID() + " from the " + row);
             
-            // Only show tribe if I still have cards to draw. 
-            // If it's the last draw, I'll wait for the turn-end bonuses (food/PP) to arrive before showing the tribe.
             LightTribe tribe = clientController.getLocalModel().getPlayerTribe(this.player);
             int remainingAboveDraws = tribe.getRemainingAbove();
             int remainingBelowDraws = tribe.getRemainingBelow();
@@ -359,10 +348,8 @@ public class TUIView implements ViewInterface {
         }
     }
 
-    //TODO
     @Override
     public void showEraChanged(int era) {
-
     }
 
     @Override
@@ -392,7 +379,6 @@ public class TUIView implements ViewInterface {
 
     @Override
     public void showTotemToTurnTile(String playerName, int index) {
-        //todo:
     }
 
     @Override
@@ -442,7 +428,6 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    //TODO: decidere se non mostrarla subito ma solo su richiesta
     public void showFoodModified(String playerName, int deltaFood, int finalFood) {
         if(playerName.equals(player)){
             System.out.println();
@@ -451,7 +436,6 @@ public class TUIView implements ViewInterface {
     }
 
     @Override
-    //TODO: decidere se non mostrarla subito ma solo su richiesta
     public void showPrestigePointsModified(String playerName, int deltaPP, int finalPP) {
         if(playerName.equals(player)) {
             System.out.println();
@@ -462,21 +446,23 @@ public class TUIView implements ViewInterface {
         }
     }
 
+    /**
+     * only used in GUI
+     */
     @Override
-    public void showShamanStarsModified(String playerName, int stars) {
+    public void showShamanStarsModified(String playerName, int stars) {}
 
-    }
-
+    /**
+     * only used in GUI
+     */
     @Override
-    public void showBuildersDiscountModified(String playerName, int discount){
+    public void showBuildersDiscountModified(String playerName, int discount){}
 
-    }
-
+    /**
+     * only used in GUI
+     */
     @Override
-    public void showGatherersDiscountModified(String playerName, int discount){
-
-    }
-
+    public void showGatherersDiscountModified(String playerName, int discount){}
 
     @Override
     public void showEvent(String playerName, EventType eventType, int foodModified, int ppModified) {
@@ -532,6 +518,11 @@ public class TUIView implements ViewInterface {
         System.out.println();
         System.out.println("You have left the game!");
         printAvailableActions(clientController.getClientState(), false);
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        System.err.println(errorMessage);
     }
 
     /*
@@ -887,7 +878,6 @@ public class TUIView implements ViewInterface {
                 }
                 else {
                     gameJoined = true;
-                    // prova a joinare il game
                     try {
                         clientController.joinGame(gameID);
                     }

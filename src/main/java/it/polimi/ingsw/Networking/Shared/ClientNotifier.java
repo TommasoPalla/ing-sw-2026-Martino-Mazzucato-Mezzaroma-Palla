@@ -57,6 +57,10 @@ public interface ClientNotifier {
      * @param playerName the name of the player who left.
      */
     void notifyPlayerLeftGame(String playerName);
+
+    /**
+     * Notifies the player that he is now the new host.
+     */
     void notifyNewHost();
 
     /**
@@ -129,15 +133,19 @@ public interface ClientNotifier {
      */
     void notifyNewShamansStars(String playerName, int stars);
 
+    /**
+     * Updates a player's Builders' discount.
+     * @param playerName the name of the player.
+     * @param discount the new discount.
+     */
     void notifyNewBuildersDiscount(String playerName, int discount);
 
-    void notifyNewGatherersDiscount(String playerName, int discount);
-
     /**
-     * Notifies a change in game phase.
-     * @param newPhase the new phase.
+     * Updates a player's Gatherers' discount.
+     * @param playerName the name of the player.
+     * @param discount the new discount.
      */
-    void notifyGamePhase(GamePhase newPhase);
+    void notifyNewGatherersDiscount(String playerName, int discount);
 
     /**
      * Notifies a change in era.

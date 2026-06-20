@@ -63,14 +63,6 @@ public class SocketServer implements VirtualSocketServer{
     }
 
     @Override
-    public void disconnect(SocketClientHandler handler) {
-        this.clients.remove(handler);
-        serverController.updateSocketClients(this.clients);
-        serverController.notifyAvailableGames();
-        System.out.println("[TCP] Client disconnected " + handler);
-    }
-
-    @Override
     public void chooseOfferTile(int index, SocketClientHandler clientHandler) throws OccupiedTileException {
         serverController.chooseOfferTile(clientHandler.getPlayerRecord(), index);
     }

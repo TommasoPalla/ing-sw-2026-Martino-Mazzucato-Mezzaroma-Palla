@@ -55,7 +55,10 @@ public class RMIServerAdapter implements ServerConnection {
             try (java.net.DatagramSocket socket = new java.net.DatagramSocket()) {
                 socket.connect(java.net.InetAddress.getByName("8.8.8.8"), 10002);
                 clientIp = socket.getLocalAddress().getHostAddress();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                System.err.println("[WARNING] Cannot determine locale IP with 8.8.8.8.\n" +
+                        "Fallback on 127.0.0.1. RMI callback may not work. Cause:\n" + e.getMessage());
+            }
 
             System.setProperty("java.rmi.server.hostname", clientIp);
             Registry registry = LocateRegistry.getRegistry(host, port);
@@ -68,16 +71,6 @@ public class RMIServerAdapter implements ServerConnection {
             System.err.println("Error during connection to RMI server\n" + e.getMessage());
         } catch (NotBoundException e){
             System.err.println("Error during RMI server lookup\n" + e.getMessage());
-        }
-    }
-
-    @Override
-    public void disconnect() {
-        stopHeartbeat();
-        try{
-            serverStub.disconnect(clientStub);
-        } catch (RemoteException e){
-            System.out.println("Error during server disconnection: " + e.getMessage());
         }
     }
 
@@ -167,18 +160,13 @@ public class RMIServerAdapter implements ServerConnection {
 
     }
 
-    @Override
-    public void endTurn(String playerName){
-
-    }
-
     private void startHeartBeat() {
         heartbeatScheduler = Executors.newSingleThreadScheduledExecutor();
         heartbeatScheduler.scheduleAtFixedRate(() -> {
             try {
                 serverStub.ping(clientStub);
             } catch (RemoteException e) {
-                // server irraggiungibile
+                // cannot get to the server via the network
                 stopHeartbeat();
                 client.getController().handleServerDisconnection(client.getController().getPlayerName());
             }

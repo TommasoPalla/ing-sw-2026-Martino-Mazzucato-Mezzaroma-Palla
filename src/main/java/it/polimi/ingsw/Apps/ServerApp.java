@@ -21,7 +21,6 @@ public class ServerApp {
     private static RMIServer rmiServer;
 
     public static void main(String[] args) throws Exception {
-        //UNICO CONTROLLER CON ASSOCIATO IL MODEL
         ServerController mainController = new ServerController();
 
         String realIp = "127.0.0.1";
@@ -50,7 +49,6 @@ public class ServerApp {
         }
 
         // MESOS DATABASE SETUP AND CONNECTION
-
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nDo you want to connect this server to an external MySQL Database for match history? [Y/n]");
         String answer = scanner.nextLine();

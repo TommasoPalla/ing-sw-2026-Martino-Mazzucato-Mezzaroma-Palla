@@ -447,6 +447,10 @@ public class Gui implements ViewInterface {
     public void showEndGameLeft() {
     }
 
+    @Override
+    public void showError(String errorMessage) {
+        //TODO: da fare bene i banner di errore
+    }
 
     public void showCreationChoiceScene() throws IOException {
 

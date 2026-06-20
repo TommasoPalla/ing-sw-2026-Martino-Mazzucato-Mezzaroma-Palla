@@ -6,6 +6,10 @@ import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * This class is used to ensure that the IP address
+ * entered by the user is properly written.
+ */
 public class ConnectionValidator {
     public boolean checkIP(String IPAddr){
         //(from 1 to 3 digits followed by a dot) 3 times + (from 1 to 3 digits)
@@ -16,7 +20,8 @@ public class ConnectionValidator {
         if(matcher.matches()){
             //take individual 1 to 3 digits number and checkIP if they are invalid
             String[] IPGroup = IPAddr.split("\\.");
-            if(Arrays.stream(IPGroup).noneMatch(group -> parseInt(group) > 255)) return true;
+            if(Arrays.stream(IPGroup).noneMatch(group -> parseInt(group) > 255))
+                return true;
 
             return false;
         }

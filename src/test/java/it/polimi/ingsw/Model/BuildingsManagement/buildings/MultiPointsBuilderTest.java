@@ -51,7 +51,7 @@ public class MultiPointsBuilderTest {
         player1.getTribe().addCharacterToTribe(new Builder(1, "B2", 2, 3, 1));
         buildingManager.useBuilding(GamePhase.END_GAME, player1);
         player1.getTribe().calculatePlayerFinalPoints();
-        assertEquals(13, player1.getTribe().getPrestigePoints());   //3 * 2 from the building + 4 from purchasing the building + 3 from builder
+        assertEquals(10, player1.getTribe().getPrestigePoints());   //3 * 2 from the building + 4 from purchasing the building
     }
 
     @Test

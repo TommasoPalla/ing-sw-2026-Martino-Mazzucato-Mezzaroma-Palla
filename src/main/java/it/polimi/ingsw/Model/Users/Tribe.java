@@ -178,12 +178,6 @@ public class  Tribe implements TribeInterface{
 
         modifyPrestigePoints(populationPoints + artistsPoints + inventorsPoints + buildingsPoints);
 
-
-        System.out.println("DEBUG:" + tribeOwner.getName() + "'s artists points: " + artistsPoints);
-        System.out.println("DEBUG:" + tribeOwner.getName() + "'s builders points: " + populationPoints);
-        System.out.println("DEBUG:" + tribeOwner.getName() + "'s inventors points: " + inventorsPoints);
-        System.out.println("DEBUG:" + tribeOwner.getName() + "'s buildings points: " + buildingsPoints);
-
         System.out.println();
 
         return this.prestigePoints;

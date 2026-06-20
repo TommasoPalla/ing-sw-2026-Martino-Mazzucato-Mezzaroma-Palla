@@ -12,6 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Interface defining the callbacks used to update the client's View.
+ * It contains methods invoked by the controller to push updates,
+ * resource modifications, and lobby events to the player's user interface,
+ * modifying the local model and the view state.
+ */
 public interface ClientViewUpdate {
     void updateGameCreated(int gameID, int numPlayers);
     void updateGameStarted(List<String> firstTurnOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow,
@@ -21,11 +27,9 @@ public interface ClientViewUpdate {
     void updateSuccessfullyJoinedGame(int gameID, int numPlayers, ArrayList<String> players, Map<String,Color> totemColors) throws RemoteException;
     void updatePlayerLeftGame(String playerName);
     void updateNewHost();
-    //void updatePlayerDisconnected(String playerName);
     void updateCardDrawn(boolean isTopRow, boolean isBuilding, int index, String id);
     void updateTurnPassed(String playerName);
     void updateTotemColor(String playerName, Color totemColor);
-
     void updateStartRound(Map<EventType, ArrayList<PlayerEventResults>> lastEventsResults, ArrayList<Card> newTopRow,
                           ArrayList<Card> newBottomRow, ArrayList<BuildingCard> newTopBuildings,
                           ArrayList<BuildingCard> newBottomBuildings);

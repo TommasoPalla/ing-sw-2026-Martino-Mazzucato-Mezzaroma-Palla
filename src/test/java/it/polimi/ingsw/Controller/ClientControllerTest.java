@@ -29,7 +29,6 @@ public class ClientControllerTest {
     private static class TestServerConnection implements ServerConnection {
         public String lastAction = "";
         @Override public void connect() {}
-        @Override public void disconnect() {}
         @Override public void createGame(String playerName, int numPlayers) { lastAction = "createGame:" + numPlayers; }
         @Override public void joinGame(String playerName, int gameID) { lastAction = "joinGame:" + gameID; }
         @Override public void startGame(String playerName, int gameID) { lastAction = "startGame"; }
@@ -38,7 +37,6 @@ public class ClientControllerTest {
         @Override public void chooseOfferTile(int index) { lastAction = "chooseOfferTile:" + index; }
         @Override public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) { lastAction = "drawCard"; }
         @Override public void passTurn() { lastAction = "passTurn"; }
-        @Override public void endTurn(String playerName) { lastAction = "endTurn"; }
     }
 
     private static class TestView implements ViewInterface {
@@ -74,6 +72,7 @@ public class ClientControllerTest {
 
         @Override public void showEndGame(Map<String, Integer> finalRanking) {}
         @Override public void showLeaderboardInfo(int playerPosition) {}
+        @Override public void showError(String errorMessage) {}
 
         @Override
         public void showEndGameLeft() {

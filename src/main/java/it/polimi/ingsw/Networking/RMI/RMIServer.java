@@ -26,19 +26,18 @@ public class RMIServer implements VirtualRMIServer {
     final ServerController serverController;
     final ArrayList<VirtualRMIClient> clients = new ArrayList<>();   //lista dei client connessi al server in generale
 
-    //Mappa che associa ad ogni client il proprio player record (nome e gameID) DOPO che ha joinato un game
+    /**
+     * Maps every client to its record after joining a game
+     */
     private Map<VirtualRMIClient, PlayerRecord> clientRecords = new ConcurrentHashMap<>();
 
-    //Mappa che associa ad ogni client il proprio gestore dell'heartbeat
+    /**
+     * Maps every client to its heartbeat
+     */
     private final Map<VirtualRMIClient, HeartBeat> clientHeartBeats = new ConcurrentHashMap<>();
 
     public RMIServer(ServerController serverController){
         this.serverController = serverController;
-    }
-
-    //getters
-    public ArrayList<VirtualRMIClient> getClients(){
-        return clients;
     }
 
     public void startServer(){
@@ -67,7 +66,6 @@ public class RMIServer implements VirtualRMIServer {
     @Override
     public void createGame(VirtualRMIClient client, String playerName, int numPlayers) throws RemoteException {
         ClientNotifier clientNotifier = new RMIClientNotifier(client);
-        //da fare il clientRecord.put() capendo come prendere il game id
         int gameID = serverController.createNewGame(clientNotifier, playerName, numPlayers); //QUI viene creato il game e assegnatogli il gameID
         PlayerRecord playerRecord = new PlayerRecord(gameID, playerName);
         clientRecords.put(client, playerRecord);
@@ -80,7 +78,6 @@ public class RMIServer implements VirtualRMIServer {
             clientRecords.put(client, playerRecord);
             ClientNotifier clientNotifier = new RMIClientNotifier(client);
             serverController.joinGame(clientNotifier, playerRecord);
-            //System.out.println(playerRecord + "added to game");
         } catch (NotJoinableGameException e) {
             throw new NotJoinableGameException(e.getMessage());
         }
@@ -133,17 +130,6 @@ public class RMIServer implements VirtualRMIServer {
         }catch(UnavailableColorException e){
             throw new UnavailableColorException(totemColor);
         }
-    }
-
-    @Override
-    public void disconnect(VirtualRMIClient clientStub) {
-        stopHeartBeat(clientStub);
-        this.clients.remove(clientStub);
-        PlayerRecord record = clientRecords.get(clientStub);
-        serverController.removeClientFromGame(record);
-        System.out.println(clientRecords.get(clientStub) + "removed from RMI server");
-        System.out.println("[RMI] Client disconnected: " + clientStub);
-        serverController.updateRMIClients(this.clients);
     }
 
     @Override

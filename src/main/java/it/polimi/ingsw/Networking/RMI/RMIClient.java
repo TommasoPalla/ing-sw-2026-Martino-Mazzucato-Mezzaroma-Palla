@@ -25,22 +25,6 @@ public class RMIClient implements VirtualRMIClient {
 
     public ClientController getController(){ return this.controller;}
 
-    public void run() throws RemoteException{}
-    public void runCli() throws RemoteException{}
-    public void runGUI() throws RemoteException{}
-
-    @Override
-    //verosimilmente si dovra' passare per parametro il model e poi chiamare System.out.println(model.toString()) o simile
-    public void showUpdate() throws RemoteException {
-        // call to client controller update methods
-        System.out.println("state model updated");
-    }
-
-    @Override
-    public void reportError(String errorMessage) throws RemoteException {
-        System.out.println(errorMessage);
-    }
-
     //CALLBACKS from players' actions
     @Override
     public synchronized void updateGameCreated(int gameID, int numPlayers){
@@ -139,11 +123,6 @@ public class RMIClient implements VirtualRMIClient {
         controller.updateGatherersDiscount(playerName, discount);
     }
 
-
-    @Override
-    public synchronized void updateGamePhase(GamePhase phase) throws RemoteException {
-        controller.updateGamePhase(phase);
-    }
 
     @Override
     public synchronized void updateEra(int era) throws RemoteException {

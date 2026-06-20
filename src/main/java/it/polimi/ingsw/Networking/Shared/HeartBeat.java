@@ -3,6 +3,14 @@ package it.polimi.ingsw.Networking.Shared;
 import it.polimi.ingsw.Networking.Configs.ServerConfigs;
 import java.util.concurrent.*;
 
+/**
+ * This class is used to find client disconnecting.
+ * Every client send a ping periodically to the
+ * server, every time resetting a timeout. If a
+ * timeout for a client runs out the client is considered
+ * disconnected, the game is ended and all other clients
+ * are notified
+ */
 public class HeartBeat {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private volatile ScheduledFuture<?> timeoutTask;

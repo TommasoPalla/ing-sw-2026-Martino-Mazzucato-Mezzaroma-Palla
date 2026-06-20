@@ -29,6 +29,7 @@ public class GameControllerTest {
     private TestClientNotifier notifier2;
 
     private static class TestClientNotifier implements ClientNotifier {
+        // used to see what is the last message sent to the network
         public List<String> notifications = new ArrayList<>();
         public boolean gameStarted = false;
         public Map<String, Color> chosenColors = new HashMap<>();
@@ -56,7 +57,6 @@ public class GameControllerTest {
         @Override public void notifyNewShamansStars(String playerName, int stars) { notifications.add("notifyNewShamansStars:" + playerName + ":" + stars); }
         @Override public void notifyNewBuildersDiscount(String playerName, int discount) { notifications.add("notifyNewBuildersDiscount:" + playerName + ":" + discount); }
         @Override public void notifyNewGatherersDiscount(String playerName, int discount) { notifications.add("notifyNewGatherersDiscount:" + playerName + ":" + discount); }
-        @Override public void notifyGamePhase(GamePhase newPhase) { notifications.add("notifyGamePhase:" + newPhase); }
         @Override public void notifyEra(int era) { notifications.add("notifyEra:" + era); }
         @Override public void notifyEndGame(Map<String, Integer> finalRanking) { notifications.add("notifyEndGame"); }
         @Override public void notifyLeaderboardInfo(List<String> leaderboard, int playerPosition) { notifications.add("notifyLeaderboardInfo"); }
@@ -72,6 +72,15 @@ public class GameControllerTest {
         notifier2 = new TestClientNotifier();
     }
 
+    // Utility method to allow the background thread to correctly set the notifications
+    private void waitForNotifications(){
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
     @Test
     void testAddClient() {
         gameController.addClient("P1", notifier1);
@@ -85,7 +94,7 @@ public class GameControllerTest {
         assertTrue(game.isReadyToStart());
 
         // Notify verification (needs to wait for notification thread to actually send it)
-        try {Thread.sleep(50);} catch (InterruptedException e) {}
+        waitForNotifications();
         assertTrue(notifier1.notifications.contains("notifyNewPlayerConnected:P2"));
     }
 
@@ -100,7 +109,7 @@ public class GameControllerTest {
         assertFalse(game.isReadyToStart());
 
         // Notify verification (needs to wait for notification thread to actually send it)
-        try {Thread.sleep(50);} catch (InterruptedException e) {}
+        waitForNotifications();
         assertTrue(notifier2.notifications.contains("notifyPlayerLeftGame:P1"));
     }
 
@@ -112,7 +121,7 @@ public class GameControllerTest {
         assertEquals(Color.BLUE, game.getPlayersTotemColors().get("P1"));
 
         // Notify verification (needs to wait for notification thread to actually send it)
-        try {Thread.sleep(50);} catch (InterruptedException e) {}
+        waitForNotifications();
         assertTrue(notifier1.notifications.contains("notifyTotemColor:P1:BLUE"));
     }
 
@@ -128,6 +137,10 @@ public class GameControllerTest {
         
         assertTrue(game.isStarted());
         assertEquals(GamePhase.START_TURN, game.getGamePhase());
+
+        waitForNotifications();
+        assertTrue(notifier1.notifications.contains("notifyGameStarted"));
+        assertTrue(notifier2.notifications.contains("notifyGameStarted"));
     }
 
     // Used for test readability only
@@ -137,6 +150,10 @@ public class GameControllerTest {
         gameController.chooseTotemColor("P1", Color.BLUE);
         gameController.chooseTotemColor("P2", Color.RED);
         gameController.startGame("P1");
+        // ensures clean notifications on setup
+        waitForNotifications();
+        notifier1.notifications.clear();
+        notifier2.notifications.clear();
     }
 
     @Test
@@ -149,6 +166,10 @@ public class GameControllerTest {
         
         assertTrue(game.getOfferTrack().getOfferTiles().getFirst().isOccupied());
         assertEquals(currentPlayer, game.getOfferTrack().getOfferTiles().getFirst().getCurrentOccupant());
+
+        waitForNotifications();
+        assertTrue(notifier1.notifications.contains("notifyChosenTile:" + currentPlayer + ":0"));
+        assertTrue(notifier2.notifications.contains("notifyChosenTile:" + currentPlayer + ":0"));
     }
 
     @Test
@@ -193,7 +214,7 @@ public class GameControllerTest {
         assertEquals(p2Name, game.getCurrentPlayer().getName());
 
         // Notify verification (needs to wait for notification thread to actually send it)
-        try {Thread.sleep(50);} catch (InterruptedException e) {}
+        waitForNotifications();
         assertTrue(notifier1.notifications.contains("notifyDrawnCard:" + p1Name + ":0"));
         assertTrue(notifier2.notifications.contains("notifyDrawnCard:" + p1Name + ":0"));
     }
@@ -213,6 +234,10 @@ public class GameControllerTest {
         gameController.handlePassTurn(p1Name);
 
         assertEquals(p2Name, game.getCurrentPlayer().getName());
+
+        waitForNotifications();
+        assertTrue(notifier1.notifications.contains("notifyPassedTurn:" + p1Name));
+        assertTrue(notifier2.notifications.contains("notifyPassedTurn:" + p1Name));
     }
 
     @Test

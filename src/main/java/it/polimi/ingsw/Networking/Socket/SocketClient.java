@@ -9,33 +9,17 @@ import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.EventManagement.PlayerEventResults;
 import it.polimi.ingsw.View.GamePlayers;
 
-import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class SocketClient implements VirtualSocketClient {
-    /*final BufferedReader input;  potrebbe essere necessario un reader diverso: da definire
-    final VirtualSocketServer server;   */
-
-    //run(), runCli(), runGUI()
     private final ClientController controller;
     public SocketClient(ClientController controller){
         this.controller = controller;
     }
 
     public ClientController getController(){ return this.controller; }
-
-    @Override
-    public void showUpdate() throws IOException {
-        System.out.println("state model updated");
-    }
-
-    @Override
-    public void reportError(String errorMessage) throws IOException {
-        System.out.println("[ERROR]: " + errorMessage);
-    }
 
     //----------------CALLBACKS FROM PLAYERS' ACTIONS-------------------------
     @Override
@@ -49,22 +33,22 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updatePlayerConnected(String playerName) throws IOException {
+    public void updatePlayerConnected(String playerName) {
         controller.updatePlayerConnected(playerName);
     }
 
     @Override
-    public void successfullyJoinedGame(int gameID, int playerNum, ArrayList<String> playerNames, Map<String, Color> totemColors) throws IOException {
+    public void successfullyJoinedGame(int gameID, int playerNum, ArrayList<String> playerNames, Map<String, Color> totemColors)  {
         controller.updateSuccessfullyJoinedGame(gameID, playerNum, playerNames, totemColors);
     }
 
     @Override
-    public void updatePlayerLeftGame(String playerName) throws RemoteException {
+    public void updatePlayerLeftGame(String playerName) {
         controller.updatePlayerLeftGame(playerName);
     }
 
     @Override
-    public void updateNewHost() throws IOException {
+    public void updateNewHost() {
         controller.updateNewHost();
     }
 
@@ -96,33 +80,33 @@ public class SocketClient implements VirtualSocketClient {
     }
 
     @Override
-    public void updateTurnPassed(String playerName) throws IOException {
+    public void updateTurnPassed(String playerName) {
         controller.updateTurnPassed(playerName);
     }
 
     //----------------CALLBACKS FROM GAME STATE (SERVER) UPDATES-------------------------
     @Override
-    public void updateFood(String playerName, int food) throws IOException {
+    public void updateFood(String playerName, int food) {
         controller.updateFoodReserve(playerName, food);
     }
 
     @Override
-    public void updateShamansStars(String playerName, int stars) throws IOException {
+    public void updateShamansStars(String playerName, int stars) {
         controller.updateShamansStars(playerName, stars);
     }
 
     @Override
-    public void updatePrestigePoints(String playerName, int points) throws IOException {
+    public void updatePrestigePoints(String playerName, int points) {
         controller.updatePrestigePoints(playerName, points);
     }
 
     @Override
-    public void updateBuildersDiscount(String playerName, int discount) throws IOException {
+    public void updateBuildersDiscount(String playerName, int discount) {
         controller.updateBuildersDiscount(playerName, discount);
     }
 
     @Override
-    public void updateGatherersDiscount(String playerName, int discount) throws IOException {
+    public void updateGatherersDiscount(String playerName, int discount) {
         controller.updateGatherersDiscount(playerName, discount);
     }
 

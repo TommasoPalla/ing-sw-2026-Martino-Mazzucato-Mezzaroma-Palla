@@ -14,11 +14,6 @@ public interface ServerConnection {
     void connect();
 
     /**
-     * Closes the connection to the server.
-     */
-    void disconnect();
-
-    /**
      * Creates a new game lobby.
      * @param playerName the name of the player creating the game.
      * @param numPlayers the number of players for the game.
@@ -72,9 +67,4 @@ public interface ServerConnection {
      * to draw a building card, he can decide to skip his turn to the next player.
      */
     void passTurn();
-    /**
-     * Ends the player's current turn.
-     * @param playerName the name of the player ending the turn.
-     */
-    void endTurn(String playerName);
 }

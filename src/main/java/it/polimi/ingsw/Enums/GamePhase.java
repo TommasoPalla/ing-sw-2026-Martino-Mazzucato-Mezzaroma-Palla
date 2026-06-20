@@ -5,7 +5,6 @@ package it.polimi.ingsw.Enums;
  */
 public enum GamePhase {
   START_GAME,
-  //initialization of OfferTrack and totem placing
   START_TURN,
   ON_DRAW,
   ON_PURCHASE,

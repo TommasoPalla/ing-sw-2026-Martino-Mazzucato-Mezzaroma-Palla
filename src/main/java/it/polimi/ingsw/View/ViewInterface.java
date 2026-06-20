@@ -51,4 +51,6 @@ public interface ViewInterface {
     void showEndGame(Map<String, Integer> finalRanking);
     void showLeaderboardInfo(int playerPosition);
     void showEndGameLeft();
+
+    void showError(String errorMessage);
 }

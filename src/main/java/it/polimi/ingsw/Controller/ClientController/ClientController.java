@@ -150,7 +150,6 @@ public class ClientController implements ClientViewUpdate {
         }
         connection.createGame(playerName, numPlayers);
         clientState = ClientState.IN_LOBBY;
-        //da notificare il player della creazione del game in modo che stampi le possibili azioni da fare mentre in lobby
     }
 
     public Map<Integer, GamePlayers> getAvailableGames(){
@@ -176,7 +175,11 @@ public class ClientController implements ClientViewUpdate {
         if(clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.END_GAME){
             throw new IllegalClientStateActionException("ERROR: You can't leave a game if you're not in one!");
         }
-        connection.leaveGame(playerName, localModel.getGameId());
+        try {
+            connection.leaveGame(playerName, localModel.getGameId());
+        } catch (StubException e){
+            view.showError(e.getMessage());
+        }
         setClientState(ClientState.SETUP);
     }
 
@@ -198,6 +201,8 @@ public class ClientController implements ClientViewUpdate {
             throw new IllegalArgumentException("ERROR: The game cannot be started, because not all players have chosen their totem color.");
         } catch (NotEnoughPlayersException e) {
             throw new IllegalArgumentException("ERROR: " + (localModel.getNumPlayers() - localModel.getTotemColors().size()) + " player more needed to start the game!");
+        } catch (StubException e){
+            throw new StubException(e.getMessage());
         }
     }
 
@@ -499,9 +504,7 @@ public class ClientController implements ClientViewUpdate {
             }
         }
 
-        //System.out.println("DEBUG: Card drawn by " + playerName + ". Remaining draws: " + tribe.getRemainingAbove() + "/" + tribe.getRemainingBelow());
         if (tribe.getRemainingAbove() == 0 && tribe.getRemainingBelow() == 0) {
-            //System.out.println("DEBUG: Player " + playerName + " finished draws. Moving to turn tile.");
             if (localModel.getTurnOrder().size() == localModel.getNumPlayers()) {
                 int idx = localModel.moveTotemToTurnTile(playerName);
                 view.showTotemToTurnTile(playerName, idx);
@@ -660,7 +663,6 @@ public class ClientController implements ClientViewUpdate {
                     playersTribe.modifyPrestigePoints(ppDelta);
                     view.showEvent(playerResults.player(), eventType, foodDelta, ppDelta);
 
-                    System.out.println("[DEBUG] Player " + playerResults.player() + "was added " + foodDelta + " food and " +  ppDelta + "pp because of event " + eventType.toString() + ". Now has " + localModel.getPlayerTribe(playerResults.player()).getFoodReserve() + " food and " + localModel.getPlayerTribe(playerResults.player()).getPrestigePoints() + " prestige points");
                 }
             }
         }
@@ -716,7 +718,6 @@ public class ClientController implements ClientViewUpdate {
         if(food != 0) {
             view.showFoodModified(playerName, food,oldReserve + food);
         }
-        System.out.println("[DEBUG] updateFoodReserve for player " + playerName + ", +" + food + " food. Now has " + localModel.getPlayerTribe(playerName).getFoodReserve());
     }
 
     /**
@@ -742,7 +743,6 @@ public class ClientController implements ClientViewUpdate {
         if(pp != 0) {
             view.showPrestigePointsModified(playerName, pp, oldPP + pp);
         }
-        System.out.println("[DEBUG] updatePrestigePoints for player " + playerName + ", +"  + pp + " prestige points. Now has " +  localModel.getPlayerTribe(playerName).getPrestigePoints());
     }
 
     /**
@@ -798,12 +798,11 @@ public class ClientController implements ClientViewUpdate {
                         int idx = localModel.moveTotemToTurnTile(nextPlayer);
                         view.showFoodBonusTile(nextPlayer, foodBonus);
                         view.showTotemToTurnTile(nextPlayer, idx);
-                        continue; //find NEXT player
+                        continue;
                     }
                 }
                 playerFound = true;
             } catch (LastPlayerOfTurnException e) {
-                //localModel.setCurrentPlayer("");
                 throw new LastPlayerOfTurnException();
             }
         }
@@ -872,7 +871,6 @@ public class ClientController implements ClientViewUpdate {
      * either to PLACE_TOTEM or DRAW_CARD based on the current game phase.
      */
     private void syncClientState() {
-        //System.out.println("DEBUG: current phase: " +  localModel.getCurrentPhase());
         String currentPlayer = localModel.getCurrentPlayer();
         if (currentPlayer == null || currentPlayer.isEmpty() || !this.playerName.equals(currentPlayer)) {
             setClientState(ClientState.NOT_IN_TURN);

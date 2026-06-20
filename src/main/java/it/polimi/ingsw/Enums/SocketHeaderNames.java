@@ -8,7 +8,6 @@ public enum SocketHeaderNames {
     // actions that a player can perform
     CREATE_GAME,
     START_GAME,
-    SET_NAME,       //TODO: forse fare il corrispettivo NAME_SET
     GET_AVAILABLE_GAMES,
     JOIN_GAME,
     LEAVE_GAME,

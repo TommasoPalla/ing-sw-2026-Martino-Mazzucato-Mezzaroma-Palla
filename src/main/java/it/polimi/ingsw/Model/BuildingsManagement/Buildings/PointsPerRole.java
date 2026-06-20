@@ -36,8 +36,8 @@ public class PointsPerRole extends BuildingCard {
         return this.prestigeBonus;
     }
 
-    // Calculates the number of Character Cards of the specific role and multiplies it by the BonusPoints
-    // parameter
+    // Calculates the number of Character Cards of the specific role
+    // and multiplies it by the BonusPoints parameter
     @Override
     public void applyEffect() {
         int characterNumber = this.getOwner().getTribe().getPopulation().get(this.roleEffect).size();

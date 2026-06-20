@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Networking.Socket;
 
+import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
+import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
@@ -19,11 +21,6 @@ public interface VirtualSocketServer {
      * @param handler the remote reference to the client.
      */
     void connect(SocketClientHandler handler);
-    /**
-     * Disconnects the client from the server and unregisters its handler.
-     * @param handler the remote reference of the client to disconnect.
-     */
-    void disconnect(SocketClientHandler handler);   //forse da togliere siccome la disconnessione avviene diversamente per socket
 
     /**
      * Selects an offer tile on the track.
@@ -49,6 +46,10 @@ public interface VirtualSocketServer {
      */
     void chooseTotemColor(Color totemColor, SocketClientHandler clientHandler);
 
+    /**
+     * Allows a player that cannot draw any card to pass his turn
+     * @param clientHandler the client that requested it
+     */
     void passTurn(SocketClientHandler clientHandler);
 
     /**
@@ -57,12 +58,26 @@ public interface VirtualSocketServer {
      */
     void joinGame(SocketClientHandler clientHandler);
 
+    /**
+     * Leaves the current game lobby.
+     * @param leavingPlayer the name of the player leaving.
+     */
     void leaveGame(PlayerRecord leavingPlayer);
 
     void createGame(ClientNotifier notifier, String playerName, int numPlayers);
 
+    /**
+     * Starts the game for all players in the lobby. Only the host can call this.
+     * @param requestingPlayerName the name of the player requesting the start.
+     * @param gameID the ID of the game to start.
+     * @throws NotTheHostException if the requester is not the game host.
+     * @throws NotEnoughPlayersException if the lobby doesn't have the required number of players.
+     */
     void startGame(String requestingPlayerName, int gameID);
 
-
+    /**
+     * Heartbeat signal sent by the client to prove it is still alive.
+     * @param client the stub of the client sending the ping.
+     */
     void ping(SocketClientHandler client);
 }

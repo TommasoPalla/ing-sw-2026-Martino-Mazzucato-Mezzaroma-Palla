@@ -24,15 +24,16 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updateGameCreated(gameID, playerNum);
         } catch (RemoteException e){
-            //TODO: da sistemare tutte queste eccezioni
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify game created");
         }
     }
     @Override
     public void notifyGameStarted(List<String> shuffledFirstPlayingOrder, Map<String,Integer> initialFood, ArrayList<Card> firstTopRow, ArrayList<Card> firstBottomRow, ArrayList<BuildingCard> buildingsTopRow, ArrayList<BuildingCard> buildingsBottomRow) {
         try {
             clientStub.updateGameStarted(shuffledFirstPlayingOrder, initialFood, firstTopRow, firstBottomRow, buildingsTopRow, buildingsBottomRow);
-        } catch (RemoteException e){}
+        } catch (RemoteException e){
+            throw new StubException("could not notify game started");
+        }
     }
 
     @Override
@@ -132,7 +133,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updateFood(playerName, newFoodReserve);
         } catch (RemoteException e) {
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify new food");
         }
     }
 
@@ -141,7 +142,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updatePp(playerName, points);
         } catch (RemoteException e) {
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify new pp");
         }
     }
 
@@ -150,7 +151,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updateShamansStars(playerName, stars);
         } catch (RemoteException e) {
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify new shaman stars");
         }
     }
 
@@ -159,7 +160,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updateBuildersDiscount(playerName, discount);
         } catch (RemoteException e) {
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify new builders discount");
         }
     }
 
@@ -168,27 +169,8 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updateGatherersDiscount(playerName, discount);
         } catch (RemoteException e) {
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify new gatherers discount");
         }
-    }
-
-    //    @Override
-//    public void notifyNextPlayer(String playerName) {
-//        try {
-//            clientStub.updateNextPlayer(playerName);
-//        } catch (RemoteException e) {
-//            //throw new StubException("could not notify");
-//        }
-//    }
-
-    @Override
-    public void notifyGamePhase(GamePhase newPhase) {
-        try {
-            clientStub.updateGamePhase(newPhase);
-        } catch (RemoteException e) {
-            //throw new StubException("could not notify");
-        }
-
     }
 
     @Override
@@ -196,7 +178,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updateEra(era);
         } catch (RemoteException e){
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify new era");
         }
     }
 
@@ -205,7 +187,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updateEndGame(finalRanking);
         } catch (RemoteException e){
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify end game");
         }
     }
 
@@ -214,7 +196,7 @@ public class RMIClientNotifier implements ClientNotifier {
         try {
             clientStub.updateLeaderboardInfo(leaderboard, playerPosition);
         } catch (RemoteException e){
-            //throw new StubException("could not notify");
+            throw new StubException("could not notify leaderboard");
         }
     }
 
@@ -222,6 +204,8 @@ public class RMIClientNotifier implements ClientNotifier {
     public void notifyForceQuit(String disconnectedPlayer) {
         try {
             clientStub.forceQuit(disconnectedPlayer);
-        } catch (RemoteException e){}
+        } catch (RemoteException e){
+            throw new StubException("could not notify force quit");
+        }
     }
 }

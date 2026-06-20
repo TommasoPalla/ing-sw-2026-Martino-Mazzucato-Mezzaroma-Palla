@@ -119,7 +119,7 @@ public class GameController {
                 n.notifyNewPlayerConnected(playerName);
             });
         } catch (StubException e) {
-            //handleCriticalDisconnection();
+            System.out.println(e.getMessage());
         }
 
         connectedClients.put(playerName, newNotifier);
@@ -132,7 +132,7 @@ public class GameController {
             try {
                 newNotifier.notifySuccessfullyJoinedGame(gameInstance.getGameID(), gameInstance.getNumPlayer(), clients, gameInstance.getPlayersTotemColors());
             } catch(StubException e){
-                //handleCriticalDisconnection();
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -150,7 +150,7 @@ public class GameController {
                     });
                     return;
                 } catch (StubException e) {
-                    //handleCriticalDisconnection();
+                    System.out.println(e.getMessage());
                 }
             }
             gameInstance.getPlayersTotemColors().remove(playerName);
@@ -159,7 +159,7 @@ public class GameController {
                     n.notifyPlayerLeftGame(playerName);
                 });
             } catch (StubException e) {
-                //handleCriticalDisconnection();
+                System.out.println(e.getMessage());
             }
             connectedClients.remove(playerName);
             // se il player che è stato rimosso era l'host, il secondo a essere entrato (se esiste) diventa il nuovo host
@@ -188,7 +188,7 @@ public class GameController {
                 n.notifyTotemColor(playerName, totemColor);
             });
         } catch (StubException e) {
-            //handleCriticalDisconnection();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -270,7 +270,6 @@ public class GameController {
             gameInstance.setNextRound();
             setNextPlayer();
             gameInstance.initOfferTrack();
-            //TODO: notify game started da fare in socket e chiamare qui
             notifyAll(n -> n.notifyGameStarted(shuffledFirstPlayingOrder, initialFood, gameInstance.getOfferTrack().getTopRow(),
                     gameInstance.getOfferTrack().getBottomRow(), gameInstance.getOfferTrack().getTopBuildingCard(),
                     gameInstance.getOfferTrack().getBottomBuildingCard()));
@@ -297,31 +296,6 @@ public class GameController {
                 n.notifyStartRound(lastEventsResults, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             });
 
-//        if (isLastRound) {
-//            // In the last round, we also resolve top row events that were left there
-//            ArrayList<EventCard> topEvents = gameInstance.getOfferTrack().getTopEvents();
-//            if (!topEvents.isEmpty()) {
-//                Map<EventType, ArrayList<PlayerEventResults>> topEventsResults = gameInstance.getEventManager().resolve(topEvents, gameInstance.getPlayers(), gameInstance.getBuildingManager());
-//
-//                // Combine bottom and top events results
-//                Map<EventType, ArrayList<PlayerEventResults>> allEventsResults = new HashMap<>(lastEventsResults);
-//                for (EventType type : topEventsResults.keySet()) {
-//                    if (allEventsResults.containsKey(type)) {
-//                        allEventsResults.get(type).addAll(topEventsResults.get(type));
-//                    } else {
-//                        allEventsResults.put(type, topEventsResults.get(type));
-//                    }
-//                }
-//
-//                notifyAll(n -> {
-//                    n.notifyStartRound(allEventsResults);
-//                });
-//            } else {
-//                notifyAll(n -> {
-//                    n.notifyStartRound(lastEventsResults);
-//                });
-//            }
-
             calculateFinalPoints();
         }
 
@@ -329,8 +303,6 @@ public class GameController {
             gameInstance.initOfferTrack();
         } catch(ChangeEraException e){
             gameInstance.changeEra();
-            //TODO: verificare che arrivi e che venga mostrato al player. In teoria non serve il parametro perché il player
-            // sa già l'era
             notifyAll(n -> {
                 n.notifyEra(gameInstance.getEra());
             });
@@ -360,7 +332,6 @@ public class GameController {
             throw new OccupiedTileException();
         }
 
-        //TODO: da capire effettivamente cosa fare con queste StubException
         try{
             gameInstance.chooseOfferTile(player, index);
             notifyAll( n -> {
@@ -368,7 +339,7 @@ public class GameController {
             });
         }
         catch(StubException e){
-            //handleCriticalDisconnection();
+            System.out.println(e.getMessage());
         }
         try {
             setNextPlayer();
@@ -396,10 +367,8 @@ public class GameController {
             OfferTrack offerTrack = gameInstance.getOfferTrack();
             int oldFoodReserve = currPlayer.getTribe().getFoodReserve();
             int oldPrestigePoints = currPlayer.getTribe().getPrestigePoints();
-            System.out.println("[DEBUG] " + playerName + " prima del pescaggio della carta: F:" + oldFoodReserve + ", PP: " + oldPrestigePoints);
 
             Card drawn = currPlayer.drawCard(fromTopRow, fromBuilding, index, offerTrack);
-            System.out.println("[DEBUG] Cibo e pp del player " + playerName + " dopo il pescaggio della carta: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
 
             if(drawn != null){
                 try{
@@ -453,27 +422,23 @@ public class GameController {
                         int foodDelta = currPlayer.getTribe().getFoodReserve() - oldFoodReserve;
                         int prestigeDelta = currPlayer.getTribe().getPrestigePoints() - oldPrestigePoints;
 
-                        System.out.println("[DEBUG] Cibo e pp notificati al player " + playerName + ": F:" + (foodDelta) + ", PP: " + (prestigeDelta));
                         notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
                         notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
                     }
                     else {
-                        System.out.println("[DEBUG] Cibo e pp del player " + playerName + " prima del ritorno alla turn tile: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
                         if(gameInstance.getOfferTrack().getTurnTile().getTurnOrder().size() == gameInstance.getNumPlayer())
                             // Return to tile food bonus
                             gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(currPlayer, gameInstance.getBuildingManager());
-                        System.out.println("[DEBUG] Cibo e pp del player " + playerName + " dopo il ritorno alla turn tile: F:" + currPlayer.getTribe().getFoodReserve() + ", PP: " + currPlayer.getTribe().getPrestigePoints());
                         int foodDelta = currPlayer.getTribe().getFoodReserve() - oldFoodReserve;
                         int prestigeDelta = currPlayer.getTribe().getPrestigePoints() - oldPrestigePoints;
 
-                        System.out.println("[DEBUG] Cibo e pp notificati al player " + playerName + ": F:" + (foodDelta) + ", PP: " + (prestigeDelta));
                         notifyAll(n -> n.notifyNewFood(playerName, foodDelta));
                         notifyAll(n -> n.notifyNewPrestigePoints(playerName, prestigeDelta));
 
                         endDrawingTurn();
                     }
                 } catch (StubException e) {
-                   //handleCriticalDisconnection();
+                    System.out.println(e.getMessage());
                 }
             }
     }
@@ -519,7 +484,7 @@ public class GameController {
 
             endDrawingTurn();
         } catch (StubException e) {
-        //handleCriticalDisconnection();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -552,7 +517,7 @@ public class GameController {
                 startRound(eventsResults);
             }
         } catch (StubException e) {
-        //handleCriticalDisconnection();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -589,11 +554,13 @@ public class GameController {
     }
 
     public void handleCriticalDisconnection(String disconnectedPlayer){
-        System.err.println("[GAME " + gameInstance.getGameID() + "] CRITICAL DISCONNECTION detected. Forcing all clients to quit and clearing lobby.");
+        System.err.println("[GAME " + gameInstance.getGameID() + "] Connection error detected. Forcing all clients to quit and clearing lobby.");
         notifyAll( n -> {
             try {
                 n.notifyForceQuit(disconnectedPlayer);
-            } catch (Exception e){}
+            } catch (StubException e){
+                System.out.println(e.getMessage());
+            }
         });
         connectedClients.clear();
     }

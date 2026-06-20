@@ -173,7 +173,6 @@ public record CommandParser(ClientController clientController) {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-        //non vanno try e catch perché drawCard lancia eccezioni già "formattate" nel formato che piace alla view
         clientController.drawCard(fromTopRow, fromBuilding,  index);
     }
 
@@ -182,7 +181,6 @@ public record CommandParser(ClientController clientController) {
      * @param argsString the string containing the arguments of the command.
      * @return the name of the player in input, cleaned.
      */
-    //TODO: da fixare (?)
     public String parseOtherTribe(String argsString){
         if(argsString.trim().isEmpty())
             throw new IllegalArgumentException("ERROR: this command requires arguments.");

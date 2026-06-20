@@ -50,7 +50,6 @@ public class ServerControllerTest {
         @Override public void notifyNewShamansStars(String playerName, int stars) {}
         @Override public void notifyNewBuildersDiscount(String playerName, int discount) {}
         @Override public void notifyNewGatherersDiscount(String playerName, int discount) {}
-        @Override public void notifyGamePhase(GamePhase newPhase) {}
         @Override public void notifyEra(int era) {}
         @Override public void notifyEndGame(Map<String, Integer> finalRanking) {}
         @Override public void notifyLeaderboardInfo(List<String> leaderboard, int playerPosition) {}

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
+import it.polimi.ingsw.CustomException.StubException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
 import it.polimi.ingsw.CustomException.UnavailableColorException;
@@ -34,7 +35,6 @@ import java.util.function.Consumer;
  * This class is located server-side and accepts methods invocation requests
  * via JSON messages
  */
-
 public class SocketClientHandler implements ClientNotifier, Runnable {
 
     private final Map<SocketHeaderNames, Consumer<Object[]>> commandHandlers = new HashMap<>();
@@ -62,36 +62,24 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
         commandHandlers.put(SocketHeaderNames.CREATE_GAME, parameters -> {
             String playerName = (String) parameters[0];
             int numPlayers = ((Double) parameters[1]).intValue();
-            try {
-                server.createGame(this, playerName, numPlayers);
-            } catch (Exception e){
-                //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
-            }
+            server.createGame(this, playerName, numPlayers);
         });
         commandHandlers.put(SocketHeaderNames.START_GAME, parameters -> {
             String requestingPlayerName = (String) parameters[0];
             int gameID = ((Double) parameters[1]).intValue();
-            try {
-                server.startGame(requestingPlayerName, gameID);
-            } catch (Exception e) {}
+            server.startGame(requestingPlayerName, gameID);
         });
         commandHandlers.put(SocketHeaderNames.JOIN_GAME, parameters -> {
             String playerName = (String) parameters[0];
             int gameID = ((Double) parameters[1]).intValue();
             this.playerRecord = new PlayerRecord(gameID, playerName);
-            try {
-                server.joinGame(this);
-            } catch (Exception e){
-                //TODO: questa exception lanciata e' generica e non specifica -> da farne una specifica per questo caso
-            }
+            server.joinGame(this);
         });
         commandHandlers.put(SocketHeaderNames.LEAVE_GAME, parameters -> {
             String playerName = (String) parameters[0];
             int gameID = ((Double) parameters[1]).intValue();
             PlayerRecord leavingPlayer = new PlayerRecord(gameID, playerName);
-            try {
-                server.leaveGame(leavingPlayer);
-            } catch (Exception e) {}
+            server.leaveGame(leavingPlayer);
         });
         commandHandlers.put(SocketHeaderNames.CHOOSE_TOTEM_COLOR, parameters -> {
             Color totemColor = Color.valueOf((String) parameters[0]) ;
@@ -102,9 +90,7 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
             }
         });
         commandHandlers.put(SocketHeaderNames.PASS_TURN, parameters -> {
-            try {
-                server.passTurn(this);
-            } catch (Exception e) {}
+            server.passTurn(this);
         });
         commandHandlers.put(SocketHeaderNames.DRAW_CARD, parameters -> {
             boolean fromTopRow = (boolean) parameters[0];
@@ -158,13 +144,15 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
             }
         } catch (IOException e) {
             System.err.println("TCP Connection lost for handler " + this + ": " + e.getMessage());
-        } finally {
-            server.disconnect(this);
         }
     }
 
     private void sendMessage(SocketMessageDTO message){
-        outStream.println(gson.toJson(message));
+        try {
+            outStream.println(gson.toJson(message));
+        } catch (Exception e) {
+            throw new StubException(this.playerRecord.playerName());
+        }
     }
 
     //CALLBACKS actions from clients
@@ -215,7 +203,6 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     public void notifyPlayerLeftGame(String playerName) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.LEFT_GAME, playerName);
         sendMessage(message);
-
     }
 
     @Override
@@ -307,13 +294,6 @@ public class SocketClientHandler implements ClientNotifier, Runnable {
     @Override
     public void notifyNewPrestigePoints(String playerName, int newPP) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.ADDED_PRESTIGE_POINTS, playerName, newPP);
-        sendMessage(message);
-    }
-
-    @Override
-    public void notifyGamePhase(GamePhase newPhase) {
-        JsonElement serializedPhase = gson.toJsonTree(newPhase, GamePhase.class);
-        SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHANGED_GAME_PHASE, serializedPhase);
         sendMessage(message);
     }
 

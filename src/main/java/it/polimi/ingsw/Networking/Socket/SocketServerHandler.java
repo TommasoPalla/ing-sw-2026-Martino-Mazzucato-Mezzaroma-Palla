@@ -45,11 +45,7 @@ public class SocketServerHandler implements Runnable{
         commandHandlers.put(SocketHeaderNames.GAME_CREATED, parameters -> {
            int gameID = ((Double) parameters[0]).intValue();
            int playerNum = ((Double) parameters[1]).intValue();
-           try{
-               client.updateGameCreated(gameID, playerNum);     //TODO:capire cosa ci va qui, correlato al TODO in ServerController
-           } catch (Exception e){
-               //TODO: non so di preciso cosa ci sia da fare qui quindi lascio cosi', stessa cosa anche per tutti gli altri
-           }
+           client.updateGameCreated(gameID, playerNum);
         });
         commandHandlers.put(SocketHeaderNames.GAME_STARTED, parameters -> {
             String playersString = gson.toJson(parameters[0]);
@@ -75,15 +71,11 @@ public class SocketServerHandler implements Runnable{
             String buildingsBottomRowString = gson.toJson(parameters[5]);
             Type buildingsBottomRowType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
             ArrayList<BuildingCard> newBuildingBottomRow = gson.fromJson(buildingsBottomRowString, buildingsBottomRowType);
-            try {
-                client.updateGameStarted(firstTurnOrder, initialFood, newTopRow, newBottomRow, newBuildingTopRow, newBuildingBottomRow);
-            } catch (Exception e) {}
+            client.updateGameStarted(firstTurnOrder, initialFood, newTopRow, newBottomRow, newBuildingTopRow, newBuildingBottomRow);
         });
         commandHandlers.put(SocketHeaderNames.PLAYER_JOINED_GAME, parameters -> {
             String playerName = (String) parameters[0];
-            try{
-                client.updatePlayerConnected(playerName);
-            } catch (Exception e){}
+            client.updatePlayerConnected(playerName);
         });
         commandHandlers.put(SocketHeaderNames.SUCCESSFULLY_JOINED, parameters -> {
            int gameID = ((Double) parameters[0]).intValue();
@@ -96,28 +88,20 @@ public class SocketServerHandler implements Runnable{
            String colorsString = gson.toJson(parameters[3]);
            Type totemMapType = new TypeToken<Map<String, Color>>(){}.getType();
            Map<String, Color> playerToColors = gson.fromJson(colorsString, totemMapType);
-           try {
-               client.successfullyJoinedGame(gameID, playerNum, playerNames, playerToColors);
-           } catch (IOException e){}
+           client.successfullyJoinedGame(gameID, playerNum, playerNames, playerToColors);
         });
         commandHandlers.put(SocketHeaderNames.LEFT_GAME, parameters -> {
             String playerName = (String) parameters[0];
-            try{
-                client.updatePlayerLeftGame(playerName);
-            } catch (IOException e){}
+            client.updatePlayerLeftGame(playerName);
         });
         commandHandlers.put(SocketHeaderNames.NEW_HOST, parameters -> {
-            try {
-                client.updateNewHost();
-            } catch (IOException e) {}
+            client.updateNewHost();
         });
         commandHandlers.put(SocketHeaderNames.GET_AVAILABLE_GAMES, parameters -> {
             String gamesString = gson.toJson(parameters[0]);
             Type type = new TypeToken<Map<Integer, GamePlayers>>(){}.getType();
             Map<Integer, GamePlayers> availableGames = gson.fromJson(gamesString, type) ;
-            try {
-                client.updateAvailableGames(availableGames);
-            } catch(IOException e){}
+            client.updateAvailableGames(availableGames);
         });
         commandHandlers.put(SocketHeaderNames.START_ROUND, parameters -> {
             String eventResultsString = gson.toJson(parameters[0]);
@@ -139,95 +123,69 @@ public class SocketServerHandler implements Runnable{
             String bottomBuildingsString = gson.toJson(parameters[4]);
             Type bottomBuildType = new TypeToken<ArrayList<BuildingCard>>(){}.getType();
             ArrayList<BuildingCard> newBottomBuildings = gson.fromJson(bottomBuildingsString, bottomBuildType);
-            try {
-                client.updateStartRound(eventResults, newTopRow, newBottomRow, newTopBuildings, newBottomBuildings);
-            } catch (IOException e){}
+            client.updateStartRound(eventResults, newTopRow, newBottomRow, newTopBuildings, newBottomBuildings);
         });
         commandHandlers.put(SocketHeaderNames.CHOSEN_TOTEM_COLOR, parameters -> {
             String playerName = (String) parameters[0];
             Color totemColor = Color.valueOf((String) parameters[1]) ;
-            try{
-                client.updateChosenTotemColor(playerName, totemColor);
-            } catch (IOException e){}
+            client.updateChosenTotemColor(playerName, totemColor);
         });
         commandHandlers.put(SocketHeaderNames.DRAWN_CARD, parameters -> {
             String playerName = (String) parameters[0];
             boolean fromTopRow = (boolean) parameters[1];
             boolean fromBuildings = (boolean) parameters[2];
             int index = ((Double) parameters[3]).intValue();
-            try{
-                client.updateDrawnCard(playerName, fromTopRow, fromBuildings, index);
-            } catch (IOException e){}
+            client.updateDrawnCard(playerName, fromTopRow, fromBuildings, index);
         });
         commandHandlers.put(SocketHeaderNames.TURN_PASSED, parameters -> {
            String playerName = (String) parameters[0];
-           try {
-                client.updateTurnPassed(playerName);
-           } catch (IOException e){}
+            client.updateTurnPassed(playerName);
         });
         commandHandlers.put(SocketHeaderNames.CHOSEN_OFFER_TILE, parameters -> {
             String playerName = (String) parameters[0];
             int index = ((Double) parameters[1]).intValue();
-            try{
-                client.updateChosenTile(playerName, index);
-            } catch (IOException e) {}
+            client.updateChosenTile(playerName, index);
         });
 
         //----------------CALLBACKS FROM GAME STATE (SERVER) UPDATES-------------------------
         commandHandlers.put(SocketHeaderNames.ADDED_FOOD, parameters -> {
             String playerName = (String) parameters[0];
             int food = ((Double) parameters[1]).intValue();
-            try{
-                client.updateFood(playerName, food);
-            } catch (IOException e) {}
+            client.updateFood(playerName, food);
         });
         commandHandlers.put(SocketHeaderNames.ADDED_SHAMAN_STARS, parameters -> {
             String playerName = (String) parameters[0];
             int shamanStars = ((Double) parameters[1]).intValue();
-            try{
-                client.updateShamansStars(playerName, shamanStars);
-            } catch (IOException e) {}
+            client.updateShamansStars(playerName, shamanStars);
         });
         commandHandlers.put(SocketHeaderNames.ADDED_PRESTIGE_POINTS, parameters -> {
             String playerName = (String) parameters[0];
             int prestigePoints = ((Double) parameters[1]).intValue();
-            try{
-                client.updatePrestigePoints(playerName, prestigePoints);
-            } catch (IOException e) {}
+            client.updatePrestigePoints(playerName, prestigePoints);
         });
         commandHandlers.put(SocketHeaderNames.ADDED_BUILDERS_DISCOUNT, parameters -> {
             String playerName = (String) parameters[0];
             int discount = ((Double) parameters[1]).intValue();
-            try{
-                client.updateBuildersDiscount(playerName, discount);
-            } catch (IOException e) {}
+            client.updateBuildersDiscount(playerName, discount);
         });
         commandHandlers.put(SocketHeaderNames.ADDED_GATHERERS_DISCOUNT, parameters -> {
             String playerName = (String) parameters[0];
             int discount = ((Double) parameters[1]).intValue();
-            try{
-                client.updateGatherersDiscount(playerName, discount);
-            } catch (IOException e) {}
+            client.updateGatherersDiscount(playerName, discount);
         });
         commandHandlers.put(SocketHeaderNames.CHANGED_GAME_PHASE, parameters -> {
             GamePhase phase = GamePhase.valueOf((String) parameters[0]);
-            try {
-                client.updateGamePhase(phase);
-            } catch (IOException e) {}
+            client.updateGamePhase(phase);
         });
         commandHandlers.put(SocketHeaderNames.CHANGED_ERA, parameters -> {
            int newEra = ((Double) parameters[0]).intValue();
-           try {
-               client.updateEra(newEra);
-           } catch (IOException e) {}
+           client.updateEra(newEra);
         });
         commandHandlers.put(SocketHeaderNames.GAME_ENDED, parameters -> {
             String finalRankingString = gson.toJson(parameters[0]);
             Type finalRankingType = new TypeToken<Map<String, Integer>>(){}.getType();
             Map<String, Integer> finalRanking = gson.fromJson(finalRankingString, finalRankingType);
-            try {
-                client.updateEndGame(finalRanking);
-            } catch (IOException e){}
+            client.updateEndGame(finalRanking);
         });
         commandHandlers.put(SocketHeaderNames.LEADERBOARD_INFO, parameters -> {
             String leaderboardString = gson.toJson(parameters[0]);
@@ -235,15 +193,11 @@ public class SocketServerHandler implements Runnable{
             List<String> leaderboard = gson.fromJson(leaderboardString, leaderboardType);
 
             int playerPosition = ((Double) parameters[1]).intValue();
-            try {
-                client.updateLeaderboardInfo(leaderboard,playerPosition);
-            } catch (IOException e) {}
+            client.updateLeaderboardInfo(leaderboard,playerPosition);
         });
         commandHandlers.put(SocketHeaderNames.FORCE_QUIT, parameters -> {
             String disconnectedPlayer = (String) parameters[0];
-            try {
-                client.forceQuit(disconnectedPlayer);
-            } catch (IOException e) {}
+            client.forceQuit(disconnectedPlayer);
         });
         commandHandlers.put(SocketHeaderNames.ERROR, parameters -> {
             String errorMessage = (String) parameters[0];
@@ -266,11 +220,9 @@ public class SocketServerHandler implements Runnable{
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
-
                 } else {
                     System.out.println("ERROR: " + socketHeader + " is not a valid command"); //chiaramente un placeholder, va messo qualcosa di meglio
                 }
-
             }
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());

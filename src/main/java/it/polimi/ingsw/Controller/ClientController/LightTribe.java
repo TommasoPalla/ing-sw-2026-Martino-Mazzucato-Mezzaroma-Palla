@@ -57,7 +57,7 @@ public class LightTribe implements TribeInterface {
     }
 
     /*
-    * Getters
+     * Getters
      */
     public String getPlayerName() { return playerName; }
 
@@ -116,7 +116,7 @@ public class LightTribe implements TribeInterface {
     public boolean getCanDrawAdditional() { return canDrawAdditional; }
 
     /*
-    * Setters
+     * Setters
      */
     public void setShamansStars(int stars) { this.shamansStars = stars; }
     public void setBuilderDiscount(int discount) { this.builderDiscount = discount; }
@@ -148,6 +148,10 @@ public class LightTribe implements TribeInterface {
     @Override
     public void addGathererDiscount(int discount) { this.gatherersDiscount += discount; }
 
+    /**
+     * Set when the player buys the building that allows for an additional draw
+     * @param canDrawAdditional true if the player has the correct building
+     */
     public void setCanDrawAdditional(boolean canDrawAdditional) { this.canDrawAdditional = canDrawAdditional; }
     /**
      * Adds a character to the tribe and applies its immediate effects (resource bonuses/discounts).

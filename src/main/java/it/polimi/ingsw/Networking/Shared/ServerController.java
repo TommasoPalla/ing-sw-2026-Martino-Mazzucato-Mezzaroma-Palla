@@ -136,7 +136,9 @@ public class ServerController {
         new Thread( () -> {
             try {
                 notifier.notifyGameCreated(gameID, firstPlayerName, playerNum);
-            } catch (Exception e){}
+            } catch (Exception e){
+
+            }
         }).start();
 
         notifyAvailableGames();

@@ -41,8 +41,8 @@ public class SustenanceDiscount extends BuildingCard {
         return this.foodDiscount;
     }
 
-    // Calculates the number of Character Cards of the specific role and adds it
-    // to the Food discount
+    // Calculates the number of Character Cards of the
+    // specific role and adds it to the Food discount
     @Override
     public void applyEffect(EffectContext context) {
         int characterNumber = this.getOwner().getTribe().getPopulation().get(this.roleEffect).size();

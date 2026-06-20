@@ -5,6 +5,11 @@ import it.polimi.ingsw.Model.Cards.BuildingCard;
 
 import java.util.ArrayList;
 
+/**
+ * This class is used to ensure that the CardID
+ * entered by the user is valid. If it is, the
+ * corresponding card info will be shown
+ */
 public class CardIDValidator {
     private final ClientController clientController;
 

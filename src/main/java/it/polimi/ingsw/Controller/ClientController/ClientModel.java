@@ -79,13 +79,11 @@ public class ClientModel {
         if(numPlayers >= 4) offerTiles.add(new OfferTile('G'));
     }
 
-    /*drawable è void in quanto la gestione del caso negativo (la carta non è pescabile)
-    avviene attraverso le exception, lanciate dal metodo accept(visitor)
-    solo se l'edificio non è alla portata del player o la carta è un evento.
-    se finsce il metodo implicitamente non ha lanciato eccezioni e il metodo
-    drawCard di clientController può procedere senza problemi.
+    /*drawable is void because if the card cannot be drawn
+      an exception is thrown in accept(visitor). If there are
+      no exception thrown it means that the card was drawable
+      and clientController.drawCard() goes on undisturbed
      */
-
     /**
      * It checks if the card chosen by the player is drawable or not.
      * @param fromTopRow true if it's from top row, false if it's from bottom.
@@ -229,7 +227,7 @@ public class ClientModel {
 
 
     /*
-    * Methods that update values of a player's tribe.
+     * Methods that update values of a player's tribe.
      */
     void updateFoodReserve(String playerName, int food) {
         players.get(playerName).modifyFood(food);
@@ -286,7 +284,7 @@ public class ClientModel {
     }
 
     /*
-    * Getters
+     * Getters
      */
     public int getGameId(){return gameId;}
     public int getNumPlayers(){return numPlayers;}

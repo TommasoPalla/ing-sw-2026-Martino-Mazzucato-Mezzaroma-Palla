@@ -2,6 +2,7 @@ package it.polimi.ingsw.Networking.Socket;
 
 import com.google.gson.Gson;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
+import it.polimi.ingsw.CustomException.StubException;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.SocketHeaderNames;
 import it.polimi.ingsw.CustomException.IllegalDrawException;
@@ -59,70 +60,61 @@ public class SocketServerAdapter implements ServerConnection {
         }
     }
 
-    @Override
-    public void disconnect() {
+    private void sendMessage(SocketMessageDTO message){
         try {
-            socket.close();
-            listenerThread.interrupt();
-        } catch (IOException e) {
-            System.out.println("[ERROR]: " + e.getMessage());
+            outStream.println(gson.toJson(message));
+        } catch (Exception e) {
+            this.client.getController().getView().showError(e.getMessage());
         }
     }
-
 
     @Override
     public void leaveGame(String playerName, int gameID){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.LEAVE_GAME, playerName, gameID);
-        outStream.println(gson.toJson(message));
+        sendMessage(message);
     }
 
     @Override
     public void createGame(String playerName, int numPlayers){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CREATE_GAME, playerName, numPlayers);
-        outStream.println(gson.toJson(message));
+        sendMessage(message);
     }
 
     @Override
     public void startGame(String playerName, int gameID) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.START_GAME,  playerName, gameID);
-        outStream.println(gson.toJson(message));
+        sendMessage(message);
     }
 
     @Override
     public void joinGame(String playerName, int gameID){
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.JOIN_GAME, playerName, gameID);
-        outStream.println(gson.toJson(message));
+        sendMessage(message);
     }
 
     //Client direct actions
     @Override
     public void chooseOfferTile(int index) throws OccupiedTileException {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHOOSE_OFFER_TILE, index);
-        outStream.println(gson.toJson(message));
+        sendMessage(message);
     }
 
     @Override
     public void drawCard(boolean fromTopRow, boolean fromBuildings, int index) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.DRAW_CARD, fromTopRow, fromBuildings, index);
-        outStream.println(gson.toJson(message));
+        sendMessage(message);
     }
 
     @Override
     public void chooseTotem(Color totemColor) {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.CHOOSE_TOTEM_COLOR, totemColor);
-        outStream.println(gson.toJson(message));
+        sendMessage(message);
     }
 
     @Override
     public void passTurn() {
         SocketMessageDTO message = new SocketMessageDTO(SocketHeaderNames.PASS_TURN);
-        outStream.println(gson.toJson(message));
-    }
-
-    @Override
-    //serve davvero? di base non si passa il turno ma si fanno per forza tutte le azioni possibili
-    //e poi il turno viene passato automaticamente
-    public void endTurn(String playerName){
+        sendMessage(message);
     }
 
     private void startHeartBeat() {
@@ -130,7 +122,7 @@ public class SocketServerAdapter implements ServerConnection {
         heartbeatScheduler.scheduleAtFixedRate(() -> {
             try {
                 SocketMessageDTO ping = new SocketMessageDTO(SocketHeaderNames.PING);
-                outStream.println(gson.toJson(ping));
+                sendMessage(ping);
             } catch (Exception e) {
                 // server irraggiungibile
                 stopHeartbeat();

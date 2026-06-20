@@ -88,7 +88,7 @@ public class ClientApp {
             }
         }
         connection.connect();
-        clientController.bindConnection(connection);        //binding connessione-controller cosi' che parli con il server
+        clientController.bindConnection(connection);
 
         String UIType;
         do{
@@ -96,7 +96,7 @@ public class ClientApp {
             UIType = scanner.nextLine();
         }while(!UIType.equalsIgnoreCase("TUI") && !UIType.equalsIgnoreCase("GUI"));
 
-        ViewInterface view;      //interfaccia implementata da GUI e TUI
+        ViewInterface view;
         switch(UIType.toUpperCase()){
             case "TUI" -> {
                 view = new TUIView(clientController);

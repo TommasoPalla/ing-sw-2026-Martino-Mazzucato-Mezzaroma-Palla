@@ -24,7 +24,6 @@ public class DrawAdditionalCard extends BuildingCard {
                 buildingData.prestige);
         this.game = null;
     }
-    //da verificare che abbia senso, nel costruttore non può andare
     public void updateGame(Game instance){
         this.game = instance;
     }

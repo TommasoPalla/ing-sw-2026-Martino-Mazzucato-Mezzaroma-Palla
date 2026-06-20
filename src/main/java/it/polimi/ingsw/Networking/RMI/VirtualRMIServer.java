@@ -22,13 +22,6 @@ public interface VirtualRMIServer extends Remote {
     void connect(VirtualRMIClient clientStub) throws RemoteException;
 
     /**
-     * Disconnects the client from the server and unregisters its stub.
-     * @param clientStub the remote reference of the client to disconnect.
-     * @throws RemoteException if RMI communication fails.
-     */
-    void disconnect(VirtualRMIClient clientStub) throws RemoteException;
-
-    /**
      * Selects an offer tile on the track.
      * @param client the stub of the client performing the action.
      * @param index the index of the chosen tile.
