@@ -137,13 +137,6 @@ public class Gui implements ViewInterface {
 //        return currentRanking;
 //    }
 
-    /**
-     * standard method of the implemented interface
-     */
-    @Override
-    public void runView() {
-
-    }
 
     /**
      * loads the first scene, after a selected delays the following scene nicknameScene is loaded
@@ -156,7 +149,7 @@ public class Gui implements ViewInterface {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
-            PauseTransition delay = new PauseTransition(Duration.seconds(3));//splash iniziale dura 3 secondi
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));//initial splash of 3 sec
 
             delay.setOnFinished(event -> {
 
@@ -284,7 +277,6 @@ public class Gui implements ViewInterface {
                 }
             }
         });
-
     }
 
     @Override
@@ -520,7 +512,11 @@ public class Gui implements ViewInterface {
 
     @Override
     public void showError(String errorMessage) {
-
+        Platform.runLater(() -> {
+            if(gameScene != null) {
+                gameScene.showError(errorMessage);
+            } //TODO: capire se serve farlo anche in altre scene
+        });
     }
 
     public void showCreationChoiceScene() throws IOException {
@@ -602,9 +598,8 @@ public class Gui implements ViewInterface {
                 rootAnchor.setPrefHeight(primaryStage.getHeight());
             }
 
-            GameSceneController controller = loader.getController();
-            controller.setup(this);
-            gameScene = controller;
+            gameScene = loader.getController();
+            gameScene.setup(this);
 
             Scene scene = new Scene(root);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/gameSceneStyle.css")).toExternalForm());

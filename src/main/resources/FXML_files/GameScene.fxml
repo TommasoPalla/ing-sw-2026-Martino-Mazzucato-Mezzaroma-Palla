@@ -85,15 +85,15 @@
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/Food.png"/>
          </ImageView>
-         <Label fx:id="foodReserve" text="0" prefWidth="20"/>
+         <Label fx:id="foodReserve" text="0" prefWidth="25"/>
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/Prestige.png"/>
          </ImageView>
-         <Label fx:id="prestigePoints" text="0" prefWidth="20"/>
+         <Label fx:id="prestigePoints" text="0" prefWidth="25"/>
          <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
             <Image url="@/Images/Icons/Characters.png"/>
          </ImageView>
-         <Label fx:id="charactersNumber" text="0" prefWidth="20"/>
+         <Label fx:id="charactersNumber" text="0" prefWidth="25"/>
 
          <Label text="My Tribe" alignment="TOP_CENTER" prefWidth="100">
             <font>

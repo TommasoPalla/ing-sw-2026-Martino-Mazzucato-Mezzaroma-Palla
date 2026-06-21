@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model.Cards;
 
+import it.polimi.ingsw.Utils.Visitor;
 import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.io.Serializable;

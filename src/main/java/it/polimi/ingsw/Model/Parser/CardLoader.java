@@ -33,7 +33,7 @@ public class CardLoader {
             JsonObject root = rootElement.getAsJsonObject();
             return root.getAsJsonArray(key);
         }catch (IOException e) {
-            System.err.println("JSON file loading failed "+e.getMessage());
+            System.err.println("JSON file loading failed " + e.getMessage());
             return new JsonArray();
         }
     }

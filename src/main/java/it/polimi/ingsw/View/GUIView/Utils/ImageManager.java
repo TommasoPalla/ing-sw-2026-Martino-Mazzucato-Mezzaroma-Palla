@@ -24,7 +24,7 @@ public class ImageManager {
      * @param cardId unique card ID received from the server
      * @return a JavaFX Node ready to be added to the scene
      */
-    public static Node getCardNode(String cardId) {
+    public static Node getCardNode(String cardId, double width, double height) {
         Node cardNode;
         String fullResourcePath = RESOURCE_PATH_PREFIX + "CardImages/" + cardId + ".png";
 
@@ -35,14 +35,15 @@ public class ImageManager {
                 // Background loading is set false to ensure the stream is read safely before closing. NO??
                 Image image = new Image(imageStream, GUISettings.Cards.WIDTH, GUISettings.Cards.HEIGHT, true, true);
                 ImageView imageView = new ImageView(image);
-                imageView.setFitWidth(GUISettings.Cards.WIDTH);
-                imageView.setFitHeight(GUISettings.Cards.HEIGHT);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+                imageView.setFitWidth(width);
+                imageView.setFitHeight(height);
 
-                Rectangle clip = new Rectangle(GUISettings.Cards.WIDTH, GUISettings.Cards.HEIGHT);
+                Rectangle clip = new Rectangle(width, height);
                 clip.setArcHeight(15);
                 clip.setArcWidth(15);
                 imageView.setClip(clip);
-                imageView.setSmooth(true);
 
                 cardNode = imageView;
             } catch (Exception e) {

@@ -6,6 +6,7 @@ import it.polimi.ingsw.Enums.ClientState;
 import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.EventType;
 import it.polimi.ingsw.Enums.GamePhase;
+import it.polimi.ingsw.Model.BuildingsManagement.Buildings.DrawAdditionalCard;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
@@ -567,7 +568,7 @@ public class ClientController implements ClientViewUpdate {
 
     /**
      * This internal method checks if, after all players drew their card, someone can draw an additional card applying
-     * the {@link it.polimi.ingsw.Model.BuildingsManagement.Buildings.DrawAdditionalCard} building. If there is and if
+     * the {@link DrawAdditionalCard} building. If there is and if
      * there are still cards they can draw from the top row, they are set as the current player and they're notified.
      * @return true if the building's effect can be applied, false if not.
      */

@@ -13,11 +13,7 @@ import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
  */
 public class DrawAdditionalCard extends BuildingCard {
     private Game game;
-    public DrawAdditionalCard(Game gameInstance, int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
-                              String effectDescription, int prestige) {
-        super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
-        this.game = gameInstance;
-    }
+
     public DrawAdditionalCard(BuildingCardDTO buildingData){
         super(buildingData.era, buildingData.cardID, buildingData.cost,
                 buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,

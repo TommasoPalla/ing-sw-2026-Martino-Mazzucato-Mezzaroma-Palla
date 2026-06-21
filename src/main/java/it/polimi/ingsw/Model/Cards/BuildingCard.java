@@ -4,6 +4,7 @@ import it.polimi.ingsw.Model.BuildingsManagement.EffectContext;
 import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.EventManagement.EventStrategy;
 import it.polimi.ingsw.Model.Users.*;
+import it.polimi.ingsw.Utils.Visitor;
 import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.util.Map;

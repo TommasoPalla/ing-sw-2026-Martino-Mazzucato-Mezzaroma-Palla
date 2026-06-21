@@ -3,7 +3,7 @@ package it.polimi.ingsw.Model.Cards.Characters;
 import it.polimi.ingsw.Enums.CharacterRole;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.Card;
-import it.polimi.ingsw.Model.Cards.Visitor;
+import it.polimi.ingsw.Utils.Visitor;
 import it.polimi.ingsw.Model.Users.TribeInterface;
 import it.polimi.ingsw.View.TUIView.TuiIcons;
 

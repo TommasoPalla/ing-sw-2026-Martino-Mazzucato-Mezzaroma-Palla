@@ -3,7 +3,6 @@ package it.polimi.ingsw.View.TUIView;
 import it.polimi.ingsw.Controller.ClientController.ClientController;
 import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.OccupiedTileException;
-import it.polimi.ingsw.CustomException.StubException;
 import it.polimi.ingsw.CustomException.UIException.*;
 
 import it.polimi.ingsw.Enums.*;
@@ -58,7 +57,7 @@ public class TUIView implements ViewInterface {
         this.commandParser = new CommandParser(clientController);
         this.tuiState = TUIState.SETUP;
         // Starts the thread of this TUI, using 'run()' as Thread.run() method
-        Thread commandListenThread = new Thread(this::runView);
+        Thread commandListenThread = new Thread(this::runTUI);
         commandListenThread.start();
     }
 
@@ -66,8 +65,7 @@ public class TUIView implements ViewInterface {
     /**
      * It makes the player choose its nickname and puts itself a continuous listening status.
      */
-    @Override
-    public void runView() {
+    public void runTUI() {
         System.out.println("Welcome to MESOS!");
         System.out.println("Choose your nickname:");
         boolean nameVerified = false;

@@ -15,6 +15,15 @@ public final class GUISettings {
     public static final class Cards {
         public static final double WIDTH = 103.0;
         public static final double HEIGHT = 152.0;
+
+        public static double getScaleFactor(int numPlayers) {
+            return switch(numPlayers) {
+                case 3 -> 0.9;
+                case 4 -> 0.8;
+                case 5 -> 0.7;
+                default -> 1.0;
+            };
+        }
     }
 
     public static final class Icons {

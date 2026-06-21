@@ -2,7 +2,7 @@ package it.polimi.ingsw.Model.GameBoard;
 
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
-import it.polimi.ingsw.Model.Cards.VisitorAdapter;
+import it.polimi.ingsw.Utils.VisitorAdapter;
 
 
 /**

@@ -130,11 +130,6 @@ public class GameBoardController {
         bottomRow.visibleProperty().bind(Bindings.isNotEmpty(bottomRow.getChildren()));
         bottomBuildings.visibleProperty().bind(Bindings.isNotEmpty(bottomBuildings.getChildren()));
 
-        /*topRow.managedProperty().bind(topRow.visibleProperty());
-        bottomRow.managedProperty().bind(bottomRow.visibleProperty());
-        topBuildings.managedProperty().bind(topBuildings.visibleProperty());
-        bottomBuildings.managedProperty().bind(bottomBuildings.visibleProperty());*/
-
         setPassTurnBtnEnabled(false);
         initOfferTrack();
         updateTopRow();
@@ -183,72 +178,72 @@ public class GameBoardController {
         ArrayList<Card> cards = gui.getClientController().getLocalModel().getTopRow();
         topRow.getChildren().clear();
 
+        int numPlayers = gui.getClientController().getLocalModel().getNumPlayers();
         int i = 0;
         // Popola dinamicamente il contenitore
         for (Card card : cards) {
 
             CardComponent cardRepresentation = new CardComponent(card, true, false,
-                    i, actionListener);
+                    i, actionListener, numPlayers);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
             // Aggiunge il nodo grafico al layout lineare
             topRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        //topRow.setVisible(i > 0);
     }
 
     public void updateBottomRow() {
         ArrayList<Card> cards = gui.getClientController().getLocalModel().getBottomRow();
         bottomRow.getChildren().clear();
 
+        int numPlayers = gui.getClientController().getLocalModel().getNumPlayers();
         int i = 0;
         // Popola dinamicamente il contenitore
         for (Card card : cards) {
 
             CardComponent cardRepresentation = new CardComponent(card, false, false,
-                    i, actionListener);
+                    i, actionListener, numPlayers);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
             // Aggiunge il nodo grafico al layout lineare
             bottomRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        //bottomRow.setVisible(i > 0);
     }
 
     public void updateTopBuildings() {
         ArrayList<BuildingCard> cards = gui.getClientController().getLocalModel().getTopBuildings();
         topBuildings.getChildren().clear();
 
+        int numPlayers = gui.getClientController().getLocalModel().getNumPlayers();
         int i = 0;
         for (BuildingCard building : cards) {
 
             CardComponent cardRepresentation = new CardComponent(building, true, true,
-                    i, actionListener);
+                    i, actionListener, numPlayers);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
             topBuildings.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        //topBuildings.setVisible(i > 0);
     }
 
     public void updateBottomBuildings() {
         ArrayList<BuildingCard> cards = gui.getClientController().getLocalModel().getBottomBuildings();
         bottomBuildings.getChildren().clear();
 
+        int numPlayers = gui.getClientController().getLocalModel().getNumPlayers();
         int i = 0;
         for (BuildingCard building : cards) {
 
             CardComponent cardRepresentation = new CardComponent(building, false, true,
-                    i, actionListener);
+                    i, actionListener, numPlayers);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
             bottomBuildings.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
-        //bottomBuildings.setVisible(i > 0);
     }
 
 
@@ -333,7 +328,7 @@ public class GameBoardController {
             foundCharacter = foundCharacter || isCurrentCardSelectable;
         }
 
-        if(!foundCharacter && areSelectable) {
+        if(!foundCharacter && areSelectable && (remainingAbove != 0 &&  remainingBelow != 0)) {
             setPassTurnBtnEnabled(true);
         }
     }

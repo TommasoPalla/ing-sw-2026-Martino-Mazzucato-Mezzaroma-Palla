@@ -4,7 +4,7 @@ import it.polimi.ingsw.CustomException.IllegalDrawException;
 import it.polimi.ingsw.CustomException.InsufficientFoodException;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.EventCard;
-import it.polimi.ingsw.Model.Cards.VisitorAdapter;
+import it.polimi.ingsw.Utils.VisitorAdapter;
 import it.polimi.ingsw.Controller.ClientController.ClientModel;
 
 /**
@@ -35,8 +35,6 @@ public class DrawableCardVisitor extends VisitorAdapter {
         int discountedCost = building.getCost();
         int foodReserve;
         if(isLightModel){
-            //non super safe, ma questo visitor è chiamato in ClientModel solo se è verificato
-            //che il giocatore a pescare è il current
             String currPlayer = model.getCurrentPlayer();
             discountedCost -= model.getPlayerTribe(currPlayer).getBuildersDiscount();
             foodReserve = model.getPlayerTribe(currPlayer).getFoodReserve();

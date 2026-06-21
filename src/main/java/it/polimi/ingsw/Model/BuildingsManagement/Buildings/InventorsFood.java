@@ -23,6 +23,7 @@ public class InventorsFood extends BuildingCard {
         this.inventorsNumber = 0;
         this.foodBonus = foodBonus;
     }
+
     public InventorsFood(BuildingCardDTO buildingData){
         super(buildingData.era, buildingData.cardID, buildingData.cost,
                 buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,

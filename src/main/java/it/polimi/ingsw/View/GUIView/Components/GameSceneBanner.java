@@ -4,6 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -93,6 +94,7 @@ public class GameSceneBanner {
         AnchorPane.setRightAnchor(overlay, 0.0);
 
         VBox container = new VBox();
+        container.setAlignment(Pos.CENTER);
         StackPane.setAlignment(container, Pos.CENTER);
         container.getStyleClass().add("banner-label");
         container.setPickOnBounds(true);
@@ -106,12 +108,7 @@ public class GameSceneBanner {
         container.getChildren().add(banner);
 
         if (currentRequest.customNode() != null) {
-            /*TODO: per mostrare descrizione carta
-            customNode.setOnMouseClicked(event -> {
-                showDescription();
-            });*/
             container.getChildren().add(currentRequest.customNode());
-            StackPane.setAlignment(currentRequest.customNode(), Pos.BASELINE_CENTER);
         }
 
         overlay.getChildren().add(container);

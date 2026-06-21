@@ -1,8 +1,7 @@
 package it.polimi.ingsw.Model.Cards;
 
 import it.polimi.ingsw.Enums.EventType;
-import it.polimi.ingsw.Model.GameBoard.OfferTrack;
-import it.polimi.ingsw.Model.Users.Player;
+import it.polimi.ingsw.Utils.Visitor;
 import it.polimi.ingsw.View.TUIView.TuiIcons;
 
 import java.util.Map;

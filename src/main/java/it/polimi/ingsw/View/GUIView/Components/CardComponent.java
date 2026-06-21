@@ -41,7 +41,7 @@ public class CardComponent implements BoardInteractionStrategy {
      * @param listener      the interaction delegate invoked when a draw action triggers on this component
      */
     public CardComponent(Card card, boolean fromTopRow, boolean fromBuildings, int index,
-                         BoardActionListener listener) {
+                         BoardActionListener listener, int numPlayers) {
         this.cardLayout = new StackPane();
         this.fromTopRow = fromTopRow;
         this.fromBuildings = fromBuildings;
@@ -49,8 +49,12 @@ public class CardComponent implements BoardInteractionStrategy {
         this.listener = listener;
         this.cardLayout.getStyleClass().add("card-style");
 
-        Node cardImageNode = ImageManager.getCardNode(card.getCardID());
-        this.cardLayout.setPrefSize(GUISettings.Cards.WIDTH, GUISettings.Cards.HEIGHT);
+        double scaleFactor = GUISettings.Cards.getScaleFactor(numPlayers);
+        double targetWidth = GUISettings.Cards.WIDTH * scaleFactor;
+        double targetHeight = GUISettings.Cards.HEIGHT * scaleFactor;
+
+        Node cardImageNode = ImageManager.getCardNode(card.getCardID(), targetWidth, targetHeight);
+        this.cardLayout.setPrefSize(targetWidth, targetHeight);
         this.cardLayout.getChildren().add(cardImageNode);
 
         if(fromBuildings) {

@@ -14,7 +14,6 @@ import java.util.Map;
  * to the status of the game.
  */
 public interface ViewInterface {
-    void runView();
     void showNameSet(String newName);
     void showNewAvailableGames();
     void showGameCreated(int gameID);

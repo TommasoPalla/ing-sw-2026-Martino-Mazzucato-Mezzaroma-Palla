@@ -291,3 +291,48 @@
     -fx-font-size: 12;
     -fx-text-fill: -fx-dark-color;
 }
+
+.custom-dialog-pane {
+    -fx-background-radius: 20;
+}
+.custom-dialog-pane, .game-popup-box {
+    -fx-background-color: -fx-light-color;
+    -fx-border-color: -fx-primary-accent-color;
+    -fx-border-width: 5px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 15px;
+    -fx-padding: 20;
+}
+
+.custom-dialog-title, .game-popup-text {
+    -fx-font-family: "Helvetica", "Arial", sans-serif;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-dark-color;
+}
+
+.custom-dialog-description, .game-popup-text {
+    -fx-font-family: "Helvetica", "Arial", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-dark-color;
+}
+
+.dialog-button-yes, .game-button {
+    -fx-background-color: -fx-secondary-background-color;
+    -fx-text-fill: -fx-light-color;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+}
+.dialog-button-yes:hover, .game-button:hover {
+    -fx-background-color: -fx-primary-accent-color;
+}
+
+.dialog-button-no, .game-button {
+    -fx-background-color: -fx-secondary-accent-color;
+    -fx-text-fill: -fx-dark-color;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+}
+.dialog-button-no:hover, .game-button:hover {
+    -fx-background-color: -fx-primary-accent-color;
+}

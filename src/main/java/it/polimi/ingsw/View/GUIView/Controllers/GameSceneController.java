@@ -9,6 +9,7 @@ import it.polimi.ingsw.Enums.*;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.View.GUIView.Components.ConfirmationDialog;
 import it.polimi.ingsw.View.GUIView.Components.GameNotificationManager;
 import it.polimi.ingsw.View.GUIView.Components.GameSceneBanner;
 import it.polimi.ingsw.View.GUIView.Components.PlayerInfoWidget;
@@ -160,8 +161,12 @@ public class GameSceneController implements BoardActionListener {
 
     private void addCardToTribe(Card card, boolean isBuilding){
         String id = card.getCardID();
+        int numPlayers = gui.getClientController().getLocalModel().getNumPlayers();
+        double scale = 0.9;
+
         if (isBuilding) {
-            Node building = ImageManager.getCardNode(id);
+            Node building = ImageManager.getCardNode(id, GUISettings.Cards.WIDTH * scale, GUISettings.Cards.HEIGHT * scale);
+
             BuildingCard buildingCard = (BuildingCard) card;
             Tooltip tooltip = new Tooltip(buildingCard.getEffectDescription());
             tooltip.setShowDelay(Duration.millis(200));
@@ -177,7 +182,7 @@ public class GameSceneController implements BoardActionListener {
             AnimationsUtils.animateLabelUpdate(charactersNumber, String.valueOf(charactersNum));
 
             CharacterCard character = (CharacterCard) card;
-            Node characterImage = ImageManager.getCardNode(id);
+            Node characterImage = ImageManager.getCardNode(id, GUISettings.Cards.WIDTH * scale, GUISettings.Cards.HEIGHT * scale);
 
             int newNumberPerRole;
             switch (character.getRole()) {
@@ -338,7 +343,10 @@ public class GameSceneController implements BoardActionListener {
             gameBoardController.updateBottomRow();
         }
 
-        Node cardImage = ImageManager.getCardNode(card.getCardID());
+        int numPlayers = gui.getClientController().getLocalModel().getNumPlayers();
+        double scale = 0.9;
+
+        Node cardImage = ImageManager.getCardNode(card.getCardID(), GUISettings.Cards.WIDTH * scale, GUISettings.Cards.HEIGHT * scale);
         String prefix = player + " has drawn ";
         if(player.equals(localPlayer)){
             addCardToTribe(card, fromBuildings);
@@ -352,7 +360,13 @@ public class GameSceneController implements BoardActionListener {
             playerWidget.updateCardDrawn(card);
         }
 
-        banner.showBanner(prefix + "this card", cardImage, 1.5, null, 0);
+        if(fromBuildings) {
+            BuildingCard buildingCard = (BuildingCard) card;
+            Tooltip tooltip = new Tooltip(buildingCard.getEffectDescription());
+            tooltip.setShowDelay(Duration.millis(200));
+            Tooltip.install(cardImage, tooltip);
+        }
+        banner.showBanner(prefix + "this card", cardImage, 2.0, null, 0);
     }
 
     public void showNewCurrentPlayer(String player, ClientState clientState){
@@ -394,14 +408,18 @@ public class GameSceneController implements BoardActionListener {
                 gameBoardController.toggleSelectableCards(true);
             }
         }
-        AnimationsUtils.animateLabelUpdate(playerStatus, player);
+        if(player.equals(localPlayer)) {
+            AnimationsUtils.animateLabelUpdate(playerStatus, "You");
+        } else {
+            AnimationsUtils.animateLabelUpdate(playerStatus, player);
+        }
     }
 
 
-    //fare un po' di prove per vedere che stampa effettivamente il prossimo giocatore
     public void showNewGamePhase(GamePhase phase){
         StringBuilder messageBuilder = new StringBuilder("It's time to ");
         String currentPlayer = gui.getClientController().getLocalModel().getTurnOrder().getFirst();
+
         if(phase == GamePhase.ON_DRAW) {
             messageBuilder.append("draw cards");
             messageBuilder.append(currentPlayer.equals(localPlayer)
@@ -409,23 +427,25 @@ public class GameSceneController implements BoardActionListener {
                     : "\nIt's " + currentPlayer + "'s turn");
             gameBoardController.toggleSelectableTiles(false);
             AnimationsUtils.animateLabelUpdate(phaseStatus, "Drawing Cards");
-        } else if (phase == GamePhase.START_TURN){
+            String message = messageBuilder.toString();
+            banner.showBanner(message, 2, null, 0);
+        }
+
+        else if (phase == GamePhase.START_TURN){
             messageBuilder.append("place totems");
             messageBuilder.append(currentPlayer.equals(localPlayer)
                     ? "\nIt's your turn!"
                     : "\nIt's " + currentPlayer + "'s turn");
             gameBoardController.toggleSelectableCards(false);
             AnimationsUtils.animateLabelUpdate(phaseStatus, "Placing Totem");
+            String message = messageBuilder.toString();
+            banner.showBanner(message, 2, null, 0);
 
         } else {
-            messageBuilder.append("to declare the winner");
             gameBoardController.toggleSelectableTiles(false);
             gameBoardController.toggleSelectableCards(false);
             AnimationsUtils.animateLabelUpdate(phaseStatus, "End Game");
-
         }
-        String message = messageBuilder.toString();
-        banner.showBanner(message, 2, null, 0);
     }
 
 
@@ -438,7 +458,7 @@ public class GameSceneController implements BoardActionListener {
             message.append(" event resolved!\nYou ");
             String variation = (foodModified > 0) ? "gained "
                                                 : "lost ";
-            message.append(variation).append(String.valueOf(abs(foodModified))).append(" of food");
+            message.append(variation).append(String.valueOf(abs(foodModified))).append(" Food Tokens");
             variation = (ppModified > 0) ? "\nYou gained "
                                         : "\nYou lost ";
             message.append(variation).append(String.valueOf(abs(ppModified))).append(" prestige Points");
@@ -491,10 +511,12 @@ public class GameSceneController implements BoardActionListener {
         String prefix;
 
         if(player.equals(localPlayer)){
-            AnimationsUtils.animateLabelUpdate(prestigePoints, String.valueOf(abs(finalPP)));
+            AnimationsUtils.animateLabelUpdate(prestigePoints, String.valueOf(finalPP));
             prefix = (deltaPP > 0) ? "You gained "
                     : "You lost ";
-            banner.showBanner(prefix.concat(suffix), 1.5, null, 0);
+            if(gui.getClientController().getLocalModel().getCurrentPhase() != GamePhase.END_GAME) {
+                banner.showBanner(prefix.concat(suffix), 1.5, null, 0);
+            }
         }
 
         else {
@@ -596,25 +618,22 @@ public class GameSceneController implements BoardActionListener {
 
     @FXML
     public void handleLeaveGame() {
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("Leave game");
-        confirmAlert.setHeaderText("You are leaving this game once and for all.");
-        confirmAlert.setContentText("Are you sure?");
-
-        Optional<ButtonType> result = confirmAlert.showAndWait();
-
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                gui.getClientController().leaveGame();
-            } catch(Exception e) {
-                notificationManager.addWarning(e.getMessage());
+        ConfirmationDialog dialog = new ConfirmationDialog("Leave Game", "Are you sure you want to leave?" +
+                "\nThis will end the match for all other players\nand you will not be able to return.");
+        dialog.showAndWait().ifPresent(response -> {
+            if(response.getButtonData() == ButtonBar.ButtonData.YES) {
+                try {
+                    gui.getClientController().leaveGame();
+                } catch (IllegalClientStateActionException e) {
+                    notificationManager.addWarning(e.getMessage());
+                }
             }
-        }
+        });
     }
 
     public void showCriticalDisconnection(String playerName) {
-        String message = (playerName.equals(localPlayer)) ? playerName
-                                                        : "You";
+        String message = (playerName.equals(localPlayer)) ? "You"
+                                                        : playerName;
         String suffix = " left the game. You will be brought to setup.";
         banner.showBanner(message.concat(suffix), 3, this::goBackToSetup, 0);
     }
@@ -629,5 +648,9 @@ public class GameSceneController implements BoardActionListener {
 
     public GameNotificationManager getNotificationManager() {
         return this.notificationManager;
+    }
+
+    public void showError(String errorMessage) {
+        notificationManager.addWarning(errorMessage);
     }
 }

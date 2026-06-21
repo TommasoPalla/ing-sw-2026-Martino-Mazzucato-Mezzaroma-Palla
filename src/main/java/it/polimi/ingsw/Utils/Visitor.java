@@ -1,6 +1,8 @@
-package it.polimi.ingsw.Model.Cards;
+package it.polimi.ingsw.Utils;
 
+import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+import it.polimi.ingsw.Model.Cards.EventCard;
 
 /**
  * Visitor interface uses visitor Pattern in order to let

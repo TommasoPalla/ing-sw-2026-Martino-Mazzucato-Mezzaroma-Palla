@@ -14,11 +14,6 @@ import it.polimi.ingsw.Model.Parser.BuildingCardDTO;
 public class TotemFood extends BuildingCard {
     private final int foodBonus;
 
-    public TotemFood(Game gameInstance, int era, String cardID, int cost, GamePhase activatedAt, Effect effect,
-                     String effectDescription, int prestige, int foodBonus) {
-        super(era, cardID, cost, activatedAt, effect, effectDescription, prestige);
-        this.foodBonus = foodBonus;
-    }
     public TotemFood(BuildingCardDTO buildingData){
         super(buildingData.era, buildingData.cardID, buildingData.cost,
                 buildingData.activatedAt, buildingData.effect, buildingData.effectDescription,
