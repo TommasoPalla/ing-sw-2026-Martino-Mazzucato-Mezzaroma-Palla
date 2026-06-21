@@ -519,7 +519,7 @@ public class Gui implements ViewInterface {
     @Override
     public void showLeaderboardInfo(int playerPosition) {
         if(lobby != null) {
-            lobby.showError(errorMessage);
+            //lobby.showError(errorMessage);
         }
     }
 
