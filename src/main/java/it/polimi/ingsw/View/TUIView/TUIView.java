@@ -500,7 +500,8 @@ public class TUIView implements ViewInterface {
     @Override
     public void showLeaderboardInfo(int playerPosition) {
         System.out.println();
-        if (playerPosition == 0) {
+        // Player's position is 0 if no database has been connected during server configuration
+        if (playerPosition > 0) {
             System.out.println("You are now in position " + Color.RED.colorize(String.valueOf(playerPosition)) + " in the Mesos leaderboard of games with "
                     + clientController.getLocalModel().getNumPlayers() + " players!");
             System.out.println();
