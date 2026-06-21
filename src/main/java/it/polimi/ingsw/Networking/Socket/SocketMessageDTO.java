@@ -6,7 +6,6 @@ public class SocketMessageDTO {
     private SocketHeaderNames commandName;
     private Object[] parameters;
 
-    public SocketMessageDTO(){}
     public SocketMessageDTO(SocketHeaderNames commandName, Object... parameters){
         this.commandName = commandName;
         this.parameters = parameters;

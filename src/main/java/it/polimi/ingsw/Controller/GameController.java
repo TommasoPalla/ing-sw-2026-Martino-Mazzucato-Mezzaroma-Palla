@@ -348,7 +348,7 @@ public class GameController {
             try {
                 setNextPlayer();
             } catch (LastPlayerOfTurnException e1) {
-                // If all players have 0 draws (unlikely but theoretically possible with Tile A), end round
+                // All players have 0 draws (unlikely but theoretically possible with Tile A), end round
                 //startRound();
             }
         }
