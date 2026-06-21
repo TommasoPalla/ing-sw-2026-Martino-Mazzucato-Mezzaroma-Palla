@@ -173,10 +173,6 @@ public class SocketServerHandler implements Runnable{
             int discount = ((Double) parameters[1]).intValue();
             client.updateGatherersDiscount(playerName, discount);
         });
-        commandHandlers.put(SocketHeaderNames.CHANGED_GAME_PHASE, parameters -> {
-            GamePhase phase = GamePhase.valueOf((String) parameters[0]);
-            client.updateGamePhase(phase);
-        });
         commandHandlers.put(SocketHeaderNames.CHANGED_ERA, parameters -> {
            int newEra = ((Double) parameters[0]).intValue();
            client.updateEra(newEra);
