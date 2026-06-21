@@ -401,12 +401,6 @@ public class Game {
         if (currentRound == 10)
             events.addAll(getOfferTrack().getTopEvents());
         Map<EventType, ArrayList<PlayerEventResults>> eventsResults = eventManager.resolve(events, players, buildingManager);
-        System.out.println(eventsResults);
-        for (EventType eventType : eventsResults.keySet()) {
-            for (PlayerEventResults playerEventResults : eventsResults.get(eventType)) {
-                System.out.println("cibo e pp modificati dall'evento " + eventType + " per " + playerEventResults.player() + " : " + playerEventResults.foodAndPP()[0] + " , " + playerEventResults.foodAndPP()[1]);
-            }
-        }
         return eventsResults;
     }
 

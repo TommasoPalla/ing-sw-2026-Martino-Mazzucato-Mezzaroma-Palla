@@ -104,7 +104,6 @@ public record CommandParser(ClientController clientController) {
         } catch (IllegalClientStateActionException e) {
             throw new IllegalClientStateActionException(e.getMessage());
         } catch (IllegalActionPhaseException e) {
-            System.out.println(clientController.getLocalModel().getCurrentPhase());
             throw new IllegalActionPhaseException();
         } catch (OccupiedTileException e) {
             throw new OccupiedTileException();

@@ -213,19 +213,16 @@ public class GameController {
                 int oldFoodReserve = nextPlayer.getTribe().getFoodReserve();
 
                 if (nextPlayer.getRemainingAbove() == 0 && nextPlayer.getRemainingBelow() == 0) {
-                    System.out.println("[GAME " + gameInstance.getGameID() + "] Player '" + nextPlayer.getName() + "' has 0 draws, returning to tile.");
                     int bonus = (nextPlayer.getCurrentOfferTile() != null) ? nextPlayer.getCurrentOfferTile().getFoodBonus() : 0;
                     gameInstance.getOfferTrack().getTurnTile().returnToStartingTile(nextPlayer, gameInstance.getBuildingManager());
                     if (bonus > 0) {
                         nextPlayer.getTribe().modifyFood(bonus);
                         notifyAll(n -> n.notifyNewFood(nextPlayer.getName(), nextPlayer.getTribe().getFoodReserve()-oldFoodReserve));
                     }
-                    System.out.println("[GAME " + gameInstance.getGameID() + "] Turn changed: current player is now '" + nextPlayer.getName() + "'");
                     return setNextPlayer();
                 }
             }
 
-            System.out.println("[GAME " + gameInstance.getGameID() + "] Turn changed: current player is now '" + nextPlayer.getName() + "'");
             return nextPlayer;
         }
         catch (LastPlayerOfTurnException e) {
@@ -257,7 +254,6 @@ public class GameController {
             throw new IllegalActionPhaseException();
         }
         else {
-            System.out.println("[GAME " + gameInstance.getGameID() + "] Starting game...");
             for(String player: connectedClients.keySet()){
                 gameInstance.addPlayer(player);
             }
@@ -265,7 +261,6 @@ public class GameController {
             List<String> shuffledFirstPlayingOrder = gameInstance.getOfferTrack().getTurnTile().getTurnOrder().stream()
                     .map(Player::getName)
                     .toList();
-            System.out.println("[GAME " + gameInstance.getGameID() + "] Turn order: " + shuffledFirstPlayingOrder);
             gameInstance.setCurrentPhase(GamePhase.START_TURN);
             gameInstance.setNextRound();
             setNextPlayer();
@@ -289,9 +284,7 @@ public class GameController {
 
         try {
             int newRound = gameInstance.setNextRound();
-            System.out.println("[GAME " + gameInstance.getGameID() + "] Round " + newRound + " started.");
         } catch (LastRoundException e) {
-            System.out.println("[GAME " + gameInstance.getGameID() + "] Final round reached!");
             notifyAll(n -> {
                 n.notifyStartRound(lastEventsResults, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             });
@@ -324,7 +317,6 @@ public class GameController {
      * @throws OccupiedTileException if the tile is already occupied by another player.
      */
     public synchronized void handleChooseOfferTile (String playerName, int index) throws OccupiedTileException{
-        System.out.println("[GAME " + gameInstance.getGameID() + "] ACTION: '" + playerName + "' placing totem on tile " + index);
         Player player = gameInstance.getPlayerByName(playerName);
         checkPlayer(player);
         if(gameInstance.getOfferTrack().getOfferTiles().get(index).isOccupied()) {
@@ -455,18 +447,20 @@ public class GameController {
         int oldPrestigePoints = currPlayer.getTribe().getPrestigePoints();
 
         try {
-            if (currPlayer.getRemainingAbove() > 0) {
-                for (Card card : offerTrack.getTopRow()) {
-                    if (!(card instanceof EventCard)) {
-                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
+            if (gameInstance.getNumPlayer() == gameInstance.getOfferTrack().getTurnTile().getTurnOrder().size()) {
+                if (currPlayer.getRemainingAbove() > 0) {
+                    for (Card card : offerTrack.getTopRow()) {
+                        if (!(card instanceof EventCard)) {
+                            throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
+                        }
                     }
                 }
-            }
 
-            if (currPlayer.getRemainingBelow() > 0) {
-                for (Card card : offerTrack.getBottomRow()) {
-                    if (!(card instanceof EventCard)) {
-                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
+                if (currPlayer.getRemainingBelow() > 0) {
+                    for (Card card : offerTrack.getBottomRow()) {
+                        if (!(card instanceof EventCard)) {
+                            throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
+                        }
                     }
                 }
             }

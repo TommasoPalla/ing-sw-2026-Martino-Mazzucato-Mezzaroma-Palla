@@ -281,19 +281,21 @@ public class ClientController implements ClientViewUpdate {
             throw new IllegalClientStateActionException("ERROR: You cannot do that right now!");
         }
 
-        LightTribe tribe = localModel.getPlayerTribe(this.playerName);
-        if (tribe.getRemainingAbove() > 0) {
-            for (Card card : localModel.getTopRow()) {
-                if (!(card instanceof EventCard)) {
-                    throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
+        if(localModel.getTurnOrder().size() == localModel.getNumPlayers()) {
+            LightTribe tribe = localModel.getPlayerTribe(this.playerName);
+            if (tribe.getRemainingAbove() > 0) {
+                for (Card card : localModel.getTopRow()) {
+                    if (!(card instanceof EventCard)) {
+                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
+                    }
                 }
             }
-        }
 
-        if (tribe.getRemainingBelow() > 0) {
-            for (Card card : localModel.getBottomRow()) {
-                if (!(card instanceof EventCard)) {
-                    throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
+            if (tribe.getRemainingBelow() > 0) {
+                for (Card card : localModel.getBottomRow()) {
+                    if (!(card instanceof EventCard)) {
+                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
+                    }
                 }
             }
         }
@@ -651,8 +653,6 @@ public class ClientController implements ClientViewUpdate {
 
         // UPDATING EVENTS RESULTS using deltas
         if (!lastEventsResults.isEmpty()) {
-            //TODO: system out da togliere
-            System.out.println(lastEventsResults);
             for (EventType eventType : lastEventsResults.keySet()) {
                 for(PlayerEventResults playerResults : lastEventsResults.get(eventType)){
                     LightTribe playersTribe = localModel.getPlayerTribe(playerResults.player());

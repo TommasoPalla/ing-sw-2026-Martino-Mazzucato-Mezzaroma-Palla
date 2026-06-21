@@ -71,7 +71,6 @@ public class TurnTile {
         ArrayList<String> playerNames = new ArrayList<>();
         for(Player p : turnOrder)
             playerNames.add(p.getName());
-        System.out.println("[GAME " + turnOrder.getFirst().getGame().getGameID() + "] New turn order is: " + playerNames);
         return turnOrder;
     }
 
