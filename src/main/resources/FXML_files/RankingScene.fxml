@@ -1,8 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--<?import javafx.scene.control.Button?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.control.TextField?>-->
+<!--<?import javafx.scene.effect.ColorAdjust?>-->
+<!--<?import javafx.scene.image.ImageView?>-->
+<!--<?import javafx.scene.layout.AnchorPane?>-->
+<!--<?import javafx.scene.layout.Pane?>-->
+<!--<?import javafx.scene.layout.VBox?>-->
+<!--<?import javafx.scene.text.Font?>-->
+<!--<?import java.net.URL?>-->
+<!--<Pane fx:id="root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"-->
+<!--      fx:controller="it.polimi.ingsw.View.GUIView.Controllers.RankingSceneController"-->
+<!--      styleClass="main-background">-->
+<!--    <stylesheets>-->
+<!--        <URL value="@/css/gameSceneStyle.css"/>-->
+<!--    </stylesheets>-->
+<!--&lt;!&ndash;<?import javafx.scene.media.MediaView?>&ndash;&gt;-->
+<!--&lt;!&ndash;    <MediaView fx:id="background" fitWidth="1920.0" fitHeight="1080.0" preserveRatio="true" />&ndash;&gt;-->
+<!--    <AnchorPane fx:id="gamePane">-->
+<!--&lt;!&ndash;        <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">&ndash;&gt;-->
+<!--&lt;!&ndash;            <effect>&ndash;&gt;-->
+<!--&lt;!&ndash;                <ColorAdjust saturation="-0.5" />&ndash;&gt;-->
+<!--&lt;!&ndash;            </effect>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ImageView>&ndash;&gt;-->
+<!--        <Label alignment="CENTER" prefWidth="480.0" layoutX="400.0" layoutY="200.0"/>-->
+<!--        &lt;!&ndash; <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">-->
+<!--            <effect>-->
+<!--                <ColorAdjust saturation="-0.5" />-->
+<!--            </effect>-->
+<!--        </ImageView> &ndash;&gt;-->
+<!--        <Label alignment="CENTER" prefWidth="480.0" layoutX="400.0" layoutY="330.0"-->
+<!--               text="This game ranking"-->
+<!--               style="-fx-text-fill: #E5CEBE; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0.3, 0, 2);">-->
+<!--            <font>-->
+<!--                <Font name="Calibri Italic" size="34.0" />-->
+<!--            </font>-->
+<!--        </Label>-->
+<!--        <Label alignment="CENTER" prefWidth="480.0" layoutX="1040.0" layoutY="200.0"-->
+<!--               text="Global ranking"-->
+<!--               style="-fx-text-fill: #E5CEBE; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0.3, 0, 2);">-->
+<!--            <font>-->
+<!--                <Font name="Calibri Italic" size="34.0" />-->
+<!--            </font>-->
+<!--        </Label>-->
+<!--        <VBox layoutX="480.0" layoutY="280.0" prefWidth="320.0" spacing="0.0">-->
+<!--            <Label alignment="CENTER" prefWidth="320.0" prefHeight="55.0" text="This game ranking"-->
+<!--                   style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;">-->
+<!--                <font>-->
+<!--                    <Font name="Calibri Bold Italic" size="26.0" />-->
+<!--                </font>-->
+<!--            </Label>-->
+<!--            <VBox fx:id="ranking" prefHeight="350.0" prefWidth="320.0" spacing="10.0"-->
+<!--                  style="-fx-background-color: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10; -fx-padding: 16;" />-->
+<!--        </VBox>-->
+<!--        <VBox layoutX="1120.0" layoutY="280.0" prefWidth="320.0" spacing="0.0">-->
+<!--            <Label alignment="CENTER" prefWidth="320.0" prefHeight="55.0" text="Global ranking"-->
+<!--                   style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;">-->
+<!--                <font>-->
+<!--                    <Font name="Calibri Bold Italic" size="26.0" />-->
+<!--                </font>-->
+<!--            </Label>-->
+<!--            <VBox fx:id="generalLeaderboard" prefHeight="350.0" prefWidth="320.0" spacing="10.0"-->
+<!--                  style="-fx-background-color: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10; -fx-padding: 16;" />-->
+<!--        </VBox>-->
+<!--        <Button layoutX="760.0" layoutY="830.0" prefWidth="400.0" prefHeight="50.0" fx:id="leaveLobby"-->
+<!--                mnemonicParsing="false" onAction="#handleLeave" text="Leave Lobby"-->
+<!--                style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #F4B492; -fx-font-size: 24px;-->
+<!--                 -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: rgba(244,180,146,0.55);-->
+<!--                  -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;-->
+<!--                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" />-->
+<!--    </AnchorPane>-->
+<!--</Pane>-->
+
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -10,76 +82,41 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import java.net.URL?>
-<Pane fx:id="root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="it.polimi.ingsw.View.GUIView.Controllers.RankingSceneController"
-      styleClass="main-background">
-    <stylesheets>
-        <URL value="@/css/gameSceneStyle.css"/>
-    </stylesheets>
-<!--<?import javafx.scene.media.MediaView?>-->
+<Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.Controllers.RankingSceneController">
 
-<!--    <MediaView fx:id="background" fitWidth="1920.0" fitHeight="1080.0" preserveRatio="true" />-->
-
-    <AnchorPane fx:id="gamePane">
-
-<!--        <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">-->
-<!--            <effect>-->
-<!--                <ColorAdjust saturation="-0.5" />-->
-<!--            </effect>-->
-<!--        </ImageView>-->
-
-        <Label alignment="CENTER" prefWidth="480.0" layoutX="400.0" layoutY="200.0"/>
-        <!-- <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
+<AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">
+    <children>
+        <ImageView fx:id="background" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="true">
             <effect>
-                <ColorAdjust saturation="-0.5" />
+                <ColorAdjust saturation="0" />
             </effect>
-        </ImageView> -->
-        <Label alignment="CENTER" prefWidth="480.0" layoutX="400.0" layoutY="330.0"
-               text="This game ranking"
-               style="-fx-text-fill: #E5CEBE; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0.3, 0, 2);">
-            <font>
-                <Font name="Calibri Italic" size="34.0" />
-            </font>
-        </Label>
-
-        <Label alignment="CENTER" prefWidth="480.0" layoutX="1040.0" layoutY="200.0"
-               text="Global ranking"
-               style="-fx-text-fill: #E5CEBE; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0.3, 0, 2);">
-            <font>
-                <Font name="Calibri Italic" size="34.0" />
-            </font>
-        </Label>
+        </ImageView>
 
         <VBox layoutX="480.0" layoutY="280.0" prefWidth="320.0" spacing="0.0">
-            <Label alignment="CENTER" prefWidth="320.0" prefHeight="55.0" text="This game ranking"
-                   style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;">
-                <font>
-                    <Font name="Calibri Bold Italic" size="26.0" />
-                </font>
-            </Label>
-            <VBox fx:id="ranking" prefHeight="350.0" prefWidth="320.0" spacing="10.0"
-                  style="-fx-background-color: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10; -fx-padding: 16;" />
+            <children>
+                <Label alignment="CENTER" prefHeight="55.0" prefWidth="320.0" style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;" text="This game ranking">
+                    <font>
+                        <Font name="Calibri Bold Italic" size="26.0" />
+                    </font>
+                </Label>
+                <VBox fx:id="ranking" prefHeight="350.0" prefWidth="320.0" spacing="10.0" style="-fx-background-color: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10; -fx-padding: 16;" />
+            </children>
         </VBox>
 
         <VBox layoutX="1120.0" layoutY="280.0" prefWidth="320.0" spacing="0.0">
-            <Label alignment="CENTER" prefWidth="320.0" prefHeight="55.0" text="Global ranking"
-                   style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;">
-                <font>
-                    <Font name="Calibri Bold Italic" size="26.0" />
-                </font>
-            </Label>
-            <VBox fx:id="generalLeaderboard" prefHeight="350.0" prefWidth="320.0" spacing="10.0"
-                  style="-fx-background-color: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10; -fx-padding: 16;" />
+            <children>
+                <Label alignment="CENTER" prefHeight="55.0" prefWidth="320.0" style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;" text="Global ranking">
+                    <font>
+                        <Font name="Calibri Bold Italic" size="26.0" />
+                    </font>
+                </Label>
+                <VBox fx:id="generalLeaderboard" prefHeight="350.0" prefWidth="320.0" spacing="10.0" style="-fx-background-color: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10; -fx-padding: 16;" />
+            </children>
         </VBox>
 
-        <Button layoutX="760.0" layoutY="830.0" prefWidth="400.0" prefHeight="50.0" fx:id="leaveLobby"
-                mnemonicParsing="false" onAction="#handleLeave" text="Leave Lobby"
-                style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #F4B492; -fx-font-size: 24px;
-                 -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: rgba(244,180,146,0.55);
-                  -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand;
-                   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" />
+        <Button fx:id="leaveLobby" layoutX="760.0" layoutY="830.0" mnemonicParsing="false" onAction="#handleLeave" prefHeight="50.0" prefWidth="400.0" style="-fx-background-color: rgba(20,12,8,0.75); -fx-text-fill: #F4B492; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-border-color: rgba(244,180,146,0.55); -fx-border-width: 2; -fx-border-radius: 10; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 12, 0, 0, 3);" text="Leave Lobby" />
 
-    </AnchorPane>
+    </children>
+</AnchorPane>
 
 </Pane>

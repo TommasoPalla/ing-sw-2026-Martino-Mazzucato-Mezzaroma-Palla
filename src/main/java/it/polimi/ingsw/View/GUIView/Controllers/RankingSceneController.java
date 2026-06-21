@@ -53,10 +53,10 @@ public class RankingSceneController{
 
     public void setGUI(Gui gui) {
         this.gui = gui;
-        setup();
+
     }
 
-    /*@FXML
+    @FXML
     public void initialize() {
 
         Image img = new Image(Objects.requireNonNull(getClass().getResource("/Images/Background/Background.png")).toExternalForm());
@@ -73,7 +73,6 @@ public class RankingSceneController{
 //            System.out.println("Media size: " + media.getWidth() + "x" + media.getHeight());
 //        });
 
-        Image img = new Image(getClass().getResource("/Images/Background/Background.png").toExternalForm());
 
         background.setImage(img);
 
@@ -103,20 +102,21 @@ public class RankingSceneController{
                 Platform.runLater(this::updateScale);
             }
         });
-    }*/
-
-    private void setup(){
-        for (Map.Entry<String, Integer> entry : gui.getCurrentRanking().entrySet()) {
-            Label label = new Label(entry.getKey() + ": " + entry.getValue());
-            ranking.getChildren().add(label);
-        }
-        for (String s : gui.getClientController().getLocalModel().getDbLeaderboard()){
-            generalLeaderboard.getChildren().add(new Label(s));
-        }
     }
+
+//    private void setup(){
+//        for (Map.Entry<String, Integer> entry : gui.getCurrentRanking().entrySet()) {
+//            Label label = new Label(entry.getKey() + ": " + entry.getValue());
+//            ranking.getChildren().add(label);
+//        }
+//        for (String s : gui.getClientController().getLocalModel().getDbLeaderboard()){
+//            generalLeaderboard.getChildren().add(new Label(s));
+//        }
+//    }
 
 
     public void populateRanking(Map<String, Integer> data) {
+        ranking.getChildren().clear();
         data.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .forEach(e -> {
@@ -128,6 +128,7 @@ public class RankingSceneController{
     }
 
     public void populateLeaderboard(List<String> data) {
+        generalLeaderboard.getChildren().clear();
         data.forEach(s -> {
             Label label = new Label(s);
             label.setStyle("-fx-text-fill: #E5CEBE; -fx-font-size: 24px;");
@@ -160,7 +161,7 @@ public class RankingSceneController{
 
     @FXML
     private void handleLeave() {
-        gui.getClientController().leaveGame();
+        //gui.getClientController().leaveGame();
         try {
             gui.showCreationChoiceScene();
             gui.removePlayers();

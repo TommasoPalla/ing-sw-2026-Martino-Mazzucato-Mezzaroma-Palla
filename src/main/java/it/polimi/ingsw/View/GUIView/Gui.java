@@ -25,6 +25,10 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class communicates directly with the client controller, has the methods to load and show scenes and a few fields
+ * to enable a faster implementation without exchanging obvious and redundant information with the server
+ */
 /*TODO: verificare per ogni runLater di gameScene se si può togliere il try catch (lasciarlo solo se bisogna caricare
 *  risorse grafiche (in quel caso NullPointerException)*/
 public class Gui implements ViewInterface {
@@ -55,50 +59,95 @@ public class Gui implements ViewInterface {
         this.numPlayers = 0;
     }
 
+    /**
+     * associates the client controller of this client to the controller field
+     * @param Controller
+     */
     public void bindController(ClientController Controller){
         controller = Controller;
     }
 
+    /**
+     * returns the controller bound to the gui class
+     * @return
+     */
     public ClientController getClientController(){
         return this.controller;
     }
 
+    /**
+     * modifies the private field num
+     * @param num
+     */
     public void setNumPlayers(int num){
         numPlayers=num;
     }
 
+    /**
+     * returns the number of players currently sharing a lobby or a game
+     * @return
+     */
     public int getNumPlayers(){
         return(numPlayers);
     }
 
+    /**
+     * returns the names of the players currently sharing a lobby or a game
+     * @return
+     */
     public ArrayList<String> getPlayers(){
         return players;
     }
+
+    /**
+     * empties players field, used when the players leaves a lobby or a game
+     */
     public void removePlayers(){
         players.clear();
     }
 
+    /**
+     * returns the boolean is host which identifies the property of a player which could be the host of the game
+     * @return
+     */
     public boolean returnHost(){
         return this.isHost;
     }
 
+    /**
+     * resets the isHost field to default value false
+     */
     public void handleLeave(){
         this.isHost = false;
     }
 
+    /**
+     * returns the name the user is currently using
+     * @return
+     */
     public String getName(){
         return nickname;
     }
 
-    public Map<String, Integer> getCurrentRanking(){
-        return currentRanking;
-    }
+//    /**
+//     * returns the current
+//     * @return
+//     */
+//    public Map<String, Integer> getCurrentRanking(){
+//        return currentRanking;
+//    }
 
+    /**
+     * standard method of the implemented interface
+     */
     @Override
     public void runView() {
 
     }
 
+    /**
+     * loads the first scene, after a selected delays the following scene nicknameScene is loaded
+     */
     public void introScene() {
 
         try {
@@ -149,6 +198,10 @@ public class Gui implements ViewInterface {
         });
     }
 
+    /**
+     * confirms the game was successfully created and transfers the host to the lobby
+     * @param gameID
+     */
     @Override
     public void showGameCreated(int gameID) {
         Platform.runLater(() -> {//avoids to throw exception required by lobbyScene
@@ -160,6 +213,10 @@ public class Gui implements ViewInterface {
         });
     }
 
+    /**
+     * notifies the players in the lobby a new player joined it
+     * @param playerName
+     */
     @Override
     public void showPlayerJoinedLobby(String playerName) {
         Platform.runLater(() -> {//avoids to throw exception required by lobbyScene
@@ -173,6 +230,11 @@ public class Gui implements ViewInterface {
         });
     }
 
+    /**
+     * notifies the players in the lobby a player left it
+     * @param playerName
+     * @param oldColor
+     */
     @Override
     public void showPlayerLeftLobby(String playerName, Color oldColor) {
         lobby.notifyPlayerLeft(playerName);
@@ -180,12 +242,21 @@ public class Gui implements ViewInterface {
         players.remove(playerName);
     }
 
+    /**
+     * notifies the user the host left and they are the new host
+     */
     @Override
     public void showNewHost() {
         this.isHost = true;
         lobby.newHost();
     }
 
+    /**
+     *
+     * @param gameID
+     * @param playerNames
+     * @param totemColors
+     */
     @Override
     public void showSuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
         for(String playerName : playerNames){
