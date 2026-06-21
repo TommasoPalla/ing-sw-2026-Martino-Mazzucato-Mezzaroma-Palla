@@ -82,6 +82,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.ScrollPane?>
 <Pane fx:id="root" prefHeight="1080" prefWidth="1920" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GUIView.Controllers.RankingSceneController">
 
 <AnchorPane fx:id="gamePane" maxHeight="1080" maxWidth="1920" minHeight="1080" minWidth="1920" prefHeight="1080" prefWidth="1920">
@@ -103,14 +104,36 @@
             </children>
         </VBox>
 
-        <VBox layoutX="1120.0" layoutY="280.0" prefWidth="320.0" spacing="0.0">
+<!--        <VBox layoutX="1120.0" layoutY="280.0" prefWidth="320.0" spacing="0.0">-->
+<!--            <children>-->
+<!--                <Label alignment="CENTER" prefHeight="55.0" prefWidth="320.0" style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;" text="Global ranking">-->
+<!--                    <font>-->
+<!--                        <Font name="Calibri Bold Italic" size="26.0" />-->
+<!--                    </font>-->
+<!--                </Label>-->
+<!--                <VBox fx:id="generalLeaderboard" prefHeight="350.0" prefWidth="320.0" spacing="10.0" style="-fx-background-color: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10; -fx-padding: 16;" />-->
+<!--            </children>-->
+<!--        </VBox>-->
+        <VBox layoutX="1120.0" layoutY="280.0" prefWidth="480.0" spacing="0.0">
             <children>
-                <Label alignment="CENTER" prefHeight="55.0" prefWidth="320.0" style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;" text="Global ranking">
+                <Label alignment="CENTER" prefHeight="55.0" prefWidth="480.0"
+                       style="-fx-background-color: rgba(20,12,8,0.9); -fx-text-fill: #FFE193; -fx-font-weight: bold; -fx-background-radius: 10 10 0 0; -fx-border-color: #F4B492; -fx-border-width: 2 2 0 2; -fx-border-radius: 10 10 0 0;"
+                       text="Global ranking">
                     <font>
                         <Font name="Calibri Bold Italic" size="26.0" />
                     </font>
                 </Label>
-                <VBox fx:id="generalLeaderboard" prefHeight="350.0" prefWidth="320.0" spacing="10.0" style="-fx-background-color: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10; -fx-padding: 16;" />
+
+                <ScrollPane fitToWidth="true"
+                            prefWidth="480.0"
+                            prefHeight="350.0" minHeight="350.0" maxHeight="350.0"
+                            hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                            style="-fx-background-color: rgba(20,12,8,0.7); -fx-background: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10;">
+                    <content>
+                        <VBox fx:id="generalLeaderboard" spacing="10.0"
+                              style="-fx-background-color: rgba(20,12,8,0.7); -fx-padding: 16;" />
+                    </content>
+                </ScrollPane>
             </children>
         </VBox>
 

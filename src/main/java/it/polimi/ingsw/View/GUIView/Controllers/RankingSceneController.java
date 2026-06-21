@@ -129,9 +129,14 @@ public class RankingSceneController{
 
     public void populateLeaderboard(List<String> data) {
         generalLeaderboard.getChildren().clear();
+        String currentUser = gui.getName();
         data.forEach(s -> {
             Label label = new Label(s);
-            label.setStyle("-fx-text-fill: #E5CEBE; -fx-font-size: 24px;");
+            if (s.equals(currentUser)) {
+                label.setStyle("-fx-text-fill: #FFE193; -fx-font-size: 24px; -fx-font-weight: bold;");
+            } else {
+                label.setStyle("-fx-text-fill: #E5CEBE; -fx-font-size: 24px;");
+            }
             label.setPrefWidth(480);
             generalLeaderboard.getChildren().add(label);
         });
@@ -161,7 +166,6 @@ public class RankingSceneController{
 
     @FXML
     private void handleLeave() {
-        //gui.getClientController().leaveGame();
         try {
             gui.showCreationChoiceScene();
             gui.removePlayers();
