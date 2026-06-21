@@ -221,7 +221,7 @@ public class SocketServerHandler implements Runnable{
                         System.out.println(e.getMessage());
                     }
                 } else {
-                    System.out.println("ERROR: " + socketHeader + " is not a valid command"); //chiaramente un placeholder, va messo qualcosa di meglio
+                    System.out.println("ERROR: " + socketHeader + " is not a valid command");
                 }
             }
         } catch (Exception e) {

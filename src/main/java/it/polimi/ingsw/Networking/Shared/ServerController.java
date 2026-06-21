@@ -137,7 +137,7 @@ public class ServerController {
             try {
                 notifier.notifyGameCreated(gameID, firstPlayerName, playerNum);
             } catch (Exception e){
-
+                //TODO handle exception
             }
         }).start();
 
@@ -195,7 +195,7 @@ public class ServerController {
         try {
             System.out.println("[SERVER] Start game " + gameID + " requested by host '" + requestingPlayer + "'");
             activeGames.get(gameID).gameController().startGame(requestingPlayer);
-            notifyAvailableGames(); //superfluo probabilmente, quando si aggiunge l'ultimo player il game sarà già unavailable
+            notifyAvailableGames();
         } catch (NotTheHostException e){
             throw new NotTheHostException(e.getMessage());
         } catch (NotEnoughPlayersException e){
@@ -227,7 +227,9 @@ public class ServerController {
                try {
                    RMIClientNotifier notifier = new RMIClientNotifier(client);
                    notifier.notifyAvailableGames(gamesData);
-               } catch (Exception e) {}
+               } catch (Exception e) {
+                   //TODO handle exception
+               }
             });
         }
         for(SocketClientHandler client : socketClients){

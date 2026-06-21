@@ -124,7 +124,6 @@ public class SocketServerAdapter implements ServerConnection {
                 SocketMessageDTO ping = new SocketMessageDTO(SocketHeaderNames.PING);
                 sendMessage(ping);
             } catch (Exception e) {
-                // server irraggiungibile
                 stopHeartbeat();
                 client.getController().handleServerDisconnection(client.getController().getPlayerName());
             }
