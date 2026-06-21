@@ -61,7 +61,7 @@ public class Gui implements ViewInterface {
 
     /**
      * associates the client controller of this client to the controller field
-     * @param Controller
+     * @param Controller client controller
      */
     public void bindController(ClientController Controller){
         controller = Controller;
@@ -69,7 +69,7 @@ public class Gui implements ViewInterface {
 
     /**
      * returns the controller bound to the gui class
-     * @return
+     * @return controller
      */
     public ClientController getClientController(){
         return this.controller;
@@ -77,7 +77,7 @@ public class Gui implements ViewInterface {
 
     /**
      * modifies the private field num
-     * @param num
+     * @param num num player
      */
     public void setNumPlayers(int num){
         numPlayers=num;
@@ -85,7 +85,7 @@ public class Gui implements ViewInterface {
 
     /**
      * returns the number of players currently sharing a lobby or a game
-     * @return
+     * @return num players
      */
     public int getNumPlayers(){
         return(numPlayers);
@@ -93,7 +93,7 @@ public class Gui implements ViewInterface {
 
     /**
      * returns the names of the players currently sharing a lobby or a game
-     * @return
+     * @return players
      */
     public ArrayList<String> getPlayers(){
         return players;
@@ -108,7 +108,7 @@ public class Gui implements ViewInterface {
 
     /**
      * returns the boolean is host which identifies the property of a player which could be the host of the game
-     * @return
+     * @return host
      */
     public boolean returnHost(){
         return this.isHost;
@@ -123,7 +123,7 @@ public class Gui implements ViewInterface {
 
     /**
      * returns the name the user is currently using
-     * @return
+     * @return nickname
      */
     public String getName(){
         return nickname;
@@ -193,7 +193,7 @@ public class Gui implements ViewInterface {
 
     /**
      * confirms the game was successfully created and transfers the host to the lobby
-     * @param gameID
+     * @param gameID gameID
      */
     @Override
     public void showGameCreated(int gameID) {
@@ -208,7 +208,7 @@ public class Gui implements ViewInterface {
 
     /**
      * notifies the players in the lobby a new player joined it
-     * @param playerName
+     * @param playerName playerName
      */
     @Override
     public void showPlayerJoinedLobby(String playerName) {
@@ -225,8 +225,8 @@ public class Gui implements ViewInterface {
 
     /**
      * notifies the players in the lobby a player left it
-     * @param playerName
-     * @param oldColor
+     * @param playerName playerName
+     * @param oldColor old color
      */
     @Override
     public void showPlayerLeftLobby(String playerName, Color oldColor) {
@@ -247,9 +247,9 @@ public class Gui implements ViewInterface {
     /**
      *gives the user all the information about the lobby they just joined names and totems already chosen
      * of other users sharing the same lobby
-     * @param gameID
-     * @param playerNames
-     * @param totemColors
+     * @param gameID id og game joined
+     * @param playerNames users in the lobby
+     * @param totemColors totem already taken
      */
     @Override
     public void showSuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
@@ -260,7 +260,6 @@ public class Gui implements ViewInterface {
             e' passato per parametro a joinare perche' era gia' in lobby. e' una cosa di cui possiamo
             non preoccuparci*/
             lobby.notifyPlayerJoined(playerName);
-            //TODO: da fare anche la notifica di scelta dei totem in base a totemColors (gia' presi)
             lobby.joined();
         }
         players=playerNames;
@@ -518,9 +517,7 @@ public class Gui implements ViewInterface {
 
     @Override
     public void showLeaderboardInfo(int playerPosition) {
-        if(lobby != null) {
-            //lobby.showError(errorMessage);
-        }
+
     }
 
     @Override
@@ -537,7 +534,10 @@ public class Gui implements ViewInterface {
         Platform.runLater(() -> {
             if(gameScene != null) {
                 gameScene.showError(errorMessage);
-            } //TODO: capire se serve farlo anche in altre scene
+            }
+            if(lobby != null) {
+                lobby.showError(errorMessage);
+            }
         });
     }
 
