@@ -13,7 +13,9 @@ public class IntroController {
 
     @FXML
     private StackPane root;
-
+    /**
+     * standard method to set the background
+     */
     public void initialize() {
 
         background.setImage(

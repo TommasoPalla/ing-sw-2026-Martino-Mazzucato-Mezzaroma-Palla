@@ -36,6 +36,9 @@ public class ChooseToCreateController {
 
     private static final double BASE_WIDTH = 1920;
     private static final double BASE_HEIGHT = 1080;
+    /**
+     * standard method to set the background and initialize local fields
+     */
     @FXML
     public void initialize() {
 
@@ -70,6 +73,9 @@ public class ChooseToCreateController {
             }
         });
     }
+    /**
+     * standard method to scale the background
+     */
     private void updateScale() {
 
         double sceneWidth = root.getScene().getWindow().getWidth();
@@ -95,14 +101,25 @@ public class ChooseToCreateController {
         this.gui = gui;
     }
 
+    /**
+     * communicates to gui joining decision
+     */
     @FXML
     private void handleJoin() {
         gui.handleJoin();
     }
+
+    /**
+     * communicates to gui creation decision
+     */
     @FXML
     private void handleCreate() {
         gui.handleCreate();
     }
+
+    /**
+     * loads the nickName choice scene
+     */
     @FXML
     private void handleNick() {
         gui.handleNickChange();

@@ -59,6 +59,9 @@ public class ChooseTotemController {
 
     private static final double BASE_WIDTH = 1920;
     private static final double BASE_HEIGHT = 1080;
+    /**
+     * standard method to set the background and initialize local fields
+     */
     @FXML
     public void initialize() {
 
@@ -95,6 +98,9 @@ public class ChooseTotemController {
         addGlitchOutline(whiteButton, redButton, purpleButton, yellowButton, blueButton);
 
     }
+    /**
+     * standard method to scale the background
+     */
     private void updateScale() {
 
         double sceneWidth = root.getScene().getWindow().getWidth();
@@ -118,6 +124,10 @@ public class ChooseTotemController {
     }
     private final Random glitchRandom = new Random();
 
+    /**
+     * shadow animations are organized
+     * @param buttons buttons
+     */
     private void addGlitchOutline(Button... buttons) {
         for (Button b : buttons) {
             b.setStyle("-fx-background-color: transparent; -fx-border-color: transparent; " +
@@ -159,7 +169,10 @@ public class ChooseTotemController {
         }
     }
 
-
+    /**
+     * zoom effect implemented
+     * @param event cursor hovers in the totem
+     */
     @FXML
     private void handleHoverIn(MouseEvent event) {
         // IL TRUCCO È QUI: Java ci dice chi è stato toccato
@@ -171,6 +184,10 @@ public class ChooseTotemController {
         st.play();
     }
 
+    /**
+     * zoom effect null
+     * @param event cursor hovers out
+     */
     @FXML
     private void handleHoverOut(MouseEvent event) {
         Node bottoneToccato = (Node) event.getSource();

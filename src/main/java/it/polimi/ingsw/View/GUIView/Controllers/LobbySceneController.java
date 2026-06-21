@@ -5,6 +5,7 @@ import it.polimi.ingsw.CustomException.IllegalClientStateActionException;
 import it.polimi.ingsw.CustomException.UIException.ConnectionLostException;
 import it.polimi.ingsw.CustomException.UIException.NotEnoughPlayersException;
 import it.polimi.ingsw.CustomException.UIException.NotTheHostException;
+import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.Components.GameSceneBanner;
 import javafx.application.Platform;
@@ -60,6 +61,10 @@ public class LobbySceneController {
 
     private static final double BASE_WIDTH = 1920;
     private static final double BASE_HEIGHT = 1080;
+
+    /**
+     * standard method to set the background and initialize local fields
+     */
     @FXML
     public void initialize() {
 
@@ -95,6 +100,9 @@ public class LobbySceneController {
             }
         });
     }
+    /**
+     * standard method to scale the background
+     */
     private void updateScale() {
 
         double sceneWidth = root.getScene().getWindow().getWidth();
@@ -117,6 +125,9 @@ public class LobbySceneController {
         );
     }
 
+    /**
+     * calls the scene where user is required to choose a totem
+     */
     @FXML
     private void handleTotem() {
         if (gui.getClientController().getLocalModel().getTotemColors().get(gui.getClientController().getPlayerName()) == null) {
@@ -127,6 +138,9 @@ public class LobbySceneController {
         }
     }
 
+    /**
+     * calls the creation scene and propagates the choice to leave the game to gui, where local fields are updated
+     */
     @FXML
     private void handleLeave() {
         gui.getClientController().leaveGame();
@@ -135,10 +149,13 @@ public class LobbySceneController {
             gui.removePlayers();
             gui.handleLeave();
         } catch (IOException e) {
-
+            updateLabel.setText(e.getMessage());
         }
     }
 
+    /**
+     * calls the play game scene and propagates the choice to gui where local fields are updated
+     */
     @FXML
     private void handleStart(){
         try {
@@ -150,11 +167,18 @@ public class LobbySceneController {
         }
     }
 
+    /**
+     * updated label
+     */
     public void joined(){
         Platform.runLater(() -> {
             updateLabel.setText("You joined the lobby!");
-        });    }
+        });
+    }
 
+    /**
+     * initializes the lobbyscene where only the host can start the game
+     */
     public void init() {
         for (String name : gui.getPlayers()) {
             notifyPlayerJoined(name);
@@ -165,6 +189,10 @@ public class LobbySceneController {
 
     }
 
+    /**
+     * updated the label with player of player who joined
+     * @param playerName name of player who joined
+     */
     public void notifyPlayerJoined(String playerName) {
         Platform.runLater(() -> {
             boolean alreadyIn = playersContainer.getChildren().stream()
@@ -182,6 +210,10 @@ public class LobbySceneController {
         });
     }
 
+    /**
+     * updated the label with player of player who joined
+     * @param playerName name of player who left
+     */
     public void notifyPlayerLeft(String playerName) {
         updateLabel.setText(playerName + " left the lobby");
         removePlayerFromContainer(playerName);
@@ -196,20 +228,52 @@ public class LobbySceneController {
 //        });
 //    }
 
+    /**
+     * removes a String from the VBox of connected player
+     * @param playerName player whose left
+     */
     private void removePlayerFromContainer(String playerName) {
-        // Platform.runLater assicura che la rimozione avvenga sul thread grafico
         Platform.runLater(() -> {
             playersContainer.getChildren().removeIf(node ->
                     node instanceof Label && ((Label) node).getText().equals(playerName)
             );
         });
     }
+
+    /**
+     * notifies the new host they are the new host
+     */
     public void newHost(){
         startGameButton.setVisible(gui.returnHost());
         startGameButton.setManaged(gui.returnHost());
     }
 
+    /**
+     * returns the update banner
+     * @return banner
+     */
     public GameSceneBanner getBanner(){
         return this.banner;
+    }
+
+    /**
+     * notifies a player chose a totem
+     * @param playerName name of the player
+     * @param totemColor chosen totem
+     */
+    public void notifyTotemChosen(String playerName, Color totemColor){
+        Platform.runLater(() -> {
+            updateLabel.setText(playerName + " chose " + totemColor);
+        });
+    }
+
+    /**
+     * notifies an error occurred
+     * @param errorMessage error
+     */
+    public void showError(String errorMessage){
+        Platform.runLater(() -> {
+            updateLabel.setText(errorMessage);
+        });
     }
 }

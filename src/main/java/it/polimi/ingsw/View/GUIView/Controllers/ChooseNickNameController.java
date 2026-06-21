@@ -42,6 +42,9 @@ public class ChooseNickNameController {
 
     private static final double BASE_WIDTH = 1920;
     private static final double BASE_HEIGHT = 1080;
+    /**
+     * standard method to set the background and initialize local fields
+     */
 
     @FXML
     public void initialize() {
@@ -82,6 +85,9 @@ public class ChooseNickNameController {
             }
         });
     }
+    /**
+     * standard method to scale the background
+     */
     private void updateScale() {
 
         double sceneWidth = root.getScene().getWindow().getWidth();
@@ -103,6 +109,10 @@ public class ChooseNickNameController {
                 (sceneHeight - scaledHeight) / 2
         );
     }
+
+    /**
+     * communicates to gui a nickName was chosen
+     */
     @FXML
     private void handleConfirm() {
 
@@ -121,13 +131,20 @@ public class ChooseNickNameController {
         }
     }
 
-
+    /**
+     * updates label
+     * @param message error description
+     */
     private void showError(String message) {
         if (errorLabel != null) {
             errorLabel.setText(message);
             errorLabel.setVisible(true);
         }
     }
+
+    /**
+     * updates label
+     */
     private void clearError() {
         if (errorLabel != null) {
             errorLabel.setText("");

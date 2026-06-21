@@ -58,6 +58,9 @@ public class ChooseGameIdController {
 
     private static final double BASE_WIDTH = 1920;
     private static final double BASE_HEIGHT = 1080;
+    /**
+     * standard method to set the background and initialize local fields
+     */
     @FXML
     public void initialize() {
         //cellData is -> text, which is connected / max
@@ -121,6 +124,9 @@ public class ChooseGameIdController {
             }
         });
     }
+    /**
+     * standard method to scale the background
+     */
     private void updateScale() {
 
         double sceneWidth = root.getScene().getWindow().getWidth();
@@ -146,20 +152,34 @@ public class ChooseGameIdController {
     //cellData is given every time a cell is created, 3 return because we have 3 columns
     //initialize automatically called by javaFX
 
+    /**
+     * initializes available games table
+     * @param availableGames available games data and information
+     */
     public void loadGames(Map<Integer, GamePlayers> availableGames) {
 
         gamesTable.getItems().clear();
 
         gamesTable.getItems().addAll(availableGames.entrySet());
     }
+
+    /**
+     * returns the user to the creation scene
+     */
     @FXML
     private void handleLeave(){
         try{
             gui.showCreationChoiceScene();
         }catch(IOException e){
-
+            Platform.runLater(() -> {
+                errorLabel.setText(e.getMessage());
+            });
         }
     }
+
+    /**
+     * calls the loader of the lobby scene
+     */
     @FXML
     private void handleConfirm() {
         //selected row is selected

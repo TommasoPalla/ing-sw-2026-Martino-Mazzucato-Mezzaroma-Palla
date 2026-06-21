@@ -56,6 +56,9 @@ public class RankingSceneController{
 
     }
 
+    /**
+     * standard method to set the background and initialize local fields
+     */
     @FXML
     public void initialize() {
 
@@ -114,7 +117,10 @@ public class RankingSceneController{
 //        }
 //    }
 
-
+    /**
+     * inserts database's data in the final scene
+     * @param data database's data
+     */
     public void populateRanking(Map<String, Integer> data) {
         ranking.getChildren().clear();
         data.entrySet().stream()
@@ -127,6 +133,10 @@ public class RankingSceneController{
                 });
     }
 
+    /**
+     * inserts results of the finished game in the final scene
+     * @param data results of finished game
+     */
     public void populateLeaderboard(List<String> data) {
         generalLeaderboard.getChildren().clear();
         String currentUser = gui.getName();
@@ -137,11 +147,13 @@ public class RankingSceneController{
             } else {
                 label.setStyle("-fx-text-fill: #E5CEBE; -fx-font-size: 24px;");
             }
-            label.setPrefWidth(480);
+            label.setPrefWidth(550);
             generalLeaderboard.getChildren().add(label);
         });
     }
-
+    /**
+     * standard method to scale the background
+     */
     private void updateScale() {
 
         double sceneWidth = root.getScene().getWindow().getWidth();
@@ -164,6 +176,9 @@ public class RankingSceneController{
         );
     }
 
+    /**
+     * player required to leave and is taken back to the choice to create or join a game
+     */
     @FXML
     private void handleLeave() {
         try {

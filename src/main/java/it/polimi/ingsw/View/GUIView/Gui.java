@@ -245,7 +245,8 @@ public class Gui implements ViewInterface {
     }
 
     /**
-     *
+     *gives the user all the information about the lobby they just joined names and totems already chosen
+     * of other users sharing the same lobby
      * @param gameID
      * @param playerNames
      * @param totemColors
@@ -265,6 +266,9 @@ public class Gui implements ViewInterface {
         players=playerNames;
     }
 
+    /**
+     * notifies the users of the lobby that the game was started
+     */
     @Override
     public void showGameStarted() {
         Platform.runLater(() -> {
@@ -279,6 +283,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showStartRound(int round) {
         Platform.runLater(() -> {
@@ -292,9 +297,14 @@ public class Gui implements ViewInterface {
         });
     }
 
+    /**
+     * notifies the lobby a totem was chosen
+     * @param playerName name of user who chose a totem
+     * @param totemColor totem color chosen
+     */
     @Override
     public void showChosenTotemColor(String playerName, Color totemColor) {
-
+        lobby.notifyTotemChosen(playerName, totemColor);
     }
 
     @Override
@@ -476,13 +486,18 @@ public class Gui implements ViewInterface {
         });
     }
 
+    /**
+     * notifies users in the game or lobby that a player was disconnected
+     * @param disconnectedPlayerName name of disconnected player
+     * @param oldColor color of totem of disconnected player
+     */
     @Override
     public void showForceQuit(String disconnectedPlayerName, Color oldColor) {
         Platform.runLater(() -> {
             if(gameScene != null) {
                gameScene.showCriticalDisconnection(disconnectedPlayerName);
             } else if(lobby != null) {
-                //todo: gestire disconnection in lobby
+                lobby.notifyPlayerLeft(disconnectedPlayerName);
             }
         });
     }
@@ -503,13 +518,20 @@ public class Gui implements ViewInterface {
 
     @Override
     public void showLeaderboardInfo(int playerPosition) {
-
+        if(lobby != null) {
+            lobby.showError(errorMessage);
+        }
     }
 
     @Override
     public void showEndGameLeft() {
+
     }
 
+    /**
+     * notifies a problem with the connection
+     * @param errorMessage description of problem
+     */
     @Override
     public void showError(String errorMessage) {
         Platform.runLater(() -> {
@@ -519,6 +541,10 @@ public class Gui implements ViewInterface {
         });
     }
 
+    /**
+     * loads the scene where the user is asked to join or create a game
+     * @throws IOException loader exception
+     */
     public void showCreationChoiceScene() throws IOException {
 
         Platform.runLater(() -> {//serve a thread, carica la scena appena possibile, lambda e esempio di uso gui con thread
@@ -537,7 +563,9 @@ public class Gui implements ViewInterface {
         });
     }//->handleJoin, handleCreate
 
-
+    /**
+     * loads the scene where the user is asked which game to join
+     */
     public void showGameIdScene() {
         try {
             controller.setClientState(ClientState.SETUP);
@@ -555,6 +583,9 @@ public class Gui implements ViewInterface {
         }
     }
 
+    /**
+     * loads the scene where the user is asked their username
+     */
     public void nicknameScene() {
         try {
 
@@ -571,7 +602,9 @@ public class Gui implements ViewInterface {
         }
     }//->handle Nickname
 
-
+    /**
+     * loads the scene where the user is asked to choose a totem
+     */
     public void chooseTotemScene() {
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/ChooseTotemScene.fxml"));
@@ -615,7 +648,10 @@ public class Gui implements ViewInterface {
         }
     }
 
-
+    /**
+     * loads the lobby scene where the user can leave or choose a totem
+     * @throws IOException loader exception
+     */
     public void lobbyScene() throws IOException{
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/LobbyScene.fxml"));
@@ -633,6 +669,9 @@ public class Gui implements ViewInterface {
         }
     }
 
+    /**
+     * loads the scene where the user is asked how many players do they want the game they created to host
+     */
     public void chooseNumberOfPlayers() {
         try {
 
@@ -649,6 +688,9 @@ public class Gui implements ViewInterface {
         }
     }
 
+    /**
+     * loads the scene where the finished game's leaderboard and server's own leaderboard is displayed
+     */
     public void rankingScene(){
 
         Platform.runLater(() -> {
@@ -670,29 +712,56 @@ public class Gui implements ViewInterface {
         });
     }
 
-
+    /**
+     * calls the scene where user is asked which game to join
+     */
     public void handleJoin(){
         showGameIdScene();
     }
+
+    /**
+     * calls scene where user is asked how many players do they want their game to host and initializes local fields
+     */
     public void handleCreate(){
         chooseNumberOfPlayers();
         players.add(nickname);
         this.isHost = true;
     }
+
+    /**
+     * calls the scene where user is asked to choose a username, after they decided to update it
+     */
     public void handleNickChange(){
         nicknameScene();
     }
 
+    /**
+     * calls the lobby scene after a game was successfully chosen and joined, notifies the clientController
+     * @param ID id of chosen game
+     * @throws IOException loads exception
+     */
     public void handleGameID(int ID) throws IOException{
         lobbyScene();
         controller.joinGame(ID);
     }
 
+    /**
+     * calls the scene where user is asked to join or create a game, update local fields, notifies the choice to
+     * client controller
+     * @param Nickname chosen nickname shared with client controller
+     * @throws IOException loader exception
+     */
     public void handleNickname(String Nickname) throws IOException{
         nickname = Nickname;
         controller.setPlayerName(nickname);
         showCreationChoiceScene();
     }
+
+    /**
+     * the number of desired players to take part to the created game was chosen and is shared with client controller
+     * @param number number of players
+     * @throws IOException loader exception
+     */
     public void handleNumber(int number) throws IOException{
         controller.setClientState(ClientState.SETUP);
         controller.createGame(number);
