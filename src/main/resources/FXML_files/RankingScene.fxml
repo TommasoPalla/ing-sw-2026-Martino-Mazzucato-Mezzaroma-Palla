@@ -127,7 +127,7 @@
                 <ScrollPane fitToWidth="true"
                             prefWidth="480.0"
                             prefHeight="350.0" minHeight="350.0" maxHeight="350.0"
-                            hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                            hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
                             style="-fx-background-color: rgba(20,12,8,0.7); -fx-background: rgba(20,12,8,0.7); -fx-background-radius: 0 0 10 10; -fx-border-color: #F4B492; -fx-border-width: 0 2 2 2; -fx-border-radius: 0 0 10 10;">
                     <content>
                         <VBox fx:id="generalLeaderboard" spacing="10.0"

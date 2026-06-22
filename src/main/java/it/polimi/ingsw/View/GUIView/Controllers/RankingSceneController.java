@@ -147,7 +147,7 @@ public class RankingSceneController{
             } else {
                 label.setStyle("-fx-text-fill: #E5CEBE; -fx-font-size: 24px;");
             }
-            label.setPrefWidth(550);
+            label.setPrefWidth(480);
             generalLeaderboard.getChildren().add(label);
         });
     }
@@ -186,7 +186,7 @@ public class RankingSceneController{
             gui.removePlayers();
             gui.handleLeave();
         } catch (IOException e) {
-
+            System.out.println("error loading creation scene");
         }
     }
 
