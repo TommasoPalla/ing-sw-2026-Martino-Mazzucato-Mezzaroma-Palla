@@ -147,7 +147,7 @@ public class RankingSceneController{
             } else {
                 label.setStyle("-fx-text-fill: #E5CEBE; -fx-font-size: 24px;");
             }
-            label.setPrefWidth(480);
+//            label.setPrefWidth(480);
             generalLeaderboard.getChildren().add(label);
         });
     }
