@@ -124,7 +124,7 @@
                     </font>
                 </Label>
 
-                <ScrollPane fitToWidth="true"
+                <ScrollPane fitToWidth="false"
                             prefWidth="480.0"
                             prefHeight="350.0" minHeight="350.0" maxHeight="350.0"
                             hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
