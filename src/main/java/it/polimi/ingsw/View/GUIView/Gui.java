@@ -29,8 +29,7 @@ import java.util.logging.Logger;
  * This class communicates directly with the client controller, has the methods to load and show scenes and a few fields
  * to enable a faster implementation without exchanging obvious and redundant information with the server
  */
-/*TODO: verificare per ogni runLater di gameScene se si può togliere il try catch (lasciarlo solo se bisogna caricare
-*  risorse grafiche (in quel caso NullPointerException)*/
+
 public class Gui implements ViewInterface {
 
     private static final Logger LOGGER = Logger.getLogger(Gui.class.getName());
@@ -100,7 +99,7 @@ public class Gui implements ViewInterface {
     }
 
     /**
-     * empties players field, used when the players leaves a lobby or a game
+     * empties players field, used when the players leave a lobby or a game
      */
     public void removePlayers(){
         players.clear();
@@ -121,21 +120,10 @@ public class Gui implements ViewInterface {
         this.isHost = false;
     }
 
-    /**
-     * returns the name the user is currently using
-     * @return nickname
-     */
+
     public String getName(){
         return nickname;
     }
-
-//    /**
-//     * returns the current
-//     * @return
-//     */
-//    public Map<String, Integer> getCurrentRanking(){
-//        return currentRanking;
-//    }
 
 
     /**
@@ -151,32 +139,29 @@ public class Gui implements ViewInterface {
             primaryStage.setScene(scene);
             PauseTransition delay = new PauseTransition(Duration.seconds(3));//initial splash of 3 sec
 
-            delay.setOnFinished(event -> {
+            delay.setOnFinished(_ -> {
 
                 try {
                     nicknameScene();
 
                 } catch (Exception e) {
-                    e.printStackTrace();;
+                    LOGGER.log(Level.SEVERE, "failed to load nickname scene", e);
                 }
             });
 
             delay.play();
 
         } catch (Exception e) {
-            e.printStackTrace();;
+            LOGGER.log(Level.SEVERE, "failed to load intro scene", e);
         }
-    }//-> nickname
-
-    @Override
-    public void showNewAvailableGames() {
-
     }
 
-    @Override
-    public void showNameSet(String newName) {
 
-    }
+    @Override
+    public void showNewAvailableGames() {}
+    @Override
+    public void showNameSet(String newName) {}
+
 
     @Override
     public void showNewCurrentPlayer(String playerName, ClientState clientState) {
@@ -190,6 +175,7 @@ public class Gui implements ViewInterface {
             }
         });
     }
+
 
     /**
      * confirms the game was successfully created and transfers the host to the lobby
@@ -205,6 +191,7 @@ public class Gui implements ViewInterface {
             }
         });
     }
+
 
     /**
      * notifies the players in the lobby a new player joined it
@@ -223,6 +210,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     /**
      * notifies the players in the lobby a player left it
      * @param playerName playerName
@@ -235,6 +223,7 @@ public class Gui implements ViewInterface {
         players.remove(playerName);
     }
 
+
     /**
      * notifies the user the host left and they are the new host
      */
@@ -243,6 +232,7 @@ public class Gui implements ViewInterface {
         this.isHost = true;
         lobby.newHost();
     }
+
 
     /**
      *gives the user all the information about the lobby they just joined names and totems already chosen
@@ -254,16 +244,12 @@ public class Gui implements ViewInterface {
     @Override
     public void showSuccessfullyJoinedGame(int gameID, ArrayList<String> playerNames, Map<String, Color> totemColors) {
         for(String playerName : playerNames){
-            /*
-            mezzo sbagliato. siccome notifyPlayerJoined era un metodo pensato per chi e' gia' in lobby
-            prende il nome passato e lo stampa dicendo "ha joinato". in questo caso pero' non e' chi
-            e' passato per parametro a joinare perche' era gia' in lobby. e' una cosa di cui possiamo
-            non preoccuparci*/
             lobby.notifyPlayerJoined(playerName);
             lobby.joined();
         }
-        players=playerNames;
+        players = playerNames;
     }
+
 
     /**
      * notifies the users of the lobby that the game was started
@@ -296,6 +282,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     /**
      * notifies the lobby a totem was chosen
      * @param playerName name of user who chose a totem
@@ -305,6 +292,7 @@ public class Gui implements ViewInterface {
     public void showChosenTotemColor(String playerName, Color totemColor) {
         lobby.notifyTotemChosen(playerName, totemColor);
     }
+
 
     @Override
     public void showInitialFood(Map<String, Integer> initialFood) {
@@ -317,8 +305,8 @@ public class Gui implements ViewInterface {
                 }
             }
         });
-
     }
+
 
     @Override
     public void showTileChosen(String playerName, int index) {
@@ -333,6 +321,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showFoodBonusTile(String playerName, int foodBonus) {
         Platform.runLater(() -> {
@@ -345,6 +334,7 @@ public class Gui implements ViewInterface {
             }
         });
     }
+
 
     @Override
     public void showCardDrawn(String player, Card card, boolean topRow, boolean fromBuildings) {
@@ -359,6 +349,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showEraChanged(int era) {
         Platform.runLater(() -> {
@@ -371,6 +362,7 @@ public class Gui implements ViewInterface {
             }
         });
     }
+
 
     @Override
     public void showTurnPassed(String playerThatPassed, String newCurrentPlayer) {
@@ -385,6 +377,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showNewGamePhase(GamePhase newGamePhase) {
         Platform.runLater(() -> {
@@ -393,6 +386,7 @@ public class Gui implements ViewInterface {
             }
         });
     }
+
 
     @Override
     public void showFoodModified(String playerName, int deltaFood, int finalFood) {
@@ -407,6 +401,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showPrestigePointsModified(String playerName, int deltaPP, int finalPP) {
         Platform.runLater(() -> {
@@ -419,6 +414,7 @@ public class Gui implements ViewInterface {
             }
         });
     }
+
 
     @Override
     public void showShamanStarsModified(String playerName, int stars) {
@@ -433,6 +429,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showBuildersDiscountModified(String playerName, int discount) {
         Platform.runLater(() -> {
@@ -445,6 +442,7 @@ public class Gui implements ViewInterface {
             }
         });
     }
+
 
     @Override
     public void showGatherersDiscountModified(String playerName, int discount) {
@@ -459,6 +457,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showTotemToTurnTile(String playerName, int index) {
         Platform.runLater(() -> {
@@ -472,6 +471,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showEvent(String playerName, EventType eventType, int foodModified, int ppModified) {
         Platform.runLater(() -> {
@@ -484,6 +484,7 @@ public class Gui implements ViewInterface {
             }
         });
     }
+
 
     /**
      * notifies users in the game or lobby that a player was disconnected
@@ -501,6 +502,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     @Override
     public void showEndGame(Map<String, Integer> finalRanking) {
         Platform.runLater(() -> {
@@ -515,15 +517,12 @@ public class Gui implements ViewInterface {
         });
     }
 
-    @Override
-    public void showLeaderboardInfo(int playerPosition) {
-
-    }
 
     @Override
-    public void showEndGameLeft() {
+    public void showLeaderboardInfo(int playerPosition) {}
+    @Override
+    public void showEndGameLeft() {}
 
-    }
 
     /**
      * notifies a problem with the connection
@@ -535,11 +534,12 @@ public class Gui implements ViewInterface {
             if(gameScene != null) {
                 gameScene.showError(errorMessage);
             }
-            if(lobby != null) {
+            else if(lobby != null) {
                 lobby.showError(errorMessage);
             }
         });
     }
+
 
     /**
      * loads the scene where the user is asked to join or create a game
@@ -547,7 +547,7 @@ public class Gui implements ViewInterface {
      */
     public void showCreationChoiceScene() throws IOException {
 
-        Platform.runLater(() -> {//serve a thread, carica la scena appena possibile, lambda e esempio di uso gui con thread
+        Platform.runLater(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/chooseToCreate.fxml"));
                 Parent root = loader.load();
@@ -562,6 +562,7 @@ public class Gui implements ViewInterface {
 
         });
     }//->handleJoin, handleCreate
+
 
     /**
      * loads the scene where the user is asked which game to join
@@ -583,6 +584,7 @@ public class Gui implements ViewInterface {
         }
     }
 
+
     /**
      * loads the scene where the user is asked their username
      */
@@ -602,6 +604,7 @@ public class Gui implements ViewInterface {
         }
     }//->handle Nickname
 
+
     /**
      * loads the scene where the user is asked to choose a totem
      */
@@ -620,13 +623,13 @@ public class Gui implements ViewInterface {
         }
     }
 
+
     public boolean playGameScene() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML_files/GameScene.fxml"));
             Parent root = loader.load();
 
-            if (root instanceof AnchorPane) {
-                AnchorPane rootAnchor = (AnchorPane) root;
+            if (root instanceof AnchorPane rootAnchor) {
                 rootAnchor.setPrefWidth(primaryStage.getWidth());
                 rootAnchor.setPrefHeight(primaryStage.getHeight());
             }
@@ -647,6 +650,7 @@ public class Gui implements ViewInterface {
             return false;
         }
     }
+
 
     /**
      * loads the lobby scene where the user can leave or choose a totem
@@ -669,6 +673,7 @@ public class Gui implements ViewInterface {
         }
     }
 
+
     /**
      * loads the scene where the user is asked how many players do they want the game they created to host
      */
@@ -687,6 +692,7 @@ public class Gui implements ViewInterface {
             System.out.println("Error: " + e);
         }
     }
+
 
     /**
      * loads the scene where the finished game's leaderboard and server's own leaderboard is displayed
@@ -712,6 +718,7 @@ public class Gui implements ViewInterface {
         });
     }
 
+
     /**
      * calls the scene where user is asked which game to join
      */
@@ -728,12 +735,14 @@ public class Gui implements ViewInterface {
         this.isHost = true;
     }
 
+
     /**
      * calls the scene where user is asked to choose a username, after they decided to update it
      */
     public void handleNickChange(){
         nicknameScene();
     }
+
 
     /**
      * calls the lobby scene after a game was successfully chosen and joined, notifies the clientController
@@ -744,6 +753,7 @@ public class Gui implements ViewInterface {
         lobbyScene();
         controller.joinGame(ID);
     }
+
 
     /**
      * calls the scene where user is asked to join or create a game, update local fields, notifies the choice to
@@ -756,6 +766,7 @@ public class Gui implements ViewInterface {
         controller.setPlayerName(nickname);
         showCreationChoiceScene();
     }
+
 
     /**
      * the number of desired players to take part to the created game was chosen and is shared with client controller

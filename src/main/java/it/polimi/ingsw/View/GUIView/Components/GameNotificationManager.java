@@ -9,6 +9,14 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
+
+/**
+ * UI component responsible for managing and displaying transient toast notifications
+ * and operational warnings in real-time.
+ * <p>
+ * It creates a dynamic vertical stack container anchored at the bottom-right corner of the
+ * screen, handling automatic fade/removal timers and manual close actions for individual alerts.
+ */
 public class GameNotificationManager {
     private final AnchorPane target;
     private VBox notificationContainer;
@@ -18,6 +26,12 @@ public class GameNotificationManager {
         initContainer();
     }
 
+
+    /**
+     * Sets up the core vertical container stack. Configures geometry anchors,
+     * applies CSS styling tokens, and sets up property bindings so the layout container
+     * completely hides itself when no alerts are actively present on screen.
+     */
     private void initContainer() {
         notificationContainer = new VBox();
         notificationContainer.setAlignment(Pos.BOTTOM_RIGHT);
@@ -40,7 +54,6 @@ public class GameNotificationManager {
     public void addWarning(String errorMessage) {
         addWarning(errorMessage, 3);
     }
-
     public void addWarning(String errorMessage, double timeout){
        addNotification("warning", errorMessage, timeout);
     }
@@ -52,6 +65,18 @@ public class GameNotificationManager {
         addNotification("info", message, timeout);
     }
 
+
+    /**
+     * Factory workflow method that dynamically constructs, styles, and injects a notification row
+     * component into the display stack.
+     * <p>
+     * It binds text wrappers, configures custom structural button styles, handles event
+     * bubbling protection (consuming mouse clicks so they don't trigger board events underneath),
+     * and sets up the background countdown transitions.
+     * @param notificationType Discriminator category determining the layout look ("warning" vs "info").
+     * @param message          The actual descriptive text.
+     * @param timeout          Lifespan duration bounds before trigger fires.
+     */
     private void addNotification (String notificationType, String message, double timeout) {
         HBox notification = new HBox();
         notification.setAlignment(Pos.CENTER_LEFT);
@@ -79,12 +104,12 @@ public class GameNotificationManager {
         PauseTransition timer = null;
         if(timeout > 0) {
             timer = new PauseTransition(Duration.seconds(timeout));
-            timer.setOnFinished(event -> removeNotification(notification));
+            timer.setOnFinished(_ -> removeNotification(notification));
         }
 
         //timer is passed to finalTimer because Lambda Functions require final variables
         final PauseTransition finalTimer = timer;
-        closeButton.setOnAction(event -> {
+        closeButton.setOnAction(_ -> {
             if (finalTimer != null) {
                 finalTimer.stop();
             }
@@ -104,6 +129,12 @@ public class GameNotificationManager {
         notificationContainer.toFront();
     }
 
+
+    /**
+     * Safely ejects an active notification row from the layout queue stack, effectively releasing
+     * its memory allocations and allowing the background binding to automatically shrink the view space.
+     * @param notification The target HBox container being discarded.
+     */
     private void removeNotification(HBox notification) {
         notificationContainer.getChildren().remove(notification);
     }

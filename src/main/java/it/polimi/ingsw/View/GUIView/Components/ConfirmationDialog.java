@@ -9,7 +9,12 @@ import javafx.stage.StageStyle;
 
 import java.util.Objects;
 
-
+/**
+ * A customized pop-up modal dialog used to ask players for confirmation
+ * before performing critical operations (such as leaving an active game match).
+ * * It extends the standard JavaFX {@link Dialog} but removes the default OS window
+ * decorations to support custom CSS styling, transparent backgrounds, and thematic fonts.
+ */
 public class ConfirmationDialog extends Dialog<ButtonType> {
 
     private static final ButtonType YES_BUTTON = new ButtonType("Yes", ButtonBar.ButtonData.YES);
@@ -19,7 +24,7 @@ public class ConfirmationDialog extends Dialog<ButtonType> {
         initModality(Modality.APPLICATION_MODAL);
         initStyle(StageStyle.UNDECORATED);
 
-        getDialogPane().sceneProperty().addListener((observable, oldScene, newScene) -> {
+        getDialogPane().sceneProperty().addListener((_, _, newScene) -> {
             if (newScene != null) {
                 newScene.setFill(Color.TRANSPARENT);
                 if (newScene.getWindow() instanceof Stage stage) {
@@ -44,6 +49,5 @@ public class ConfirmationDialog extends Dialog<ButtonType> {
 
         dialogPane.lookupButton(YES_BUTTON).getStyleClass().add("dialog-button-yes");
         dialogPane.lookupButton(NO_BUTTON).getStyleClass().add("dialog-button-no");
-
     }
 }

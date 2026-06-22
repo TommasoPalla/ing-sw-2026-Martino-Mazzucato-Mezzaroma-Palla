@@ -30,6 +30,7 @@ public class OfferTileComponent extends TileComponent implements BoardInteractio
         setupInteraction();
     }
 
+
     public void setupInteraction() {
         // Manages interaction on click
         this.tileLayout.setOnMouseClicked((MouseEvent event) -> {

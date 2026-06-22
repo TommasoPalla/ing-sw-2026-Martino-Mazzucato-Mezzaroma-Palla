@@ -5,8 +5,8 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Enums.InventorType;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.Cards.Characters.CharacterCard;
+
 import it.polimi.ingsw.View.GUIView.GUISettings;
-import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.Utils.AnimationsUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,12 +17,11 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 
 /**PlayerInfoWidget class represents a dynamic widget that shows brief information
- * about other players' tribes (different from the client). It represents various
+ * about other players' tribes (different from the local player). It represents various
  * icons with labels in grid-like structure. From 1 to 4 instances of this class
  * will appear on InfoBoard component, depending on number of players.
  *
@@ -44,7 +43,6 @@ public class PlayerInfoWidget extends GridPane{
     private final Label huntersNum;
     private final Label artistsNum;
 
-    private final Gui gui;
 
     /**Initializes the player's widget shown on Info Board (on the right of the screen).
      * Sets player's name and totem icon, initializes to 0 all labels referring to
@@ -52,9 +50,8 @@ public class PlayerInfoWidget extends GridPane{
      *
      * @param name Name of the player the widget refers to
      * @param totemColor Color of the totem chosen by the player, used to show the correct icon
-     * @param gui reference to main GUI class to get tribe's information, in order to show them
      */
-    public PlayerInfoWidget(String name, Color totemColor, Gui gui){
+    public PlayerInfoWidget(String name, Color totemColor){
         super();
         this.setMinWidth(GUISettings.PlayerWidget.WIDTH - 20);
         this.setPrefWidth(GUISettings.PlayerWidget.WIDTH);
@@ -67,7 +64,6 @@ public class PlayerInfoWidget extends GridPane{
         this.setVgap(12);
         this.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/gameSceneStyle.css")).toExternalForm());
         this.getStyleClass().add("player-widget");
-        this.gui = gui;
 
         ColumnConstraints colIcon = new ColumnConstraints();
         colIcon.setMinWidth(GUISettings.Icons.ICON_WIDTH);
@@ -76,6 +72,8 @@ public class PlayerInfoWidget extends GridPane{
         colLabel.setMinWidth(15);
         colLabel.setHgrow(Priority.ALWAYS);
         this.getColumnConstraints().addAll(colIcon, colLabel, colIcon, colLabel, colIcon, colLabel);
+
+
         //Graphical layout
         //Row 0: totem, playerName and food
         ImageView totemImage = new ImageView();
@@ -86,7 +84,6 @@ public class PlayerInfoWidget extends GridPane{
         try {
             Image totemImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(totemImagePath)));
             totemImage.setImage(totemImg);
-            //TODO: non sembra funzionare lo stile
             totemImage.setStyle("-fx-border-width: 1; -fx-border-color: #FF6B35; -fx-background-radius: 20");
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -112,7 +109,9 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(foodImage, 3, 0, 2, 1);
         foodReserve = new Label("0");
+        foodReserve.getStyleClass().add("widget-label");
         this.add(foodReserve, 5, 0);
+
 
         //row 1 prestige, characters numbers and sustenance discount
         //prestige
@@ -129,6 +128,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(prestigeImage, 0, 1);
         prestigePoints = new Label("0");
+        prestigePoints.getStyleClass().add("widget-label");
         this.add(prestigePoints, 1, 1);
 
         //characters
@@ -145,6 +145,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(charactersImage, 2, 1);
         charactersNum = new Label("0");
+        charactersNum.getStyleClass().add("widget-label");
         this.add(charactersNum, 3, 1);
 
         //sustenanceDiscount
@@ -161,7 +162,9 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(sustenanceDiscountImage, 4, 1);
         sustenanceDiscount = new Label("0");
+        sustenanceDiscount.getStyleClass().add("widget-label");
         this.add(sustenanceDiscount, 5, 1);
+
 
         //row 2: shamanic stars, buildingsDiscount and InventionsNumber
         //shamanStars
@@ -178,6 +181,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(starsImage, 0, 2);
         shamanStars = new Label("0");
+        shamanStars.getStyleClass().add("widget-label");
         this.add(shamanStars, 1, 2);
 
         //buildingDiscount
@@ -194,6 +198,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(buildingsDiscountImage, 2, 2);
         buildingsDiscount = new Label("0");
+        buildingsDiscount.getStyleClass().add("widget-label");
         this.add(buildingsDiscount, 3, 2);
 
         //inventions Num
@@ -210,7 +215,9 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(inventionsImage, 4, 2);
         inventionsNum = new Label("0");
+        inventionsNum.getStyleClass().add("widget-label");
         this.add(inventionsNum, 5, 2);
+
 
         //row 3: shamans, builders, inventors
         //shamans
@@ -227,6 +234,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(shamansImage, 0, 3);
         shamansNum = new Label("0");
+        shamansNum.getStyleClass().add("widget-label");
         this.add(shamansNum, 1, 3);
 
         //builders
@@ -243,6 +251,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(buildersImage, 2, 3);
         buildersNum = new Label("0");
+        buildersNum.getStyleClass().add("widget-label");
         this.add(buildersNum, 3, 3);
 
         //inventors
@@ -259,7 +268,9 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(inventorsImage, 4, 3);
         inventorsNum = new Label("0");
+        inventorsNum.getStyleClass().add("widget-label");
         this.add(inventorsNum, 5, 3);
+
 
         //row 4: gatherers, hunters, artists
         //gatherers
@@ -276,6 +287,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(gatherersImage, 0, 4);
         gatherersNum = new Label("0");
+        gatherersNum.getStyleClass().add("widget-label");
         this.add(gatherersNum, 1, 4);
 
         //hunters
@@ -292,6 +304,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(huntersImage, 2, 4);
         huntersNum = new Label("0");
+        huntersNum.getStyleClass().add("widget-label");
         this.add(huntersNum, 3, 4);
 
         //artists
@@ -308,6 +321,7 @@ public class PlayerInfoWidget extends GridPane{
         }
         this.add(artistsImage, 4, 4);
         artistsNum = new Label("0");
+        artistsNum.getStyleClass().add("widget-label");
         this.add(artistsNum, 5, 4);
     }
 
@@ -316,15 +330,14 @@ public class PlayerInfoWidget extends GridPane{
      *
      * @param card card drawn by this player, caller of this method
      *            checks that it is an instance of CharacterCard
+     * @param tribe player's tribe used to retrieve information about specific CharacterRole population
      */
-    public void updateCardDrawn(Card card){
+    public void updateCardDrawn(Card card, LightTribe tribe){
         int newCharNum = Integer.parseInt(charactersNum.getText()) + 1;
         AnimationsUtils.animateLabelUpdate(charactersNum, String.valueOf(newCharNum));
 
         CharacterCard character = (CharacterCard) card;
         int newNum;
-        String playerName = nameLabel.getText();
-        LightTribe tribe = gui.getClientController().getLocalModel().getPlayerTribe(playerName);
 
         switch (character.getRole()) {
             case ARTIST -> {
@@ -379,6 +392,10 @@ public class PlayerInfoWidget extends GridPane{
     }
     public int getPrestigePoints() {
         return Integer.parseInt(prestigePoints.getText());
+    }
+
+    public String getPlayerName(){
+        return nameLabel.getText();
     }
 
     public void updateShamanStars(int stars) {

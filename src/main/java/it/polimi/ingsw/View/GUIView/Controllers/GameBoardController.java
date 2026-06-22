@@ -5,13 +5,14 @@ import it.polimi.ingsw.Enums.Color;
 import it.polimi.ingsw.Model.Cards.BuildingCard;
 import it.polimi.ingsw.Model.Cards.Card;
 import it.polimi.ingsw.Model.GameBoard.OfferTile;
+
 import it.polimi.ingsw.View.GUIView.Components.CardComponent;
 import it.polimi.ingsw.View.GUIView.Components.OfferTileComponent;
 import it.polimi.ingsw.View.GUIView.Components.TileComponent;
 import it.polimi.ingsw.View.GUIView.Components.TotemComponent;
-import it.polimi.ingsw.View.GUIView.GUISettings;
 import it.polimi.ingsw.View.GUIView.Gui;
 import it.polimi.ingsw.View.GUIView.Utils.*;
+
 import javafx.beans.binding.Bindings;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -30,6 +31,16 @@ import javafx.util.Duration;
 import java.util.*;
 import java.util.regex.Pattern;
 
+
+/**
+ * UI controller responsible for managing the game board.
+ * <p>
+ * It synchronizes and renders dynamic card rows,
+ * handles deck appearance shifts across historical Eras, updates visibility of tiles, cards
+ * and other components regarding 'draw_card' and 'place_totem' game phase. This happens also via
+ * pseudo-classes to highlight interactive slots depending on player resources
+ * and turn actions.
+ */
 public class GameBoardController {
 
     private Gui gui;
@@ -73,6 +84,8 @@ public class GameBoardController {
     @FXML
     private Button passTurnBtn;
 
+
+
     @FXML
     public void initialize() {
         topRow.setVisible(false);
@@ -87,6 +100,13 @@ public class GameBoardController {
         passTurnBtn.setTooltip(tooltip);
     }
 
+
+    /**
+     * Binds core execution callback structures and populates initial view elements.
+     * @param gui                 The primary GUI client coordinator.
+     * @param onPassTurnRequested Runnable callback handling pass turn actions inside the game scene.
+     * @param localPlayer         The unique user nickname identifier registered to this machine.
+     */
     public void setup(Gui gui, Runnable onPassTurnRequested, String localPlayer) {
         this.gui = gui;
         this.onPassTurnRequested = onPassTurnRequested;
@@ -94,10 +114,18 @@ public class GameBoardController {
         updateInitialGameState();
     }
 
+
     public void setActionListener(BoardActionListener actionListener) {
         this.actionListener = actionListener;
     }
 
+
+    /**
+     * Swaps the back artwork of the common layout deck depending on the active game Era.
+     * Also clips corners to ensure uniform rounded rendering.
+     * @param era Target era match index (1, 2, or 3).
+     * @return A prefix string describing the newly entered era.
+     */
     public String setDeckImage(int era) {
         String imagePath, prefix;
         switch (era) {
@@ -124,6 +152,11 @@ public class GameBoardController {
         return prefix;
     }
 
+
+    /**
+     * Binds container visibility properties directly to whether they contain child elements,
+     * initializes the physical offer track layout, and forces an initial redraw on all card rows.
+     */
     private void updateInitialGameState(){
         topRow.visibleProperty().bind(Bindings.isNotEmpty(topRow.getChildren()));
         topBuildings.visibleProperty().bind(Bindings.isNotEmpty(topBuildings.getChildren()));
@@ -138,6 +171,12 @@ public class GameBoardController {
         updateTopBuildings();
     }
 
+
+    /**
+     * Assembles the main horizontal Offer Track components.
+     * Clears old slots, appends a shared turn order tile at index 0, registers subsequent offer tile
+     * components from the local model, and anchors active player totem tokens onto their default positions.
+     */
     private void initOfferTrack(){
         totemLayer.setPickOnBounds(false);
 
@@ -173,21 +212,21 @@ public class GameBoardController {
         }
     }
 
+    /**
+     * Clears and repopulates the upper card row based on updated local model data.
+     */
     public void updateTopRow() {
-        // Svuota i vecchi componenti grafici prima del ripristino della fila
         ArrayList<Card> cards = gui.getClientController().getLocalModel().getTopRow();
         topRow.getChildren().clear();
 
         int numPlayers = gui.getClientController().getLocalModel().getNumPlayers();
         int i = 0;
-        // Popola dinamicamente il contenitore
         for (Card card : cards) {
 
             CardComponent cardRepresentation = new CardComponent(card, true, false,
                     i, actionListener, numPlayers);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
-            // Aggiunge il nodo grafico al layout lineare
             topRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
@@ -199,14 +238,12 @@ public class GameBoardController {
 
         int numPlayers = gui.getClientController().getLocalModel().getNumPlayers();
         int i = 0;
-        // Popola dinamicamente il contenitore
         for (Card card : cards) {
 
             CardComponent cardRepresentation = new CardComponent(card, false, false,
                     i, actionListener, numPlayers);
             cardRepresentation.getGraphicsNode().pseudoClassStateChanged(SELECTABLE_PSEUDO, false);
 
-            // Aggiunge il nodo grafico al layout lineare
             bottomRow.getChildren().add(cardRepresentation.getGraphicsNode());
             i++;
         }
@@ -246,7 +283,11 @@ public class GameBoardController {
         }
     }
 
-
+    /**
+     * Toggles the CSS "selectable" highlight state for all open Offer tiles on the track layout,
+     * making sure already occupied tiles cannot be highlighted or targeted.
+     * @param areSelectable True if the user is currently expected to place a totem.
+     */
     public void toggleSelectableTiles(boolean areSelectable) {
         int i = 1;
         for(OfferTile tile: gui.getClientController().getLocalModel().getOfferTiles()) {
@@ -256,6 +297,16 @@ public class GameBoardController {
         }
     }
 
+
+    /**
+     * Evaluates game state constraints and updates the highlight states for all active cards.
+     * <p>
+     * It dynamically checks if the player has remaining card draw allowances, evaluates food reserves
+     * against building discount parameters, and distinguishes event cards from standard
+     * claimable characters. If no legal character choices exist but the player still holds draw tokens,
+     * it automatically triggers the "Pass Turn" safety button display.
+     * @param areSelectable True if it is currently the local player's turn to pick cards.
+     */
     public void toggleSelectableCards(boolean areSelectable) {
         //boolean variable is used to assess that player can still draw a character, if 'false' "passTurnBtn" will be shown
         boolean foundCharacter = false;
@@ -333,16 +384,29 @@ public class GameBoardController {
         }
     }
 
+
+    /**
+     * Fetches remaining upper/lower row draw allocations from the model and updates the text counters.
+     */
     public void updateRemainingCards() {
         int topCount = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getRemainingAbove();
         int bottomCount = gui.getClientController().getLocalModel().getPlayerTribe(localPlayer).getRemainingBelow();
         AnimationsUtils.animateLabelUpdate(cardsTop, String.valueOf(topCount));
         AnimationsUtils.animateLabelUpdate(cardsBottom, String.valueOf(bottomCount));
     }
+
+    /**
+     * Controls the visibility state of the remaining card count panel layer.
+     * * @param isVisible True to show the info pane wrapper on screen.
+     */
     public void showRemainingCards(boolean isVisible) {
         remainingCards.setVisible(isVisible);
     }
 
+
+    /**
+     * Flushes out all visual elements currently attached to the common board card container lists.
+     */
     public void clearRows() {
         topRow.getChildren().clear();
         topBuildings.getChildren().clear();
@@ -350,11 +414,13 @@ public class GameBoardController {
         bottomRow.getChildren().clear();
     }
 
+
     public void moveTotemToTurnTile(String playerName, int index) {
         TotemComponent totem = this.totems.get(playerName);
         Node tile = offerTrack.getChildren().getFirst();
         totem.moveTotemToTurnTile(tile, index);
     }
+
 
     public void moveTotemToOfferTile(String playerName, int index) {
         TotemComponent totem = this.totems.get(playerName);
@@ -367,6 +433,11 @@ public class GameBoardController {
         passTurnBtn.setDisable(!enabled);
     }
 
+
+    /**
+     * FXML action trigger fired when the pass turn button is clicked.
+     * Locks down interaction properties to prevent double-clicks and alerts the parent listener.
+     */
     @FXML
     private void handlePassTurn() {
         passTurnBtn.setDisable(true);

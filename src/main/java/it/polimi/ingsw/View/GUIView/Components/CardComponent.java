@@ -12,7 +12,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-import javax.tools.Tool;
 
 
 /**
@@ -67,6 +66,7 @@ public class CardComponent implements BoardInteractionStrategy {
         setupInteraction();
     }
 
+
     /**
      * Configures the behaviour on interactions with the component,
      * ensuring input propagation is contained within the graphic bounds.
@@ -80,6 +80,7 @@ public class CardComponent implements BoardInteractionStrategy {
         });
     }
 
+
     /**
      * Retrieves the root JavaFX graphical node associated with this card element.
      *
@@ -88,6 +89,7 @@ public class CardComponent implements BoardInteractionStrategy {
     public Node getGraphicsNode() {
         return this.cardLayout;
     }
+
 
     /**
      * Concrete implementation of {@link BoardInteractionStrategy} method.

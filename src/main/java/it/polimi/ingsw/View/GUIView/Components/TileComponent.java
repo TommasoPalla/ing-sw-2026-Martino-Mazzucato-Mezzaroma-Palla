@@ -6,6 +6,12 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
+/**
+ * A graphical wrapper component representing a generic physical board tile in Mesos.
+ * <p>
+ * It leverages a {@link StackPane} to allow structural layering, making it possible
+ * to easily stack totem tokens on top of the tile artwork.
+ */
 public class TileComponent {
     StackPane tileLayout;
 

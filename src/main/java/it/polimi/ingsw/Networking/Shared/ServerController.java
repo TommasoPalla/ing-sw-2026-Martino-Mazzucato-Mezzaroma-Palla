@@ -134,7 +134,6 @@ public class ServerController {
             try {
                 notifier.notifyGameCreated(gameID, firstPlayerName, playerNum);
             } catch (Exception e){
-                //TODO handle exception
             }
         }).start();
 
@@ -222,7 +221,6 @@ public class ServerController {
                    RMIClientNotifier notifier = new RMIClientNotifier(client);
                    notifier.notifyAvailableGames(gamesData);
                } catch (Exception e) {
-                   //TODO handle exception
                }
             });
         }

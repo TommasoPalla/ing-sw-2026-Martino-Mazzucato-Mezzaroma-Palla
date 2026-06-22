@@ -77,51 +77,76 @@
 
    <VBox fx:id="tribeRegion" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="300"
          maxWidth="860" prefWidth="860" maxHeight="380" prefHeight="380"
-         styleClass="tribe-region" spacing="5">
+         styleClass="tribe-region" spacing="10">
       <padding>
          <Insets top="15.0" bottom="15.0" left="20.0" right="20.0"/>
       </padding>
       <HBox fx:id="tribeHeader" alignment="TOP_CENTER" spacing="15" style="-fx-cursor: hand">
-         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
-            <Image url="@/Images/Icons/Food.png"/>
-         </ImageView>
-         <Label fx:id="foodReserve" text="0" prefWidth="25"/>
-         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
-            <Image url="@/Images/Icons/Prestige.png"/>
-         </ImageView>
-         <Label fx:id="prestigePoints" text="0" prefWidth="25"/>
-         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
-            <Image url="@/Images/Icons/Characters.png"/>
-         </ImageView>
-         <Label fx:id="charactersNumber" text="0" prefWidth="25"/>
 
-         <Label text="My Tribe" alignment="TOP_CENTER" prefWidth="100">
-            <font>
-               <Font name="System Bold" size="18.0"/>
-            </font>
-         </Label>
+         <HBox spacing="15" alignment="CENTER_LEFT">
+            <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+               <Image url="@/Images/Icons/Food.png"/>
+            </ImageView>
+            <Label fx:id="foodReserve" text="0" prefWidth="30" styleClass="tribe-label"/>
+         </HBox>
 
-         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
-            <Image url="@/Images/Icons/Sustenance.png"/>
-         </ImageView>
-         <Label fx:id="sustenanceDiscount" text="0" prefWidth="20"/>
+         <HBox spacing="15" alignment="CENTER_LEFT">
+            <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+               <Image url="@/Images/Icons/Prestige.png"/>
+            </ImageView>
+            <Label fx:id="prestigePoints" text="0" prefWidth="30" styleClass="tribe-label"/>
+         </HBox>
 
-         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
-            <Image url="@/Images/Icons/BuildingsDiscount.png"/>
-         </ImageView>
-         <Label fx:id="buildingsDiscount" text="0" prefWidth="20"/>
-         <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
-            <Image url="@/Images/Icons/ShamanStar.png"/>
-         </ImageView>
-         <Label fx:id="shamanStars" text="0" prefWidth="20"/>
-         <ImageView fitWidth="36" fitHeight="36" preserveRatio="true">
-            <Image url="@/Images/Icons/Inventions.png" />
-         </ImageView>
-         <Label fx:id="distinctInventions" text="0" prefWidth="20" />
+         <HBox spacing="15" alignment="CENTER_LEFT">
+            <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+               <Image url="@/Images/Icons/Characters.png"/>
+            </ImageView>
+            <Label fx:id="charactersNumber" text="0" prefWidth="30" styleClass="tribe-label"/>
+         </HBox>
+
+         <HBox>
+            <padding>
+               <Insets right="10" left="25"/>
+            </padding>
+            <Label text="My Tribe" style="-fx-font-weight: bold;" alignment="TOP_CENTER" prefWidth="120">
+               <font>
+                  <Font name="Segoe UI" size="22.0"/>
+               </font>
+            </Label>
+         </HBox>
+
+
+         <HBox spacing="10" alignment="CENTER_LEFT">
+            <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+               <Image url="@/Images/Icons/Sustenance.png"/>
+            </ImageView>
+            <Label fx:id="sustenanceDiscount" text="0" prefWidth="20" styleClass="tribe-label"/>
+         </HBox>
+
+         <HBox spacing="10" alignment="CENTER_LEFT">
+            <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+               <Image url="@/Images/Icons/BuildingsDiscount.png"/>
+            </ImageView>
+            <Label fx:id="buildingsDiscount" text="0" prefWidth="20" styleClass="tribe-label"/>
+         </HBox>
+
+         <HBox spacing="10" alignment="CENTER_LEFT">
+            <ImageView fitHeight="36" fitWidth="36" preserveRatio="true">
+               <Image url="@/Images/Icons/ShamanStar.png"/>
+            </ImageView>
+            <Label fx:id="shamanStars" text="0" prefWidth="20" styleClass="tribe-label"/>
+         </HBox>
+
+         <HBox spacing="10" alignment="CENTER_LEFT">
+            <ImageView fitWidth="36" fitHeight="36" preserveRatio="true">
+               <Image url="@/Images/Icons/Inventions.png" />
+            </ImageView>
+            <Label fx:id="distinctInventions" text="0" prefWidth="20" styleClass="tribe-label"/>
+         </HBox>
 
       </HBox>
 
-      <!--TODO: definire stile label-->
+
       <HBox fx:id="myTribe" spacing="20.0" alignment="CENTER"
             prefWidth="860" maxWidth="860" prefHeight="300">
          <padding>
@@ -129,37 +154,67 @@
          </padding>
 
          <VBox spacing="10" alignment="TOP_CENTER">
-            <Label fx:id="huntersNumber" text="0"/>
+            <HBox spacing="5" alignment="CENTER" prefWidth="113">
+               <ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                  <Image url="@/Images/Icons/Hunter.png"/>
+               </ImageView>
+               <Label fx:id="huntersNumber" text="0" styleClass="tribe-column-label"/>
+            </HBox>
             <VBox fx:id="hunterColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
-            <Label fx:id="buildersNumber" text="0"/>
+            <HBox spacing="5" alignment="CENTER" prefWidth="113">
+               <ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                  <Image url="@/Images/Icons/Builder.png"/>
+               </ImageView>
+               <Label fx:id="buildersNumber" text="0" styleClass="tribe-column-label"/>
+            </HBox>
             <VBox fx:id="builderColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
-            <Label fx:id="gatherersNumber" text="0"/>
+            <HBox spacing="5" alignment="CENTER" prefWidth="113">
+               <ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                  <Image url="@/Images/Icons/Gatherer.png"/>
+               </ImageView>
+               <Label fx:id="gatherersNumber" text="0" styleClass="tribe-column-label"/>
+            </HBox>
             <VBox fx:id="gathererColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
-            <Label fx:id="artistsNumber" text="0"/>
+            <HBox spacing="5" alignment="CENTER" prefWidth="113">
+               <ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                  <Image url="@/Images/Icons/Artist.png"/>
+               </ImageView>
+               <Label fx:id="artistsNumber" text="0" styleClass="tribe-column-label"/>
+            </HBox>
             <VBox fx:id="artistColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
-            <Label fx:id="shamansNumber" text="0"/>
+            <HBox spacing="5" alignment="CENTER" prefWidth="113">
+               <ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                  <Image url="@/Images/Icons/Shaman.png"/>
+               </ImageView>
+               <Label fx:id="shamansNumber" text="0" styleClass="tribe-column-label"/>
+            </HBox>
             <VBox fx:id="shamanColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
          <VBox spacing="10" alignment="TOP_CENTER">
-            <Label fx:id="inventorsNumber" text="0"/>
+            <HBox spacing="5" alignment="CENTER" prefWidth="113">
+               <ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                  <Image url="@/Images/Icons/Inventor.png"/>
+               </ImageView>
+               <Label fx:id="inventorsNumber" text="0" styleClass="tribe-column-label"/>
+            </HBox>
             <VBox fx:id="inventorColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 
-         <VBox spacing="10" alignment="TOP_CENTER">
-            <Label text="Buildings"/>
+         <VBox spacing="10" alignment="CENTER" prefWidth="113">
+            <Label text="Buildings" styleClass="tribe-column-label"/>
             <VBox fx:id="buildingColumn" prefWidth="113" prefHeight="270" maxHeight="270" spacing="-70"/>
          </VBox>
 

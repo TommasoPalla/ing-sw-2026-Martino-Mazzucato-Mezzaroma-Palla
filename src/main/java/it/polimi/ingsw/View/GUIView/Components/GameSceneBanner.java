@@ -4,7 +4,6 @@ import javafx.animation.PauseTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -112,10 +111,10 @@ public class GameSceneBanner {
         }
 
         overlay.getChildren().add(container);
-        overlay.setOnMouseClicked(event -> hideBanner());
+        overlay.setOnMouseClicked(_ -> hideBanner());
         if (currentRequest.onsetDelay() > 0) {
             PauseTransition delay = new PauseTransition(Duration.seconds(currentRequest.onsetDelay()));
-            delay.setOnFinished(event -> target.getChildren().add(overlay));
+            delay.setOnFinished(_ -> target.getChildren().add(overlay));
             delay.play();
         } else {
             target.getChildren().add(overlay);
@@ -123,7 +122,7 @@ public class GameSceneBanner {
 
         if(currentRequest.timeout() > 0){
             autoCloseTimer = new PauseTransition(Duration.seconds(currentRequest.timeout() + currentRequest.onsetDelay()));
-            autoCloseTimer.setOnFinished(event -> hideBanner());
+            autoCloseTimer.setOnFinished(_ -> hideBanner());
             autoCloseTimer.play();
         }
     }
@@ -149,10 +148,11 @@ public class GameSceneBanner {
             }
             isDisplayBusy = false;
             PauseTransition inBetweenDelay = new PauseTransition(Duration.seconds(1));
-            inBetweenDelay.setOnFinished(event -> processQueue());
+            inBetweenDelay.setOnFinished(_ -> processQueue());
             inBetweenDelay.play();
         }
     }
+
 
     /**
      * Internal immutable data record container representing a single unique notification event payload context.
