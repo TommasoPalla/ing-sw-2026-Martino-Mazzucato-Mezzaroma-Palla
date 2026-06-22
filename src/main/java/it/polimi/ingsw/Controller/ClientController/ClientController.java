@@ -168,9 +168,8 @@ public class ClientController implements ClientViewUpdate {
         }
     }
 
-    /**todo: sistemare javadoc
-     * This method forwards the request by the player to leave the lobby he is in. Can only be performed if the client
-     * state is "IN_LOBBY".
+    /**
+     * This method forwards the request by the player to leave the lobby or the game he is in.
      */
     public void leaveGame(){
         if(clientState == ClientState.CONNECTING || clientState == ClientState.SETUP || clientState == ClientState.END_GAME){

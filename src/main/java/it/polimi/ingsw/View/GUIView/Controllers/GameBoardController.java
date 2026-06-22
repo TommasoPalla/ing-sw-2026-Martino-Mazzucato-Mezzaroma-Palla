@@ -328,7 +328,7 @@ public class GameBoardController {
             foundCharacter = foundCharacter || isCurrentCardSelectable;
         }
 
-        if(!foundCharacter && areSelectable && (remainingAbove != 0 &&  remainingBelow != 0)) {
+        if(!foundCharacter && areSelectable && (remainingAbove != 0 ||  remainingBelow != 0)) {
             setPassTurnBtnEnabled(true);
         }
     }
