@@ -447,20 +447,18 @@ public class GameController {
         int oldPrestigePoints = currPlayer.getTribe().getPrestigePoints();
 
         try {
-            if (gameInstance.getNumPlayer() == gameInstance.getOfferTrack().getTurnTile().getTurnOrder().size()) {
-                if (currPlayer.getRemainingAbove() > 0) {
-                    for (Card card : offerTrack.getTopRow()) {
-                        if (!(card instanceof EventCard)) {
-                            throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
-                        }
+            if (currPlayer.getRemainingAbove() > 0) {
+                for (Card card : offerTrack.getTopRow()) {
+                    if (!(card instanceof EventCard)) {
+                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
                     }
                 }
+            }
 
-                if (currPlayer.getRemainingBelow() > 0) {
-                    for (Card card : offerTrack.getBottomRow()) {
-                        if (!(card instanceof EventCard)) {
-                            throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
-                        }
+            if (currPlayer.getRemainingBelow() > 0) {
+                for (Card card : offerTrack.getBottomRow()) {
+                    if (!(card instanceof EventCard)) {
+                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
                     }
                 }
             }

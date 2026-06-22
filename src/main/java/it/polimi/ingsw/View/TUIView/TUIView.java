@@ -425,24 +425,17 @@ public class TUIView implements ViewInterface {
             System.out.println("New game phase: It's time to draw the cards!");
     }
 
+    /**
+     * only used in GUI
+     */
     @Override
-    public void showFoodModified(String playerName, int deltaFood, int finalFood) {
-        if(playerName.equals(player)){
-            System.out.println();
-            System.out.println("You got " + deltaFood + " food!");
-        }
-    }
+    public void showFoodModified(String playerName, int deltaFood, int finalFood) {}
 
+    /**
+     * only used in GUI
+     */
     @Override
-    public void showPrestigePointsModified(String playerName, int deltaPP, int finalPP) {
-        if(playerName.equals(player)) {
-            System.out.println();
-            if (deltaPP > 0)
-                System.out.println("You gained " + deltaPP + " prestige points!");
-            else
-                System.out.println("You lost " + deltaPP + " prestige points!");
-        }
-    }
+    public void showPrestigePointsModified(String playerName, int deltaPP, int finalPP) {}
 
     /**
      * only used in GUI

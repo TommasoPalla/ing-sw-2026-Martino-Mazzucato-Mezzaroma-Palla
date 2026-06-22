@@ -281,21 +281,19 @@ public class ClientController implements ClientViewUpdate {
             throw new IllegalClientStateActionException("ERROR: You cannot do that right now!");
         }
 
-        if(localModel.getTurnOrder().size() == localModel.getNumPlayers()) {
-            LightTribe tribe = localModel.getPlayerTribe(this.playerName);
-            if (tribe.getRemainingAbove() > 0) {
-                for (Card card : localModel.getTopRow()) {
-                    if (!(card instanceof EventCard)) {
-                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
-                    }
+        LightTribe tribe = localModel.getPlayerTribe(this.playerName);
+        if (tribe.getRemainingAbove() > 0) {
+            for (Card card : localModel.getTopRow()) {
+                if (!(card instanceof EventCard)) {
+                    throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
                 }
             }
+        }
 
-            if (tribe.getRemainingBelow() > 0) {
-                for (Card card : localModel.getBottomRow()) {
-                    if (!(card instanceof EventCard)) {
-                        throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
-                    }
+        if (tribe.getRemainingBelow() > 0) {
+            for (Card card : localModel.getBottomRow()) {
+                if (!(card instanceof EventCard)) {
+                    throw new IllegalClientStateActionException("You can not pass your turn if you can draw cards!");
                 }
             }
         }
