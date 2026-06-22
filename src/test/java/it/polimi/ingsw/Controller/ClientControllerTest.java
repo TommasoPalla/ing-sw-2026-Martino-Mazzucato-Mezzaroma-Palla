@@ -41,7 +41,6 @@ public class ClientControllerTest {
 
     private static class TestView implements ViewInterface {
         public String lastShown = "";
-        @Override public void runView() {}
         @Override public void showNameSet(String newName) { lastShown = "nameSet:" + newName; }
         @Override public void showNewAvailableGames() {}
         @Override public void showGameCreated(int gameID) { lastShown = "gameCreated:" + gameID; }
