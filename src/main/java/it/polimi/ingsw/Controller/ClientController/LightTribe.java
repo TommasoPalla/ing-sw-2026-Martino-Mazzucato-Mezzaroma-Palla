@@ -160,6 +160,9 @@ public class LightTribe implements TribeInterface {
     public void addCharacter(CharacterCard character) {
         population.get(character.getRole()).add(character);
         populationSize++;
+        if (character.getRole() == CharacterRole.INVENTOR) {
+            addInventor(character.getInventorType());
+        }
     }
 
     /**

@@ -245,10 +245,6 @@ public class ClientModel {
         players.get(playerName).setGathererDiscount(discount);
     }
 
-    //aggiungere metodo clearOfferTile(), in player c'è moveTotemToTurnTile e in OfferTile c'è free, decidere cosa fare
-    void updateOfferTiles(ArrayList<OfferTile> remoteOfferTile){
-        offerTiles = remoteOfferTile;
-    }
     void updateTopRow(ArrayList<Card> newTopRow) {
         this.topRow = newTopRow;
     }
