@@ -66,7 +66,7 @@
                         <goal>shade</goal>
                     </goals>
                     <configuration>
-                        <finalName>${project.artifactId}-client</finalName>
+                        <outputFile>${project.artifactId}-client.jar</outputFile>
                         <transformers>
                             <transformer implementation=
                                                  "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -83,7 +83,7 @@
                         <goal>shade</goal>
                     </goals>
                     <configuration>
-                        <finalName>${project.artifactId}-server</finalName>
+                        <outputFile>${project.artifactId}-server.jar</outputFile>
                         <transformers>
                             <transformer implementation=
                                                  "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -109,15 +109,9 @@
         <version>0.0.8</version>
         <executions>
           <execution>
-            <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
                 <mainClass>it.polimi.ingsw.Apps.ClientApp</mainClass>
-<!--                <options>-->
-<!--                    <option>&#45;&#45;add-modules=javafx.controls,javafx.fxml,javafx.media</option>-->
-<!--                </options>-->
-<!--                <mainClass>it.polimi.ingsw.View.GUIView.GuiStart</mainClass>-->
-<!--                <mainClass>it.polimi.ingsw.View.GUIView.GuiTests</mainClass>-->
 
                 <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
