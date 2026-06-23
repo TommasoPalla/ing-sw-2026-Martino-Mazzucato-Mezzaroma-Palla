@@ -15,9 +15,13 @@ Mesos Board Game is the final project of the **"Software Engineering"** course (
 
 ## Table of Contents
 
-* [Specifications](#Specifications)
-* [Javadocs](#Javadocs)
-* [More](#More)
+* [Specifications](#specifications)
+* [Implemented Functionalities](#implemented-functionalities)
+* [Javadocs](#javadocs)
+* [How to compile](#how-to-compile)
+* [How to run from JARs](#how-to-run-from-jars)
+* [How to run from IDE (IntelliJ IDEA)](#how-to-run-from-ide-intellij-idea)
+* [More](#more)
 
 ## Game's screenshots
 
