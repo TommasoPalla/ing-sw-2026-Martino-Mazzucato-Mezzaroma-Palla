@@ -93,9 +93,9 @@ mvn clean package
 ### System requirements
 * Java 23 or later
 
-You can either run the JARs contained in the target directory, which has been previously built with Maven (see the [Compile](#how-to-compile) section), or run the JARs in the [deliverables/jars][deliverablesJars-link].
+You can either run the JARs contained in the target directory, which has been previously built with Maven (see the [Compile](#how-to-compile) section), or run the JARs in the [deliverables/jars][deliverablesJars-link]. You can also just download the jars to run them from whatever folder you want on your pc, without the need to clone the repo.
 
-Now open a terminal on your pc and navigate to the chosen directory.
+Now open a terminal on your pc and navigate to the chosen folder.
 
 ### Server
 1. Run this command
