@@ -91,7 +91,7 @@ mvn clean package
 
 ## How to run from JARs
 ### System requirements
-* Operative System: Linux, Windows, MacOS
+* **Operating System**: Linux, Windows, MacOS
 * Java 23 or later
 
 You can either run the JARs contained in the target directory, which has been previously built with Maven (see the [Compile](#how-to-compile) section), or run the JARs in the [deliverables/jars][deliverablesJars-link]. You can also just download the jars to run them from whatever folder you want on your pc, without the need to clone the repo.
@@ -116,9 +116,9 @@ TUI version of the game uses UTF-8 emojis in terminal, supported by default on L
 1. Open the Windows Control Panel
 2. Open the Region settings
 3. Click on the Administrative tab at the top
-4. Click the Change system locale... button
+4. Click the *Change system locale...* button
 5. Check the box for "Beta: Use Unicode UTF-8 for worldwide language support"
-6. Click OK, and then click Restart now to reboot your PC and apply the changes.
+6. Click *OK*, and then click *Restart now* to reboot your PC and apply the changes.
 
 ## How to run from IDE (IntelliJ IDEA)
 ### Server
