@@ -52,19 +52,12 @@
     -fx-cursor: default;
     -fx-border-radius: 10.0;
     -fx-effect: null;
-    /*-fx-animation-name: zoom-out;
-    -fx-animation-duration: 0.15s;
-    -fx-animation-fill-mode: forwards;*/
 }
 .card-style:selectable {
     -fx-cursor: hand;
     -fx-border-width: 5;
     -fx-border-radius: 10;
     -fx-border-color: -fx-secondary-accent-color;
-    /*-fx-animation-name: zoom-in;
-    -fx-animation-duration: 0.15s;
-    -fx-animation-fill-mode: forwards;
-    -fx-effect: dropshadow(three-pass-box, rgba(255, 200, 59, 0.6), 15, 0.3, 0, 0);*/
 }
 
 .tribe-cards-row {

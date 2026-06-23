@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -49,6 +50,11 @@ public class Gui implements ViewInterface {
     public Gui(Stage stage){
         this.primaryStage = stage;
         this.primaryStage.setMaximized(true);
+        this.primaryStage.setMinHeight(720);
+        this.primaryStage.setMinWidth(720);
+        primaryStage.setOnCloseRequest((WindowEvent event) -> {
+            System.exit(1);
+        });
         String logoPath = "/Images/Icons/Logo.png";
         Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream(logoPath)));
         this.primaryStage.getIcons().add(logo);
