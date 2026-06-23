@@ -87,9 +87,9 @@ mvn clean package
 
 ## How to run from JARs
 ### System requirements
-* Java 21 or later
+* Java 23 or later
 
-You can either run the JARs contained in the target directory, which has been previously built with Maven (see the [Compile](#Howtocompile) section), or run the JARs in the [deliverables/jars][deliverablesJars-link].
+You can either run the JARs contained in the target directory, which has been previously built with Maven (see the [Compile](#how-to-compile) section), or run the JARs in the [deliverables/jars][deliverablesJars-link].
 
 Now open a terminal on your pc and navigate to the chosen directory.
 
