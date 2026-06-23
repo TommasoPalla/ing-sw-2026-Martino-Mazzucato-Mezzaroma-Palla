@@ -19,13 +19,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.util.Random;
 
-import static java.lang.Double.max;
-import static java.lang.Double.min;
-
+/**
+ * this class controls the "ChooseTotem" scene, allowing the user to choose a totem, the totems are the buttons
+ * selecting themselves and are subject to a zoom animation
+ */
 public class ChooseTotemController {
     private Gui gui;
 
@@ -205,7 +205,7 @@ public class ChooseTotemController {
             try{
                 gui.lobbyScene();
             }catch(IOException e){
-
+                errorLabel.setText("error returning to the lobby");
             }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
@@ -218,7 +218,7 @@ public class ChooseTotemController {
             try{
                 gui.lobbyScene();
             }catch(IOException e){
-
+                errorLabel.setText("error returning to the lobby");
             }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
@@ -231,7 +231,7 @@ public class ChooseTotemController {
             try{
                 gui.lobbyScene();
             }catch(IOException e){
-
+                errorLabel.setText("error returning to the lobby");
             }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
@@ -244,7 +244,7 @@ public class ChooseTotemController {
             try{
                 gui.lobbyScene();
             }catch(IOException e){
-
+                errorLabel.setText("error returning to the lobby");
             }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");
@@ -257,7 +257,7 @@ public class ChooseTotemController {
             try{
                 gui.lobbyScene();
             }catch(IOException e){
-
+                errorLabel.setText("error returning to the lobby");
             }
         }else{
             errorLabel.setText("Unavailable color, please choose another one");

@@ -5,8 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
-
-
+/**
+ * this class controls the "IntroScene" scene, the control is limited to the introduction image to be shown
+ */
 public class IntroController {
     @FXML
     private ImageView background;

@@ -15,6 +15,10 @@ import javafx.scene.transform.Scale;
 
 import java.io.IOException;
 
+/**
+ * this class controls the "ChooseNickName" scene, allowing the user to choose a nickName and to confirm it via
+ * "confirm" button
+ */
 public class ChooseNickNameController {
     private Gui gui;
 

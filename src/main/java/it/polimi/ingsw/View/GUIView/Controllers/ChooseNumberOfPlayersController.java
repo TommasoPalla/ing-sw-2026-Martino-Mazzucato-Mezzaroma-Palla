@@ -15,7 +15,10 @@ import javafx.scene.transform.Scale;
 
 import java.io.IOException;
 import java.lang.NumberFormatException;
-
+/**
+ * this class controls the "ChooseNumberOfPlayers" scene, allowing the user to choose a number of players, necessary for
+ * the game they chose to create and to confirm it via "confirm" button
+ */
 public class ChooseNumberOfPlayersController {
     private Gui gui;
 

@@ -16,13 +16,17 @@ import javafx.scene.transform.Scale;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * this class is the controller for the "ChooseGameID" scene, it allows the user to choose an element from a gamesTable
+ * where available games to join are display, after a selection is possible to confirm the choice via the "confirm"
+ * button while it's possible to go back to the creationChoiceScene at any moment via the "back" button
+ */
 public class ChooseGameIdController {
     private Gui gui;
 
     public void setGUI(Gui gui) {
         this.gui = gui;
     }
-//TODO: javadoc here
     @FXML
     private Label errorLabel;
 

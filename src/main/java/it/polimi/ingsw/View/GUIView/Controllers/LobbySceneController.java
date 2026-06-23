@@ -21,7 +21,13 @@ import javafx.scene.transform.Scale;
 
 import java.io.IOException;
 
-
+/**
+ * this class controls the "LobbyScene" scene, allowing the user to choose between the loading of the ChooseTotemScene
+ * via the "ChooseTotemButton" button or to leave the lobby and the host to start the game once the number of players
+ * in the lobby is the one associated with the lobby and once all the players chose their totem.
+ * All users sharing a lobby are also notified via "updateLabel" label of other players joining or leaving the lobby or
+ * choosing a totem.
+ */
 public class LobbySceneController {
     private Gui gui;
     private ClientModel model;

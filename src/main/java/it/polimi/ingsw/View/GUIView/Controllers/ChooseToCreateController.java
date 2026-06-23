@@ -9,7 +9,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
-
+/**
+ * this class controls the "ChooseToCreate" scene, allowing the user to choose whether they want to create a game, to
+ * join one or to change their current nickName
+ */
 public class ChooseToCreateController {
 
     private Gui gui;
