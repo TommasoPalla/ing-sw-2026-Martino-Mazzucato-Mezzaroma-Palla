@@ -136,7 +136,7 @@ Mind that to play the game you will need at least:
 [finalUML-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/blob/master/deliverables/final/uml/UML_Mesos.png
 [protocolDoc-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/deliverables/final/uml
 [deliverablesJars-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/deliverables/final/jars
-[mesos_db_dump-link]:https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/deliverables/dump/mesos_db_dump.sql
+[mesos_db_dump-link]:https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/deliverables/final/dump/mesos_db_dump.sql
 [main-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/src/main/java/it/polimi/ingsw
 [tests-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/src/test/java/it/polimi/ingsw
 
