@@ -73,6 +73,23 @@
                                 <mainClass>it.polimi.ingsw.Apps.ClientApp</mainClass>
                             </transformer>
                         </transformers>
+
+                        <artifactSet>
+                            <excludes>
+                                <exclude>com.mysql:*</exclude>
+                            </excludes>
+                        </artifactSet>
+
+                        <filters>
+                            <filter>
+                                <artifact>${project.groupId}:${project.artifactId}</artifact>
+                                <excludes>
+                                    <exclude>it/polimi/Networking/Shared/ServerController.class</exclude>
+                                    <exclude>it/polimi/Networking/Shared/LeaderboardDAO.class</exclude>
+                                    <exclude>it/polimi/Networking/Apps/ServerApp.class</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
                     </configuration>
                 </execution>
                 <!-- SERVER JAR -->
@@ -90,6 +107,24 @@
                                 <mainClass>it.polimi.ingsw.Apps.ServerApp</mainClass>
                             </transformer>
                         </transformers>
+
+                        <artifactSet>
+                            <excludes>
+                                <exclude>org.openjfx:*</exclude> </excludes>
+                        </artifactSet>
+
+                        <filters>
+                            <filter>
+                                <artifact>${project.groupId}:${project.artifactId}</artifact>
+                                <excludes>
+                                    <exclude>it/polimi/ingsw/View/TUIView/**</exclude>
+                                    <exclude>it/polimi/ingsw/View/GUIView/**</exclude>
+                                    <exclude>css/**</exclude>
+                                    <exclude>FXML_files/**</exclude>
+                                    <exclude>Images/**</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
                     </configuration>
                 </execution>
             </executions>
