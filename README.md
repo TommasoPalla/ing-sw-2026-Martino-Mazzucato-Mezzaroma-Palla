@@ -72,13 +72,52 @@ Each method and class in this project has a Javadoc associated to it.
 
 We wrote it to ensure the best readability of the code
 
+## How to compile
+
+Build dependencies:
+* JDK 23
+* maven
+
+1. Clone this repo by downloading the ```.zip``` file or by using the command ```git clone``` on your terminal
+2. In the root directory of the project run this command to clean the environment and generate the jars.
+```
+mvn clean package
+```
+3. Two compiled jars (```PSP11-server.jar``` and ```PSP11-client.jar```) can be found in the newly generated folder `\target`, and can be run as described below.
+
+## How to run from JARs
+### System requirements
+* Java 21 or later
+
+You can either run the JARs contained in the target directory, which has been previously built with Maven (see the [Compile](#Howtocompile) section), or run the JARs in the [deliverables/jars][deliverablesJars-link].
+
+Now open a terminal on your pc and navigate to the chosen directory.
+
+### Server
+1. Run this command
+```java -jar PSP11-server.jar```
+2. If you want to, configurate the Database to connect your server to a MySQL Database of choice. You will need to enter the Database URL, the USERNAME and the PASSWORD.
+
+### Client
+1. Run this command
+```java -jar PSP11-client.jar```
+2. Select the type of connection you want to use (Socket or RMI)
+3. Set server IP and ports for Socket and RMI connections
+4. Select the type of User Interface you want to use to play the game (TUI or GUI).
+
 ## How to run from IDE (IntelliJ IDEA)
 ### Server
 * Run ServerApp
-* Set server IP and ports for Socket and RMI connections
+* If you want to, configurate the Database to connect your server to a MySQL Database of choice. You will need to enter the Database URL, the USERNAME and the PASSWORD.
 ### Client
 * Run ClientApp
 * Set server IP and ports for Socket and RMI connections
+* Select the type of connection you want to use (Socket or RMI)
+* Select the type of User Interface you want to use to play the game (TUI or GUI).
+
+Mind that to play the game you will need at least:
+* One Server running (with or without a connected Database
+* 2 Clients (using CLI or GUI).
 
 ## More
 
@@ -96,6 +135,7 @@ We wrote it to ensure the best readability of the code
 [boardgame-publisher-link]: https://www.craniocreations.it/en/product/mesos
 [finalUML-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/blob/master/deliverables/final/uml/UML_Mesos.png
 [protocolDoc-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/deliverables/final/uml
+[deliverablesJars-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/deliverables/final/jars
 [main-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/src/main/java/it/polimi/ingsw
 [tests-link]: https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/tree/master/src/test/java/it/polimi/ingsw
 
