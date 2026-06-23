@@ -100,7 +100,7 @@ Now open a terminal on your pc and navigate to the chosen directory.
 ### Server
 1. Run this command
 ```java -jar PSP11-server.jar```
-2. If you want to, configurate the Database to connect your server to a MySQL Database of choice. You will need to enter the Database URL, the USERNAME and the PASSWORD (Note: The Database structure has to be the same as the one found in the [Database dump][mesos_db_dump-link], otherwise it will not work properly).
+2. If you want, you can configure your server to connect a MySQL Database of choice to it. You will need to enter the Database URL, the USERNAME and the PASSWORD (Note: The Database structure has to be the same as the one found in the [Database dump][mesos_db_dump-link], otherwise it will not work properly).
 
 ### Client
 1. Run this command
@@ -112,7 +112,7 @@ Now open a terminal on your pc and navigate to the chosen directory.
 ## How to run from IDE (IntelliJ IDEA)
 ### Server
 * Run ServerApp
-* If you want to, configurate the Database to connect your server to a MySQL Database of choice. You will need to enter the Database URL, the USERNAME and the PASSWORD (Note: The Database structure has to be the same as the one found in the [Database dump][mesos_db_dump-link], otherwise it will not work properly).
+* If you want, you can configure your server to connect a MySQL Database of choice to it. You will need to enter the Database URL, the USERNAME and the PASSWORD (Note: The Database structure has to be the same as the one found in the [Database dump][mesos_db_dump-link], otherwise it will not work properly).
 ### Client
 * Run ClientApp
 * Set server IP and ports for Socket and RMI connections
@@ -120,7 +120,7 @@ Now open a terminal on your pc and navigate to the chosen directory.
 * Select the type of User Interface you want to use to play the game (TUI or GUI).
 
 Mind that to play the game you will need at least:
-* One Server running (with or without a connected Database
+* One Server running (with or without a connected Database)
 * 2 Clients (using CLI or GUI).
 
 ## More
