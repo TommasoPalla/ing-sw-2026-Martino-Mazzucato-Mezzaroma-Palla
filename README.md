@@ -6,8 +6,11 @@ Mesos Board Game is the final project of the **"Software Engineering"** course (
 
 **Professor:** San Pietro Pierluigi
 
+**Final Score:** 30L/30
+
 ### The Team
 
+Made with love <3 by 
 * [Paolo Martino](https://github.com/PaoloMartino)
 * [Lorenzo Mazzucato](https://github.com/lorenzomazzucato)
 * [Davide Mezzaroma](https://github.com/DavideMezzaroma)
@@ -15,6 +18,7 @@ Mesos Board Game is the final project of the **"Software Engineering"** course (
 
 ## Table of Contents
 
+* [Disclaimer](#disclaimer)
 * [Specifications](#specifications)
 * [Implemented Functionalities](#implemented-functionalities)
 * [Javadocs](#javadocs)
@@ -34,6 +38,9 @@ Mesos Board Game is the final project of the **"Software Engineering"** course (
 ### Main Game Board
 <img src="https://github.com/TommasoPalla/ing-sw-2026-Martino-Mazzucato-Mezzaroma-Palla/blob/master/readme%20assets/Mesos_mainBoard.png?raw=true" alt="Mesos Main Board Screen" width="800px">
 
+## Disclaimer
+
+Il gioco da tavolo Mesos e tutto il relativo materiale grafico è di esclusiva proprietà di Cranio Creations.
 
 ## Specifications
 
